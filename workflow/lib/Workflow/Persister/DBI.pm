@@ -296,6 +296,7 @@ sub fetch_history {
         SELECT workflow_hist_id, workflow_id, action, description, state, user, history_date
           FROM %s
          WHERE workflow_id = ?
+         ORDER BY history_date DESC
     /;
 
     $sql = sprintf( $sql, $self->history_table );
