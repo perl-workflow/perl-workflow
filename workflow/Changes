@@ -5,23 +5,24 @@ Revision history for Perl extension Workflow
   Workflow
 
      - Since we've now got 'resulting_state' that is dependent on the
-     action results of the previous action being run, we cannot set
-     the 'new' workflow state before executing the action.
+     action results of the previous action being run (see
+     Workflow::State change), we cannot set the 'new' workflow state
+     before executing the action.
 
-
-     One of the results of this is that you shouldn't set the 'state'
-     property of any created Workflow::History objects -- we'll modify
-     the state of any history objects with an empty state before
-     saving them (see changes for Workflow::Factory)
+       One result: you shouldn't set the 'state' property of any created
+     Workflow::History objects -- we'll modify the state of any
+     history objects with an empty state before saving them (see
+     changes for Workflow::Factory)
 
        Another result is that the value of '$wf->state' inside your
      Action now refers to the EXISTING state of the workflow not the
-     NEW state. Therefore any code you have using the state of the
-     workflow (such as in our example 'Trouble Ticket' application)
-     will give a different value than the previous Workflow version.
+     SOON TO BE state. Therefore any code you have using the state of
+     the workflow (such as in our example 'Trouble Ticket'
+     application) will give a different value than the previous
+     Workflow version.
 
-     This behavior seems more consistent, but comments are are
-     welcome.
+       This behavior seems more consistent, but comments/suggestions
+     are welcome.
 
      - In 'execute_action()' -- once we're done executing the main
      action, check to see if our new state is an autorun state, and if
@@ -44,8 +45,9 @@ Revision history for Perl extension Workflow
      state.
 
      - The 'resulting_state' property of an action within a state can
-     now be multivalued and may depend on the return value of the
-     action that's executed. For instance, we might have:
+     now be multivalued, which means the actual value depends on the
+     return value of the action that's executed. For instance, we
+     might have:
 
      <state name="create user">
          <action name="create">
@@ -55,9 +57,23 @@ Revision history for Perl extension Workflow
          </action>
         ....
 
-     So if the action 'create' returns 'admin', the new state will be
+       So if the action 'create' returns 'admin', the new state will be
      'assign as admin'; on 'helpdesk' it will be 'assign as helpdesk',
      and all other values will go to state 'assign as luser'.
+
+       Existing behavior (actions returning nothing for a single
+     'resulting_state') is unchanged.
+
+
+0.05  Thu Sep 30 23:11:01 EDT 2004
+
+  Workflow::Persister::DBI
+
+      - Trying to fetch a workflow with a non-existent ID didn't work
+      properly, returning an empty workflow object (which blew up when
+      you tried to call a method on it) instead of undef (as
+      documented). Thanks to Martin Winkler <mw@arsnavigandi.de> for
+      pointing the problem out.
 
 
 0.04  Sun Sep 12 22:17:48 EDT 2004
