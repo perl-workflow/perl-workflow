@@ -3,33 +3,11 @@ package Workflow::Config;
 # $Id$
 
 use strict;
+use Data::Dumper        qw( Dumper );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
 $Workflow::Config::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-
-########################################
-# WORKFLOW
-
-# Pull out states and their configurations from the main configuration
-# -- this is here and not in the factory since the Workflow should be
-# the class that's aware of its own configuration
-
-sub get_all_state_config {
-    my ( $class, $config ) = @_;
-    my $log = get_logger();
-    my @state_config = ();
-    while ( my ( $state, $state_info ) = each %{ $config } ) {
-        next if ( $state eq 'properties' );
-        $log->info( "Pulling out configurations for state '$state'" );
-        $state_info->{name} = $state;
-        push @state_config, $state_info;
-    }
-    return @state_config;
-}
-
-########################################
-# MAIN PARSING
 
 # Make for shorter calls...
 sub new { return bless( {}, $_[0] ) }
@@ -72,7 +50,13 @@ sub parse {
                                 "type '$file_type'";
         }
         $log->info( "Parsed file '$file' ok" );
-        push @config, $this_config;
+        if ( ref $this_config->{ $type } eq 'ARRAY' ) {
+            $log->debug( "Adding multiple configurations for '$type'" );
+            push @config, @{ $this_config->{ $type } };
+        }
+        else {
+            push @config, $this_config;
+        }
     }
     return @config;
 }
@@ -90,6 +74,8 @@ sub _expand_refs {
 
 sub _translate_perl {
     my ( $class, $type, $file ) = @_;
+    my $log = get_logger();
+
     local $/ = undef;
     open( CONF, '<', $file )
         || configuration_error "Cannot read file '$file': $!";
@@ -101,6 +87,7 @@ sub _translate_perl {
         configuration_error "Cannot evaluate perl data structure ",
                             "in '$file': $@";
     }
+    $log->debug( "Translated '$type' '$file' into: ", Dumper( $data ) );
     return $data;
 }
 
@@ -115,7 +102,7 @@ my %XML_OPTIONS = (
         KeyAttr    => [],
     },
     persister => {
-        ForceArray => [ 'persisters' ],
+        ForceArray => [ 'persister' ],
         KeyAttr    => [],
     },
     validator => {
@@ -132,6 +119,7 @@ my $XML_REQUIRED = 0;
 
 sub _translate_xml {
     my ( $class, $type, $file ) = @_;
+    my $log = get_logger();
     unless ( $XML_REQUIRED ) {
         require XML::Simple;
         XML::Simple->import( ':strict' );
@@ -140,6 +128,7 @@ sub _translate_xml {
 
     my $options = $XML_OPTIONS{ $type } || {};
     my $config = XMLin( $file, %{ $options } );
+    $log->debug( "Translated '$type' '$file' into: ", Dumper( $config ) );
     return $config;
 }
 
@@ -181,11 +170,6 @@ that every 'action' within a workflow state has a 'resulting_state'
 key).
 
 Returns: list of hash references for each file in C<@files>
-
-B<get_all_state_config( \%workflow_config )>
-
-Pull out all the state configuration hashrefs in C<\%workflow_config>
-and return them in a list.
 
 B<is_valid_config_type( $config_type )>
 
