@@ -976,9 +976,8 @@ L<Workflow::Factory>
 
 L<Workflow::State>
 
-October 2004 talk 'Workflows in Perl' given to pgh.pm:
-
-  L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
+October 2004 talk 'Workflows in Perl' given to
+pgh.pm: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 
 =head1 COPYRIGHT
 
