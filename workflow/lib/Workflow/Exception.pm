@@ -46,7 +46,9 @@ sub _mythrow {
     my ( $msg, %params ) = _massage( @_ );
     my $log = get_logger();
     my ( $pkg, $line ) = (caller)[0,2];
-    $log->error( "$type exception thrown from [$pkg: $line]: $msg" );
+    my ( $prev_pkg, $prev_line ) = (caller(1))[0,2];
+    $log->error( "$type exception thrown from [$pkg: $line; before: ",
+                 "$prev_pkg: $prev_line]: $msg" );
     goto &Exception::Class::Base::throw( $TYPE_CLASSES{ $type },
                                          message => $msg, %params );
 }
@@ -162,7 +164,7 @@ makes for very readable code:
                 "frightfully wrong: $@",
                 { foo => 'bar' };
 
-=head1 DECLARED EXCEPTION CLASSES
+=head1 SHORTCUTS
 
 B<Workflow::Exception> - import using C<workflow_error>
 
