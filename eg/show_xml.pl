@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
 use strict;
-use Config::Auto;
+use Workflow::Config;
 use Data::Dumper qw( Dumper );
 
 $Data::Dumper::Indent = 1;
 
-my $conf = Config::Auto::parse( $ARGV[0] );
-print Dumper( $conf );
+my @conf = Workflow::Config->_translate_xml( $ARGV[0], $ARGV[1] );
+print Dumper( $conf[0] );
