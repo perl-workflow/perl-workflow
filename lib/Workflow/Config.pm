@@ -35,21 +35,33 @@ sub parse {
     return () unless ( scalar @config_files );
     my @config = ();
     foreach my $file ( @config_files ) {
-        my ( $file_type ) = $file =~ /\.(\w+)$/;
-        $log->info( "'$type' config file '$file' is type '$file_type'" );
-        my ( $this_config );
-        if ( $file_type eq 'perl' ) {
-            $this_config = $class->_translate_perl( $type, $file );
+        my ( $file_type, $file_name );
+        my $method;
+        if ( ref $file ) { # string
+            $file_type = 'perl';
+            $file_type = 'xml' if ( $$file =~ m/^\s*</ && $$file =~ m/>\s*$/ );
+            $method = "_translate_${file_type}";
+            $file_name = '[scalar ref]';
         }
-        elsif ( $file_type eq 'xml' ) {
-            $this_config = $class->_translate_xml( $type, $file );
+        else {
+            ( $file_type ) = $file =~ /\.(\w+)$/;
+            $method = "_translate_${file_type}_file";
+            $file_name = $file;
+        }
+        $log->is_info &&
+            $log->info( "'$type' config file '$file_name' is type '$file_type'" );
+
+        my ( $this_config );
+        if ( $class -> can( $method ) ) {
+            $this_config = $class->$method( $type, $file );
         }
         else {
             configuration_error "Do not know how to parse configuration ",
                                 "type '$type' from file '$file' of ",
                                 "type '$file_type'";
         }
-        $log->info( "Parsed file '$file' ok" );
+        $log->is_info &&
+            $log->info( "Parsed file '$file_name' ok" );
         if ( ref $this_config->{ $type } eq 'ARRAY' ) {
             $log->debug( "Adding multiple configurations for '$type'" );
             push @config, @{ $this_config->{ $type } };
@@ -72,7 +84,7 @@ sub _expand_refs {
 }
 
 
-sub _translate_perl {
+sub _translate_perl_file {
     my ( $class, $type, $file ) = @_;
     my $log = get_logger();
 
@@ -81,13 +93,22 @@ sub _translate_perl {
         || configuration_error "Cannot read file '$file': $!";
     my $config = <CONF>;
     close( CONF );
+    my $data = $class->_translate_perl( $type, $config, $file );
+    $log->is_debug &&
+        $log->debug( "Translated '$type' '$file' into: ", Dumper( $data ) );
+    return $data;
+}
+
+sub _translate_perl {
+    my ( $class, $type, $config, $file ) = @_;
+    my $log = get_logger();
+
     no strict 'vars';
     my $data = eval $config;
     if ( $@ ) {
         configuration_error "Cannot evaluate perl data structure ",
                             "in '$file': $@";
     }
-    $log->debug( "Translated '$type' '$file' into: ", Dumper( $data ) );
     return $data;
 }
 
@@ -117,8 +138,19 @@ my %XML_OPTIONS = (
 
 my $XML_REQUIRED = 0;
 
-sub _translate_xml {
+sub _translate_xml_file {
     my ( $class, $type, $file ) = @_;
+    my $log = get_logger();
+    my $config = $class->_translate_xml( $type, $file, $file );
+    $log->is_debug &&
+        $log->debug( "Translated '$type' '$file' into: ", Dumper( $config ) );
+    return $config;
+}
+
+# $config can either be a filename or scalar ref with file contents
+
+sub _translate_xml {
+    my( $class, $type, $config, $file ) = @_;
     my $log = get_logger();
     unless ( $XML_REQUIRED ) {
         require XML::Simple;
@@ -127,9 +159,8 @@ sub _translate_xml {
     };
 
     my $options = $XML_OPTIONS{ $type } || {};
-    my $config = XMLin( $file, %{ $options } );
-    $log->debug( "Translated '$type' '$file' into: ", Dumper( $config ) );
-    return $config;
+    my $data = XMLin( $config, %{ $options } );
+    return $data;
 }
 
 1;
