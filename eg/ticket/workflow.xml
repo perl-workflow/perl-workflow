@@ -15,53 +15,57 @@
         using names rather than IDs we cannot assume</description>
 
 <!-- This action is accessible from this state by everyone -->
-     <action name="TIX_NEW"
-        resulting_state="TIX_CREATED"/>
+     <action name="create issue"
+        resulting_state="CREATED"/>
   </state>
 
-  <state name="TIX_CREATED">
+  <state name="CREATED">
      <description>State of ticket after it has been created</description>
-     <action name="TIX_COMMENT"
+     <action name="add comment"
              resulting_state="NOCHANGE"/>        
 <!--
-     <action name="TIX_CLOSE"
-             resulting_state="TIX_CLOSED">
+     <action name="close issue"
+             resulting_state="CLOSED">
         <condition name="IsAdminUser"/>
      </action>
 -->
 
-     <action name="TIX_EDIT"
-             resulting_state="TIX_IN_PROGRESS">
+     <action name="edit issue"
+             resulting_state="IN_PROGRESS">
         <condition name="IsWorker"/>
      </action>
    </state>
 
-   <state name="TIX_IN_PROGRESS">
+   <state name="IN_PROGRESS">
       <description>State of ticket after developers start work</description>
-      <action name="TIX_CLOSE"
-              resulting_state="TIX_CLOSED">
+
+      <action name="close issue"
+              resulting_state="CLOSED">
          <condition name="IsCreator"/>
       </action>
+
+      <action name="add comment"
+              resulting_state="NOCHANGE"/>        
    </state>
 
 <!--
-    <state name="TIX_AWAITS_APPROVAL">
+    <state name="AWAITS_APPROVAL">
       <description>State of ticket after developers complete work</description>
-       <action name="TIX_CLOSE"
-               resulting_state="TIX_CLOSED">
+       <action name="close issue"
+               resulting_state="CLOSED">
           <condition name="IsCreationUser"/>
        </action>
-       <action name="TIX_ESCALATE"
-               resulting_state="TIX_CREATED_ESCALATED">
+       <action name="escalate issue"
+               resulting_state="CREATED_ESCALATED">
           <condition name="IsCreationUser"/>
        </action>
     </state>
 -->
 
-   <state name="TIX_CLOSED">
+   <state name="CLOSED">
       <description>State of ticket after creator approves the work done</description>
-      <action name="TIX_REOPEN"
-              resulting_state="TIX_CREATED">
+      <action name="reopen issue"
+              resulting_state="CREATED">
          <condition name="IsCreator"/>
       </action>
    </state>
