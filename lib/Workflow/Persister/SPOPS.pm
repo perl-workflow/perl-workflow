@@ -89,6 +89,7 @@ sub create_history {
         }
         else {
             $h->id( $hist_persist->id );
+            $h->set_saved();
             $log->info( "Created history record with ID ", $hist_persist->id );
         }
     }
@@ -97,7 +98,7 @@ sub create_history {
 
 sub fetch_history {
     my ( $self, $wf ) = @_;
-    my $histories = eval {
+    my $persist_histories = eval {
         $self->history_class->fetch_group({ where => 'workflow_id = ?',
                                             value => [ $wf->id ],
                                             order => 'history_date DESC' });
@@ -105,7 +106,22 @@ sub fetch_history {
     if ( $@ ) {
         persist_error "Error fetching workflow history: $@";
     }
-    return @{ $histories };
+    my @histories = ();
+    for ( @{ $persist_histories } ) {
+        my $hist = Workflow::History->new({
+            id           => $_->id,
+            workflow_id  => $_->workflow_id,
+            action       => $_->action,
+            description  => $_->description,
+            state        => $_->state,
+            user         => $_->user,
+# NOTE: SPOPS class must return this as a DateTime object...
+            date         => $_->history_date,
+        });
+        $hist->set_saved();
+        push @histories, $hist;
+    }
+    return @histories;
 }
 
 1;
@@ -118,18 +134,41 @@ Workflow::Persister::SPOPS - Persist workflows using SPOPS
 
 =head1 SYNOPSIS
 
- <workflow type="foo">
-   <persister class="Workflow::Persister::SPOPS"
-              workflow_class="WorkflowPersist"
-              history_class="WorkflowHistoryPersist"/>
+ <persister name="SPOPSPersister"
+            class="Workflow::Persister::SPOPS"
+            workflow_class="My::Persist::Workflow"
+            history_class="My::Persist::History"/>
 
 =head1 DESCRIPTION
 
-=head1 CLASS METHODS
+=head2 Overview
 
-=head1 OBJECT METHODS
+Use a SPOPS classes to persist your workflow and workflow history
+information. Configuration is simple: just specify the class names and
+everything else is done.
+
+We do not perform any class initialization, so somewhere in your
+server/process startup code you should have something like:
+
+ my $config = get_workflow_and_history_config();
+ SPOPS::Initialize->process({ config => $config });
+
+This will generate the classes named in the persister configuration.
+
+=head2 SPOPS Configuration
+
+B<NOTE>: The configuration for your workflow history object B<must>
+use the L<SPOPS::Tool::DateConvert> to translate the 'history_date'
+field into a L<DateTime> object. We assume when we fetch the history
+object that this has already been done.
 
 =head1 SEE ALSO
+
+L<Workflow::Persister>
+
+L<SPOPS>
+
+L<SPOPS::Tool::DateConvert>
 
 =head1 COPYRIGHT
 
