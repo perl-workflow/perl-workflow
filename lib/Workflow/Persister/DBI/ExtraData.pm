@@ -4,33 +4,48 @@ package Workflow::Persister::DBI::ExtraData;
 
 use strict;
 use base qw( Workflow::Persister::DBI );
+use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 
 $Workflow::Persister::DBI::ExtraData::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 my @FIELDS = qw( table data_field context_key );
+__PACKAGE__->mk_accessors( @FIELDS );
 
 sub init {
     my ( $self, $params ) = @_;
     $self->SUPER::init( $params );
+    my $log = get_logger();
 
-    # now configure additional info...
-    foreach my $field ( @FIELDS ) {
-        my $param_name = "extra_$field";
-        if ( $params->{ $param_name } ) {
-            $self->$field( $params->{ $param_name } );
-        }
-        else {
-            push @not_found, $required_field;
-        }
+    my @not_found = ();
+    foreach ( qw( table data_field ) ) {
+        push @not_found, $_ unless ( $params->{"extra_$_"} );
     }
-
     if ( scalar @not_found ) {
+        $log->error( "Required configuration fields not found: ",
+                     join( ', ', @not_found ) );
         configuration_error
             "To fetch extra data with each workflow with this implementation ",
             "you must specify: ", join( ', ', @not_found );
     }
 
+    $self->table( $params->{extra_table} );
+    my $data_field = $params->{extra_data_field};
+
+    # If multiple data fields specified we don't allow the user to
+    # specify a context key
+
+    if ( $data_field =~ /,/ ) {
+        $self->data_field( [ split /\s*,\s*/, $data_field ] );
+    }
+    else {
+        $self->data_field( $data_field );
+        my $context_key = $params->{extra_context_key} || $data_field;
+        $self->context_key( $context_key );
+    }
+    $log->info( "Configured extra data fetch with: ",
+                join( '; ', $self->table, $data_field,
+                            $self->context_key ) );
 }
 
 sub fetch_extra_workflow_data {
@@ -43,9 +58,13 @@ sub fetch_extra_workflow_data {
        SELECT %s FROM %s
         WHERE workflow_id = ?
     };
-    $sql = sprintf( $sql, $self->data_field, $self->table );
-    $log->debug( "Preparing SQL\n$sql" );
-    $log->debug( "Binding parameters: ", $wf->id );
+    my $data_field = $self->data_field;
+    my $select_data_fields = ( ref $data_field )
+                               ? join( ', ', @{ $data_field } )
+                               : $data_field;
+    $sql = sprintf( $sql, $select_data_fields, $self->table );
+    $log->debug( "Using SQL\n$sql" );
+    $log->debug( "Bind parameters: ", $wf->id );
 
     my ( $sth );
     eval {
@@ -54,15 +73,28 @@ sub fetch_extra_workflow_data {
     };
     if ( $@ ) {
         persist_error "Failed to retrieve extra data from table ",
-                      $self->table, ": $@" );
+                      $self->table, ": $@";
     }
     else {
         $log->debug( "Prepared/executed extra data fetch ok" );
         my $row = $sth->fetchrow_arrayref;
-        my $value = $row->[0];
-        $wf->context->param( $self->context_key, $value );
-        $log->info( sprintf( "Set data from %s.%s into context key %s ok",¯
-                             $self->table, $self->data_field, $self->context_key ) );
+        if ( ref $data_field ) {
+            for ( my $i = 0; $i < scalar @{ $data_field }; $i++ ) {
+                $wf->context->param( $data_field->[ $i ], $row->[ $i ] );
+                $log->info(
+                    sprintf( "Set data from %s.%s into context key %s ok",
+                             $self->table, $data_field->[$i], $data_field->[$i] )
+                );
+            }
+        }
+        else {
+            my $value = $row->[0];
+            $wf->context->param( $self->context_key, $value );
+            $log->info(
+                sprintf( "Set data from %s.%s into context key %s ok",
+                         $self->table, $self->data_field, $self->context_key )
+            );
+        }
     }
 }
 
@@ -88,11 +120,85 @@ Workflow::Persister::DBI::ExtraData - Fetch extra data with each workflow and pu
 
 =head1 DESCRIPTION
 
-=head1 CLASS METHODS
+=head2 Overview
 
-=head1 OBJECT METHODS
+Simple subclass of L<Workflow::Persister::DBI> to allow you to declare
+an extra table and data field(s) from which to fetch data whenever you
+fetch a workflow. There is a simple restriction: the table must have a
+field 'workflow_id' of the same datatype as the 'workflow_id' field in
+the 'workflow' table.
 
-=head1 SEE ALSO
+=head2 Examples
+
+ # Specify a single field 'ticket_id' from the table 'workflow_ticket'
+ # and store it in the context using the same key:
+ 
+ <persister
+     ...
+     extra_table="workflow_ticket"
+     extra_data_field="ticket_id"
+     ...
+ 
+ # How you would use this:
+ my $wf = FACTORY->fetch_workflow( 'Ticket', 55 );
+ print "Workflow is associated with ticket: ",
+       $wf->context->param( 'ticket_id' );
+
+ # Specify a single field 'ticket_id' from the table 'workflow_ticket'
+ # and store it in the context using a different key
+ 
+ <persister
+     ...
+     extra_table="workflow_ticket"
+     extra_data_field="ticket_id"
+     extra_context_key="THE_TICKET_ID"
+     ...
+ 
+ # How you would use this:
+ my $wf = FACTORY->fetch_workflow( 'Ticket', 55 );
+ print "Workflow is associated with ticket: ",
+       $wf->context->param( 'THE_TICKET_ID' );
+ 
+ # Specify multiple fields ('ticket_id', 'last_viewer',
+ # 'last_view_date') to pull from the 'workflow_ticket' table:
+ 
+ <persister
+     ...
+     extra_table="workflow_ticket"
+     extra_data_field="ticket_id,last_viewer,last_view_date"
+     ...
+ 
+ # How you would use this:
+ my $wf = FACTORY->fetch_workflow( 'Ticket', 55 );
+ print "Workflow is associated with ticket: ",
+       $wf->context->param( 'ticket_id' ), " ",
+       "which was last viewed by ",
+       $wf->context->param( 'last_viewer' ), " on ",
+       $wf->context->param( 'last_view_date' );
+
+=head2 Configuration
+
+B<extra_table> (required)
+
+Table where the extra data are kept.
+
+B<extra_data_field> (required)
+
+Can be a single field or a comma-separated list of fields, all in the
+same table. If a single field specified you have the option of
+declaring a different C<extra_context_key> under which the value
+should be stored in the workflow context. Otherwise the values are
+stored by the field names in the workflow context.
+
+B<extra_context_key> (optional)
+
+Key under which to save the data from C<extra_data_field> in the
+workflow context.
+
+Note: this is ignored when you specify multiple fields in
+C<extra_data_field>; we just use the fieldnames for the context keys
+in that case. And if you specify a single data field and do not
+specify a context key we also use the data field name.
 
 =head1 COPYRIGHT
 
