@@ -47,10 +47,8 @@ sub execute {
 
     my $persister = FACTORY->get_persister( 'TestPersister' );
     if ( $persister->isa( 'Workflow::Persister::DBI' ) ) {
-        my $sql = q{
-            INSERT INTO workflow_ticket ( workflow_id, ticket_id )
-            VALUES ( ?, ? )
-        };
+        my $sql = 'INSERT INTO workflow_ticket ( workflow_id, ticket_id ) ' .
+                  'VALUES ( ?, ? )';
         $log->debug( "Will run SQL\n$sql" );
         $log->debug( "Will use parameters: ", join( ', ', $wf->id, $ticket->id ) );
         my $dbh = $persister->handle;
