@@ -43,6 +43,7 @@ lib/Workflow/Action/InputField.pm
 lib/Workflow/Action/Null.pm
 lib/Workflow/Base.pm
 lib/Workflow/Condition.pm
+lib/Workflow/Condition/Evaluate.pm
 lib/Workflow/Condition/HasUser.pm
 lib/Workflow/Config.pm
 lib/Workflow/Config/Perl.pm
@@ -84,6 +85,7 @@ t/action.t
 t/action_field.t
 t/base.t
 t/condition.t
+t/condition_evaluate.t
 t/config.t
 t/context.t
 t/exception.t

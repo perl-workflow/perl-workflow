@@ -5,6 +5,7 @@ package Workflow::State;
 use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl       qw( get_logger );
+use Workflow::Condition::Evaluate;
 use Workflow::Exception qw( workflow_error );
 use Workflow::Factory   qw( FACTORY );
 
@@ -65,7 +66,7 @@ sub evaluate_action {
     foreach my $condition ( @conditions ) {
         my $condition_name = $condition->name;
         $log->is_debug &&
-            $log->debug( "Will evaluate condition '$condition_name'" );
+            $log->debug( "Evaluating condition '$condition_name'" );
         eval { $condition->evaluate( $wf ) };
         if ( $@ ) {
             # TODO: We may just want to pass the error up without wrapping it...
@@ -136,8 +137,13 @@ sub autorun {
 sub init {
     my ( $self, $config ) = @_;
     $log ||= get_logger();
-
     my $name = $config->{name};
+
+    my $class = ref( $self );
+
+    $log->is_debug &&
+        $log->debug( "Constructing '$class' object for state $name" );
+
     $self->state( $name );
     $self->description( $config->{description} );
     if ( $config->{autorun} ) {
@@ -146,9 +152,6 @@ sub init {
     else {
         $self->autorun( 'no' );
     }
-    my $class = ref( $self );
-    $log->is_debug &&
-        $log->debug( "Constructing '$class' object for state $name" );
     foreach my $state_action_config ( @{ $config->{action} } ) {
         my $action_name = $state_action_config->{name};
         my $resulting = $state_action_config->{resulting_state};
@@ -206,8 +209,8 @@ sub _add_action_config {
     $log->is_debug &&
         $log->debug( "Adding '$state' '$action_name' config" );
     $self->{_actions}{ $action_name } = $action_config;
-    $self->{_conditions}{ $action_name } =
-        [ $self->_create_condition_objects( $action_config ) ];
+    my @action_conditions = $self->_create_condition_objects( $action_config );
+    $self->{_conditions}{ $action_name } = \@action_conditions;
 }
 
 sub _create_condition_objects {
@@ -216,9 +219,20 @@ sub _create_condition_objects {
     my @conditions = $self->normalize_array( $action_config->{condition} );
     my @condition_objects = ();
     foreach my $condition_info ( @conditions ) {
-        $log->is_info &&
-            $log->info( "Fetching condition '$condition_info->{name}'" );
-        push @condition_objects, FACTORY->get_condition( $condition_info->{name} );
+
+        # Special case: a 'test' denotes our 'evaluate' condition
+        if ( $condition_info->{test} ) {
+            push @condition_objects, Workflow::Condition::Evaluate->new({
+                name  => 'evaluate',
+                class => 'Workflow::Condition::Evaluate',
+                test  => $condition_info->{test},
+            });
+        }
+        else {
+            $log->is_info &&
+                $log->info( "Fetching condition '$condition_info->{name}'" );
+            push @condition_objects, FACTORY->get_condition( $condition_info->{name} );
+        }
     }
     return @condition_objects;
 }
@@ -317,7 +331,7 @@ within the autorun state.
 
 B<get_conditions( $action_name )>
 
-Returns a list of L<Condition> objects for action
+Returns a list of L<Workflow::Condition> objects for action
 C<$action_name>. Throws exception if object does not contain
 C<$action_name> at all.
 
@@ -355,8 +369,6 @@ is executed. If you've specified multiple return states in the
 configuration then you need to specify the C<$action_return>,
 otherwise we return a hash with action return values as the keys and
 the action names as the values.
-
-
 
 B<get_autorun_action_name( $workflow )>
 
@@ -399,6 +411,8 @@ performing some sanity checks like ensuring every action has a
 =head1 SEE ALSO
 
 L<Workflow>
+
+L<Workflow::Condition>
 
 L<Workflow::Factory>
 

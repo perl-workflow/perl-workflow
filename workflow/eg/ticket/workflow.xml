@@ -21,8 +21,9 @@
 
   <state name="CREATED">
      <description>State of ticket after it has been created</description>
-     <action name="add comment"
-             resulting_state="NOCHANGE"/>        
+     <action name="add comment" resulting_state="NOCHANGE">
+         <condition test="defined $context->{ticket}" />
+     </action>
 <!--
      <action name="close issue"
              resulting_state="CLOSED">
