@@ -78,11 +78,37 @@ fetches workflow history records.
 
 =head1 SUBCLASSING
 
+=head2 Strategy
 
+=head2 Methods
+
+B<create_workflow( $workflow )>
+
+Generate an ID for the workflow, serialize the workflow data (ID and
+state) and set the ID in the workflow.
+
+B<update_workflow( $workflow )>
+
+Update the workflow state.
+
+B<fetch_workflow( $workflow_id )>
+
+Retrieve the workflow data corresponding to C<$workflow_id>. It not
+found return undef, if found return a hashref with the data.
+
+B<create_history( $workflow, @history )>
+
+Serialize all objects in C<@history> for later retrieval.
+
+B<fetch_history( $workflow )>
+
+Return list of L<Workflow::History> objects.
 
 =head1 SEE ALSO
 
 L<Workflow::Factory>
+
+L<Workflow::History>
 
 =head1 COPYRIGHT
 

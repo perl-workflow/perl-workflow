@@ -63,16 +63,17 @@ Workflow::Action::InputField - Metadata about information required by an Action
 
 =head1 SYNOPSIS
 
- # Declare the fields needed by your action in the configuration
+ # Declare the fields needed by your action in the configuration...
+ 
  <action name="CreateUser">
     <field name="username"
            is_required="yes"
-           source_class="App::Fied::ValidUsers"/>
+           source_class="App::Field::ValidUsers"/>
     <field name="email"
            is_required="yes"/>
     <field name="office"
            source_list="Pittsburgh,Hong Kong,Moscow,Portland"/>
- </action>
+ ...
 
 =head1 DESCRIPTION
 
@@ -108,7 +109,43 @@ For instance, in the above declaration there are three fields,
 
 =head2 Public Methods
 
+B<new( \%params )>
+
+B<is_required()>
+
+Returns 'yes' if field is required, 'no' if optional.
+
+B<is_optional()>
+
+Returns 'yes' if field is optional, 'no' if required.
+
+B<get_possible_values()>
+
+Returns list of possible values for this field.
+
+B<add_possible_values( @values )>
+
+Adds possible values to be used for this field.
+
 =head2 Properties
+
+B<name> (required)
+
+Name of the field.
+
+B<description> (optional)
+
+What does the field mean? This is not required for operation but it is
+B<strongly> encouraged so your clients can create front ends to feed
+you the information without much fuss.
+
+B<type> (optional)
+
+Datatype of field (still under construction...).
+
+B<requirement> ('required'|'optional')
+
+If field is required, 'required', otherwise 'optional'.
 
 =head1 SEE ALSO
 

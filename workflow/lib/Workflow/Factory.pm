@@ -128,17 +128,15 @@ sub get_workflow {
     my ( $wf );
     if ( $wf_id ) {
         my $persister = $self->_get_persister( $wf_type );
-        my $wf = $persister->fetch_workflow( $wf_id );
-
-        my $wf_persist = eval { WorkflowPersist->fetch( $wf_id ) };
-        if ( $@ ) {
-            workflow_error "Failed to fetch workflow '$wf_type' with ",
-                           "ID '$wf_id': $@";
+        my $wf_info = $persister->fetch_workflow( $wf_id );
+        unless ( $wf_info ) {
+            workflow_error "No workflow found with ID '$wf_id'";
         }
-        $wf = Workflow->new( $wf_persist->{state},
-                             $config,
-                             $self->{_workflow_state}{ $wf_type } );
-        $wf->id( $wf_persist->id );
+        my $wf = Workflow->new( $wf_info->{state},
+                                $config,
+                                $self->{_workflow_state}{ $wf_type },
+                                $wf_id );
+
         $self->_fetch_extra_workflow_data( $wf );
     }
     else {
@@ -233,6 +231,13 @@ sub save_workflow {
         workflow_error "Failed to save workflow with ID '$wf_id': $@";
     }
     return $wf;
+}
+
+
+sub get_workflow_history {
+    my ( $self, $wf ) = @_;
+    my $persister = $self->_get_persister( $wf->type );
+    return $persister->fetch_history( $wf_id );
 }
 
 
@@ -438,3 +443,14 @@ L<Workflow::Action>
 L<Workflow::Condition>
 
 L<Workflow::Validator>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2003 Chris Winters. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHORS
+
+Chris Winters E<lt>chris@cwinters.comE<gt>

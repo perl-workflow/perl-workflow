@@ -7,11 +7,17 @@ use base qw( Class::Accessor );
 
 $Workflow::History::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-my @FIELDS = qw( id date username user_id state description );
+my @FIELDS = qw( id action description action_on user user_id state );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 sub is_saved {
-    return $self->id;
+    my ( $self ) = @_;
+    return $self->{_set_saved};
+}
+
+sub _set_saved {
+    my ( $self ) = @_;
+    $self->{_set_saved} = 1;
 }
 
 1;
@@ -20,17 +26,70 @@ __END__
 
 =head1 NAME
 
-Workflow::History - 
+Workflow::History - Recorded work on a workflow action or workflow itself
 
 =head1 SYNOPSIS
 
+ # in your action
+ sub execute {
+     my ( $self, $wf ) = @_;
+     my $current_user = $wf->context->param( 'current_user' );
+     # ... do your work with $ticket
+     $wf->add_history( action => 'create ticket',
+                       user   => $current_user->full_name,
+                       description => "Ticket $ticket->{subject} successfully created" );
+ }
+
+ # in your view (using TT2)
+ [% FOREACH history = workflow.get_history %]
+    On:     [% OI.format_date( history.action_on, '%Y-%m-%d %H:%M' ) %]<br>
+    Action: [% history.action %] (ID: [% history.id %])<br>
+    by:     [% history.user %]<br>
+    [% history.description %]
+ [% END %]
+
 =head1 DESCRIPTION
 
-=head1 CLASS METHODS
+Every workflow can record its history. More appropriately, every
+action the workflow executes can deposit history entries in the
+workflow to be saved later. Neither the action nor the workflow knows
+about how the history is saved, just that the history is available.
 
-=head1 OBJECT METHODS
+=head1 METHODS
+
+=head2 Public Methods
+
+B<new( \%params )>
+
+Create a new history object, filling it with properties from
+C<\%params>.
+
+B<is_saved()>
+
+Returns true if this history object has been saved, false if not.
+
+=head2 Properties
+
+B<id> - ID of history entry
+
+B<workflow_id> - ID of workflow to which history is attached
+
+B<action> - Brief description of action taken
+
+B<description> - Lengthy description of action taken
+
+B<action_on> - Date history noted
+
+B<user> - User name (login or full name, up to you) taking action (may
+be blank)
+
+B<user_id> - ID of user taking action (may be blank)
+
+B<state> - State of workflow as history was recorded.
 
 =head1 SEE ALSO
+
+L<Workflow>
 
 =head1 COPYRIGHT
 
