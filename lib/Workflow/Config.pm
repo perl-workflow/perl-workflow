@@ -150,7 +150,7 @@ Workflow::Config - Parse configuration files for the workflow components
 Read in configurations for the various workflow components. Currently
 the class understands XML (preferred) and serialized Perl data
 structures as valid configuration file formats. (I tried to use INI
-files but there was too many deeply nested information. Sorry.)
+files but there was too much deeply nested information. Sorry.)
 
 =head1 CLASS METHODS
 
@@ -180,6 +180,144 @@ if not. Valid configuration types are: 'action', 'condition',
 B<get_valid_config_types()>
 
 Returns list of strings representing the valid configuration types.
+
+=head1 CONFIGURATION INFORMATION
+
+=head2 workflow
+
+   workflow
+      type        $
+      description $
+      persister   $
+      state       \@
+          name          $
+          description   $
+          action        \@
+              name            $
+              resulting_state $
+              condition       \@
+                  name $
+
+=over 4
+
+=item *
+
+the 'type' and 'description' keys are at the top level
+
+=item *
+
+the 'extra_data' key holds an array of zero or more hashrefs with
+'table', 'field', 'class' and 'context' keys
+
+=item *
+
+'state' key holds array of one or more 'state' declarations; one of
+them must be 'INITIAL'
+
+=item *
+
+each 'state' declaration holds 'description' and 'name' keys and
+multiple 'action' declarations
+
+=item *
+
+each 'action' declaration holds 'name' and 'resulting_state' keys and
+may hold a 'condition' key with one or more named conditions
+
+=back
+
+=head2 condition
+
+ conditions:
+ 
+     condition \@
+        name  $
+        class $
+        param \@
+            name  $
+            value $
+
+=over 4
+
+=item *
+
+array of one or more hashrefs with 'name' and 'class' keys
+
+=back
+
+=head2 validator
+
+ validators:
+ 
+     validator \@
+        name  $
+        class $
+        param \@
+            name  $
+            value $
+
+=over 4
+
+=item *
+
+array of one or more hashrefs with 'name' and 'class' keys, plus
+possibly one or more 'param' hashrefs each with 'name' and 'value'
+keys
+
+=back
+
+=head2 action
+
+ actions:
+ 
+    action \@
+       name  $
+       field \@
+          name         $
+          is_required  yes|no
+          type         $
+          source_list  \@ of $
+          source_class $
+          param        \@
+              name  $
+              value $
+       validator \@
+           name $
+           arg  \@
+               value $
+
+=over 4
+
+=item *
+
+array of one or more action hashrefs with 'name', 'class' and
+'description' keys
+
+=item *
+
+each 'action' may have zero or more values used to fill it; each value
+has a 'name', 'description' and 'necessity' ('required' or 'optional')
+
+=item *
+
+each 'action' may have any number of 'param' hashrefs, each with
+'name' and 'value'
+
+=item *
+
+each 'action' may have any number of 'validator' hashrefs, each with a
+'name' key and array of 'arg' declarations
+
+=back
+
+=head2 persister
+
+ persister:
+ 
+   extra_table   $
+   extra_field   $
+   extra_class   $
+   extra_context $
 
 =head1 COPYRIGHT
 

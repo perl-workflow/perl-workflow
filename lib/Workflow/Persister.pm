@@ -155,8 +155,6 @@ fetches workflow history records.
 
 =head1 SUBCLASSING
 
-=head2 Strategy
-
 =head2 Methods
 
 B<create_workflow( $workflow )>

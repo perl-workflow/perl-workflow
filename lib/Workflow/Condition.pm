@@ -34,22 +34,31 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
 
 =head1 SYNOPSIS
 
- # First declare the condition in a 'workflow_condition.ini'
+ # First declare the condition in a 'workflow_condition.xml'...
  
- [IsAdminUser]
- class = MyApp::Condition::IsAdminUser
- admin_group_id = 5
- admin_group_id = 6
+ <conditions>
+   <condition
+      name="IsAdminUser"
+      class="MyApp::Condition::IsAdminUser">
+         <param name="admin_group_id" value="5" />
+         <param name="admin_group_id" value="6" />
+   </condition>
+ ...
  
- [MyAction]
- condition = IsAdminUser
- 
+ # Reference the condition in an action...
+ <actions>
+    <action name="MyAction" class="My::Action">
+      ... 
+      <condition name="IsAdminUser" />
+    </action>
+ ...
+  
  # Then implement the condition
  
  package MyApp::Condition::IsAdminUser;
  
  use strict;
- use base qw( Condition );
+ use base qw( Workflow::Condition );
  use Workflow::Exception qw( condition_error configuration_error );
  
  __PACKAGE__->mk_accessors( 'admin_group_id' );
@@ -69,8 +78,11 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
      my ( $self, $wf ) = @_;
      my $admin_ids = $self->admin_group_id;
      my $current_user = $wf->context->param( 'current_user' );
+     unless ( $current_user ) {
+         condition_error "No user defined, cannot check groups";
+     }
      foreach my $group ( @{ $current_user->get_groups } ) {
-         return 1 if ( $admin_ids->{ $group->id } );
+         return if ( $admin_ids->{ $group->id } );
      }
      condition_error "Not member of any Admin groups";
  }
@@ -113,13 +125,14 @@ You may also do any initialization here -- you can fetch data from the
 database and store it in the class or object, whatever you need.
 
 If you do not have sufficient information in C<\%params> you should
-throw an exception.
+throw an exception (preferably 'configuration_error' imported from
+L<Workflow::Exception>).
 
 B<evaluate( $workflow )>
 
-Determine whether your condition passes (return a true value) or false
-(return 0 or undef). You can get the application context information
-from the C<$workflow> object.
+Determine whether your condition fails by throwing an exception. You
+can get the application context information necessary to process your
+condition from the C<$workflow> object.
 
 =head1 COPYRIGHT
 

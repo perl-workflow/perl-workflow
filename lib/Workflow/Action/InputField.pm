@@ -20,10 +20,14 @@ sub new {
     $log->debug( "Instantiating new field '$params->{name}'" );
 
     my $self = bless( {}, $class );
+
+    # Set all our parameters
     foreach my $field ( @FIELDS ) {
         next unless ( $params->{ $field } );
         $self->$field( $params->{ $field } );
     }
+
+    # ...ensure our name is defined
     unless ( $self->name ) {
         my $id_string = '[' .
                         join( '] [', map { "$_: $params->{$_}" }
@@ -36,10 +40,11 @@ sub new {
     unless ( $self->label ) {
         $self->label( $name );
     }
-    my $requirement = ( $params->{is_required} && $params->{is_required} eq 'yes' )
+    my $requirement = ( defined $params->{is_required} && $params->{is_required} eq 'yes' )
                         ? 'required' : 'optional';
     $self->requirement( $requirement );
 
+    # ...ensure a class associated with the input source exists
     if ( my $source_class = $self->source_class ) {
         $log->debug( "Possible values for '$name' from '$source_class'" );
         unless ( $INCLUDED{ $source_class } ) {
@@ -116,11 +121,11 @@ Workflow::Action::InputField - Metadata about information required by an Action
  <action name="CreateUser">
     <field name="username"
            is_required="yes"
-           source_class="App::Field::ValidUsers"/>
+           source_class="App::Field::ValidUsers" />
     <field name="email"
-           is_required="yes"/>
+           is_required="yes" />
     <field name="office"
-           source_list="Pittsburgh,Hong Kong,Moscow,Portland"/>
+           source_list="Pittsburgh,Hong Kong,Moscow,Portland" />
  ...
 
 =head1 DESCRIPTION
@@ -130,9 +135,9 @@ its job. Think of it as a way for the external world (your
 application) to discover what information an action needs from it. The
 application can request these fields from the workflow by action name
 and present them to the user in whatever form appropriate for the
-application. The sample application shipped with this distribution
-just cycles through them one at a time and presents a query to the
-user for data entry.
+application. The sample command-line application shipped with this
+distribution just cycles through them one at a time and presents a
+query to the user for data entry.
 
 For instance, in the above declaration there are three fields,
 'username', 'email' and 'office'. So your application might do:
@@ -162,6 +167,10 @@ For instance, in the above declaration there are three fields,
 
 B<new( \%params )>
 
+Typical constructor; will throw exception if 'name' is not defined or
+if the property 'source_class' is defined but the class it specifies
+is not available.
+
 B<is_required()>
 
 Returns 'yes' if field is required, 'no' if optional.
@@ -174,7 +183,7 @@ B<get_possible_values()>
 
 Returns list of possible values for this field. Each possible value is
 represented by a hashref with the keys 'label' and 'value' which makes
-it easy to create dropdown lists and the like.
+it easy to create dropdown lists in templates and the like.
 
 B<add_possible_values( @values )>
 
@@ -201,7 +210,8 @@ you the information without much fuss.
 
 B<type> (optional)
 
-TODO: Datatype of field (still under construction...).
+TODO: Datatype of field (still under construction...). By default it
+is set to 'basic'.
 
 B<requirement> ('required'|'optional')
 
