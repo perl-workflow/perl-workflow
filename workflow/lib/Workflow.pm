@@ -281,6 +281,7 @@ Workflow - Simple, flexible system to implement workflows
  my $workflow_conf  = 'workflow.xml';
  
  # contents of 'workflow.xml'
+ 
  <workflow>
      <type>myworkflow</type>
      <state name="INITIAL">
@@ -310,8 +311,8 @@ Workflow - Simple, flexible system to implement workflows
  my $action_conf    = 'action.xml';
  
  # contents of 'action.xml'
+ 
  <actions>
-
      <action name="upload file" class="MyApp::Action::Upload">
          <field name="path" label="File Path"
                 description="Path to file" is_required="yes" />
@@ -326,13 +327,13 @@ Workflow - Simple, flexible system to implement workflows
      <action name="annotate"    class="MyApp::Action::Annotate" />
 
      <action name="null"        class="Workflow::Action::Null" />
-
- </action>
-
+ </actions>
+ 
  # Defines conditions available to the workflow
  my $condition_conf = 'condition.xml';
  
  # contents of 'condition.xml'
+ 
  <conditions>
      <condition name="can_annotate"
                 class="MyApp::Condition::CanAnnotate" />
@@ -342,6 +343,7 @@ Workflow - Simple, flexible system to implement workflows
  my $validator_conf = 'validator.xml';
  
  # contents of 'validator.xml'
+ 
  <validators>
      <validator name="filesize_cap" class="MyApp::Validator::FileSizeCap">
          <param name="max_size" value="20M" />
