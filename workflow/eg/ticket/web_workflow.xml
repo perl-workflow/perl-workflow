@@ -1,8 +1,42 @@
-<!-- For each action define how to provide the data it needs -->
-<actions>
+<web>
 
-   <action name="TIX_CREATE"
-           class="App::Web::CreateHandler"
-           method="show_form"/>
+<!-- Each of these entries maps a URL to a class + method that gets
+     executed with the parameters from the web server -->
 
-</actions>
+    <url-mapping
+           url="create"
+           class="App::Web"
+           method="create_workflow"/>
+
+    <url-mapping
+           url="fetch"
+           class="App::Web"
+           method="fetch_workflow"/>
+
+    <url-mapping
+           url="history"
+           class="App::Web"
+           method="list_history"/>
+
+    <url-mapping
+           url="execute"
+           class="App::Web"
+           method="execute_action"/>
+
+    <url-mapping
+           url="login"
+           class="App::Web"
+           method="login"/>
+
+<!-- Each of these entries maps a workflow action name to the template
+     name to show the user to provide that action the data it needs -->
+
+   <action-display
+           name="TIX_NEW"
+           template="ticket_form.tmpl"/>
+
+   <action-display
+           name="TIX_COMMENT"
+           template="ticket_comment.tmpl"/>
+
+</web>
