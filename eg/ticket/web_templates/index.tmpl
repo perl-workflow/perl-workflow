@@ -17,9 +17,9 @@ system, providing consistency for all your applications.</p>
 
 [% IF current_user %]
 
-<p><a href="/create/">Create a new workflow</a></p>
+<p><a href="[% base_url %]/create/">Create a new workflow</a></p>
 
-<form method="GET" action="/fetch/">
+<form method="GET" action="[% base_url %]/fetch/">
 <p>Use an existing workflow:<br>
 ID: <input type="text" size="8" name="workflow_id"> <input type="submit" value="Fetch Workflow">
 </p>
@@ -29,7 +29,7 @@ ID: <input type="text" size="8" name="workflow_id"> <input type="submit" value="
 
 <p>First things first: you need to login!</p>
 
-<form method="GET" action="/login/">
+<form method="GET" action="[% base_url %]/login/">
 <p>Your first name: <input type="text" size="10" name="current_user"> <input type="submit" value="Login">
 </p>
 </form>
