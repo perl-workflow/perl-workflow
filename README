@@ -1,0 +1,42 @@
+INTRO
+========================================
+
+The 'Workflow' Perl module implements a standalone workflow system. It
+aims to be simple but flexible and therefore powerful. Each piece of
+the workflow system has a direct and easily stated job, and hopefully
+you'll find that you can put the pieces together to create very useful
+systems.
+
+Read 'perldoc Workflow' for a more detailed introduction, sample usage,
+interactions with your applications, and more.
+
+
+INSTALLATION
+========================================
+
+To install this module type the following:
+
+   perl Build.PL
+   ./Build
+   ./Build test
+   ./Build install
+
+
+DEPENDENCIES
+========================================
+
+This module requires these other modules and libraries:
+
+    DateTime
+    Exception::Class
+    Log::Dispatch
+    Log::Log4perl
+	Test::More
+    XML::Simple
+
+COPYRIGHT AND LICENCE
+========================================
+
+Copyright (c) 2003 - 2004 Chris Winters and Arvato Direct. All rights
+reserved.  This program is free software; you can redistribute it
+and/or modify it under the same terms as Perl itself.
