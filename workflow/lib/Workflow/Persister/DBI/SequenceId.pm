@@ -12,7 +12,7 @@ __PACKAGE__->mk_accessors( @FIELDS );
 
 sub pre_fetch_id {
     my ( $self, $dbh ) = @_;
-    my $full_select = sprintf( $sequence_select, $sequence_name );
+    my $full_select = sprintf( $self->sequence_select, $self->sequence_name );
     my ( $sth );
     eval {
         $sth = $dbh->prepare( $full_select );
