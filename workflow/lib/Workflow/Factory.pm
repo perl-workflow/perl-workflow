@@ -5,7 +5,7 @@ package Workflow::Factory;
 use strict;
 use base qw( Workflow::Base Exporter );
 use Log::Log4perl qw( get_logger );
-use Workflow::Exception qw( workflow_error );
+use Workflow::Exception qw( configuration_error workflow_error );
 
 $Workflow::Factory::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -132,18 +132,18 @@ sub get_workflow {
         unless ( $wf_info ) {
             workflow_error "No workflow found with ID '$wf_id'";
         }
-        my $wf = Workflow->new( $wf_info->{state},
+        my $wf = Workflow->new( $wf_id,
+                                $wf_info->{state},
                                 $config,
-                                $self->{_workflow_state}{ $wf_type },
-                                $wf_id );
-
+                                $self->{_workflow_state}{ $wf_type } );
         $self->_fetch_extra_workflow_data( $wf );
     }
     else {
         $wf = Workflow->new( $INITIAL_STATE,
                              $config,
                              $self->{_workflow_state}{ $wf_type } );
-        $self->_insert_workflow( $wf );
+        my $id = $self->persister->create_workflow( $wf );
+        $wf->id( $id );
     }
     unless ( $wf->context ) {
         $wf->context( Workflow::Context->new );
@@ -237,7 +237,7 @@ sub save_workflow {
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
     my $persister = $self->_get_persister( $wf->type );
-    return $persister->fetch_history( $wf_id );
+    return $persister->fetch_history( $wf->id );
 }
 
 
