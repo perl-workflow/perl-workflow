@@ -194,7 +194,11 @@ sub fetch_workflow {
         $sth = $self->handle->prepare( $sql );
         $sth->execute( $wf_id );
     };
+    if ( $@ ) {
+        persist_error "Cannot fetch workflow: $@";
+    }
     my $row = $sth->fetchrow_arrayref;
+    return undef unless ( $row );
     return { state       => $row->[0],
              last_update => $parser->parse_datetime( $row->[1] ), };
 }
