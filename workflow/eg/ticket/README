@@ -6,21 +6,72 @@ system. A *very* simple system. It comes with two interfaces: a
 command-line application and a simple standalone web server. Both are
 interfaces to the same workflows and tickets.
 
-The default setup uses SQLite, a standalone multi-platform database
-that has a great Perl interface (DBD::SQLite) and requires no
-setup. You can use a different database by modifying
-'workflow_persister.xml' to use a different DBI database.
+Initializing the System
+--------------------
 
-Here's how to initialize the system if you're using SQLite:
+The sample application is configured to use a SQLite database, and
+while with a little configuration (in 'workflow_persister.xml') you
+can use a different DBMS, you can get the demo running in less than a
+minute with SQLite. Draw your own conclusions.
+
+To initialize the database, just run the command-line application with
+the '--db' switch:
 
  perl ticket.pl --db
 
- 
-, assuming you're in the
-'eg/ticket/' directory:
+This will create a new database for you. If a database (in the file
+'ticket.db') already exists it will be wiped out. Since it's so easy
+to wipe out and reinitialize the system you should have no qualms
+about playing around, putting bad data in to see what happens, etc.
 
- $ sqlite ticket.db < ../../workflow_sqlite.sql
- $ sqlite ticket.db < ticket.sql
+
+Command-line Application
+--------------------
+
+Running the command-line application without the switch will bring you
+to a 'TicketServer: ' prompt:
+
+ perl ticket.pl
+
+Issuing a 'cmd' command will give you a list of valid commands along
+with a description of each. Hopefully you can weave your way to
+something interesting.
+
+
+Web Application
+--------------------
+
+Next (and probably more fun), you can manipulate the workflow system
+through the web application:
+
+ perl ticket_web.pl
+
+This will fire up a standalone web server using HTTP::Daemon. Once
+it's started it will report to you the hostname and port it's running
+on:
+
+  $ perl ticket_web.pl
+  Please contact me at [URL: http://shazam.local:57988/]
+
+Paste that URL into your browser and fire away. It's a very simple
+application but looking through the 'ticket_web.pl' should give you an
+idea of how to integrate the workflow system into your display
+technology.
+
+
+Following Application Progress
+--------------------
+
+No matter which interface you're using you can see what the
+application is doing watch the file 'workflow.log'. This is the
+logfile for all phases of the application, and it's controlled by the
+Log::Log4perl configuration file 'log4perl.conf'. It's very useful to
+watch what's going on with a 'tail -f' or whatever your platform
+supports.
+
+Note that if you run both interfaces at the same time they'll write to
+the same file. This can make for confusing log messages as they may be
+interleaved.
 
 
 ========================================
