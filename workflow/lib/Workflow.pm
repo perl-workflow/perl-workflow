@@ -268,10 +268,12 @@ Workflow - Simple, flexible system to implement workflows
  # Defines validators available to the actions
  my $validator_conf = 'validator.xml';
  
- FACTORY->add_config_from_file( workflow   => $workflow_conf,
-                                action     => $action_conf,
-                                condition  => $condition_conf,
-                                validator  => $validator_conf );
+ FACTORY->add_config_from_file(
+     workflow   => $workflow_conf,
+     action     => $action_conf,
+     condition  => $condition_conf,
+     validator  => $validator_conf
+ );
  
  # Instantiate a new workflow...
  my $workflow = FACTORY->create_workflow( 'myworkflow' );
