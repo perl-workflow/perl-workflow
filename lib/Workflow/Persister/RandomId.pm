@@ -1,11 +1,11 @@
-package Workflow::Persister::DBI::RandomId;
+package Workflow::Persister::RandomId;
 
 # $Id$
 
 use strict;
 use base qw( Class::Accessor );
 
-$Workflow::Persister::DBI::RandomId::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Persister::RandomId::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 my @FIELDS = qw( id_length );
 __PACKAGE__->mk_accessors( @FIELDS );
@@ -31,7 +31,7 @@ __END__
 
 =head1 NAME
 
-Workflow::Persister::DBI::RandomId - Persister to generate random ID
+Workflow::Persister::RandomId - Persister to generate random ID
 
 =head1 SYNOPSIS
 
@@ -42,7 +42,7 @@ Workflow::Persister::DBI::RandomId - Persister to generate random ID
 
 =head1 DESCRIPTION
 
-Implementation for DBI persister to generate a random ID string. You
+Implementation for any persister to generate a random ID string. You
 can specify the length using the 'id_length' parameter, but normally
 the default (8 characters) is sufficient.
 
