@@ -14,7 +14,8 @@ $App::Action::TicketCreate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\
 sub execute {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
-    $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
+    $log->debug( "Action '", $self->name, "' with class ",
+                 "'", ref( $self ), "' executing..." );
 
     my $context = $wf->context;
     my @fields = qw( type subject description due_date creator );

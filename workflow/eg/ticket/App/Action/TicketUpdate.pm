@@ -12,7 +12,8 @@ $App::Action::TicketUpdate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\
 sub execute {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
-    $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
+    $log->debug( "Action '", $self->name, "' with class ",
+                 "'", ref( $self ), "' executing..." );
     my $ticket = $wf->context->param( 'ticket' );
     $ticket->status( $wf->state );
     $ticket->update;
