@@ -4,6 +4,7 @@ package Workflow::Persister;
 
 use strict;
 use base qw( Workflow::Base );
+use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( persist_error );
 
 $Workflow::Persister::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -24,6 +25,17 @@ sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
     persist_error "Persister '", ref( $self ), "' must implement ",
                   "'fetch_workflow()'";
+}
+
+sub fetch_extra_workflow_data {
+    my ( $self, $wf ) = @_;
+    my $log = get_logger();
+    $log->debug( "Called empty implementation of 'fetch_extra_workflow_data()'; ",
+                 "this is not an error as you may not need this extra ",
+                 "functionality. If you do you should use a perister for this ",
+                 "purpose (e.g., Workflow::Persister::DBI::ExtraData) or ",
+                 "create your own and just implement this method." );
+    return;
 }
 
 sub create_history {
