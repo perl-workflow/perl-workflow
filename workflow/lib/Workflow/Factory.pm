@@ -18,6 +18,7 @@ require Workflow::Action;
 require Workflow::Condition;
 require Workflow::Config;
 require Workflow::Context;
+require Workflow::Persister;
 require Workflow::State;
 require Workflow::Validator;
 
@@ -42,6 +43,9 @@ sub add_config_from_file {
     $self->_add_validator_config(
         Workflow::Config->parse( 'validator', $params{validator} )
     );
+    $self->_add_persister_config(
+        Workflow::Config->parse( 'persister', $params{persister} )
+    );
     $self->_add_action_config(
         Workflow::Config->parse( 'action', $params{action} )
     );
@@ -56,6 +60,7 @@ sub add_config {
     _check_config_keys( %params );
     $self->_add_condition_config( _flatten( $params{condition} ) );
     $self->_add_validator_config( _flatten( $params{validator} ) );
+    $self->_add_persister_config( _flatten( $params{persister} ) );
     $self->_add_action_config( _flatten( $params{action} ) );
     $self->_add_workflow_config( _flatten( $params{workflow} ) );
 }
@@ -125,24 +130,25 @@ sub get_workflow {
     unless ( $config ) {
         workflow_error "No workflow of type '$wf_type' available";
     }
+    my $persister = $self->_get_persister( $config->{persister} );
     my ( $wf );
     if ( $wf_id ) {
-        my $persister = $self->_get_persister( $wf_type );
         my $wf_info = $persister->fetch_workflow( $wf_id );
         unless ( $wf_info ) {
             workflow_error "No workflow found with ID '$wf_id'";
         }
+        $log->debug( "Fetched data for workflow '$wf_id' ok" );
         my $wf = Workflow->new( $wf_id,
                                 $wf_info->{state},
                                 $config,
                                 $self->{_workflow_state}{ $wf_type } );
-        $self->_fetch_extra_workflow_data( $wf );
+        $persister->fetch_extra_workflow_data( $wf );
     }
     else {
         $wf = Workflow->new( $INITIAL_STATE,
                              $config,
                              $self->{_workflow_state}{ $wf_type } );
-        my $id = $self->persister->create_workflow( $wf );
+        my $id = $persister->create_workflow( $wf );
         $wf->id( $id );
     }
     unless ( $wf->context ) {
@@ -154,54 +160,6 @@ sub get_workflow {
 sub _get_workflow_config {
     my ( $self, $wf_type ) = @_;
     return $self->{_workflow_config}{ $wf_type };
-}
-
-sub _fetch_extra_workflow_data {
-    my ( $self, $wf ) = @_;
-    my $log = get_logger();
-
-    $log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
-    my $wf_conf = $self->_get_workflow_config( $wf->type );
-    my $extra_data_conf = $wf_conf->{properties}{extra_data};
-    unless ( ref $extra_data_conf eq 'HASH' ) {
-        $log->debug( "No 'extra_data' configuration properties set..." );
-        return;
-    }
-
-    unless ( $wf->context ) {
-        $wf->context( Workflow::Context->new );
-    }
-
-    my $sql = qq{
-       SELECT * FROM $extra_data_conf->{table}
-        WHERE workflow_id = ?
-    };
-    my $dbh = WorkflowPersist->global_datasource_handle;
-    my ( $sth );
-    eval {
-        $sth = $dbh->prepare( $sql );
-        $sth->execute( $wf->id );
-    };
-    if ( $@ ) {
-        $log->error( "Failed to retrieve extra data from table ",
-                     "'$extra_data_conf->{table}': $@" );
-    }
-    else {
-        $log->debug( "Prepared/executed extra data fetch ok" );
-        my $row = $sth->fetchrow_hashref;
-        my $value_id = $row->{ $extra_data_conf->{field} };
-        my $value_class = $extra_data_conf->{class};
-        my $value = eval { $value_class->fetch( $value_id ) };
-        if ( $@ ) {
-            $log->error( "Failed to fetch object of class '$value_class' ",
-                         "using ID '$value_id': $@" );
-        }
-        else {
-            $wf->context->param( $extra_data_conf->{context}, $value );
-            $log->debug( "Fetched data of type '$value_class' with ID '$value_id' ",
-                         "and placed into context under name '$extra_data_conf->{context}' ok" );
-        }
-    }
 }
 
 sub _insert_workflow {
@@ -236,7 +194,8 @@ sub save_workflow {
 
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
-    my $persister = $self->_get_persister( $wf->type );
+    my $wf_config = $self->_get_workflow_config( $wf_type );
+    my $persister = $self->_get_persister( $wf_config->{persister} );
     return $persister->fetch_history( $wf->id );
 }
 
@@ -273,6 +232,50 @@ sub get_action {
     my $action_class = $config->{class};
     return $action_class->new( $wf, $config );
 }
+
+########################################
+# PERSISTERS
+
+sub _add_persister_config {
+    my ( $self, @all_persister_config ) = @_;
+    return unless ( scalar @all_persister_config );
+    my $log = get_logger();
+    foreach my $persister_config ( @all_persister_config ) {
+        my $name = $persister_config->{name};
+        $log->debug( "Adding configuration for persister '$name'" );
+        $self->{_persister_config}{ $name } = $persister_config;
+        my $persister_class = $persister_config->{class};
+        unless ( $persister_class ) {
+            configuration_error "You must specify a 'class' in persister ",
+                                "'$name' configuration";
+        }
+        $log->debug( "Trying to include persister class '$persister_class'..." );
+        eval "require $persister_class";
+        if ( $@ ) {
+            configuration_error "Cannot include persister class ",
+                                "'$persister_class': $@";
+        }
+        $log->debug( "Included persister '$name' class '$persister_class' ok" );
+        $log->debug( "Creating instance of persister '$name'" );
+        my $persister = eval { $persister_class->new( $persister_config ) };
+        if ( $@ ) {
+            configuration_error "Failed to create instance of persister ",
+                                "'$name' of class '$persister_class': $@";
+        }
+        $log->debug( "Created instance of persister '$name' ok" );
+        $self->{_persister}{ $name } = $persister;
+    }
+}
+
+sub _get_persister {
+    my ( $self, $persister_name ) = @_;
+    my $persister = $self->{_persister}{ $persister_name };
+    unless ( $config ) {
+        workflow_error "No persister with name '$persister_name' available";
+    }
+    return $persister;
+}
+
 
 ########################################
 # CONDITIONS
