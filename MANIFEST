@@ -2,7 +2,6 @@ Build.PL
 Makefile.PL
 MANIFEST
 README
-TODO
 VERSION
 doc/configuration.txt
 doc/overview.txt
