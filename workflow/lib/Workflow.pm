@@ -280,15 +280,76 @@ Workflow - Simple, flexible system to implement workflows
  # Defines a workflow of type 'myworkflow'
  my $workflow_conf  = 'workflow.xml';
  
+ # contents of 'workflow.xml'
+ <workflow>
+     <type>myworkflow</type>
+     <state name="INITIAL">
+         <action name="upload file" resulting_state="uploaded" />
+     </state>
+     <state name="uploaded" autorun="yes">
+         <action name="verify file" resulting_state="annotate">
+              <!-- everyone other than 'CWINTERS' must verify -->
+              <condition test="$context->{user} ne 'CWINTERS'" />
+         </action>
+         <action name="null" resulting_state="annotated">
+              <condition test="$context->{user} eq 'CWINTERS'" />
+         </action>
+     </state>
+     <state name="verify file">
+         <action name="annotate">
+             <condition name="can_annotate" />
+         </action>
+     </state>
+     <state name="annotated">
+         <action name="null" resulting_state="finished" />
+     </state>
+     <state name="finished" />
+ </workflow>
+ 
  # Defines actions available to the workflow
  my $action_conf    = 'action.xml';
  
+ # contents of 'action.xml'
+ <actions>
+
+     <action name="upload file" class="MyApp::Action::Upload">
+         <field name="path" label="File Path"
+                description="Path to file" is_required="yes" />
+     </action>
+
+     <action name="verify file" class="MyApp::Action::Verify">
+         <validator name="filesize_cap">
+             <arg>$file_size</arg>
+         </validator>
+     </action>
+
+     <action name="annotate"    class="MyApp::Action::Annotate" />
+
+     <action name="null"        class="Workflow::Action::Null" />
+
+ </action>
+
  # Defines conditions available to the workflow
  my $condition_conf = 'condition.xml';
  
+ # contents of 'condition.xml'
+ <conditions>
+     <condition name="can_annotate"
+                class="MyApp::Condition::CanAnnotate" />
+ </conditions>
+
  # Defines validators available to the actions
  my $validator_conf = 'validator.xml';
  
+ # contents of 'validator.xml'
+ <validators>
+     <validator name="filesize_cap" class="MyApp::Validator::FileSizeCap">
+         <param name="max_size" value="20M" />
+     </validator>
+ </validators>
+
+ # Stock the factory with the configurations; we can add more later if
+ # we want
  FACTORY->add_config_from_file(
      workflow   => $workflow_conf,
      action     => $action_conf,
@@ -304,10 +365,11 @@ Workflow - Simple, flexible system to implement workflows
  # Display available actions...
  print "Available actions: ", $workflow->get_current_actions, "\n";
  
- # Get the data needed for action 'FOO' (assumed to be available in
- # the current state) and display the fieldname and description
- 
- print "Action 'Foo' requires the following fields:\n";
+ # Get the data needed for action 'upload file' (assumed to be
+ # available in the current state) and display the fieldname and
+ # description
+  
+ print "Action 'upload file' requires the following fields:\n";
  foreach my $field ( $workflow->get_action_fields( 'FOO' ) ) {
      print $field->name, ": ", $field->description,
            "(Required? ", $field->is_required, ")\n";
@@ -319,10 +381,10 @@ Workflow - Simple, flexible system to implement workflows
  my $context = $workflow->context;
  $context->param( current_user => $user );
  $context->param( sections => \@sections );
- $context->param( news => $news );
+ $context->param( path => $path_to_file );
  
  # Execute one of them
- $workflow->execute_action( 'FOO' );
+ $workflow->execute_action( 'upload file' );
  
  print "New state: ", $workflow->state, "\n";
  
@@ -332,6 +394,8 @@ Workflow - Simple, flexible system to implement workflows
  print "Current state: ", $workflow->state, "\n";
 
 =head1 DESCRIPTION
+
+This documentation is for version '0.10' of the Workflow module.
 
 =head2 Overview
 
@@ -385,7 +449,7 @@ states, how to move from one state to another, and under what
 conditions you can change states.
 
 This is represented by the L<Workflow> object. You normally do not
-need to subclass this object and customize it.
+need to subclass this object for customization.
 
 =item *
 
@@ -433,13 +497,13 @@ this distribution uses a fairly common application to illustrate: the
 trouble ticket.
 
 When you create a workflow you have one action available to you:
-create a new ticket ('TIX_NEW'). The workflow has a state 'INITIAL'
-when it is first created, but this is just a bootstrapping exercise
-since the workflow must always be in some state.
+create a new ticket ('create issue'). The workflow has a state
+'INITIAL' when it is first created, but this is just a bootstrapping
+exercise since the workflow must always be in some state.
 
-The workflow action 'TIX_NEW' has a property 'resulting_state', which
-just means: if you execute me properly the workflow will be in the new
-state 'TIX_CREATED'.
+The workflow action 'create issue' has a property 'resulting_state',
+which just means: if you execute me properly the workflow will be in
+the new state 'CREATED'.
 
 All this talk of 'states' and 'transitions' can be confusing, but just
 match them to what happens in real life -- you move from one action to
@@ -474,8 +538,8 @@ workflow and asking it what actions we can execute right now:
 We can also interrogate the workflow about what fields are necessary
 to execute a particular action:
 
- print "To execute the action 'TIX_NEW' you must provide:\n\n";
- my @fields = $wf->get_action_fields( 'TIX_NEW' );
+ print "To execute the action 'create issue' you must provide:\n\n";
+ my @fields = $wf->get_action_fields( 'create issue' );
  foreach my $field ( @fields ) {
      print $field->name, " (Required? ", $field->is_required, ")\n",
            $field->description, "\n\n";
@@ -719,15 +783,16 @@ in the current state.
 
 =head1 SEE ALSO
 
-L<Workflow::Factory>
-
 L<Workflow::Context>
+
+L<Workflow::Factory>
 
 L<Workflow::State>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003 Chris Winters and Arvato Direct; 2004 Chris
+Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -738,6 +803,9 @@ Chris Winters E<lt>chris@cwinters.comE<gt>
 
 Dietmar Hanisch E<lt>Dietmar.Hanisch@Bertelsmann.deE<gt> - Provided
 most of the good ideas for the module and an excellent example of
-everyday usage.
+everyday use.
 
 Jim Smith E<lt>jgsmith@tamu.eduE<gt> - Contributed patches and ideas.
+
+Martin Winkler E<lt>mw@arsnavigandi.deE<gt> - Pointed out a bug and a
+few other items.
