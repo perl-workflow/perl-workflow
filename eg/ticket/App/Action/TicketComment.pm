@@ -19,7 +19,6 @@ sub execute {
             action      => "Ticket comment",
             description => $wf->context->param( 'comment' ),
             user        => $wf->context->param( 'current_user' ),
-            state       => $wf->state,
         })
     );
 }

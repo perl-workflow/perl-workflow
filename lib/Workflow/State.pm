@@ -13,6 +13,8 @@ $Workflow::State::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 my @FIELDS = qw( state description );
 __PACKAGE__->mk_accessors( @FIELDS );
 
+my ( $log );
+
 ########################################
 # PUBLIC
 
@@ -52,7 +54,7 @@ sub is_action_available {
 
 sub evaluate_action {
     my ( $self, $wf, $action_name ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
 
     my $state = $self->state;
 
@@ -78,17 +80,16 @@ sub evaluate_action {
 sub get_next_state {
     my ( $self, $action_name, $action_return ) = @_;
     $self->_contains_action_check( $action_name );
-    my $result = $self->{_actions}{ $action_name }{resulting_state};
-    if ( ref( $result ) eq 'HASH' ) {
-        if ( defined $action_return ) {
-            return $result->{ $action_return };
-        }
-        else {
-            return values %{ $result };
-        }
-    }
-    return $result;;
+    my $resulting_state = $self->{_actions}{ $action_name }{resulting_state};
+    return $resulting_state unless ( ref( $resulting_state ) eq 'HASH' );
 
+    if ( defined $action_return ) {
+        # TODO: Throw exception if $action_return not found and no '*' defined?
+        return $resulting_state->{ $action_return } || $resulting_state->{'*'};
+    }
+    else {
+        return %{ $resulting_state };
+    }
 }
 
 sub get_autorun_action_name {
@@ -99,7 +100,7 @@ sub get_autorun_action_name {
                        "execution. If you want it to be run automatically ",
                        "set the 'autorun' property to 'yes'.";
     }
-    my $log = get_logger();
+    $log ||= get_logger();
 
     my @actions = $self->get_available_action_names( $wf );
     my $pre_error = "State '$state' should be automatically executed but ";
@@ -117,11 +118,13 @@ sub get_autorun_action_name {
 
 sub autorun {
     my ( $self, $setting ) = @_;
-    if ( $setting =~ /^(true|1|yes)$/i ) {
-        $self->{autorun} = 'yes';
-    }
-    elsif ( defined $setting ) {
-        $self->{autorun} = 'no';
+    if ( defined $setting ) {
+        if ( $setting =~ /^(true|1|yes)$/i ) {
+            $self->{autorun} = 'yes';
+        }
+        else {
+            $self->{autorun} = 'no';
+        }
     }
     return ( $self->{autorun} eq 'yes' );
 }
@@ -132,24 +135,66 @@ sub autorun {
 
 sub init {
     my ( $self, $config ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
+
     my $name = $config->{name};
     $self->state( $name );
     $self->description( $config->{description} );
-    $self->is_autorun( $config->{autorun} );
+    if ( $config->{autorun} ) {
+        $self->autorun( $config->{autorun} );
+    }
+    else {
+        $self->autorun( 'no' );
+    }
     my $class = ref( $self );
     $log->is_debug &&
         $log->debug( "Constructing '$class' object for state $name" );
     foreach my $state_action_config ( @{ $config->{action} } ) {
         my $action_name = $state_action_config->{name};
+        my $resulting = $state_action_config->{resulting_state};
+        if ( my $resulting_type = ref( $resulting ) ) {
+            if ( $resulting_type eq 'ARRAY' ) {
+                $state_action_config->{resulting_state} =
+                    $self->_assign_resulting_state_from_array( $action_name, $resulting );
+            }
+        }
         $log->debug( "Adding action '$action_name' to '$class' '$name'" );
         $self->_add_action_config( $action_name, $state_action_config );
     }
 }
 
+sub _assign_resulting_state_from_array {
+    my ( $self, $action_name, $resulting ) = @_;
+    my $name = $self->state;
+    my @errors = ();
+    my %new_resulting = ();
+    foreach my $map ( @{ $resulting } ) {
+        if ( ! $map->{state} or ! defined $map->{return} ) {
+            push @errors, "Must have both 'state' ($map->{state}) and 'return' " .
+                          "($map->{return}) keys defined.";
+        }
+        elsif ( $new_resulting{ $map->{return} } ) {
+            push @errors, "The 'return' value ($map->{return}) must be " .
+                          "unique among the resulting states.";
+        }
+        else {
+            $new_resulting{ $map->{return} } = $map->{state};
+        }
+    }
+    if ( scalar @errors ) {
+        workflow_error "Errors found assigning 'resulting_state' to ",
+                       "action '$action_name' in state '$name': ",
+                       join( '; ', @errors );
+    }
+    $log->is_debug &&
+        $log->debug( "Assigned multiple resulting states in '$name' and ",
+                     "action '$action_name' from array ok" );
+    return \%new_resulting;
+}
+
 sub _add_action_config {
     my ( $self, $action_name, $action_config ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     my $state = $self->state;
     unless ( $action_config->{resulting_state} ) {
         my $no_change_value = Workflow->NO_CHANGE_VALUE;
@@ -167,7 +212,7 @@ sub _add_action_config {
 
 sub _create_condition_objects {
     my ( $self, $action_config ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     my @conditions = $self->normalize_array( $action_config->{condition} );
     my @condition_objects = ();
     foreach my $condition_info ( @conditions ) {
@@ -199,10 +244,19 @@ Workflow::State - Information about an individual state in a workflow
  # This is an internal object...
  <workflow...>
    <state name="Start">
+     <action ... resulting_state="Progress" />
+   </state>
       ...
    <state name="Progress" description="I am in progress">
+     <action ... >
+        <resulting_state return="0" state="Needs Affirmation" />
+        <resulting_state return="1" state="Approved" />
+        <resulting_state return="*" state="Needs More Info" />
+     </action>
+   </state>
       ...
-   <state name="Approved" autorun=yes">
+   <state name="Approved" autorun="yes">
+     <action ... resulting_state="Completed" />
       ...
 
 =head1 DESCRIPTION
@@ -211,18 +265,53 @@ Each L<Workflow::State> object represents a state in a workflow. Each
 state can report its name, description and all available
 actions. Given the name of an action it can also report what
 conditions are attached to the action and what state will result from
-the action.
+the action (the 'resulting state').
+
+=head2 Resulting State
+
+The resulting state is action-dependent. For instance, in the
+following example you can perform two actions from the state 'Ticket
+Created' -- 'add comment' and 'edit issue':
+
+  <state name="Ticket Created">
+     <action name="add comment"
+             resulting_state="NOCHANGE" />
+     <action name="edit issue"
+             resulting_state="Ticket In Progress" />
+   </state>
+
+If you execute 'add comment' the new state of the workflow will be the
+same ('NOCHANGE' is a special state). But if you execute 'edit issue'
+the new state will be 'Ticket In Progress'.
+
+You can also have multiple return states for a single action. The one
+chosen by the workflow system will depend on what the action
+returns. For instance we might have something like:
+
+  <state name="create user">
+     <action name="create">
+         <resulting_state return="admin"    state="Assign as Admin" />
+         <resulting_state return="helpdesk" state="Assign as Helpdesk" />
+         <resulting_state return="*"        state="Assign as Luser" />
+     </action>
+   </state>
+
+So if we execute 'create' the workflow will be in one of three states:
+'Assign as Admin' if the return value of the 'create' action is
+'admin', 'Assign as Helpdesk' if the return is 'helpdesk', and 'Assign
+as Luser' if the return is anything else.
+
+=head2 Autorun State
 
 You can also indicate that the state should be automatically executed
-when the workflow enters it. Note the slight change in terminology --
-typically we talk about executing an action, not a state. But we can
-use both here because an automatically run state requires that one and
-only one action is available for running.
-
-Note: that being autorunable doesn't mean a state contains only one
-action. It just means that only one action is available when the state
-is entered. For example, you might have actions with mutually
-exclusive conditions within the autorun state.
+when the workflow enters it using the 'autorun' property. Note the
+slight change in terminology -- typically we talk about executing an
+action, not a state. But we can use both here because an automatically
+run state requires that one and only one action is available for
+running. That doesn't mean a state contains only one action. It just
+means that only one action is available when the state is entered. For
+example, you might have two actions with mutually exclusive conditions
+within the autorun state.
 
 =head1 PUBLIC METHODS
 
@@ -259,12 +348,15 @@ Returns all actions names that are available given the data in
 C<$workflow>. Each action name returned will return true from
 B<is_action_available()>.
 
-B<get_next_state( $action_name, [ $return_value ] )>
+B<get_next_state( $action_name, [ $action_return ] )>
 
 Returns the state(s) that will result if action C<$action_name>
-executed. If you've specified multiple return states in the
-configuration then you need to specify the C<$return_value>, otherwise
-we return an array of states.
+is executed. If you've specified multiple return states in the
+configuration then you need to specify the C<$action_return>,
+otherwise we return a hash with action return values as the keys and
+the action names as the values.
+
+
 
 B<get_autorun_action_name( $workflow )>
 

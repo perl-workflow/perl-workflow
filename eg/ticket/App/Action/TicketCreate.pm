@@ -68,7 +68,6 @@ sub execute {
             description => sprintf( "New ticket created of type '%s' and subject '%s'",
                                     $self->param( 'type' ), $self->param( 'subject' ) ),
             user        => $creator,
-            state       => $wf->state,
         })
     );
     $log->info( "History record added to workflow ok" );
