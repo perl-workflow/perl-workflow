@@ -7,6 +7,7 @@ README
 VERSION
 eg/ticket/README
 eg/ticket/log4perl.conf
+eg/ticket/ticket.cgi
 eg/ticket/ticket.pl
 eg/ticket/ticket.sql
 eg/ticket/ticket_csv.sql
@@ -43,6 +44,8 @@ lib/Workflow/Base.pm
 lib/Workflow/Condition.pm
 lib/Workflow/Condition/HasUser.pm
 lib/Workflow/Config.pm
+lib/Workflow/Config/Perl.pm
+lib/Workflow/Config/XML.pm
 lib/Workflow/Context.pm
 lib/Workflow/Exception.pm
 lib/Workflow/Factory.pm
