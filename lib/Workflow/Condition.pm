@@ -120,3 +120,14 @@ B<evaluate( $workflow )>
 Determine whether your condition passes (return a true value) or false
 (return 0 or undef). You can get the application context information
 from the C<$workflow> object.
+
+=head1 COPYRIGHT
+
+Copyright (c) 2003 Chris Winters. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHORS
+
+Chris Winters E<lt>chris@cwinters.comE<gt>

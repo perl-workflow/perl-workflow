@@ -55,12 +55,12 @@ sub fetch_workflow {
         $log->error( "No file at path '$full_path'" );
         persist_error "No workflow with ID '$wf_id' is available";
     }
-    my $wf = eval { $self->_constitute_object( $full_path ) };
+    my $wf_info = eval { $self->_constitute_object( $full_path ) };
     if ( $@ ) {
         persist_error "Cannot reconstitute data from file for ",
                       "workflow '$wf_id': $@";
     }
-    return $wf;
+    return $wf_info;
 }
 
 sub create_history {
@@ -100,7 +100,11 @@ sub _serialize_workflow {
     local $Data::Dumper::Indent = 1;
     my $full_path = $self->_get_workflow_path( $wf->id );
     $log->debug( "Trying to write workflow to '$full_path'" );
-    $self->_serialize_object( $full_path, $wf );
+    my %wf_info = (
+        id    => $wf->id,
+        state => $wf->state,
+    );
+    $self->_serialize_object( $full_path, \%wf_info );
     $log->debug( "Wrote workflow ok" );
 }
 

@@ -62,3 +62,14 @@ C<$other_context> wins.
 =head1 SEE ALSO
 
 L<Workflow>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2003 Chris Winters. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHORS
+
+Chris Winters E<lt>chris@cwinters.comE<gt>

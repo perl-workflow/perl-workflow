@@ -53,11 +53,61 @@ Workflow::Base - Base class with constructor
 
 =head1 SYNOPSIS
 
+ package My::App::Foo;
+ use base qw( Workflow::Base );
+
 =head1 DESCRIPTION
 
-=head1 CLASS METHODS
+Provide a constructor and some other useful methods for subclasses.
 
-=head1 OBJECT METHODS
+=head1 METHODS
 
-=head1 SEE ALSO
+=head2 Class Methods
 
+B<new( @params )>
+
+Just create a new object (blessed hashref) and pass along C<@params>
+to the C<init()> method, which subclasses can override to initialize
+themselves.
+
+Returns: new object
+
+=head2 Object Methods
+
+B<init( @params )>
+
+Subclasses may implement to do initialization. The C<@params> are
+whatever is passed into C<new()>. Nothing need be returned.
+
+B<param( [ $name, $value ] )>
+
+Associate arbitrary parameters with this object.
+
+If neither C<$name> nor C<$value> given, return a hashref of all
+parameters set in object.
+
+If C<$name> given, return the value associated with it, C<undef> if
+C<$name> was not previously set.
+
+If C<$name> and C<$value> given, associate C<$name> with C<$value>,
+overwriting any existing value, and return the new value.
+
+B<clear_params()>
+
+Clears out all parameters associated with this object.
+
+B<normalize_array( \@array | $item )>
+
+If given C<\@array> return it dereferenced; if given C<$item>, return
+it in a list. If given neither return an empty list.
+
+=head1 COPYRIGHT
+
+Copyright (c) 2003 Chris Winters. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHORS
+
+Chris Winters E<lt>chris@cwinters.comE<gt>

@@ -4,9 +4,6 @@ package Workflow;
 
 use strict;
 
-# Note: we may implement a separate event mechanism (use
-# 'Class::Observable'? read observations from database?)
-
 use base qw( Workflow::Base );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( workflow_error );
@@ -23,25 +20,27 @@ use constant NO_CHANGE_VALUE => 'NOCHANGE';
 # OBJECT METHODS
 
 sub init {
-    my ( $self, $current_state, $config, $wf_state_objects ) = @_;
+    my ( $self, $current_state, $config, $wf_state_objects, $id ) = @_;
 
     my $log = get_logger();
     $log->info( "Creating a new workflow of type '$config->{properties}{type}' ",
                 "with current state '$current_state'" );
 
-    my %copy_config = %{ $config };
+    if ( $id ) {
+        $self->id( $id );
+    }
 
+    my %copy_config = %{ $config };
     $self->state( $current_state );
-    $self->type( $copy_config{properties}{type} );
-    $self->description( $copy_config{properties}{description} );
-    delete $copy_config{properties}{type};
-    delete $copy_config{properties}{description};
+    $self->type( $copy_config{type} );
+    $self->description( $copy_config{description} );
+    delete @copy_config{ qw( type description ) };
 
     # other properties go into 'param'...
-    while ( my ( $key, $value ) = each %{ $copy_config{properties} } ) {
+    while ( my ( $key, $value ) = each %{ $copy_config } ) {
+        next unless ( $key eq 'state' );
         $self->param( $key, $value );
     }
-    delete $copy_config{properties};
 
     # Now set all the Workflow::State objects created and cached by the
     # factory
@@ -158,13 +157,19 @@ sub _get_next_state {
 
 sub add_history {
     my ( $self, $params ) = @_;
-    $self->{_histories_unsaved} ||= [];
+    $params->{workflow_id} = $self->id;
     push @{ $self->{_histories} }, Workflow::History->new( $params );
 }
 
 sub get_history {
     my ( $self ) = @_;
-    return @{ $self->{_histories} };
+    my @saved_history = FACTORY->get_workflow_history( $self );
+    return ( @{ $self->{_histories} }, @saved_history );
+}
+
+sub clear_history {
+    my ( $self ) = @_;
+    $self->{_histories} = [];
 }
 
 1;
@@ -191,8 +196,8 @@ B<add_history( \%params | $wf_history_object )>
 
 B<get_history()>
 
-Returns all history objects for this workflow. Note that some may be
-unsaved.
+Returns list of history objects for this workflow. Note that some may
+be unsaved.
 
 =head2 Properties
 
@@ -300,3 +305,14 @@ L<Workflow::Factory>
 L<Workflow::Context>
 
 L<Workflow::State>
+
+=head1 COPYRIGHT
+
+Copyright (c) 2003 Chris Winters. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHORS
+
+Chris Winters E<lt>chris@cwinters.comE<gt>

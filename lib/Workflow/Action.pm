@@ -2,6 +2,10 @@ package Workflow::Action;
 
 # $Id$
 
+# Note: we may implement a separate event mechanism so that actions
+# can trigger other code (use 'Class::Observable'? read observations
+# from database?)
+
 use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl     qw( get_logger );
@@ -14,6 +18,9 @@ __PACKAGE__->mk_accessors( @FIELDS );
 
 ########################################
 # PUBLIC
+
+####################
+# INPUT FIELDS
 
 sub add_fields {
     my ( $self, @fields ) = @_;
@@ -35,6 +42,9 @@ sub fields {
     return @{ $self->{_fields} };
 }
 
+####################
+# VALIDATION
+
 sub add_validators {
     my ( $self, @validator_info ) = @_;
     my @validators = ();
@@ -51,8 +61,6 @@ sub get_validators {
     my ( $self ) = @_;
     return @{ $self->{_validators} };
 }
-
-
 
 sub validate {
     my ( $self, $wf ) = @_;
@@ -127,6 +135,8 @@ Workflow::Action - Base class for Workflow actions
  # Configure the Action...
  <action name="CreateUser"
          class="MyApp::Action::CreateUser">
+   <field name="username" is_required="yes"/>
+   <field name="email" is_required="yes"/>
    <validator name="IsUniqueUser">
        <arg name="$username"/>
    </validator>
@@ -176,7 +186,7 @@ use it as such but it is strongly recommended.
 
 B<add_field( @fields )>
 
-Add a L<Workflow::Action::InputField> to the object.
+Add one or more L<Workflow::Action::InputField>s to the action.
 
 B<required_fields()>
 
@@ -191,17 +201,20 @@ B<fields()>
 Return a list of all L<Workflow::Action::InputField> objects
 associated with this action.
 
-B<add_validators( @validator_hashrefs )>
+B<add_validators( @validator_config )>
 
-Given the 'validator' declarations in the action configuration, ask
-the L<Workflow::Factory> for the L<Workflow::Validator> object
-associated with each name and store that along with the arguments to
-be used, runtime and otherwise.
+Given the 'validator' configuration declarations in the action
+configuration, ask the L<Workflow::Factory> for the
+L<Workflow::Validator> object associated with each name and store that
+along with the arguments to be used, runtime and otherwise.
 
 B<get_validators()>
 
 Get a list of all the validator hashrefs, each with two keys:
-'validator' and 'args'.
+'validator' and 'args'. The 'validator' key contains the appropriate
+L<Workflow::Validator> object, while 'args' contains an arrayref of
+arguments to pass to the validator, some of which may need to be
+evaluated at runtime.
 
 B<validate( $workflow )>
 
@@ -210,7 +223,7 @@ throw a L<Workflow::Exception>, the validation subclass.
 
 B<execute( $workflow )>
 
-Subclasses must implement
+Subclasses must implement.
 
 =head2 Private Methods
 
@@ -222,4 +235,13 @@ L<Workflow>
 
 L<Workflow::Factory>
 
+=head1 COPYRIGHT
 
+Copyright (c) 2003 Chris Winters. All rights reserved.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=head1 AUTHORS
+
+Chris Winters E<lt>chris@cwinters.comE<gt>
