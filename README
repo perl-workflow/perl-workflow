@@ -14,12 +14,12 @@ interactions with your applications, and more.
 INSTALLATION
 ========================================
 
-To install this module type the following:
+To install this module type one of the following:
 
-   perl Build.PL
-   ./Build
-   ./Build test
-   ./Build install
+ perl Makefile.PL  or   perl Build.PL
+ make                   ./Build
+ make test              ./Build test
+ make install           ./Build install
 
 QUICK START
 ========================================
