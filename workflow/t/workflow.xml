@@ -1,0 +1,37 @@
+<workflow>
+ <type>Ticket</type>
+ <description>This is the workflow for sample application Ticket</description>
+ <persister>TestPersister</persister>
+ <state name="INITIAL">
+     <description>This is the state the workflow enters when
+        instantiated. It's like a 'state zero' but since we're
+        using names rather than IDs we cannot assume</description>
+     <action name="TIX_NEW"
+        resulting_state="TIX_CREATED"/>
+ </state>
+
+ <state name="TIX_CREATED">
+     <description>State of ticket after it has been created</description>
+     <action name="TIX_COMMENT"
+             resulting_state="NOCHANGE"/>        
+     <action name="TIX_EDIT"
+             resulting_state="TIX_IN_PROGRESS">
+        <condition name="HasUser"/>
+     </action>
+  </state>
+
+  <state name="TIX_IN_PROGRESS">
+      <description>State of ticket after developers start work</description>
+      <action name="TIX_CLOSE"
+              resulting_state="TIX_CLOSED">
+         <condition name="HasUser"/>
+      </action>
+  </state>
+  <state name="TIX_CLOSED">
+      <description>State of ticket after creator approves the work done</description>
+      <action name="TIX_REOPEN"
+              resulting_state="TIX_CREATED">
+         <condition name="HasUser"/>
+      </action>
+  </state>
+</workflow>

@@ -1,0 +1,74 @@
+<actions>
+   <action name="TIX_NEW"
+           class="TestApp::Action::TicketCreate">
+      <description>Create a new ticket</description>
+      <field name="subject"
+             label="Subject"
+             description="Subject of ticket"
+             is_required="yes"/>
+      <field name="description"
+             label="Description"
+             description="Text describing the problem and any details to reproduce, if possible"
+             is_required="yes"/>
+      <field name="creator"
+             label="Creator"
+             description="Name of user who is creating the ticket"
+             is_required="yes"
+             source_class="TestApp::User"/>
+      <field name="type"
+             label="Type"
+             description="Type of ticket"
+             is_required="yes"
+             source_list="Bug,Feature,Improvement,Task"/>
+      <field name="due_date"
+             label="Due Date"
+             description="Date ticket is due (format: yyyy-mm-dd hh:mm)"/>
+      <validator name="DateValidator">
+         <arg>$due_date</arg>
+      </validator>
+   </action>
+
+   <action name="TIX_COMMENT"
+           class="TestApp::Action::TicketComment">
+      <field name="ticket_id"
+             description="Ticket to comment on"
+             is_required="yes"/>
+      <field name="comment"
+             description="Comment to add"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User doing the commenting"
+             is_required="yes"/>
+   </action>
+
+   <action name="TIX_EDIT"
+           class="TestApp::Action::TicketUpdate">
+      <field name="ticket_id"
+             description="Ticket to edit"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User working on the ticket"
+             is_required="yes"/>
+   </action>
+
+   <action name="TIX_CLOSE"
+           class="TestApp::Action::TicketUpdate">
+      <field name="ticket_id"
+             description="Ticket to close"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User closing the ticket"
+             is_required="yes"/>
+   </action>
+
+   <action name="TIX_REOPEN"
+           class="TestApp::Action::TicketUpdate">
+      <field name="ticket_id"
+             description="Ticket to reopen"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User reopening the ticket"
+             is_required="yes"/>
+   </action>
+
+</actions>

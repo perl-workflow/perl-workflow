@@ -1,0 +1,4 @@
+<conditions>
+   <condition name="HasUser"
+              class="TestApp::Condition::HasUser"/>
+</conditions>
