@@ -17,39 +17,7 @@ $Workflow::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
 ########################################
-# OBJECT METHODS
-
-sub init {
-    my ( $self, $current_state, $config, $wf_state_objects, $id ) = @_;
-
-    my $log = get_logger();
-    $log->info( "Creating a new workflow of type '$config->{properties}{type}' ",
-                "with current state '$current_state'" );
-
-    if ( $id ) {
-        $self->id( $id );
-    }
-
-    my %copy_config = %{ $config };
-    $self->state( $current_state );
-    $self->type( $copy_config{type} );
-    $self->description( $copy_config{description} );
-    delete @copy_config{ qw( type description ) };
-
-    # other properties go into 'param'...
-    while ( my ( $key, $value ) = each %{ $copy_config } ) {
-        next unless ( $key eq 'state' );
-        $self->param( $key, $value );
-    }
-
-    # Now set all the Workflow::State objects created and cached by the
-    # factory
-
-    foreach my $wf_state ( @{ $wf_state_objects } ) {
-        $self->_set_workflow_state( $wf_state );
-    }
-}
-
+# PUBLIC METHODS
 
 sub context {
     my ( $self, $context ) = @_;
@@ -70,6 +38,18 @@ sub context {
         $self->{context} = WorkflowContext->new();
     }
     return $self->{context};
+}
+
+sub get_current_actions {
+    my ( $self ) = @_;
+    my $wf_state = $self->_get_workflow_state;
+    return $wf_state->get_available_action_names( $self );
+}
+
+sub get_action_fields {
+    my ( $self, $action_name ) = @_;
+    my $action = $self->_get_action( $action_name );
+    return $action->fields;
 }
 
 sub execute_action {
@@ -94,18 +74,59 @@ sub execute_action {
     # transactions...
 
     FACTORY->save_workflow( $self );
+    return $self->state;
 }
 
-sub get_current_actions {
+sub add_history {
+    my ( $self, $params ) = @_;
+    $params->{workflow_id} = $self->id;
+    push @{ $self->{_histories} }, Workflow::History->new( $params );
+}
+
+sub get_history {
     my ( $self ) = @_;
-    my $wf_state = $self->_get_workflow_state;
-    return $wf_state->get_available_action_names( $self );
+    my @saved_history = FACTORY->get_workflow_history( $self );
+    return ( @{ $self->{_histories} }, @saved_history );
 }
 
-sub get_action_fields {
-    my ( $self, $action_name ) = @_;
-    my $action = $self->_get_action( $action_name );
-    return $action->fields;
+sub clear_history {
+    my ( $self ) = @_;
+    $self->{_histories} = [];
+}
+
+
+########################################
+# PRIVATE METHODS
+
+sub init {
+    my ( $self, $id, $current_state, $config, $wf_state_objects ) = @_;
+
+    my $log = get_logger();
+    $log->info( "Creating a new workflow of type '$config->{properties}{type}' ",
+                "with current state '$current_state'" );
+
+    if ( $id ) {
+        $self->id( $id );
+    }
+
+    my %copy_config = %{ $config };
+    $self->state( $current_state );
+    $self->type( $copy_config{type} );
+    $self->description( $copy_config{description} );
+    delete @copy_config{ qw( type description ) };
+
+    # other properties go into 'param'...
+    while ( my ( $key, $value ) = each %copy_config ) {
+        next unless ( $key eq 'state' );
+        $self->param( $key, $value );
+    }
+
+    # Now set all the Workflow::State objects created and cached by the
+    # factory
+
+    foreach my $wf_state ( @{ $wf_state_objects } ) {
+        $self->_set_workflow_state( $wf_state );
+    }
 }
 
 sub _get_action {
@@ -152,83 +173,240 @@ sub _get_next_state {
 }
 
 
-########################################
-# HISTORY
-
-sub add_history {
-    my ( $self, $params ) = @_;
-    $params->{workflow_id} = $self->id;
-    push @{ $self->{_histories} }, Workflow::History->new( $params );
-}
-
-sub get_history {
-    my ( $self ) = @_;
-    my @saved_history = FACTORY->get_workflow_history( $self );
-    return ( @{ $self->{_histories} }, @saved_history );
-}
-
-sub clear_history {
-    my ( $self ) = @_;
-    $self->{_histories} = [];
-}
-
 1;
 
 __END__
 
 =head1 NAME
 
-Workflow - Object to represent and move between application states
+Workflow - Simple, flexible system to implement workflows
 
 =head1 SYNOPSIS
 
+ use Workflow::Factory qw( FACTORY );
+ 
+ # Defines a workflow of type 'myworkflow'
+ my $workflow_conf  = 'workflow.xml';
+ 
+ # Defines actions available to the workflow
+ my $action_conf    = 'action.xml';
+ 
+ # Defines conditions available to the workflow
+ my $condition_conf = 'condition.xml';
+ 
+ # Defines validators available to the actions
+ my $validator_conf = 'validator.xml';
+ 
+ FACTORY->add_config_from_file( workflow   => $workflow_conf,
+                                action     => $action_conf,
+                                condition  => $condition_conf,
+                                validator  => $validator_conf );
+ 
+ # Instantiate a new workflow...
+ my $workflow = FACTORY->get_workflow( 'myworkflow' );
+ print "Workflow ", $workflow->id, " ",
+       "currently at state ", $workflow->state, "\n";
+ 
+ # Display available actions...
+ print "Available actions: ", $workflow->get_current_actions, "\n";
+ 
+ # Get the data needed for action 'FOO' (assumed to be available in
+ # the current state) and display the fieldname and description
+ 
+ print "Action 'Foo' requires the following fields:\n";
+ foreach my $field ( $workflow->get_action_fields( 'FOO' ) ) {
+     print $field->name, ": ", $field->description,
+           "(Required? ", $field->is_required, ")\n";
+ }
+ 
+ # Add items for the workflow validators, conditions and actions to
+ # work with
+ 
+ my $context = $workflow->context;
+ $context->param( current_user => $user );
+ $context->param( sections => \@sections );
+ $context->param( news => $news );
+ 
+ # Execute one of them
+ $workflow->execute_action( 'FOO' );
+ 
+ print "New state: ", $workflow->state, "\n";
+ 
+ # Later.... fetch an existing workflow
+ my $id = get_workflow_id_from_user( ... );
+ my $workflow = FACTORY->get_workflow( 'myworkflow', $id );
+ print "Current state: ", $workflow->state, "\n";
+
 =head1 DESCRIPTION
 
-=head1 PUBLIC METHODS
+=head2 Overview
+
+This is a standalone workflow system. It is designed to fit into your
+system rather than force your system to fit to it. You can save
+workflow information to a database or the filesystem (or a custom
+storage). The different components of a workflow system can be
+included separately as libraries to allow for maximum reusibility.
+
+=head2 User Point of View
+
+As a user you only see two components, plus a third which is really
+embedded into another:
+
+=over 4
+
+=item *
+
+L<Workflow::Factory> - The factory is your interface for creating new
+workflows and fetching existing ones. You also feed all the necessary
+configuration files and/or data structures to the factory to
+initialize it.
+
+=item *
+
+L<Workflow> - When you get the workflow object from the workflow
+factory you can only use it in a few ways -- asking for the current
+state, actions available for the state, data required for a particular
+action, and most importantly, executing a particular action. Executing
+an action is how you change from one state to another.
+
+=item *
+
+L<Workflow::Context> - This is a blackboard for data from your
+application to the workflow system and back again. Each instantiation
+of a L<Workflow> has its own context, and actions executed by the
+workflow can read data from and deposit data into the context.
+
+=back
+
+=head2 Developer Point of View
+
+The workflow system has four basic components:
+
+=over 4
+
+=item *
+
+B<workflow> - The workflow is a collection of states; you define the
+states, how to move from one state to another, and under what
+conditions you can change states.
+
+This is represented by the L<Workflow> object. You normally do not
+need to subclass this object and customize it.
+
+=item *
+
+B<action> - The action is defined by you or in a separate library. The
+action is triggered by moving from one state to another and has access
+to information
+
+The base class for actions is the L<Workflow::Action> class.
+
+=item *
+
+B<condition> - Within the workflow you can attach one or more
+conditions to an action. These ensure that actions can only get
+executed when certain conditions are met. Conditions are completely
+arbitrary: typically they will ensure the user has particular access
+rights, but you can also specify that an action can only be executed
+at certain times of the day, or from certain IP addresses, and so
+forth. Each condition is created once at startup then passed a context
+to check every time an action is checked to see if it can be executed.
+
+The base class for conditions is the L<Workflow::Condition> class.
+
+=item *
+
+B<validator> - An action can specify one or more validators to ensure
+that the data available to the action is correct. The data to check
+can be as simple or complicated as you like. Each validator is created
+once then passed a context and data to check every time an action is
+executed.
+
+The base class for validators is the L<Workflow::Validator> class.
+
+=back
+
+=head1 WORKFLOW METHODS
+
+The following documentation is for the workflow object itself rather
+than the entire system.
 
 =head2 Object Methods
 
 B<execute_action( $action_name )>
 
-B<query_action_for_data( $action_name )>
+Execute the action C<$action_name> which normally changes the state of
+the workflow. If C<$action_name> not in the current state, fails one
+of the conditions on the action, or fails one of the validators on the
+action an exception is thrown.
+
+Returns: new state of workflow
+
+B<get_current_actions()>
+
+Returns a list of action names available from the current state for
+the given environment. So if you keep your C<context()> the same if
+you call C<execute_action()> with one of the action names you should
+not trigger any condition error since the action has already been
+screened for conditions.
+
+Returns: list of strings representing available actions
+
+B<get_action_fields( $action_name )>
+
+Return a list of L<Workflow::Action::InputField> objects for the given
+C<$action_name>. If C<$action_name> not in the current state or not
+accessible by the environment an exception is thrown.
+
+Returns: list of L<Workflow::Action::InputField> objects
 
 B<add_history( \%params | $wf_history_object )>
+
+Adds history to the workflow, typically done by an action in
+C<execute_action()> or one of the observers of that action. This
+history will not be saved until C<execute_action()> is complete.
+
+Returns: nothing
 
 B<get_history()>
 
 Returns list of history objects for this workflow. Note that some may
-be unsaved.
+be unsaved if you call this during the C<execute_action()> process.
+
+B<clear_history()>
+
+Clears all transient history objects from the workflow object, B<not>
+from the long-term storage.
 
 =head2 Properties
 
 Unless otherwise noted properties are read-only.
 
-=over 4
-
-=item B<id>
+B<id>
 
 ID of this workflow. This will B<always> be defined, since when the
-L<Workflow::Factory> creates a new workflow it first ensures the
-workflow is saved.
+L<Workflow::Factory> creates a new workflow it first saves it to
+long-term storage.
 
-=item B<type>
+B<type>
 
 Type of workflow this is. You may have many individual workflows
 associated with a type.
 
-=item B<description>
+B<description>
 
 Description (usually brief, hopefully with a URL...)  of this
 workflow.
 
-=item B<state>
+B<state>
 
 The current state of the workflow.
 
-=item B<context> (read-write, see below)
+B<context> (read-write, see below)
 
-A L<Workflow::Context> object associated with this workflow. If one does
-not already exist in the workflow the workflow will create a new one.
+A L<Workflow::Context> object associated with this workflow. This
+should never be undefined as the L<Workflow::Factory> sets an empty
+context into the workflow when it is instantiated.
 
 If you add a context to a workflow and one already exists, the values
 from the new workflow will overwrite values in the existing
@@ -244,17 +422,14 @@ You will see:
 
  Current drinks: beer, wine
 
-=back
+=head2 Internal Methods
 
-=head1 INTERNAL METHODS
+B<init( $id, $current_state, \%workflow_config, \@wf_states )>
 
-=head2 Object Methods
-
-B<init( $current_state, \%workflow_config, \@wf_states )>
-
-B<THIS SHOULD ONLY BE CALLED BY THE WorkflowFactory> Do not call this
-or the C<new()> method yourself. Your only interface for creating and
-fetching workflows is through the factory.
+B<THIS SHOULD ONLY BE CALLED BY THE L<Workflow::Factory>. Do not call
+this or the C<new()> method yourself -- you will only get an
+exception. Your only interface for creating and fetching workflows is
+through the factory.
 
 This is called by the inherited constructor and sets the
 C<$current_state> value to the property C<state> and uses the other
@@ -272,7 +447,7 @@ current workflow state. This will throw an exception if:
 
 No workflow state exists with a name of the current state. (This is
 usually some sort of configuration error and should be caught at
-initialization time.)
+initialization time, so it should not happen.)
 
 =item *
 
@@ -287,8 +462,6 @@ No action C<$action_name> exists in the workflow universe.
 One of the conditions for the action in this state is not met.
 
 =back
-
-B<_evaluate_conditions( $action_name, @conditions )>
 
 B<_get_workflow_state( [ $state ] )>
 
