@@ -19,7 +19,7 @@ sub validate {
     }
     if ( scalar @no_value ) {
         validation_error "The following fields require a value: ",
-                         join( ', ', @no_values );
+                         join( ', ', @no_value );
     }
 }
 
