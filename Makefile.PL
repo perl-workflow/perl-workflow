@@ -15,6 +15,7 @@ my %opts = (
       'Exception::Class'           => 1.10,
       'Log::Dispatch'              => 2.00,
       'Log::Log4perl'              => 0.34,
+      'Safe'                       => 0,
       'Test::More'                 => 0.41,
       'XML::Simple'                => 2.00,
   },

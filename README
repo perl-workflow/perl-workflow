@@ -55,11 +55,16 @@ For more info, see 'eg/ticket/README'
 MORE INFO
 ========================================
 
-Issues (tasks, feature requests, bugs) are tracked via JIRA at:
+Questions, comments, ideas? E-mail them:
+
+  Chris Winters <chris@cwinters.com>
+
+When we get them, issues (tasks, feature requests, bugs) are tracked
+via JIRA at:
 
   http://jira.openinteract.org/
 
-The Workflow home page:
+When it gets big enough, the Workflow home page will be at:
 
   http://workflow.openinteract.org/
 
@@ -77,6 +82,7 @@ This module requires these other modules and libraries:
     File::Spec
     Log::Dispatch
     Log::Log4perl
+    Safe
 	Test::More
     XML::Simple
 

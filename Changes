@@ -1,25 +1,29 @@
 Revision history for Perl extension Workflow
 
-0.10
+0.10  Tue Oct 12 01:02:11 EDT 2004
 
   Workflow
 
-     - Since we've now got 'resulting_state' that is dependent on the
-     action results of the previous action being run (see
-     Workflow::State change), we cannot set the 'new' workflow state
-     before executing the action.
+     - POTENTIAL BACKWARD INCOMPATIBILITY
+     
+       Since we've now got 'resulting_state' in a state's action that is
+     dependent on the action results of the previous action being run
+     (see Workflow::State change), we cannot set the 'new' workflow
+     state before executing the action.
 
        One result: you shouldn't set the 'state' property of any created
      Workflow::History objects -- we'll modify the state of any
      history objects with an empty state before saving them (see
      changes for Workflow::Factory)
 
-       Another result is that the value of '$wf->state' inside your
+       Another result: the value of '$wf->state' inside your
      Action now refers to the EXISTING state of the workflow not the
-     SOON TO BE state. Therefore any code you have using the state of
-     the workflow (such as in our example 'Trouble Ticket'
-     application) will give a different value than the previous
-     Workflow version.
+     SOON TO BE state. Earlier versions had the SOON TO BE state set
+     into the workflow before executing the action to make things less
+     confusing. Now that it's changed any code you have using the
+     state of the workflow (such as in our example 'Trouble Ticket'
+     application in eg/ticket/) will give a different value than the
+     previous Workflow version.
 
        This behavior seems more consistent, but comments/suggestions
      are welcome.
@@ -33,6 +37,12 @@ Revision history for Perl extension Workflow
      - New class: use if you want to move the workflow from one state
      to another without actually doing anything.
 
+  Workflow::Condition::Evaluate
+
+     - New class: allow inline conditions expressed as Perl code in
+     the 'test' attribution of 'condition'; has access to the values
+     in the current workflow context in a Safe compartment.
+
   Workflow::Factory
 
      - In save_workflow(), call 'set_new_state()' with the workflow
@@ -45,7 +55,7 @@ Revision history for Perl extension Workflow
      state.
 
      - The 'resulting_state' property of an action within a state can
-     now be multivalued, which means the actual value depends on the
+     now be multivalued, which means the next state depends on the
      return value of the action that's executed. For instance, we
      might have:
 
