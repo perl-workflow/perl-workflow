@@ -81,6 +81,7 @@ sub create_history {
         my $history_file = catfile( $history_dir, $history_id );
         $self->_serialize_object( $history_file, $history );
         $log->info( "Created history object '$history_id' ok" );
+        $history->set_saved();
     }
 }
 
@@ -96,6 +97,7 @@ sub fetch_history {
     foreach my $history_file ( @history_files ) {
         my $full_history_file = catfile( $history_dir, $history_file );
         my $history = $self->_constitute_object( $full_history_file );
+        $history->set_saved();
         push @histories, $history;
     }
     return @histories;

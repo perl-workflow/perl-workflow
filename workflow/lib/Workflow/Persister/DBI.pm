@@ -274,6 +274,7 @@ sub create_history {
             }
         }
         $h->id( $id );
+        $h->set_saved();
         $log->info( "Workflow history entry ", $id, " created ok" );
     }
     return @history;
@@ -300,12 +301,14 @@ sub fetch_history {
         $sth->execute( $wf->id );
     };
     if ( $@ ) {
+        $log->error( "Caught error fetching workflow history: $@" );
         persist_error $@;
     }
+    $log->debug( "Prepared and executed ok" );
 
     my @history = ();
     while ( my $row = $sth->fetchrow_arrayref ) {
-        push @history, Workflow::History->new({
+        my $hist = Workflow::History->new({
             id          => $row->[0],
             workflow_id => $row->[1],
             action      => $row->[2],
@@ -314,6 +317,9 @@ sub fetch_history {
             user        => $row->[5],
             date        => $parser->parse_datetime( $row->[6] ),
         });
+        $log->debug( "Fetched history object '$row->[0]'" );
+        $hist->set_saved();
+        push @history, $hist;
     }
     $sth->finish;
     return @history;
