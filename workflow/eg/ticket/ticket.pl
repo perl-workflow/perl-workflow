@@ -44,52 +44,64 @@ $log->info( "Finished configuring workflow factory" );
 my ( $wf, $user, $ticket );
 
 my %responses = (
-    help          => [
-        'List all commands and a brief description',
-        \&list_commands,
-    ],
     wf            => [
-        "Create/retrieve a workflow; use 'wf Ticket' to create one, 'wf Ticket ID' to fetch",
+        "Create/retrieve a workflow",
+        "Create: 'wf Ticket'; retrieve (ID == 4): 'wf Ticket 4'",
         \&get_workflow,
     ],
    state         => [
        'Get current state of active workflow',
+       "'state'",
        \&get_current_state,
    ],
    actions       => [
        'Get current actions of active workflow',
+       "'actions'",
        \&get_current_actions,
    ],
    action_data   => [
-       "Display data required for a particular action; 'action_data FOO_ACTION'",
+       "Display data required for a particular action",
+       "'action_data FOO_ACTION'",
        \&get_action_data,
    ],
    enter_data    => [
-       "Interactively enter data required for an action and place it in context; 'enter_data FOO_ACTION'",
+       "Interactively enter data required for an action and place it in context",
+       "'enter_data FOO_ACTION'",
        \&prompt_action_data,
    ],
    context       => [
-       "Set data into the context; 'context variable value'",
+       "Set data into the context",
+       "'context myvar myvalue'",
        \&set_context,
    ],
    context_clear => [
        'Clear data out of context',
+       "'context_clear'",
        \&clear_context,
    ],
    context_show  => [
        'Display data in context',
+       "'context_show'",
        \&show_context
    ],
    execute       => [
        'Execute an action; data for the action should be in context',
+       "'execute_action FOO_ACTION'",
        \&execute_action,
    ],
    ticket        => [
        'Fetch a ticket and put it into the context',
+       "'ticket 1'",
        \&use_ticket,
    ],
+    help          => [
+        'List all commands and a brief description',
+        "'help'",
+        \&list_commands,
+    ],
    quit          => [
        'Exit the application',
+       "'quit'",
        sub { exit(0) },
    ],
 );
@@ -99,7 +111,7 @@ while ( 1 ) {
     my @args = split /\s+/, $full_response;
     my $response = shift @args;
     if ( my $info = $responses{ $response } ) {
-        eval { $info->[1]->( @args ) };
+        eval { $info->[2]->( @args ) };
         print "Caught error: $@\n" if ( $@ );
     }
     else {
@@ -201,8 +213,9 @@ sub clear_context {
 sub list_commands {
     print "Available commands:\n\n";
     foreach my $cmd ( sort keys %responses ) {
-        printf( "%s\n  %s\n",
+        printf( "%s\n  Example: %s\n  %s\n",
                 "$cmd:",
+                $responses{ $cmd }->[1],
                 $responses{ $cmd }->[0] );
     }
     print "\n";
