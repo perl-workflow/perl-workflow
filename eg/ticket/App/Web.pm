@@ -2,9 +2,13 @@ package App::Web;
 
 use strict;
 use CGI::Cookie;
-use Log::Log4perl     qw( get_logger );
-use Workflow::Factory qw( FACTORY );
-use XML::Simple       qw( :strict );
+use Cwd                   qw( cwd );
+use Data::Dumper          qw( Dumper );
+use File::Spec::Functions qw( catdir );
+use Log::Log4perl         qw( get_logger );
+use Template;
+use Workflow::Factory     qw( FACTORY );
+use XML::Simple           qw( :strict );
 
 # Default logfile name; can change with arg to init_logger()
 my $DEFAULT_LOG_FILE = 'workflow.log';
@@ -23,15 +27,22 @@ sub create_dispatcher {
     $log->is_info && $log->info( "Creating new dispatcher" );
     my $self = bless({
         cgi        => $params{cgi},
-        params     => {},
         cookie_in  => {},
-        cookie_out => {} }, $class );
+        cookie_out => {},
+        template   => undef }, $class );
+
+    # Note that this creates $self->{params}, so don't assign before
+    # this statement
 
     $self->_assign_args( $params{cgi} );
     $log->is_debug && $log->debug( "Assigned arguments ok" );
 
+    $self->param( base_url => $params{base_url} );
+
     $self->_create_cookies( $params{cookie_text} );
     $log->is_debug && $log->debug( "Created cookies ok" );
+
+    $self->_init_templating( $params{include_path} );
 
     return $self;
 }
@@ -66,8 +77,11 @@ sub _create_cookies {
 }
 
 sub param {
-    my ( $self, $name ) = @_;
-    if ( $name ) {
+    my ( $self, $name, $value ) = @_;
+    if ( $name and $value ) {
+        return $self->{params}{ $name } = $value;
+    }
+    elsif ( $name ) {
         return $self->{params}{ $name };
     }
     return $self->{params};
@@ -104,14 +118,16 @@ sub cookie_out_as_objects {
     my @values = ();
     my $cookies_out = $self->cookie_out;
     if ( scalar keys %{ $cookies_out } ) {
-        my @values = ();
         while ( my ( $name, $value ) = each %{ $cookies_out } ) {
             my $obj = CGI::Cookie->new( -name  => $name,
                                         -value => $value );
             my $cookie = $obj->as_string;
             push @values, $cookie;
-            $log->debug( "Adding cookie: '$cookie'" );
+            $log->is_debug && $log->debug( "Outbound cookie found: $cookie" );
         }
+    }
+    else {
+        $log->is_info && $log->info( "No outbound cookies found" );
     }
     return \@values;
 }
@@ -121,6 +137,7 @@ sub cookie_out_as_objects {
 
 sub is_dispatchable {
     my ( $self, $action_name ) = @_;
+    return undef unless ( $action_name );
     return defined $DISPATCH{ $action_name };
 }
 
@@ -173,8 +190,8 @@ sub _action_execute_action {
     # the parameters and redirect to the form for entering it
 
     unless ( $self->param( '_action_data_entered' ) || ! $ACTION_DATA{ $action } ) {
-        $self->params( status_msg =>
-                       'Action cannot be executed until you enter its data' );
+        $self->param( status_msg =>
+                      'Action cannot be executed until you enter its data' );
         my @fields = $wf->get_action_fields( $action );
         my %by_name = map { $_->name => $_ } @fields;
         $self->param( ACTION_FIELDS => \%by_name );
@@ -198,7 +215,7 @@ sub _action_execute_action {
         return $ACTION_DATA{ $action };
     }
     $self->param( status_msg => "Action '$action' executed ok" );
-    return $self->list_history();
+    return $self->_action_list_history();
 }
 
 sub _action_login {
@@ -216,7 +233,7 @@ sub _get_workflow {
     my ( $self ) = @_;
     return $self->param( 'workflow' )  if ( $self->param( 'workflow' ) );
     my $log = get_logger();
-    my $wf_id = $self->params( 'workflow_id' ) || $self->cookie_in( 'workflow_id' );
+    my $wf_id = $self->param( 'workflow_id' ) || $self->cookie_in( 'workflow_id' );
     unless ( $wf_id ) {
         die "No workflow ID given! Please fetch a workflow or create ",
             "a new one.\n";
@@ -246,6 +263,45 @@ sub _get_workflow {
 }
 
 ########################################
+# TEMPLATE PROCESSING
+
+sub process_template {
+    my ( $self, $template_name ) = @_;
+    $log->is_debug &&
+        $log->debug( "Processing template '$template_name'..." );
+    my ( $content );
+    my $t = $self->{template};
+    my %template_params = (
+        dispatcher => $self,
+        cgi        => $self->{cgi},
+        %{ $self->param },
+    );
+#    local $Data::Dumper::Indent = 1;
+#    $log->is_debug &&
+#        $log->debug( "Sending the following parameters: ", Dumper( \%template_params ) );
+    $t->process( $template_name, \%template_params, \$content )
+        || die "Cannot process template '$template_name': ", $t->error, "\n";
+    $log->is_debug &&
+        $log->debug( "Processed template ok" );
+    return $content;
+}
+
+sub _init_templating {
+    my ( $self, $include_path ) = @_;
+    unless ( $include_path ) {
+        $include_path = catdir( cwd(), 'web_templates' );
+    }
+    $log->is_info &&
+        $log->info( "Initializing the template object with path: $include_path" );
+    my $template = Template->new( INCLUDE_PATH => $include_path );
+    $log->is_info &&
+        $log->info( "Finished initializing the template object" );
+    return $self->{template} = $template;
+}
+
+
+
+########################################
 # INITIALIZATION
 
 sub init_logger {
@@ -262,17 +318,24 @@ sub init_logger {
 }
 
 sub init_factory {
-    FACTORY->add_config_from_file( workflow  => 'workflow.xml',
-                                   action    => 'workflow_action.xml',
-                                   validator => 'workflow_validator.xml',
-                                   condition => 'workflow_condition.xml',
-                                   persister => 'workflow_persister.xml' );
-    $log && $log->info( "Finished configuring workflow factory" );
+    $log->is_info &&
+        $log->info( "Starting to configure workflow factory" );
+
+    $log->warn( "Will use parser of class: ", Workflow::Config->get_factory_class( 'xml' ) );
+
+    FACTORY->add_config_from_file(
+        workflow  => 'workflow.xml',
+        action    => 'workflow_action.xml',
+        validator => 'workflow_validator.xml',
+        condition => 'workflow_condition.xml',
+        persister => 'workflow_persister.xml'
+    );
+    $log->is_info &&
+        $log->info( "Finished configuring workflow factory" );
 }
 
 sub init_url_mappings {
     my ( $class, $mapping_file ) = @_;
-    $log ||= get_logger();
     $log->is_info &&
         $log->info( "Initializing the URL and action mappings" );
     my %options = (
@@ -304,19 +367,6 @@ sub init_url_mappings {
     $log->is_info &&
         $log->info( "Finished initializing the URL and action mappings" );
     return $config;
-}
-
-sub init_templating {
-    my ( $include_path ) = @_;
-    unless ( $include_path ) {
-        $include_path = catdir( cwd(), 'web_templates' );
-    }
-    $log->is_info &&
-        $log->info( "Initializing the template object with path: $include_path" );
-    my $template = Template->new( INCLUDE_PATH => $include_path );
-    $log->is_info &&
-        $log->info( "Finished initializing the template object" );
-    return $template;
 }
 
 # DEPRECATED
