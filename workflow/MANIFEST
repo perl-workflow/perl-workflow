@@ -29,6 +29,7 @@ eg/ticket/workflow_persister.xml
 eg/ticket/workflow_validator.xml
 eg/ticket/App/Ticket.pm
 eg/ticket/App/User.pm
+eg/ticket/App/Web.pm
 eg/ticket/App/Action/TicketComment.pm
 eg/ticket/App/Action/TicketCreate.pm
 eg/ticket/App/Action/TicketUpdate.pm
