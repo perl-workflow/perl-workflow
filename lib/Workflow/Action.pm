@@ -9,15 +9,13 @@ package Workflow::Action;
 use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl     qw( get_logger );
+use Workflow::Action::InputField;
 use Workflow::Factory qw( FACTORY );
 
 $Workflow::Action::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 my @FIELDS = qw( name class description );
 __PACKAGE__->mk_accessors( @FIELDS );
-
-########################################
-# PUBLIC
 
 ####################
 # INPUT FIELDS
@@ -64,7 +62,7 @@ sub get_validators {
 
 sub validate {
     my ( $self, $wf ) = @_;
-    my @validators = $self->_get_validators;
+    my @validators = $self->get_validators;
     return unless ( scalar @validators );
 
     my $context = $wf->context;
@@ -100,7 +98,6 @@ sub init {
     # So we don't destroy the original...
     my %copy_params = %{ $params };
 
-    $self->workflow( $wf );
     $self->class( $copy_params{class} );
     $self->name( $copy_params{name} );
     $self->description( $copy_params{description} );
@@ -111,7 +108,7 @@ sub init {
     }
 
     my @validator_info = $self->normalize_array( $copy_params{validator} );
-    $self->_set_validators( @validator_info );
+    $self->add_validators( @validator_info );
 
     delete @copy_params{ qw( class name description field validator ) };
 
@@ -121,6 +118,7 @@ sub init {
         $self->param( $key, $value );
     }
 }
+
 
 1;
 
