@@ -11,7 +11,6 @@ use File::Spec::Functions;
 use HTTP::Daemon;
 use HTTP::Status;
 use Log::Log4perl     qw( get_logger );
-use Template;
 use Workflow::Factory qw( FACTORY );
 
 App::Web->init_logger();
@@ -21,7 +20,6 @@ $log->info( "Starting web daemon: ", scalar( localtime ) );
 
 App::Web->init_factory();
 App::Web->init_url_mappings( 'web_workflow.xml' );
-my $template = App::Web->init_templating();
 
 {
     my $d = HTTP::Daemon->new
@@ -69,6 +67,7 @@ sub _handle_request {
             $status = RC_INTERNAL_SERVER_ERROR;
             $template_name = 'error.tmpl';
         }
+
         if ( my $wf = $dispatcher->param( 'workflow' ) ) {
             $log->debug( "Action set 'workflow' in parameters, getting ",
                          "current actions from it for menu..." );
@@ -77,9 +76,7 @@ sub _handle_request {
         }
         $log->debug ( "Processing template '$template_name'..." );
         eval {
-            $template->process( $template_name, $dispatcher->param, \$content )
-                || die "Cannot process template '$template_name': ",
-                       $template->error(), "\n";
+            $content = $dispatcher->process_template( $template_name );
         };
         if ( $@ ) {
             $log->error( $@ );
@@ -92,7 +89,7 @@ sub _handle_request {
     }
     elsif ( ! $action ) {
         $log->debug( "Processing index template since no action given" );
-        $template->process( 'index.tmpl', {}, \$content );
+        $content = $dispatcher->process_template( 'index.tmpl' );
     }
     else {
         $log->error( "No dispatch found for action '$action'" );
