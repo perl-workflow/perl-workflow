@@ -5,6 +5,8 @@ use base qw( Workflow::Validator );
 use DateTime::Format::Strptime;
 use Workflow::Exception qw( configuration_error validation_error );
 
+$Workflow::Validator::MatchesDateFormat::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+
 __PACKAGE__->mk_accessors( 'formatter' );
 
 sub _init {
