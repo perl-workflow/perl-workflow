@@ -132,8 +132,14 @@ sub add_history {
 sub get_history {
     my ( $self ) = @_;
     $self->{_histories} ||= [];
-    my @saved_history = FACTORY->get_workflow_history( $self );
-    return ( @{ $self->{_histories} }, @saved_history );
+    my @uniq_history = ();
+    my %seen_ids = ();
+    foreach my $history ( ( FACTORY->get_workflow_history( $self ), @{ $self->{_histories} } ) ) {
+        my $id = $history->id;
+        push @uniq_history, $history unless ( $id and ! $seen_ids{ $id } );
+        $seen_ids{ $id }++;
+    }
+    return @uniq_history;
 }
 
 sub get_unsaved_history {
