@@ -11,11 +11,15 @@
              description="Text describing the problem and any details to reproduce, if possible"
              is_required="yes"/>
       <field name="creator"
-             description="ID of user who is creating"
-             is_required="yes"/>
+             description="Name of user who is creating the ticket"
+             is_required="yes"
+             source_class="App::User"/>
+      <field name="type"
+             description="Type of ticket"
+             is_required="yes"
+             source_list="Bug,Feature,Improvement,Task"/>
       <field name="due_date"
-             description="Due date"/>
-
+             description="Due date (format: yyyy-mm-dd hh:mm)"/>
       <validator name="DateValidator">
          <arg>$due_date</arg>
       </validator>
