@@ -554,7 +554,7 @@ L<Workflow::State>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003 Chris Winters. All rights reserved.
+Copyright (c) 2003-2004 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -562,3 +562,7 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+Dietmar Hanisch E<lt>Dietmar.Hanisch@Bertelsmann.deE<gt> - Provided
+most of the good ideas for the module and a good example of everyday
+usage.
