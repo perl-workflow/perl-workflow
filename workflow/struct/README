@@ -1,0 +1,29 @@
+SQL Structures for Workflow System
+========================================
+
+This directory contains the SQL structures necessary for using DBI
+persistence for the Workflow system. Each file contains two or more
+DDL statements for creating the tables and other support
+structures. Typically you'll just need to pipe the file into the
+relevant client:
+
+MySQL (workflow_mysql.sql):
+
+  mysql -u user -p password databasename < workflow_mysql.sql
+
+PostgreSQL (workflow_pg.sql):
+
+  psql -U user -f workflow_pg.sql databasename
+
+SQLite (workflow_sqlite.sql):
+
+  sqlite dbfile.db < workflow_sqlite.sql
+
+For other databases use the generic file 'workflow_other.sql'. The
+only difference between it and the other types is how the ID fields
+are created. The previous three use vendor-specific methods for
+generating ID fields while the generic version just uses a random
+eight-character string. Less readable, but still unique.
+
+========================================
+$Id$
