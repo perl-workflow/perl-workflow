@@ -271,6 +271,9 @@ workflow pieces:
       type        $
       description $
       persister   $
+      observer    \@
+          sub           $
+          class         $
       state       \@
           name          $
           description   $
@@ -278,7 +281,7 @@ workflow pieces:
               name            $
               resulting_state $
               condition       \@
-                  name $
+                  name              $
 
 =over 4
 

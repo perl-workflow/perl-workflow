@@ -29,7 +29,7 @@ my %XML_OPTIONS = (
         KeyAttr    => [],
     },
     workflow => {
-        ForceArray => [ 'extra_data', 'state', 'action',  'resulting_state', 'condition' ],
+        ForceArray => [ 'extra_data', 'state', 'action',  'resulting_state', 'condition', 'observer' ],
         KeyAttr    => [],
     },
 );

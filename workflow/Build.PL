@@ -7,6 +7,7 @@ Module::Build->new(
     requires          => {
       'Class::Accessor'            => 0.18,
       'Class::Factory'             => 1.00,
+      'Class::Observable'          => 1.04,
       'DateTime'                   => 0.15,
       'DateTime::Format::Strptime' => 1.00,
       'DBD::Mock'                  => 0.10,

@@ -21,15 +21,17 @@ sub import {
     my $package = caller;
 
     if ( $_[0] eq 'FACTORY' ) {
-        $log->debug( "Trying to import 'FACTORY' of type '$class' to '$package'" );
+        $log->is_debug &&
+            $log->debug( "Trying to import 'FACTORY' of type '$class' to '$package'" );
         shift;
         my $instance = _initialize_instance( $class );
 
         my $import_target = $package . '::FACTORY';
         no strict 'refs';
         unless ( defined &{ $import_target } ) {
-            $log->debug( "Target '$import_target' not yet defined, ",
-                         "creating subroutine on the fly" );
+            $log->is_debug &&
+                $log->debug( "Target '$import_target' not yet defined, ",
+                             "creating subroutine on the fly" );
             *{ $import_target } = sub { return $instance };
         }
         return $instance;
@@ -68,8 +70,9 @@ sub instance {
 sub _initialize_instance {
     my ( $class ) = @_;
     unless ( $INSTANCES{ $class } ) {
-        $log->debug( "Creating empty instance of '$class' factory for ",
-                     "singleton use" );
+        $log->is_debug &&
+            $log->debug( "Creating empty instance of '$class' factory for ",
+                         "singleton use" );
         $INSTANCES{ $class } = bless( {} => $class );
     }
     return $INSTANCES{ $class };
@@ -86,27 +89,37 @@ sub add_config_from_file {
     _check_config_keys( %params );
 
     foreach my $type ( sort keys %params ) {
-        $log->debug( "Using '$type' configuration file(s): ",
-                     join( ', ', _flatten( $params{ $type } ) ) );
+        $log->is_debug &&
+            $log->debug( "Using '$type' configuration file(s): ",
+                         join( ', ', _flatten( $params{ $type } ) ) );
     }
 
-    $log->debug( "Adding condition configurations..." );
+    $log->is_debug &&
+        $log->debug( "Adding condition configurations..." );
     $self->_add_condition_config(
         Workflow::Config->parse_all_files( 'condition', $params{condition} )
     );
-    $log->debug( "Adding validator configurations..." );
+
+    $log->is_debug &&
+        $log->debug( "Adding validator configurations..." );
     $self->_add_validator_config(
         Workflow::Config->parse_all_files( 'validator', $params{validator} )
     );
-    $log->debug( "Adding persister configurations..." );
+
+    $log->is_debug &&
+        $log->debug( "Adding persister configurations..." );
     $self->_add_persister_config(
         Workflow::Config->parse_all_files( 'persister', $params{persister} )
     );
-    $log->debug( "Adding action configurations..." );
+
+    $log->is_debug &&
+        $log->debug( "Adding action configurations..." );
     $self->_add_action_config(
         Workflow::Config->parse_all_files( 'action', $params{action} )
     );
-    $log->debug( "Adding workflow configurations..." );
+
+    $log->is_debug &&
+        $log->debug( "Adding workflow configurations..." );
     $self->_add_workflow_config(
         Workflow::Config->parse_all_files( 'workflow', $params{workflow} )
     );
@@ -160,8 +173,69 @@ sub _add_workflow_config {
             my $wf_state = Workflow::State->new( $state_conf );
             push @{ $self->{_workflow_state}{ $wf_type } }, $wf_state;
         }
-        $log->info( "Added all workflow states..." );
+
+        $log->is_info &&
+            $log->info( "Added all workflow states..." );
+
+        $self->_load_observers( $workflow_config );
+        $log->is_info &&
+            $log->info( "Added all workflow observers..." );
     }
+}
+
+# Load all the observers so they're available when we instantiate the
+# workflow
+
+sub _load_observers {
+    my ( $self, $workflow_config ) = @_;
+    my $wf_type = $workflow_config->{type};
+    my $observer_specs = $workflow_config->{observer} || [];
+    my @observers = ();
+    foreach my $observer_info ( @{ $observers } ) {
+        if ( my $observer_class = $observer_info->{class} ) {
+            $self->_load_class( $observer_class,
+                    "Cannot require observer '%s' to watch observer " .
+                    "of type '$wf_type': %s" );
+            push @observers, $observer_class;
+        }
+        elsif ( my $observer_sub = $observer_info->{sub} ) {
+            my ( $observer_class, $observer_sub ) = split /::/, $observer_sub;
+            $self->_load_class( $observer_class,
+                    "Cannot require observer '%s' with sub '$observer_sub' to " .
+                    "watch observer of type '$wf_type': %s" );
+            my ( $o_sub );
+            eval {
+                no strict 'refs';
+                $o_sub = \&{ $observer_class . '::' . $observer_sub };
+            };
+            if ( $@ or ref( $o_sub ) ne 'CODE' ) {
+                my $error = $@ || 'subroutine not found';
+                $log->error( "Error loading subroutine '$observer_sub' in ",
+                             "class '$observer_class': $error" );
+                workflow_error $error;
+            }
+        }
+        else {
+            workflow_error "Cannot add observer to '$wf_type': you must ",
+                           "have either 'class' or 'sub' defined. (See ",
+                           "Workflow::Factory docs for details.)";
+        }
+    }
+    $log->is_info &&
+        $log->info( "Added observers to '$wf_type': ",
+                    join( ', ', @observers ) );
+    $self->{_workflow_observers}{ $wf_type } = \@observers;
+}
+
+sub _load_class {
+    my ( $self, $class_to_load, $msg ) = @_;
+    eval "require $class_to_load";
+    if ( $@ ) {
+        my $full_msg = sprintf( $msg, $class_to_load, $@ );
+        $log->error( $full_msg );
+        workflow_error $full_msg;
+    }
+
 }
 
 sub create_workflow {
@@ -197,6 +271,10 @@ sub create_workflow {
     );
     $log->is_info &&
         $log->info( "Created history object ok" );
+
+    $self->associate_observers_with_workflow( $wf );
+    $wf->notify_observers( 'create' );
+
     return $wf;
 }
 
@@ -211,7 +289,8 @@ sub fetch_workflow {
     my $persister = $self->get_persister( $wf_config->{persister} );
     my $wf_info = $persister->fetch_workflow( $wf_id );
     return undef unless ( $wf_info );
-    $log->debug( "Fetched data for workflow '$wf_id' ok" );
+    $log->is_debug &&
+        $log->debug( "Fetched data for workflow '$wf_id' ok" );
     my $wf = Workflow->new( $wf_id,
                             $wf_info->{state},
                             $wf_config,
@@ -220,6 +299,9 @@ sub fetch_workflow {
     $wf->last_update( $wf_info->{last_update} );
 
     $persister->fetch_extra_workflow_data( $wf );
+
+    $self->associate_observers_with_workflow( $wf );
+    $wf->notify_observers( 'fetch' );
 
     return $wf;
 }
@@ -250,13 +332,15 @@ sub save_workflow {
     my $persister = $self->get_persister( $wf_config->{persister} );
     eval {
         $persister->update_workflow( $wf );
-        $log->info( "Workflow '", $wf->id, "' updated ok" );
+        $log->is_info &&
+            $log->info( "Workflow '", $wf->id, "' updated ok" );
         my @unsaved = $wf->get_unsaved_history;
         foreach my $h ( @unsaved ) {
             $h->set_new_state( $wf->state );
         }
         $persister->create_history( $wf, @unsaved );
-        $log->info( "Created necessary history objects ok" );
+        $log->is_info &&
+            $log->info( "Created necessary history objects ok" );
     };
     if ( $@ ) {
         $wf->last_update( $old_update );
@@ -287,19 +371,22 @@ sub _add_action_config {
     foreach my $action_config ( @all_action_config ) {
         next unless ( ref $action_config eq 'HASH' );
         my $name = $action_config->{name};
-        $log->debug( "Adding configuration for action '$name'" );
+        $log->is_debug &&
+            $log->debug( "Adding configuration for action '$name'" );
         $self->{_action_config}{ $name } = $action_config;
         my $action_class = $action_config->{class};
         unless ( $action_class ) {
             configuration_error "Action '$name' must be associated with a ",
                                 "class using the 'class' attribute."
         }
-        $log->debug( "Trying to include action class '$action_class'..." );
+        $log->is_debug &&
+            $log->debug( "Trying to include action class '$action_class'..." );
         eval "require $action_class";
         if ( $@ ) {
             configuration_error "Cannot include action class '$action_class': $@";
         }
-        $log->debug( "Included action '$name' class '$action_class' ok" );
+        $log->is_debug &&
+            $log->debug( "Included action '$name' class '$action_class' ok" );
     }
 }
 
@@ -325,28 +412,32 @@ sub _add_persister_config {
     foreach my $persister_config ( @all_persister_config ) {
         next unless ( ref $persister_config eq 'HASH' );
         my $name = $persister_config->{name};
-        $log->debug( "Adding configuration for persister '$name'" );
+        $log->is_debug &&
+            $log->debug( "Adding configuration for persister '$name'" );
         $self->{_persister_config}{ $name } = $persister_config;
         my $persister_class = $persister_config->{class};
         unless ( $persister_class ) {
             configuration_error "You must specify a 'class' in persister ",
                                 "'$name' configuration";
         }
-        $log->debug( "Trying to include persister class '$persister_class'..." );
+        $log->is_debug &&
+            $log->debug( "Trying to include persister class '$persister_class'..." );
         eval "require $persister_class";
         if ( $@ ) {
             configuration_error "Cannot include persister class ",
                                 "'$persister_class': $@";
         }
-        $log->debug( "Included persister '$name' class '$persister_class' ",
-                     "ok; now try to instantiate persister..." );
+        $log->is_debug &&
+            $log->debug( "Included persister '$name' class '$persister_class' ",
+                         "ok; now try to instantiate persister..." );
         my $persister = eval { $persister_class->new( $persister_config ) };
         if ( $@ ) {
             configuration_error "Failed to create instance of persister ",
                                 "'$name' of class '$persister_class': $@";
         }
         $self->{_persister}{ $name } = $persister;
-        $log->debug( "Instantiated persister '$name' ok" );
+        $log->is_debug &&
+            $log->debug( "Instantiated persister '$name' ok" );
     }
 }
 
@@ -371,27 +462,31 @@ sub _add_condition_config {
     foreach my $condition_config ( @all_condition_config ) {
         next unless ( ref $condition_config eq 'HASH' );
         my $name = $condition_config->{name};
-        $log->debug( "Adding configuration for condition '$name'" );
+        $log->is_debug &&
+            $log->debug( "Adding configuration for condition '$name'" );
         $self->{_condition_config}{ $name } = $condition_config;
         my $condition_class = $condition_config->{class};
         unless ( $condition_class ) {
             configuration_error "Condition '$name' must be associated ",
                                 "with a class using the 'class' attribute";
         }
-        $log->debug( "Trying to include condition class '$condition_class'" );
+        $log->is_debug &&
+            $log->debug( "Trying to include condition class '$condition_class'" );
         eval "require $condition_class";
         if ( $@ ) {
             configuration_error "Cannot include condition class ",
                                 "'$condition_class': $@";
         }
-        $log->debug( "Included condition '$name' class '$condition_class' ",
-                     "ok; now try to instantiate condition..." );
+        $log->is_debug &&
+            $log->debug( "Included condition '$name' class '$condition_class' ",
+                         "ok; now try to instantiate condition..." );
         my $condition = eval { $condition_class->new( $condition_config ) };
         if ( $@ ) {
             configuration_error "Cannot create condition '$name': $@";
         }
         $self->{_conditions}{ $name } = $condition;
-        $log->debug( "Instantiated condition '$name' ok" );
+        $log->is_debug &&
+            $log->debug( "Instantiated condition '$name' ok" );
     }
 }
 
@@ -415,26 +510,30 @@ sub _add_validator_config {
     foreach my $validator_config ( @all_validator_config ) {
         next unless ( ref $validator_config eq 'HASH' );
         my $name = $validator_config->{name};
-        $log->debug( "Adding configuration for validator '$name'" );
+        $log->is_debug &&
+            $log->debug( "Adding configuration for validator '$name'" );
         $self->{_validator_config}{ $name } = $validator_config;
         my $validator_class = $validator_config->{class};
         unless ( $validator_class ) {
             configuration_error "Validator '$name' must be associated with ",
                                 "a class using the 'class' attribute."
         }
-        $log->debug( "Trying to include validator class '$validator_class'" );
+        $log->is_debug &&
+            $log->debug( "Trying to include validator class '$validator_class'" );
         eval "require $validator_class";
         if ( $@ ) {
             workflow_error "Cannot include validator class '$validator_class': $@";
         }
-        $log->debug( "Included validator '$name' class '$validator_class' ok; ",
-                     "now try to instantiate validator..." );
+        $log->is_debug &&
+            $log->debug( "Included validator '$name' class '$validator_class' ",
+                         " ok; now try to instantiate validator..." );
         my $validator = eval { $validator_class->new( $validator_config ) };
         if ( $@ ) {
             workflow_error "Cannot create validator '$name': $@";
         }
         $self->{_validators}{ $name } = $validator;
-        $log->debug( "Instantiated validator '$name' ok" );
+        $log->is_debug &&
+            $log->debug( "Instantiated validator '$name' ok" );
     }
 }
 
@@ -504,6 +603,9 @@ Create a new workflow of type C<$workflow_type>. This will create a
 new record in whatever persistence mechanism you have associated with
 C<$workflow_type> and set the workflow to its initial state.
 
+Any observers you've associated with this workflow type will be
+attached to the returned workflow object.
+
 Returns: newly created workflow object.
 
 B<fetch_workflow( $workflow_type, $workflow_id )>
@@ -512,6 +614,9 @@ Retrieve a workflow object of type C<$workflow_type> and ID
 C<$workflow_id>. (The C<$workflow_type> is necessary so we can fetch
 the workflow using the correct persister.) If a workflow with ID
 C<$workflow_id> is not found C<undef> is returned.
+
+Any observers you've associated with this workflow type will be
+attached to the returned workflow object.
 
 Throws exception if no workflow type C<$workflow_type> available.
 
