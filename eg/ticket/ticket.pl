@@ -28,6 +28,8 @@ GetOptions( 'db'       => \$OPT_db_init,
             'dbtype=s' => \$OPT_db_type );
 $OPT_db_type ||= 'sqlite';
 
+my $DB_FILE = 'ticket.db';
+
 if ( $OPT_db_init ) {
     create_tables();
     print "Created database and tables ok\n";
@@ -290,8 +292,6 @@ sub create_tables {
     $log->info( 'Created tables ok' );
 }
 
-my $DB_FILE = 'ticket.db';
-
 sub initialize_db {
     my $log = get_logger();
 
@@ -308,12 +308,16 @@ sub initialize_db {
             $log->info( "Removing old database file..." );
             unlink( $DB_FILE );
         }
-        $dbh = DBI->connect( "DBI:SQLite:dbname=db/$DB_FILE", '', '' )
+        my $DSN = "DBI:SQLite:dbname=db/$DB_FILE";
+        $log->info( "Connecting to SQLite database with DSN '$DSN'..." );
+        $dbh = DBI->connect( $DSN, '', '',
+                             { RaiseError => 1, PrintError => 0 } )
                     || die "Cannot create database: $DBI::errstr\n";
-        $dbh->{RaiseError} = 1;
         $log->info( "Connected to database ok" );
-        @tables = ( read_tables( '../../struct/workflow_sqlite.sql' ),
-                    read_tables( 'ticket.sql' ) );
+        @tables = (
+            read_tables( '../../struct/workflow_sqlite.sql' ),
+            read_tables( 'ticket.sql' )
+        );
     }
     elsif ( $OPT_db_type eq 'csv' ) {
         my @names = qw( workflow workflow_history ticket workflow_ticket );
@@ -327,8 +331,10 @@ sub initialize_db {
                     || die "Cannot create database: $DBI::errstr\n";
         $dbh->{RaiseError} = 1;
         $log->info( "Connected to database ok" );
-        @tables = ( read_tables( '../../struct/workflow_csv.sql' ),
-                    read_tables( 'ticket_csv.sql' ) );
+        @tables = (
+            read_tables( '../../struct/workflow_csv.sql' ),
+            read_tables( 'ticket_csv.sql' )
+        );
     }
     return ( $dbh, @tables );
 }

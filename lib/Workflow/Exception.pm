@@ -45,7 +45,8 @@ sub _mythrow {
     my $type = shift @_;
     my ( $msg, %params ) = _massage( @_ );
     my $log = get_logger();
-    $log->error( "$type exception thrown from ", join( ', ', caller ) );
+    my ( $pkg, $line ) = (caller)[0,2];
+    $log->error( "$type exception thrown from [$pkg: $line]: $msg" );
     goto &Exception::Class::Base::throw( $TYPE_CLASSES{ $type },
                                          message => $msg, %params );
 }

@@ -147,6 +147,13 @@ sub _get_workflow {
         $log->warn( "No workflow found with ID '$wf_id'" );
         die "No workflow found with ID '$wf_id'\n";
     }
+    $log->info( "Setting current user to: $cookies_in->{current_user}" );
+    $wf->context->param( current_user => $cookies_in->{current_user} );
+    if ( my $ticket_id = $wf->context->param( 'ticket_id' ) ) {
+        my $ticket = App::Ticket->fetch( $ticket_id );
+        $log->info( "Setting ticket '", $ticket->id, "' to context" );
+        $wf->context->param( ticket => $ticket );
+    }
     return $wf;
 }
 
