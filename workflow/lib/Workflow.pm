@@ -489,7 +489,7 @@ You will see:
 
 B<init( $id, $current_state, \%workflow_config, \@wf_states )>
 
-B<THIS SHOULD ONLY BE CALLED BY THE L<Workflow::Factory>. Do not call
+B<THIS SHOULD ONLY BE CALLED BY THE> L<Workflow::Factory>. Do not call
 this or the C<new()> method yourself -- you will only get an
 exception. Your only interface for creating and fetching workflows is
 through the factory.
