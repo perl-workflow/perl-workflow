@@ -4,7 +4,9 @@ package Workflow::Persister::DBI;
 
 use strict;
 use base qw( Workflow::Persister );
+use DateTime;
 use DateTime::Format::Strptime;
+use DBI;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::History;
@@ -19,7 +21,7 @@ my @FIELDS = qw( handle dsn user password driver
                  workflow_id_generator history_id_generator );
 __PACKAGE__->mk_accessors( @FIELDS );
 
-my $parser = DateTime::Format::Strptime->new( pattern => '%Y-%m-%d %H:%M:%S' );
+my $parser = DateTime::Format::Strptime->new( pattern => '%Y-%m-%d %H:%M' );
 
 sub init {
     my ( $self, $params ) = @_;
@@ -54,7 +56,7 @@ sub init {
             || die "Cannot connect to database: $DBI::errstr";
     };
     if ( $@ ) {
-        perist_error $@;
+        persist_error $@;
     }
     $dbh->{RaiseError} = 1;
     $dbh->{PrintError} = 0;
@@ -318,7 +320,7 @@ sub fetch_history {
             action      => $row->[2],
             description => $row->[3],
             state       => $row->[4],
-            user        => $row->[5].
+            user        => $row->[5],
             date        => $parser->parse_datetime( $row->[6] ),
         });
     }
