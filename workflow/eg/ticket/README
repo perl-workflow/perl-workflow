@@ -69,7 +69,7 @@ Log::Log4perl configuration file 'log4perl.conf'. It's very useful to
 watch what's going on with a 'tail -f' or whatever your platform
 supports.
 
-Note that if you run both interfaces at the same time they'll write to
+Note that if you run both interfaces at the same time they'll log to
 the same file. This can make for confusing log messages as they may be
 interleaved.
 
@@ -91,6 +91,41 @@ Additionally, in 'workflow_action.xml' you'll see:
 
  - validators (e.g., 'DateValidator')
    - defined in 'workflow_validator.xml'
+
+Requests to both the command-line tool ('ticket.pl') and the web
+server ('ticket_web.pl') make data available to the workflow context
+for the actions to use. Because one application is stateful and the
+other stateless they do so in different ways. But one of the features
+of the workflow system is that it doesn't care. Here's an example:
+
+#  Action                     Context 
+-- -----------                ----------------
+0) (none)                     (empty)
+1) context current_user Bob   current_user=Bob
+2) wf Ticket                  current_user=Bob;
+                              workflow={Workflow object}
+3) execute TIX_NEW
+   - get data from user       current_user=Bob;
+                              workflow={Workflow object};
+                              ticket={Ticket object}
+4) execute TIX_COMMENT
+   - get data from user       current_user=Bob;
+                              workflow={Workflow object};
+                              ticket={Ticket object}
+ ...
+
+Every request from the user operates with the data in the context
+available to the workflow actions.
+
+To do the same with the web application we need to use cookies and do
+some extra work. As long as you're using a workflow (as set in the
+'workflow_id' cookie) the web dispatching module (App::Web) will fetch
+the workflow and set the 'current_user' cookie in its context.
+
+And because we've configured the persister to fetch extra data
+('ticket_id') associated with the workflow, the dispatcher also
+fetches the associated ticket and assigns it to the context in the
+'ticket' key.
 
 ========================================
 $Id$
