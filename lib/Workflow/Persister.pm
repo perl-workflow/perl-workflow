@@ -9,8 +9,62 @@ use Workflow::Exception qw( persist_error );
 
 $Workflow::Persister::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-my @FIELDS = qw( name class );
+my @FIELDS = qw( name class
+                 use_random use_uuid
+                 workflow_id_generator history_id_generator );
 __PACKAGE__->mk_accessors( @FIELDS );
+
+sub init {
+    my ( $self, $params ) = @_;
+    my $log = get_logger();
+    for ( @FIELDS ) {
+        $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
+    }
+    $log->info( "Initializing persister '", $self->name, "'" );
+}
+
+########################################
+# COMMON GENERATOR ASSIGNMENTS
+
+sub assign_generators {
+    my ( $self, $params ) = @_;
+    $params ||= {};
+
+    my $log = get_logger();
+
+    my ( $wf_gen, $history_gen );
+    if ( $self->use_uuid eq 'yes' ) {
+        $log->debug( "Assigning UUID generators by request" );
+        ( $wf_gen, $history_gen ) =
+            $self->init_uuid_generators( $params );
+    }
+    elsif ( $self->use_random eq 'yes' ) {
+        $log->debug( "Assigning random ID generators by request" );
+        ( $wf_gen, $history_gen ) =
+            $self->init_random_generators( $params );
+    }
+    if ( $wf_gen and $history_gen ) {
+        $self->workflow_id_generator( $wf_gen );
+        $self->history_id_generator( $history_gen );
+    }
+}
+
+sub init_random_generators {
+    my ( $self, $params ) = @_;
+    my $length = $params->{id_length} || 8;
+    my $generator =
+        Workflow::Persister::RandomId->new({ id_length => $length });
+    return ( $generator, $generator );
+}
+
+sub init_uuid_generators {
+    my ( $self, $params ) = @_;
+    my $generator = Workflow::Persister::UUID->new();
+    return ( $generator, $generator );
+}
+
+########################################
+# INTERFACE METHODS
 
 sub create_workflow {
     my ( $self, $wf ) = @_;
@@ -30,13 +84,15 @@ sub fetch_workflow {
                   "'fetch_workflow()'";
 }
 
+# This is the only one that isn't required...
 sub fetch_extra_workflow_data {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
-    $log->debug( "Called empty implementation of 'fetch_extra_workflow_data()'; ",
-                 "this is not an error as you may not need this extra ",
-                 "functionality. If you do you should use a perister for this ",
-                 "purpose (e.g., Workflow::Persister::DBI::ExtraData) or ",
+    $log->info( "Called empty 'fetch_extra_workflow_data()' (ok)" );
+    $log->debug( "An empty implementation is not an error as you may ",
+                 "not need this extra functionality. If you do you ",
+                 "should use a perister for this purpose (e.g., ",
+                 "Workflow::Persister::DBI::ExtraData) or ",
                  "create your own and just implement this method." );
     return;
 }
