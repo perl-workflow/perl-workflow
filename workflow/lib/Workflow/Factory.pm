@@ -4,6 +4,7 @@ package Workflow::Factory;
 
 use strict;
 use base qw( Workflow::Base Exporter );
+use DateTime;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 
@@ -122,7 +123,37 @@ sub _add_workflow_config {
     }
 }
 
-sub get_workflow {
+sub create_workflow {
+    my ( $self, $wf_type ) = @_;
+    my $log = get_logger();
+
+    my $wf_config = $self->_get_workflow_config( $wf_type );
+    unless ( $wf_config ) {
+        workflow_error "No workflow of type '$wf_type' available";
+    }
+    my $persister = $self->get_persister( $wf_config->{persister} );
+    my $wf = Workflow->new( undef,
+                            $INITIAL_STATE,
+                            $wf_config,
+                            $self->{_workflow_state}{ $wf_type } );
+    $wf->context( Workflow::Context->new );
+    my $id = $persister->create_workflow( $wf );
+    $wf->id( $id );
+    $persister->create_history(
+        $wf, Workflow::History->new(
+                 { workflow_id => $id,
+                   action      => 'Create workflow',
+                   description => 'Create new workflow',
+                   user        => 'n/a',
+                   state       => $wf->state,
+                   date        => DateTime->now,
+               })
+    );
+    $wf->last_update( DateTime->now );
+    return $wf;
+}
+
+sub fetch_workflow {
     my ( $self, $wf_type, $wf_id ) = @_;
     my $log = get_logger();
 
@@ -131,32 +162,18 @@ sub get_workflow {
         workflow_error "No workflow of type '$wf_type' available";
     }
     my $persister = $self->get_persister( $wf_config->{persister} );
-    my ( $wf );
-    if ( $wf_id ) {
-        my $wf_info = $persister->fetch_workflow( $wf_id );
-        unless ( $wf_info ) {
-            workflow_error "No workflow found with ID '$wf_id'";
-        }
-        $log->debug( "Fetched data for workflow '$wf_id' ok" );
-        $wf = Workflow->new( $wf_id,
-                             $wf_info->{state},
-                             $wf_config,
-                             $self->{_workflow_state}{ $wf_type } );
-        $wf->last_update( $wf_info->{last_update} );
-        $persister->fetch_extra_workflow_data( $wf );
-    }
-    else {
-        $wf = Workflow->new( undef,
-                             $INITIAL_STATE,
-                             $wf_config,
-                             $self->{_workflow_state}{ $wf_type } );
-        my $id = $persister->create_workflow( $wf );
-        $wf->id( $id );
-        $wf->last_update( DateTime->now );
-    }
-    unless ( $wf->context ) {
-        $wf->context( Workflow::Context->new );
-    }
+    my $wf_info = $persister->fetch_workflow( $wf_id );
+    return undef unless ( $wf_info );
+    $log->debug( "Fetched data for workflow '$wf_id' ok" );
+    my $wf = Workflow->new( $wf_id,
+                            $wf_info->{state},
+                            $wf_config,
+                            $self->{_workflow_state}{ $wf_type } );
+    $wf->context( Workflow::Context->new );
+    $wf->last_update( $wf_info->{last_update} );
+
+    $persister->fetch_extra_workflow_data( $wf );
+
     return $wf;
 }
 
@@ -188,7 +205,6 @@ sub save_workflow {
     return $wf;
 }
 
-
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
     my $wf_config = $self->_get_workflow_config( $wf->type );
@@ -210,12 +226,14 @@ sub _add_action_config {
         $log->debug( "Adding configuration for action '$name'" );
         $self->{_action_config}{ $name } = $action_config;
         my $action_class = $action_config->{class};
+        unless ( $action_class ) {
+            configuration_error "Action '$name' must be associated with a ",
+                                "class using the 'class' attribute."
+        }
         $log->debug( "Trying to include action class '$action_class'..." );
-        if ( $action_class ) {
-            eval "require $action_class";
-            if ( $@ ) {
-                workflow_error "Cannot include action class '$action_class': $@";
-            }
+        eval "require $action_class";
+        if ( $@ ) {
+            configuration_error "Cannot include action class '$action_class': $@";
         }
         $log->debug( "Included action '$name' class '$action_class' ok" );
     }
@@ -230,6 +248,7 @@ sub get_action {
     my $action_class = $config->{class};
     return $action_class->new( $wf, $config );
 }
+
 
 ########################################
 # PERSISTERS
@@ -254,15 +273,15 @@ sub _add_persister_config {
             configuration_error "Cannot include persister class ",
                                 "'$persister_class': $@";
         }
-        $log->debug( "Included persister '$name' class '$persister_class' ok" );
-        $log->debug( "Creating instance of persister '$name'" );
+        $log->debug( "Included persister '$name' class '$persister_class' ",
+                     "ok; now try to instantiate persister..." );
         my $persister = eval { $persister_class->new( $persister_config ) };
         if ( $@ ) {
             configuration_error "Failed to create instance of persister ",
                                 "'$name' of class '$persister_class': $@";
         }
-        $log->debug( "Created instance of persister '$name' ok" );
         $self->{_persister}{ $name } = $persister;
+        $log->debug( "Instantiated persister '$name' ok" );
     }
 }
 
@@ -289,20 +308,24 @@ sub _add_condition_config {
         $log->debug( "Adding configuration for condition '$name'" );
         $self->{_condition_config}{ $name } = $condition_config;
         my $condition_class = $condition_config->{class};
-        $log->debug( "Trying to include condition class '$condition_class'" );
-        if ( $condition_class ) {
-            eval "require $condition_class";
-            if ( $@ ) {
-                workflow_error "Cannot include condition class '$condition_class': $@";
-            }
-            my $condition = eval { $condition_class->new( $condition_config ) };
-            if ( $@ ) {
-                workflow_error "Cannot create condition '$name': $@";
-            }
-            else {
-                $self->{_conditions}{ $name } = $condition;
-            }
+        unless ( $condition_class ) {
+            configuration_error "Condition '$name' must be associated ",
+                                "with a class using the 'class' attribute";
         }
+        $log->debug( "Trying to include condition class '$condition_class'" );
+        eval "require $condition_class";
+        if ( $@ ) {
+            configuration_error "Cannot include condition class ",
+                                "'$condition_class': $@";
+        }
+        $log->debug( "Included condition '$name' class '$condition_class' ",
+                     "ok; now try to instantiate condition..." );
+        my $condition = eval { $condition_class->new( $condition_config ) };
+        if ( $@ ) {
+            configuration_error "Cannot create condition '$name': $@";
+        }
+        $self->{_conditions}{ $name } = $condition;
+        $log->debug( "Instantiated condition '$name' ok" );
     }
 }
 
@@ -313,6 +336,7 @@ sub get_condition {
     }
     return $self->{_conditions}{ $name };
 }
+
 
 ########################################
 # VALIDATORS
@@ -327,20 +351,23 @@ sub _add_validator_config {
         $log->debug( "Adding configuration for validator '$name'" );
         $self->{_validator_config}{ $name } = $validator_config;
         my $validator_class = $validator_config->{class};
-        $log->debug( "Trying to include validator class '$validator_class'" );
-        if ( $validator_class ) {
-            eval "require $validator_class";
-            if ( $@ ) {
-                workflow_error "Cannot include validator class '$validator_class': $@";
-            }
-            $log->debug( "Required validator '$name' class '$validator_class' ok" );
-            my $validator = eval { $validator_class->new( $validator_config ) };
-            if ( $@ ) {
-                workflow_error "Cannot create validator '$name': $@";
-            }
-            $self->{_validators}{ $name } = $validator;
-            $log->debug( "Created validator '$name' with class '$validator_class' ok" );
+        unless ( $validator_class ) {
+            configuration_error "Validator '$name' must be associated with ",
+                                "a class using the 'class' attribute."
         }
+        $log->debug( "Trying to include validator class '$validator_class'" );
+        eval "require $validator_class";
+        if ( $@ ) {
+            workflow_error "Cannot include validator class '$validator_class': $@";
+        }
+        $log->debug( "Included validator '$name' class '$validator_class' ok; ",
+                     "now try to instantiate validator..." );
+        my $validator = eval { $validator_class->new( $validator_config ) };
+        if ( $@ ) {
+            workflow_error "Cannot create validator '$name': $@";
+        }
+        $self->{_validators}{ $name } = $validator;
+        $log->debug( "Instantiated validator '$name' ok" );
     }
 }
 
@@ -352,6 +379,7 @@ sub get_validator {
     return $self->{_validators}{ $name };
 }
 
+# Create our single instance...
 $INSTANCE = bless( {}, __PACKAGE__ );
 
 1;
@@ -364,45 +392,73 @@ Workflow::Factory - Generates new workflow and supporting objects
 
 =head1 SYNOPSIS
 
+ # Import the singleton for easy access
  use Workflow::Factory qw( FACTORY );
+ 
+ # Add XML configurations to the factory
+ FACTORY->add_config_from_file( workflow  => 'workflow.xml',
+                                action    => [ 'myactions.xml', 'otheractions.xml' ],
+                                validator => [ 'validator.xml', 'myvalidators.xml' ],
+                                condition => 'condition.xml',
+                                persister => 'persister.xml' );
+ 
+ # Create a new workflow of type 'MyWorkflow'
+ my $wf = FACTORY->create_workflow( 'MyWorkflow' );
+ 
+ # Fetch an existing workflow with ID '25'
+ my $wf = FACTORY->fetch_workflow( 'MyWorkflow', 25 );
 
 =head1 DESCRIPTION
 
-The Workflow Factory is your primary interface to the workflow system. You give it the configuration
+=head2 Public
+
+The Workflow Factory is your primary interface to the workflow
+system. You give it the configuration files and/or data structures for
+the L<Workflow>, L<Workflow::Action>, L<Workflow::Condition>,
+L<Workflow::Persister>, and L<Workflow::Validator> objects and then
+you ask it for new and existing L<Workflow> objects.
+
+=head2 Internal
+
+Developers using the workflow system should be familiar with how the
+factory processes configurations and how it makes the various
+components of the system are instantiated and stored in the factory.
 
 =head1 METHODS
 
-=head2 Instantiation Methods
+=head2 Public Methods
 
 B<instance()>
 
 The factory is a singleton, this is how you get access to the
-instance. You can also just import the 'FACTORY' constant:
+instance. You can also just import the 'FACTORY' constant as in the
+L<SYNOPSIS>.
 
- use Workflow::Factory qw( FACTORY );
+B<create_workflow( $workflow_type )>
 
- FACTORY->add_config_from_file( action => 'myaction.xml' );
+Create a new workflow of type C<$workflow_type>. This will create a
+new record in whatever persistence mechanism you have associated with
+C<$workflow_type> and set the workflow to its initial state.
 
-B<get_workflow( $workflow_type, [ $workflow_id ] )>
+Returns: newly created workflow object.
 
-B<save_workflow( $workflow )>
+B<fetch_workflow( $workflow_type, $workflow_id )>
 
-B<get_action( $workflow, $action_name )>
+Retrieve a workflow object of type C<$workflow_type> and ID
+C<$workflow_id>. (The C<$workflow_type> is necessary so we can fetch
+the workflow using the correct persister.) If a workflow with ID
+C<$workflow_id> is not found C<undef> is returned.
 
-B<get_persister( $persister_name )>
+Throws exception if no workflow type C<$workflow_type> available.
 
-B<get_condition( $condition_name )>
-
-B<get_validator( $validator_name )>
-
-=head2 Configuration Methods
+Returns: L<Workflow> object
 
 B<add_config_from_file( %config_declarations )>
 
 Pass in filenames for the various components you wish to initialize
-using the keys 'action', 'condition', 'validator' and 'workflow'. The
-value for each can be a single filename or an arrayref of
-filenames.
+using the keys 'action', 'condition', 'persister', 'validator' and
+'workflow'. The value for each can be a single filename or an arrayref
+of filenames.
 
 The system is familiar with the 'perl' and 'xml' configuration formats
 -- see the 'doc/configuration.txt' for what we expect as the
@@ -422,23 +478,123 @@ the behavior should be exactly the same.
 B<add_config( %config_hashrefs )>
 
 Similar to C<add_config_from_file()> -- the keys may be 'action',
-'condition', 'validator' and/or 'workflow'. But the values are the
-actual configuration hashrefs instead of the files holding the
-configurations.
+'condition', 'persister', 'validator' and/or 'workflow'. But the
+values are the actual configuration hashrefs instead of the files
+holding the configurations.
 
 You normally will only need to call this if you are creating
 configurations on the fly (e.g., hot-deploying a validator class
 specified by a user) or using a custom configuration format.
 
+=head2 Internal Methods
+
+B<save_workflow( $workflow )>
+
+Stores the state and current datetime of the C<$workflow> object. This
+is normally called only from the L<Workflow> C<execute_action()>
+method.
+
+Returns: C<$workflow>
+
+B<get_workflow_history( $workflow )>
+
+Retrieves all L<Workflow::History> objects related to C<$workflow>.
+
+B<NOTE>: Normal users get the history objects from the L<Workflow>
+object itself. Under the covers it calls this.
+
+Returns: list of L<Workflow::History> objects
+
+B<get_action( $workflow, $action_name )>
+
+Retrieves the action C<$action_name> from workflow C<$workflow>. Note
+that this does not do any checking as to whether the action is proper
+given the state of C<$workflow> or anything like that. It is mostly an
+internal method for L<Workflow> (which B<does> do checking as to the
+propriety of the action) to instantiate new actions.
+
+Throws exception if no action with name C<$action_name> available.
+
+Returns: L<Workflow::Action> object
+
+B<get_persister( $persister_name )>
+
+Retrieves the persister with name C<$persister_name>.
+
+Throws exception if no persister with name C<$persister_name>
+available.
+
+B<get_condition( $condition_name )>
+
+Retrieves the condition with name C<$condition_name>.
+
+Throws exception if no condition with name C<$condition_name>
+available.
+
+B<get_validator( $validator_name )>
+
+Retrieves the validator with name C<$validator_name>.
+
+Throws exception if no validator with name C<$validator_name>
+available.
+
+=head2 Internal Configuration Methods
+
 B<_add_workflow_config( @config_hashrefs )>
+
+Adds all configurations in C<@config_hashrefs> to the factory. Also
+cycles through the workflow states and creates a L<Workflow::State>
+object for each. These states are passed to the workflow when it is
+instantiated.
+
+Returns: nothing
 
 B<_add_action_config( @config_hashrefs )>
 
+Adds all configurations in C<@config_hashrefs> to the factory, doing a
+'require' on the class referenced in the 'class' attribute of each
+action.
+
+Throws an exception if there is no 'class' associated with an action
+or if we cannot 'require' that class.
+
+Returns: nothing
+
 B<_add_persister_config( @config_hashrefs )>
+
+Adds all configurations in C<@config_hashrefs> to the factory, doing a
+'require' on the class referenced in the 'class' attribute of each
+persister.
+
+Throws an exception if there is no 'class' associated with a
+persister, if we cannot 'require' that class, or if we cannot
+instantiate an object of that class.
+
+Returns: nothing
 
 B<_add_condition_config( @config_hashrefs )>
 
+Adds all configurations in C<@config_hashrefs> to the factory, doing a
+'require' on the class referenced in the 'class' attribute of each
+condition.
+
+Throws an exception if there is no 'class' associated with a
+condition, if we cannot 'require' that class, or if we cannot
+instantiate an object of that class.
+
+Returns: nothing
+
 B<_add_validator_config( @config_hashrefs )>
+
+Adds all configurations in C<@config_hashrefs> to the factory, doing a
+'require' on the class referenced in the 'class' attribute of each
+validator.
+
+Throws an exception if there is no 'class' associated with a
+validator, if we cannot 'require' that class, or if we cannot
+instantiate an object of that class.
+
+Returns: nothing
 
 =head1 SEE ALSO
 
