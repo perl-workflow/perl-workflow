@@ -1,17 +1,15 @@
 <actions>
-
-<!-- this is the action name, used in the workflow -->
-   <action name="TIX_NEW"
+   <action name="create issue"
            class="App::Action::TicketCreate">
-      <description>Create a new ticket</description>
+      <description>Create a new issue</description>
       <field name="subject"
              label="Subject"
-             description="Subject of ticket"
+             description="Subject of issue"
              is_required="yes"/>
       <field name="description"
              label="Description"
-             description="Text describing the problem and any details to reproduce, if possible"
-             is_required="yes"/>
+             description="Description of issue"
+             is_required="yes" />
       <field name="creator"
              label="Creator"
              description="Name of user who is creating the ticket"
@@ -30,7 +28,7 @@
       </validator>
    </action>
 
-   <action name="TIX_COMMENT"
+   <action name="add comment"
            class="App::Action::TicketComment">
       <field name="ticket_id"
              description="Ticket to comment on"
@@ -43,7 +41,7 @@
              is_required="yes"/>
    </action>
 
-   <action name="TIX_EDIT"
+   <action name="edit issue"
            class="App::Action::TicketUpdate">
       <field name="ticket_id"
              description="Ticket to edit"
@@ -53,7 +51,7 @@
              is_required="yes"/>
    </action>
 
-   <action name="TIX_CLOSE"
+   <action name="close issue"
            class="App::Action::TicketUpdate">
       <field name="ticket_id"
              description="Ticket to close"
@@ -63,7 +61,7 @@
              is_required="yes"/>
    </action>
 
-   <action name="TIX_REOPEN"
+   <action name="reopen issue"
            class="App::Action::TicketUpdate">
       <field name="ticket_id"
              description="Ticket to reopen"
