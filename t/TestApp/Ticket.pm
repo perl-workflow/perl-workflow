@@ -44,11 +44,9 @@ sub fetch {
 
     my $persister = FACTORY->get_persister( 'TestPersister' );
     if ( $persister->isa( 'Workflow::Persister::DBI' ) ) {
-        my $sql = q{
-            SELECT type, subject, description, creator, status, due_date, last_update
-            FROM ticket
-            WHERE ticket_id = ?
-        };
+        my $ticket_fields = 'type, subject, description, creator, status, due_date, last_update';
+        my $sql = 'SELECT %s FROM ticket WHERE ticket_id = ?';
+        $sql = sprintf( $sql, $ticket_fields );
         $log->debug( "Will use SQL\n$sql" );
         $log->debug( "Will use parameters: $id" );
 
@@ -116,10 +114,7 @@ sub create {
                          creator status due_date last_update );
         my @values = ( $id, $self->type, $self->subject, $self->description,
                        $self->creator, $self->status, $due_date, $update_date );
-        my $sql = q{
-            INSERT INTO ticket ( %s )
-            VALUES ( %s )
-        };
+        my $sql = 'INSERT INTO ticket ( %s ) VALUES ( %s )';
         $sql = sprintf( $sql, join( ', ', @fields ),
                         join( ', ', map { '?' } @values ) );
         $log->debug( "Will use SQL\n$sql" );
@@ -169,13 +164,9 @@ sub update {
 
     my $persister = FACTORY->get_persister( 'TestPersister' );
     if ( $persister->isa( 'Workflow::Persister::DBI' ) ) {
-        my $sql = q{
-            UPDATE ticket
-            SET status = ?,
-                due_date = ?,
-                last_update = ?
-            WHERE ticket_id = ?
-        };
+        my $sql = 'UPDATE ticket ' .
+                  'SET status = ?, due_date = ?, last_update = ? ' .
+                  'WHERE ticket_id = ?';
         my @values = ( $self->status,
                        $self->due_date->strftime( '%Y-%m-%d' ),
                        $self->last_update->strftime( '%Y-%m-%d %H:%M' ),
