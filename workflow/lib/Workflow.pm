@@ -6,10 +6,11 @@ use strict;
 
 use base qw( Workflow::Base );
 use Log::Log4perl       qw( get_logger );
+use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
 use Workflow::Factory   qw( FACTORY );
 
-my @FIELDS = qw( id type description state );
+my @FIELDS = qw( id description last_update state type );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 $Workflow::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -35,7 +36,7 @@ sub context {
         }
     }
     unless ( $self->{context} ) {
-        $self->{context} = WorkflowContext->new();
+        $self->{context} = Workflow::Context->new();
     }
     return $self->{context};
 }
@@ -56,37 +57,72 @@ sub execute_action {
     my ( $self, $action_name ) = @_;
     my $log = get_logger();
 
-    # Don't eval {} these Action methods, let exceptions bubble up
-    # from here...
-
     my $action = $self->_get_action( $action_name );
-    $action->validate( $self );
-    $action->execute( $self );
 
+    # Set the state to the new workflow state for the action(s) to use
+    # for reporting, etc. If an error occurs we have the old state to
+    # reset the workflow
+
+    my $old_state = $self->state;
     my $new_state = $self->_get_next_state( $action_name );
     if ( $new_state and $new_state ne NO_CHANGE_VALUE ) {
-        $log->info( "Going to new state '$new_state'" );
+        $log->info( "Setting new state '$new_state'" );
         $self->state( $new_state );
     }
 
-    # this will save the workflow histories as well; if it fails we
-    # should have some means for the factory to rollback other
-    # transactions...
+    eval {
+        $action->validate( $self );
+        $action->execute( $self );
 
-    FACTORY->save_workflow( $self );
+        # this will save the workflow histories as well; if it fails
+        # we should have some means for the factory to rollback other
+        # transactions...
+
+        FACTORY->save_workflow( $self );
+    };
+
+    # If there's an exception, reset the state to the original one and
+    # rethrow
+
+    if ( $@ ) {
+        $self->state( $old_state );
+        die $@;
+    }
+
     return $self->state;
 }
 
 sub add_history {
-    my ( $self, $params ) = @_;
-    $params->{workflow_id} = $self->id;
-    push @{ $self->{_histories} }, Workflow::History->new( $params );
+    my ( $self, @items ) = @_;
+    my $log = get_logger();
+
+    foreach my $item ( @items ) {
+        if ( ref $item eq 'HASH' ) {
+            $item->{workflow_id} = $self->id;
+            push @{ $self->{_histories} }, Workflow::History->new( $item );
+            $log->debug( "Adding history from hashref" );
+        }
+        elsif ( UNIVERSAL::isa( $item, 'Workflow::History' ) ) {
+            $item->workflow_id( $self->id );
+            push @{ $self->{_histories} }, $item;
+            $log->debug( "Adding history object directly" );
+        }
+        else {
+            workflow_error "I don't know how to add a history of ",
+                           "type '", ref( $item ), "'";
+        }
+    }
 }
 
 sub get_history {
     my ( $self ) = @_;
     my @saved_history = FACTORY->get_workflow_history( $self );
     return ( @{ $self->{_histories} }, @saved_history );
+}
+
+sub get_unsaved_history {
+    my ( $self ) = @_;
+    return grep { ! $_->is_saved } @{ $self->{_histories} };
 }
 
 sub clear_history {
@@ -102,22 +138,20 @@ sub init {
     my ( $self, $id, $current_state, $config, $wf_state_objects ) = @_;
 
     my $log = get_logger();
-    $log->info( "Creating a new workflow of type '$config->{properties}{type}' ",
-                "with current state '$current_state'" );
+    $log->info( "Instantiating workflow of with ID '$id' and type ",
+                "'$config->{type}' with current state '$current_state'" );
 
-    if ( $id ) {
-        $self->id( $id );
-    }
+    $self->id( $id ) if ( $id );
 
-    my %copy_config = %{ $config };
     $self->state( $current_state );
-    $self->type( $copy_config{type} );
-    $self->description( $copy_config{description} );
-    delete @copy_config{ qw( type description ) };
+    $self->type( $config->{type} );
+    $self->description( $config->{description} );
 
     # other properties go into 'param'...
-    while ( my ( $key, $value ) = each %copy_config ) {
-        next unless ( $key eq 'state' );
+    while ( my ( $key, $value ) = each %{ $config } ) {
+        next if ( $key =~ /^(type|description)$/ );
+        next if ( ref $value );
+        $log->debug( "Assigning parameter '$key' -> '$value'" );
         $self->param( $key, $value );
     }
 
@@ -372,6 +406,10 @@ B<get_history()>
 
 Returns list of history objects for this workflow. Note that some may
 be unsaved if you call this during the C<execute_action()> process.
+
+B<get_unsaved_history()>
+
+Returns list of all unsaved history objects for this workflow.
 
 B<clear_history()>
 
