@@ -42,39 +42,19 @@ It does have requirements above those of the basic workflow system. These are:
 http://openinteract.sourceforge.net/; the DBD::SQLite PPD is available
 from ActiveState)
 
-The sample application is configured to use a SQLite database, and
-while with a little configuration you can use a different DBMS, you
-can get the demo running in less than a minute with SQLite. Draw your
-own conclusions.
-
-To initialize the database, just run the command-line application with
-the '--db' switch:
+To initialize:
 
  perl ticket.pl --db
 
-This will create a new database for you. If a database (named
-'ticket.db') already exists it will be wiped out. Running the
-command-line application without the switch will bring you to a
-'TicketServer: ' prompt. Issuing a 'cmd' command will give you a list
-of valid commands along with a description of each. Hopefully you can
-weave your way through doing something useful.
+To run the command-line application:
 
-Next (and probably more fun), you can manipulate the workflow system
-through the web application:
+ perl ticket.pl
+
+To start up the standalone web server:
 
  perl ticket_web.pl
 
-This will fire up a standalone web server using HTTP::Daemon. Once
-it's started it will report to you the hostname and port it's running
-on:
-
-  $ perl ticket_web.pl
-  Please contact me at [URL: http://shazam.local:57988/]
-
-Paste that URL into your browser and fire away. It's a very simple
-application but looking through the 'ticket_web.pl' should give you an
-idea of how to integrate the workflow system into your display
-technology.
+For more info, see 'eg/ticket/README'
 
 
 DEPENDENCIES
