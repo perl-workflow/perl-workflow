@@ -1,5 +1,5 @@
 <persisters>
-   <persister name="TestPerister"
+   <persister name="TestPersister"
               class="Workflow::Persister::DBI"
               dsn="DBI:SQLite:dbname=ticket.db"/>
 </persisters>
