@@ -1,24 +1,26 @@
 Revision history for Perl extension Workflow
 
-0.11
+0.15  Sun Oct 17 11:17:44 EDT 2004
 
-  You should now be able to reference the Workflow module via CPAN
-  with 'install Workflow' and such. Thanks to Michael Schwern (RT bug
-  #8011) and the PAUSE indexing server for the reports.
+  CPAN/Install notes:
 
-  Also thanks to Michael Roberts for releasing the 'Workflow'
-  namespace to this module. If you're interested in workflows
-  I strongly encourage you to check out his wftk (Workflow Toolkit)
-  project and, when it's released, the Perl interface.
+     - You should now be able to reference the Workflow module via
+     CPAN with 'install Workflow' and such. Thanks to Michael Schwern
+     (RT bug #8011) and the PAUSE indexing server for the reports.
 
-     http://www.vivtek.com/wftk.html
+     Also thanks to Michael Roberts for releasing the 'Workflow'
+     namespace to this module. If you're interested in workflows I
+     strongly encourage you to check out his wftk (Workflow Toolkit)
+     project along with the Perl interface when it's released.
 
+       http://www.vivtek.com/wftk.html
 
   Build.PL/Makefile.PL:
 
      - Add Class::Factory as dependency. Thanks to Michael Schwern for
      the pointer via RT (bug #8010)-- during my presentation to pgh.pm
-     on the Workflow module no less!
+     on the Workflow module no less! (I added a reference to the
+     presentation in README and Workflow.pm)
 
      - Add Class::Observable as dependency for new functionality.
 
@@ -26,16 +28,26 @@ Revision history for Perl extension Workflow
 
      - Ensure we actually delete the SQLite database file if it exists.
 
+  t/TestUtil.pm:
+
+     - Always store the logfile from testing in the 't/' directory.
+
   Workflow:
 
      - Workflows are now observable. Big thanks to Tom Moertel
-     <tmoertel@cpan.org> for the suggestion.
+     <tmoertel@cpan.org> for the suggestion. See WORKFLOWS ARE
+     OBSERVABLE in docs.
+
+     - In previous versions most properties were read-only but it
+     wasn't enforced. Now it is.
+
 
   Workflow::Factory:
 
      - Add the ability to register observers from the 'workflow'
      configuration and add them to workflows created from
-     fetch_workflow() and create_workflow().
+     fetch_workflow() and create_workflow(). Configuration information
+     available in Workflow.pm.
 
 
 0.10  Tue Oct 12 01:02:11 EDT 2004

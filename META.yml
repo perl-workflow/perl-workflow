@@ -1,10 +1,12 @@
 --- #YAML:1.0
 name: Workflow
-version: 0.10
+version: 0.15
 license: perl
 distribution_type: module
 requires:
   Class::Accessor: 0.18
+  Class::Factory: 1
+  Class::Observable: 1.04
   DBD::Mock: 0.1
   DateTime: 0.15
   DateTime::Format::Strptime: 1
@@ -20,7 +22,7 @@ conflicts: {}
 provides:
   Workflow:
     file: lib/Workflow.pm
-    version: 1.17
+    version: 1.20
   Workflow::Action:
     file: lib/Workflow/Action.pm
     version: 1.06
@@ -29,7 +31,7 @@ provides:
     version: 1.08
   Workflow::Action::Null:
     file: lib/Workflow/Action/Null.pm
-    version: 1.01
+    version: 1.02
   Workflow::Base:
     file: lib/Workflow/Base.pm
     version: 1.05
@@ -38,19 +40,19 @@ provides:
     version: 1.04
   Workflow::Condition::Evaluate:
     file: lib/Workflow/Condition/Evaluate.pm
-    version: 1.02
+    version: 1.01
   Workflow::Condition::HasUser:
     file: lib/Workflow/Condition/HasUser.pm
-    version: 1.03
+    version: 1.04
   Workflow::Config:
     file: lib/Workflow/Config.pm
-    version: 1.08
+    version: 1.09
   Workflow::Config::Perl:
     file: lib/Workflow/Config/Perl.pm
     version: 1.01
   Workflow::Config::XML:
     file: lib/Workflow/Config/XML.pm
-    version: 1.02
+    version: 1.03
   Workflow::Context:
     file: lib/Workflow/Context.pm
     version: 1.03
@@ -59,7 +61,7 @@ provides:
     version: 1.07
   Workflow::Factory:
     file: lib/Workflow/Factory.pm
-    version: 1.13
+    version: 1.14
   Workflow::History:
     file: lib/Workflow/History.pm
     version: 1.08
@@ -92,7 +94,7 @@ provides:
     version: 1.02
   Workflow::State:
     file: lib/Workflow/State.pm
-    version: 1.07
+    version: 1.08
   Workflow::Validator:
     file: lib/Workflow/Validator.pm
     version: 1.04
@@ -104,4 +106,5 @@ provides:
     version: 1.03
   Workflow::Validator::MatchesDateFormat:
     file: lib/Workflow/Validator/MatchesDateFormat.pm
+    version: 1.05
 generated_by: Module::Build version 0.21
