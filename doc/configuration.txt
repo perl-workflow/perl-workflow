@@ -6,11 +6,7 @@ workflow:
    workflow
       type => $
       description => $
-      extra_data => \@
-         table => $
-         field => $
-         class => $
-         context => $
+      persister => $
       state => \@
          name => $
          description => $
@@ -87,3 +83,10 @@ actions:
 
  - each 'action' may have any number of 'validator' hashrefs, each
  with a 'name' key and array of 'arg' declarations
+
+persister:
+
+   extra_table => $
+   extra_field => $
+   extra_class => $
+   extra_context => $
