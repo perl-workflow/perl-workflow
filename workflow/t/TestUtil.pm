@@ -79,6 +79,18 @@ sub init_factory {
     );
 }
 
+sub init_mock_persister {
+    my $factory = Workflow::Factory->instance;
+    my %persister = (
+        name  => 'TestPersister',
+        class => 'Workflow::Persister::DBI',
+        dsn   => 'DBI:Mock:',
+    );
+    $factory->add_config( persister => [ \%persister ] );
+}
+
+
+
 # Initialize the logger and other resources; called when module
 # required by test
 
