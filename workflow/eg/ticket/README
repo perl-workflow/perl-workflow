@@ -74,5 +74,23 @@ the same file. This can make for confusing log messages as they may be
 interleaved.
 
 
+Design Overview
+--------------------
+
+The single workflow 'Ticket' is defined in 'workflow.xml'. In that
+file you see a number of references to other objects:
+
+ - persister (e.g., 'TestPersister')
+   - defined and configured in 'workflow_persister.xml'
+ - actions (e.g., 'TIX_NEW', 'TIX_EDIT')
+   - defined in 'workflow_action.xml'
+ - conditions (e.g., 'IsWorker')
+   - defined in 'workflow_condition.xml'
+
+Additionally, in 'workflow_action.xml' you'll see:
+
+ - validators (e.g., 'DateValidator')
+   - defined in 'workflow_validator.xml'
+
 ========================================
 $Id$

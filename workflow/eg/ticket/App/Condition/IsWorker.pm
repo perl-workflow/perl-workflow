@@ -10,9 +10,11 @@ use Workflow::Factory   qw( FACTORY );
 
 $App::Condition::IsWorker::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
+my ( $log );
+
 sub evaluate {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     $log->debug( "Trying to execute condition ", ref( $self ) );
     my $cond_has_info = FACTORY->get_condition( 'HasUserAndTicket' );
     $cond_has_info->evaluate( $wf );
