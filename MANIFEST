@@ -9,7 +9,7 @@ eg/ticket/README
 eg/ticket/log4perl.conf
 eg/ticket/ticket.pl
 eg/ticket/ticket.sql
-eg/ticket/ticket_csv.pl
+eg/ticket/ticket_csv.sql
 eg/ticket/ticket_web.pl
 eg/ticket/web_templates/error.tmpl
 eg/ticket/web_templates/error_message.tmpl
