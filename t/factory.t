@@ -5,6 +5,10 @@
 use strict;
 use Test::More  tests => 4;
 
+use Log::Log4perl qw( :easy );
+Log::Log4perl->easy_init({ level => $WARN,
+                           file  => ">> workflow_tests.log" });
+
 require_ok( 'Workflow::Factory' );
 
 my $factory = Workflow::Factory->instance();
