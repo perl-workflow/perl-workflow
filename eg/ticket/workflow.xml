@@ -10,8 +10,9 @@
  <persister>TestPersister</persister>
 
   <state name="INITIAL">
-     <description>This is the state the workflow enters when instantiated. It's
-like a 'state zero' but since we're using names rather than IDs we cannot assume</description>
+     <description>This is the state the workflow enters when
+        instantiated. It's like a 'state zero' but since we're
+        using names rather than IDs we cannot assume</description>
 
 <!-- This action is accessible from this state by everyone -->
      <action name="TIX_NEW"
