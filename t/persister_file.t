@@ -3,18 +3,14 @@
 # $Id$
 
 use strict;
-
-BEGIN {
-	chdir 't' if -d 't';
-	unshift @INC, '../blib/lib', '../lib';
-}
-
 use File::Path            qw( rmtree );
 use File::Spec::Functions qw( catdir curdir rel2abs );
 use Test::More  tests => 19;
 
 require TestUtil;
 require Workflow::Factory;
+
+chdir 't' if ( -d 't' );
 
 my $persist_dir = catdir( rel2abs( curdir() ), 'tmp_file' );
 unless ( -d $persist_dir ) {
