@@ -27,6 +27,7 @@ sub _init {
 
 sub validate {
     my ( $self, $wf, $date_string ) = @_;
+    return unless ( $date_string );
     my $fmt = $self->formatter;
     my $date_object = $fmt->parse_datetime( $date_string );
     unless ( $date_object ) {
@@ -41,7 +42,7 @@ __END__
 
 =head1 NAME
 
-Workflow::Validator::MAtchesDateFormat - Ensure a stringified date matches a given pattern
+Workflow::Validator::MatchesDateFormat - Ensure a stringified date matches a given pattern
 
 =head1 SYNOPSIS
 
@@ -61,6 +62,11 @@ is the date to match.
 
 The 'date_format' pattern is a typical C<strptime> pattern. See
 L<DateTime::Format::Strptime> for details.
+
+B<NOTE>: If you pass an empty string (or no string) to this validator
+it will not throw an error. Why? If you want a value to be defined it
+is more appropriate to use the 'is_required' attribute of the input
+field to ensure it has a value.
 
 =head1 COPYRIGHT
 
