@@ -5,6 +5,7 @@ Module::Build->new(
     license           => 'perl',
     dist_version_from => 'VERSION',
     requires          => {
+      'DateTime'          => 0.15,
       'Exception::Class'  => 1.10,
       'Log::Dispatch'     => 2.00,
       'Log::Log4perl'     => 0.34,
