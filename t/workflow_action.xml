@@ -71,4 +71,10 @@
              is_required="yes"/>
    </action>
 
+   <action name="null"
+           class="Workflow::Action::Null" />
+
+   <action name="null2"
+           class="Workflow::Action::Null" />
+
 </actions>

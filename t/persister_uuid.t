@@ -3,6 +3,9 @@
 # $Id$
 
 use strict;
+use lib 't';
+use TestUtil;
+
 use constant NUM_TESTS => 7;
 use Test::More;
 

@@ -14,12 +14,12 @@ sub clear_observations {
 
 sub update {
     my ( $class, $workflow, $action, @extra ) = @_;
-    push @observations, [ 'class', $workflow, $action, \@extra ];
+    push @observations, [ 'class', $workflow, $action, @extra ];
 }
 
 sub other_sub {
-    my ( $class, $workflow, $action, @extra ) = @_;
-    push @observations, [ 'sub', $workflow, $action, \@extra ];
+    my ( $workflow, $action, @extra ) = @_;
+    push @observations, [ 'sub', $workflow, $action, @extra ];
 }
 
 1;

@@ -3,10 +3,12 @@
 # $Id$
 
 use strict;
+use lib 't';
+use TestUtil;
+
 use constant NUM_TESTS => 18;
 use Test::More;
 
-chdir 't' if ( -d 't' );
 eval "require SPOPS";
 if ( $@ ) {
     plan skip_all => 'SPOPS not installed';

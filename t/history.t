@@ -3,6 +3,8 @@
 # $Id$
 
 use strict;
+use lib 't';
+use TestUtil;
 use Test::More  tests => 10;
 
 require_ok( 'Workflow::History' );

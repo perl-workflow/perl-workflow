@@ -1,15 +1,19 @@
 package TestUtil;
 
-#!/usr/bin/perl
+# $Id$
 
 use strict;
 use DateTime;
-use Log::Log4perl qw( get_logger );
 use Test::More;
+
+my ( $original_dir );
+
+END {
+    chdir( $original_dir );
+}
 
 my $LOG_FILE  = 'workflow_tests.log';
 my $CONF_FILE = 'log4perl.conf';
-my $TEST_ROOT = '.';
 
 ########################################
 # TICKET INFO
@@ -70,16 +74,19 @@ sub check_tracker {
 # information
 
 sub init_factory {
+    require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     $factory->add_config_from_file(
-        workflow  => "$TEST_ROOT/workflow.xml",
-        action    => "$TEST_ROOT/workflow_action.xml",
-        condition => "$TEST_ROOT/workflow_condition.xml",
-        validator => "$TEST_ROOT/workflow_validator.xml"
+        workflow  => "workflow.xml",
+        action    => "workflow_action.xml",
+        condition => "workflow_condition.xml",
+        validator => "workflow_validator.xml"
     );
+    return $factory;
 }
 
 sub init_mock_persister {
+    require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     my %persister = (
         name  => 'TestPersister',
@@ -101,13 +108,14 @@ sub init {
     elsif ( -f "t/$LOG_FILE" ) {
         unlink( "t/$LOG_FILE" );
     }
-    if ( -f $CONF_FILE ) {
-        $TEST_ROOT = '.';
-    }
-    elsif ( -f "t/$CONF_FILE" ) {
-        $TEST_ROOT = 't';
-    }
-    Log::Log4perl::init( "$TEST_ROOT/$CONF_FILE" );
+
+    require Cwd;
+    $original_dir = Cwd::cwd();
+    chdir( 't' )  if ( -d 't' );
+
+    require Log::Log4perl;
+    Log::Log4perl::init( $CONF_FILE );
+
 }
 
 init();
