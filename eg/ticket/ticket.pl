@@ -51,51 +51,51 @@ my %responses = (
         "Create: 'wf Ticket'; retrieve (ID == 4): 'wf Ticket 4'",
         \&get_workflow,
     ],
-   state         => [
-       'Get current state of active workflow',
-       "'state'",
-       \&get_current_state,
-   ],
-   actions       => [
-       'Get current actions of active workflow',
-       "'actions'",
-       \&get_current_actions,
-   ],
-   action_data   => [
-       "Display data required for a particular action",
-       "'action_data FOO_ACTION'",
-       \&get_action_data,
-   ],
-   enter_data    => [
-       "Interactively enter data required for an action and place it in context",
-       "'enter_data FOO_ACTION'",
-       \&prompt_action_data,
-   ],
-   context       => [
-       "Set data into the context",
-       "'context myvar myvalue'",
-       \&set_context,
-   ],
-   context_clear => [
-       'Clear data out of context',
-       "'context_clear'",
-       \&clear_context,
-   ],
-   context_show  => [
-       'Display data in context',
-       "'context_show'",
-       \&show_context
-   ],
-   execute       => [
-       'Execute an action; data for the action should be in context',
-       "'execute_action FOO_ACTION'",
-       \&execute_action,
-   ],
-   ticket        => [
-       'Fetch a ticket and put it into the context',
-       "'ticket 1'",
-       \&use_ticket,
-   ],
+    state         => [
+        'Get current state of active workflow',
+        "'state'",
+        \&get_current_state,
+    ],
+    actions       => [
+        'Get current actions of active workflow',
+        "'actions'",
+        \&get_current_actions,
+    ],
+    action_data   => [
+        "Display data required for a particular action",
+        "'action_data FOO_ACTION'",
+        \&get_action_data,
+    ],
+    enter_data    => [
+        "Interactively enter data required for an action and place it in context",
+        "'enter_data FOO_ACTION'",
+        \&prompt_action_data,
+    ],
+    context       => [
+        "Set data into the context, or with no args show current context",
+        "'context myvar myvalue'",
+        \&set_context,
+    ],
+    context_clear => [
+        'Clear data out of context',
+        "'context_clear'",
+        \&clear_context,
+    ],
+    execute       => [
+        'Execute an action; data for the action should be in context',
+        "'execute FOO_ACTION'",
+        \&execute_action,
+    ],
+    ticket        => [
+        'Fetch a ticket and put it into the context, or show contents of current ticket',
+        "'ticket 1'; 'ticket'",
+        \&use_ticket,
+    ],
+    history       => [
+        'Show the history of a workflow',
+        "'history'",
+        \&show_history,
+    ],
     help          => [
         'List all commands and a brief description',
         "'help'",
@@ -110,6 +110,7 @@ my %responses = (
 
 while ( 1 ) {
     my $full_response = get_response( "TicketServer: " );
+    next unless ( $full_response );
     my @args = split /\s+/, $full_response;
     my $response = shift @args;
     if ( my $info = $responses{ $response } ) {
@@ -127,9 +128,9 @@ $log->info( "Stopping: ", scalar( localtime ) );
 exit();
 
 sub prompt_action_data {
-    my ( $action_name ) = @_;
+    my ( @action_name_info ) = @_;
     _check_wf();
-
+    my $action_name = join ' ', @action_name_info;
     unless ( $action_name ) {
         die "Command 'action_data' requires 'action_name' specified\n";
     }
@@ -149,29 +150,52 @@ sub prompt_action_data {
         else {
             $prompt = sprintf( "Value for field '%s' (%s)\n   %s\n-> ",
                                $field->name, $field->type, $field->description );
-
-            my $value = get_response( $prompt );
-            if ( $value ) {
-                $wf->context->param( $field->name, $value );
-            }
+        }
+        my $value = get_response( $prompt );
+        if ( $value ) {
+            $wf->context->param( $field->name, $value );
         }
     }
     print "All data entered\n";
 }
 
+sub show_history {
+    _check_wf();
+    print "Workflow history: \n";
+    foreach my $h ( $wf->get_history() ) {
+        printf( "  (%5s) %s %s %s: %s\n",
+                $h->user, $h->date->strftime( '%Y-%m-%d %H:%M' ),
+                $h->state, $h->action, $h->description );
+    }
+}
+
 sub use_ticket {
     my ( $id ) = @_;
     _check_wf();
-    unless ( $id ) {
+    my $context = $wf->context();
+    if ( ! $id and my $t = $context->param( 'ticket' ) ) {
+        print "Contents of ticket '", $t->ticket_id, "': \n";
+        foreach my $field ( $t->get_fields ) {
+            next if ( $field eq 'ticket_id' );
+            my $value = $ticket->$field();
+            if ( ref $value and $value->isa( 'DateTime' ) ) {
+                $value = $value->strftime( '%Y-%m-%d %H:%M' );
+            }
+            printf( "  %12s: %s\n", $field, $value );
+        }
+    }
+    elsif ( ! $id ) {
         die "Command 'ticket' requires the ID of the ticket you wish to use\n";
     }
-    $ticket = App::Ticket->fetch( $id );
-    print "Ticket '$id' fetched wih subject '", $ticket->subject, "'\n";
-    $wf->context->param( ticket => $ticket );
+    else {
+        $ticket = App::Ticket->fetch( $id );
+        print "Ticket '$id' fetched wih subject '", $ticket->subject, "'\n";
+        $wf->context->param( ticket => $ticket );
+    }
 }
 
 sub get_action_data {
-    my ( $action_name ) = @_;
+    my $action_name = join( ' ', @_ );
     _check_wf();
     unless ( $action_name ) {
         die "Command 'action_data' requires 'action_name' specified\n";
@@ -202,7 +226,14 @@ sub set_context {
         print "Context parameter '$name' set to '", $wf->context->param( $name ), "'\n";
     }
     else {
-        print "Nothing modified in context, no name or value given.\n";
+        my $params = $wf->context->param;
+        print "Current context contents: \n";
+        while ( my ( $k, $v ) = each %{ $params } ) {
+            if ( ref( $v ) ) {
+                $v = 'isa ' . ref( $v );
+            }
+            printf( "  %12s: %s\n", $k, $v );
+        }
     }
 }
 
@@ -236,19 +267,11 @@ sub get_current_actions {
 
 sub show_context {
     _check_wf();
-    my $params = $wf->context->param;
-    print "Contents of current context: \n";
-    while ( my ( $k, $v ) = each %{ $params } ) {
-        if ( ref( $v ) ) {
-            $v = 'isa ' . ref( $v );
-        }
-        print "$k: $v\n";
-    }
 }
 
 sub execute_action {
     _check_wf();
-    my ( $action_name ) = @_;
+    my $action_name = join( ' ', @_ );
     unless ( $action_name ) {
         die "Command 'execute_action' requires you to set 'action_name'\n";
     }
