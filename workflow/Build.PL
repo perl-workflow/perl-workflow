@@ -8,6 +8,7 @@ Module::Build->new(
       'Class::Accessor'            => 0.18,
       'DateTime'                   => 0.15,
       'DateTime::Format::Strptime' => 1.00,
+      'DBD::Mock'                  => 0.10,
       'Exception::Class'           => 1.10,
       'Log::Dispatch'              => 2.00,
       'Log::Log4perl'              => 0.34,
