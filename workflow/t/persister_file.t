@@ -3,7 +3,12 @@
 # $Id$
 
 use strict;
-use lib qw( t/ );
+
+BEGIN {
+	chdir 't' if -d 't';
+	unshift @INC, '../blib/lib', '../lib';
+}
+
 use File::Path            qw( rmtree );
 use File::Spec::Functions qw( catdir curdir rel2abs );
 use Test::More  tests => 19;
