@@ -10,7 +10,13 @@ use Workflow::Factory qw( FACTORY );
 
 $| = 1;
 
-unlink( 'workflow.log' ) if ( -f 'workflow.log' );
+my $LOG_FILE = 'workflow.log';
+if ( -f $LOG_FILE ) {
+    my $mtime = (stat $LOG_FILE)[9];
+    if ( time - $mtime > 600 ) { # 10 minutes
+        unlink( $LOG_FILE );
+    }
+}
 Log::Log4perl::init( 'log4perl.conf' );
 my $log = get_logger();
 
@@ -85,12 +91,21 @@ sub prompt_action_data {
             print "Field '", $field->name, "' already exists in context, skipping...\n";
             next;
         }
-        my $value = get_response(
-            sprintf( "Value for field '%s' (%s)\n   %s\n-> ",
-                     $field->name, $field->type, $field->description )
-        );
-        if ( $value ) {
-            $wf->context->param( $field->name, $value );
+        my @values = $field->get_possible_values;
+        my ( $prompt );
+        if ( scalar @values ) {
+            $prompt = sprintf( "Value for field '%s' (%s)\n   %s\n   Values: %s\n-> ",
+                               $field->name, $field->type, $field->description,
+                               join( ', ', map { $_->{value} } @values ) );
+        }
+        else {
+            $prompt = sprintf( "Value for field '%s' (%s)\n   %s\n-> ",
+                               $field->name, $field->type, $field->description );
+
+            my $value = get_response( $prompt );
+            if ( $value ) {
+                $wf->context->param( $field->name, $value );
+            }
         }
     }
     print "All data entered\n";
@@ -100,7 +115,7 @@ sub use_ticket {
     my ( $id ) = @_;
     _check_wf();
     unless ( $id ) {
-        die "Command 'use_ticket' requires the ID of the ticket you wish to use\n";
+        die "Command 'ticket' requires the ID of the ticket you wish to use\n";
     }
     $ticket = App::Ticket->fetch( $id );
     print "Ticket '$id' fetched wih subject '", $ticket->subject, "'\n";
@@ -116,16 +131,31 @@ sub get_action_data {
     my @action_fields = $wf->get_action_fields( $action_name );
     print "Data for action '$action_name':\n";
     foreach my $field ( @action_fields ) {
-        printf( "(%s) (%s) %s: %s\n",
-                $field->type, $field->is_required, $field->name, $field->description );
+        my @values = $field->get_possible_values;
+        if ( scalar @values ) {
+        printf( "(%s) (%s) %s [%s]: %s\n",
+                $field->type, $field->is_required, $field->name,
+                join( '|', map { $_->{value} } @values ),
+                $field->description );
+        }
+        else {
+            printf( "(%s) (%s) %s: %s\n",
+                    $field->type, $field->is_required, $field->name,
+                    $field->description );
+        }
     }
 }
 
 sub set_context {
     my ( $name, @values ) = @_;
     _check_wf();
-    $wf->context->param( $name, join( ' ', @values ) );
-    print "Context parameter '$name' set to '", $wf->context->param( $name ), "'\n";
+    if ( $name and scalar @values ) {
+        $wf->context->param( $name, join( ' ', @values ) );
+        print "Context parameter '$name' set to '", $wf->context->param( $name ), "'\n";
+    }
+    else {
+        print "Nothing modified in context, no name or value given.\n";
+    }
 }
 
 sub clear_context {
@@ -180,11 +210,11 @@ sub get_workflow {
     my ( $type, $id ) = @_;
     if ( $id ) {
         print "Fetching existing workflow of type '$type' and ID '$id'...\n";
-        $wf = FACTORY->get_workflow( $type, $id );
+        $wf = FACTORY->fetch_workflow( $type, $id );
     }
     else {
         print "Creating new workflow of type '$type'...\n";
-        $wf = FACTORY->get_workflow( $type );
+        $wf = FACTORY->create_workflow( $type );
     }
     print "Workflow of type '", $wf->type, "' available with ID '", $wf->id, "'\n";
 }
