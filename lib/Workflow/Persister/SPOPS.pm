@@ -15,6 +15,7 @@ __PACKAGE__->mk_accessors( @FIELDS );
 
 sub init {
     my ( $self, $params ) = @_;
+    $self->SUPER::init( $params );
     unless ( $params->{workflow_class} ) {
         configuration_error "SPOPS implementation for persistence must ",
                             "specify 'workflow_class' parameter ",
@@ -34,8 +35,8 @@ sub create_workflow {
     my $wf_persist = $self->workflow_class->new({
         state       => $wf->state,
         type        => $wf->type,
-        last_update => DateTime->now
-     });
+        last_update => DateTime->now,
+    });
     eval { $wf_persist->save };
     if ( $@ ) {
         persist_error "Failed to create new workflow: $@";

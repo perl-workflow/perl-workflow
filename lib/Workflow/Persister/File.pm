@@ -17,7 +17,11 @@ __PACKAGE__->mk_accessors( @FIELDS );
 
 sub init {
     my ( $self, $params ) = @_;
-    my $generator = Workflow::Persister::RandomId->new({ id_length => 8 });
+    $self->SUPER::init( $params );
+    unless ( $self->use_uuid eq 'yes' || $self->use_random eq 'yes' ) {
+        $self->use_random( 'yes' );
+    }
+    $self->assign_generators( $params );
     unless ( $params->{path} ) {
         configuration_error "The file persister must have the 'path' ",
                             "specified in the configuration";
@@ -33,6 +37,7 @@ sub init {
 sub create_workflow {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
+    my $generator = $self->workflow_id_generator;
     my $wf_id = $generator->pre_fetch_id();
     $log->debug( "Generated workflow ID '$wf_id'" );
     $self->_serialize_workflow( $wf );
@@ -66,6 +71,7 @@ sub update_workflow {
 
 sub create_history {
     my ( $self, $wf, @history ) = @_;
+    my $generator = $self->history_id_generator;
     my $log = get_logger();
     my $history_dir = $self->_get_history_path( $wf );
     foreach my $history ( $wf->get_history ) {
@@ -110,10 +116,10 @@ sub _serialize_workflow {
 }
 
 sub _serialize_object {
-    my ( $self, $path, $object ) = @_
+    my ( $self, $path, $object ) = @_;
     open( THINGY, '>', $path )
         || persist_error "Cannot write to '$path': $!";
-    print THINGY Dumper( $wf );
+    print THINGY Dumper( $object );
     close( THINGY );
 }
 
