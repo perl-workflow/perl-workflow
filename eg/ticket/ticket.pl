@@ -1,9 +1,10 @@
 #!/usr/bin/perl
 
 use strict;
-use lib qw( ../../../lib );
 use App::Ticket;
+use Cwd               qw( cwd );
 use DBI;
+use File::Spec::Functions;
 use Getopt::Long      qw( GetOptions );
 use Log::Log4perl     qw( get_logger );
 use Workflow::Factory qw( FACTORY );
@@ -22,10 +23,10 @@ my $log = get_logger();
 
 $log->info( "Starting: ", scalar( localtime ) );
 
-my ( $OPT_db_init );
-GetOptions( 'db' => \$OPT_db_init );
-
-my $DB_FILE = 'ticket.db';
+my ( $OPT_db_init, $OPT_db_type );
+GetOptions( 'db'       => \$OPT_db_init,
+            'dbtype=s' => \$OPT_db_type );
+$OPT_db_type ||= 'sqlite';
 
 if ( $OPT_db_init ) {
     create_tables();
@@ -224,16 +225,8 @@ sub get_workflow {
 # DB INIT
 
 sub create_tables {
-   if ( -f $DB_FILE ) {
-        $log->info( "Removing old database file..." );
-        unlink( $DB_FILE );
-    }
-    my $dbh = DBI->connect( "DBI:SQLite:dbname=$DB_FILE", '', '' )
-                  || die "Cannot create database: $DBI::errstr\n";
-    $dbh->{RaiseError} = 1;
-    $log->info( "Connected to database ok" );
-    my @tables = ( read_tables( '../../struct/workflow_sqlite.sql' ),
-                   read_tables( 'ticket.sql' ) );
+    my $log = get_logger();
+    my ( $dbh, @tables ) = initialize_db();
     for ( @tables ) {
         next if ( /^\s*$/ );
         $log->debug( "Creating table:\n$_" );
@@ -243,6 +236,49 @@ sub create_tables {
         }
     }
     $log->info( 'Created tables ok' );
+}
+
+my $DB_FILE = 'ticket.db';
+
+sub initialize_db {
+    my $log = get_logger();
+
+    my $path = catdir( cwd(), 'db' );
+    unless( -d $path ) {
+        mkdir( $path, 0777 ) || die "Cannot create directory '$path': $!";
+        $log->info( "Created db directory '$path' ok" );
+    }
+
+    my ( $dbh );
+    my @tables = ();
+    if ( $OPT_db_type eq 'sqlite' ) {
+        if ( -f $DB_FILE ) {
+            $log->info( "Removing old database file..." );
+            unlink( $DB_FILE );
+        }
+        $dbh = DBI->connect( "DBI:SQLite:dbname=db/$DB_FILE", '', '' )
+                    || die "Cannot create database: $DBI::errstr\n";
+        $dbh->{RaiseError} = 1;
+        $log->info( "Connected to database ok" );
+        @tables = ( read_tables( '../../struct/workflow_sqlite.sql' ),
+                    read_tables( 'ticket.sql' ) );
+    }
+    elsif ( $OPT_db_type eq 'csv' ) {
+        my @names = qw( workflow workflow_history ticket workflow_ticket );
+        for ( @names ) {
+            if ( -f $_ ) {
+                $log->info( "Removing old database file '$_'..." );
+                unlink( $_ );
+            }
+        }
+        $dbh = DBI->connect( "DBI:CSV:f_dir=db", '', '' )
+                    || die "Cannot create database: $DBI::errstr\n";
+        $dbh->{RaiseError} = 1;
+        $log->info( "Connected to database ok" );
+        @tables = ( read_tables( '../../struct/workflow_csv.sql' ),
+                    read_tables( 'ticket_csv.sql' ) );
+    }
+    return ( $dbh, @tables );
 }
 
 ########################################
