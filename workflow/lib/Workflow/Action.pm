@@ -136,13 +136,15 @@ Workflow::Action - Base class for Workflow actions
    <field name="username" is_required="yes"/>
    <field name="email" is_required="yes"/>
    <validator name="IsUniqueUser">
-       <arg name="$username"/>
+       <arg>$username</arg>
    </validator>
    <validator name="IsValidEmail">
-       <arg name="$email"/>
+       <arg>$email</arg>
    </validator>
  </action>
 
+ # Define the action
+ 
  package MyApp::Action::CreateUser;
  
  use base qw( Workflow::Action );
@@ -221,7 +223,7 @@ throw a L<Workflow::Exception>, the validation subclass.
 
 B<execute( $workflow )>
 
-Subclasses must implement.
+Subclasses B<must> implement.
 
 =head2 Private Methods
 

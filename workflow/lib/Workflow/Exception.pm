@@ -4,7 +4,7 @@ package Workflow::Exception;
 
 use strict;
 
-# Declare some of our exceptions
+# Declare some of our exceptions...
 
 use Exception::Class (
    'Workflow::Exception::Condition' => {
@@ -50,6 +50,8 @@ sub _mythrow {
     goto &Exception::Class::Base::throw( $TYPE_CLASSES{ $type },
                                          message => $msg, %params );
 }
+
+# Use 'goto' here to maintain the stack trace
 
 sub condition_error {
     unshift @_, 'condition_error';
@@ -105,7 +107,7 @@ Workflow::Exception - Base class for workflow exceptions
 
  # Standard usage
  use Workflow::Exception qw( workflow_error );
-
+ 
  my $user = $wf->context->param( 'current_user' );
  unless ( $user->check_password( $entered_password ) ) {
    workflow_error "User exists but password check failed";

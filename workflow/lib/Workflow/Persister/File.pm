@@ -200,9 +200,8 @@ Workflow::Persister::File - Persist workflow and history to the filesystem
 =head1 DESCRIPTION
 
 Main persistence class for storing the workflow and workflow history
-records to a filesystem for later retrieval.
-
-=head1 OBJECT METHODS
+records to a filesystem for later retrieval. Data are stored in
+serialized Perl data structure files.
 
 =head1 SEE ALSO
 

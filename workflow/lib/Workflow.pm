@@ -17,6 +17,8 @@ $Workflow::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
+my ( $log );
+
 ########################################
 # PUBLIC METHODS
 
@@ -43,7 +45,7 @@ sub context {
 
 sub get_current_actions {
     my ( $self ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     $log->debug( "Getting current actions for wf '", $self->id, "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_available_action_names( $self );
@@ -57,7 +59,7 @@ sub get_action_fields {
 
 sub execute_action {
     my ( $self, $action_name ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
 
     # This checks the conditions behind the scenes, so there's no
     # explicit 'check conditions' step here
@@ -109,7 +111,7 @@ sub execute_action {
 
 sub add_history {
     my ( $self, @items ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
 
     foreach my $item ( @items ) {
         if ( ref $item eq 'HASH' ) {
@@ -168,7 +170,7 @@ sub clear_history {
 sub init {
     my ( $self, $id, $current_state, $config, $wf_state_objects ) = @_;
     $id ||= '';
-    my $log = get_logger();
+    $log ||= get_logger();
     $log->info( "Instantiating workflow of with ID '$id' and type ",
                 "'$config->{type}' with current state '$current_state'" );
 
@@ -196,7 +198,7 @@ sub init {
 
 sub _get_action {
     my ( $self, $action_name ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
 
     my $state = $self->state;
     $log->debug( "Trying to find action '$action_name' in state '$state'" );
@@ -217,7 +219,7 @@ sub _get_action {
 
 sub _get_workflow_state {
     my ( $self, $state ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     $state ||= ''; # get rid of -w...
     my $use_state = $state || $self->state;
     $log->debug( "Finding Workflow::State object for state [given: $state] ",
@@ -272,7 +274,7 @@ Workflow - Simple, flexible system to implement workflows
                                 validator  => $validator_conf );
  
  # Instantiate a new workflow...
- my $workflow = FACTORY->get_workflow( 'myworkflow' );
+ my $workflow = FACTORY->create_workflow( 'myworkflow' );
  print "Workflow ", $workflow->id, " ",
        "currently at state ", $workflow->state, "\n";
  
@@ -287,9 +289,9 @@ Workflow - Simple, flexible system to implement workflows
      print $field->name, ": ", $field->description,
            "(Required? ", $field->is_required, ")\n";
  }
- 
- # Add items for the workflow validators, conditions and actions to
- # work with
+  
+ # Add data to the workflow context for the validators, conditions and
+ # actions to work with
  
  my $context = $workflow->context;
  $context->param( current_user => $user );
@@ -303,7 +305,7 @@ Workflow - Simple, flexible system to implement workflows
  
  # Later.... fetch an existing workflow
  my $id = get_workflow_id_from_user( ... );
- my $workflow = FACTORY->get_workflow( 'myworkflow', $id );
+ my $workflow = FACTORY->fetch_workflow( 'myworkflow', $id );
  print "Current state: ", $workflow->state, "\n";
 
 =head1 DESCRIPTION
@@ -366,20 +368,20 @@ need to subclass this object and customize it.
 
 B<action> - The action is defined by you or in a separate library. The
 action is triggered by moving from one state to another and has access
-to information
+to the workflow and more importantly its context.
 
 The base class for actions is the L<Workflow::Action> class.
 
 =item *
 
 B<condition> - Within the workflow you can attach one or more
-conditions to an action. These ensure that actions can only get
-executed when certain conditions are met. Conditions are completely
-arbitrary: typically they will ensure the user has particular access
-rights, but you can also specify that an action can only be executed
-at certain times of the day, or from certain IP addresses, and so
-forth. Each condition is created once at startup then passed a context
-to check every time an action is checked to see if it can be executed.
+conditions to an action. These ensure that actions only get executed
+when certain conditions are met. Conditions are completely arbitrary:
+typically they will ensure the user has particular access rights, but
+you can also specify that an action can only be executed at certain
+times of the day, or from certain IP addresses, and so forth. Each
+condition is created once at startup then passed a context to check
+every time an action is checked to see if it can be executed.
 
 The base class for conditions is the L<Workflow::Condition> class.
 
@@ -395,6 +397,147 @@ The base class for validators is the L<Workflow::Validator> class.
 
 =back
 
+=head1 WORKFLOW BASICS
+
+=head2 Just a Bunch of States
+
+A workflow is just a bunch of states with rules on how to move between
+them. These are known as transitions and are triggered by some sort of
+event. A state is just a description of object properties. You can
+describe a surprisingly large number of processes as a series of
+states and actions to move between them. The application shipped with
+this distribution uses a fairly common application to illustrate: the
+trouble ticket.
+
+When you create a workflow you have one action available to you:
+create a new ticket ('TIX_NEW'). The workflow has a state 'INITIAL'
+when it is first created, but this is just a bootstrapping exercise
+since the workflow must always be in some state.
+
+The workflow action 'TIX_NEW' has a property 'resulting_state', which
+just means: if you execute me properly the workflow will be in the new
+state 'TIX_CREATED'.
+
+All this talk of 'states' and 'transitions' can be confusing, but just
+match them to what happens in real life -- you move from one action to
+another and at each step ask: what happens next?
+
+You create a trouble ticket: what happens next? Anyone can add
+comments to it and attach files to it while administrators can edit it
+and developers can start working on it. Adding comments does not
+really change what the ticket is, it just adds
+information. Attachments are the same, as is the admin editing the
+ticket.
+
+But when someone starts work on the ticket, that is a different
+matter. When someone starts work they change the answer to: what
+happens next? Whenever the answer to that question changes, that means
+the workflow has changed state.
+
+=head2 Discover Information from the Workflow
+
+In addition to declaring what the resulting state will be from an
+action the action also has a number of 'field' properties that
+describe that data it required to properly execute it.
+
+This is an example of discoverability. This workflow system is setup
+so you can ask it what you can do next as well as what is required to
+move on. So to use our ticket example we can do this, creating the
+workflow and asking it what actions we can execute right now:
+
+ my $wf = Workflow::Factory->create_workflow( 'Ticket' );
+ my @actions = $wf->get_current_actions;
+
+We can also interrogate the workflow about what fields are necessary
+to execute a particular action:
+
+ print "To execute the action 'TIX_NEW' you must provide:\n\n";
+ my @fields = $wf->get_action_fields( 'TIX_NEW' );
+ foreach my $field ( @fields ) {
+     print $field->name, " (Required? ", $field->is_required, ")\n",
+           $field->description, "\n\n";
+ }
+
+=head2 Provide Information to the Workflow
+
+To allow the workflow to run into multiple environments we must have a
+common way to move data between your application, the workflow and the
+code that moves it from one state to another.
+
+Whenever the L<Workflow::Factory> creates a new workflow it associates
+the workflow with a L<Workflow::Context> object. The context is what
+moves the data from your application to the workflow and the workflow
+actions.
+
+For instance, the workflow has no idea what the 'current user' is. Not
+only is it unaware from an application standpoint but it does not
+presume to know where to get this information. So you need to tell it,
+and you do so through the context.
+
+The fact that the workflow system proscribes very little means it can
+be used in lots of different applications and interfaces. If a system
+is too closely tied to an interface (like the web) then you have to
+create some potentially ugly hacks to create a more convenient avenue
+for input to your system (such as an e-mail approving a document).
+
+The L<Workflow::Context> object is extremely simple to use -- you ask
+a workflow for its context and just get/set parameters on it:
+
+ # Get the username from the Apache object
+ my $username = $r->connection->user;
+ 
+ # ...set it in the context
+ $wf->context->param( user => $username );
+ 
+ # somewhere else you'll need the username:
+ 
+ $news_object->{created_by} = $wf->context->param( 'user' );
+
+=head2 Controlling What Gets Executed
+
+A typical process for executing an action is:
+
+=over 4
+
+=item *
+
+Get data from the user
+
+=item *
+
+Fetch a workflow
+
+=item *
+
+Set the data from the user to the workflow context
+
+=item *
+
+Execute an action on the context
+
+=back
+
+When you execute the action a number of checks occur. The action needs
+to ensure:
+
+=over 4
+
+=item *
+
+The data presented to it are valid -- date formats, etc. This is done
+with a validator, more at L<Workflow::Validator>
+
+=item *
+
+The environment meets certain conditions -- user is an administrator,
+etc. This is done with a condition, more at L<Workflow::Condition>
+
+=back
+
+Once the action passes these checks and successfully executes we
+update the permanent workflow storage with the new state, as long as
+the application has declared it.
+
 =head1 WORKFLOW METHODS
 
 The following documentation is for the workflow object itself rather
@@ -404,10 +547,10 @@ than the entire system.
 
 B<execute_action( $action_name )>
 
-Execute the action C<$action_name> which normally changes the state of
-the workflow. If C<$action_name> not in the current state, fails one
-of the conditions on the action, or fails one of the validators on the
-action an exception is thrown.
+Execute the action C<$action_name>. Typically this changes the state
+of the workflow. If C<$action_name> is not in the current state, fails
+one of the conditions on the action, or fails one of the validators on
+the action an exception is thrown.
 
 Returns: new state of workflow
 
@@ -486,7 +629,7 @@ from the new workflow will overwrite values in the existing
 workflow. This is a shallow merge, so with the following:
 
  $wf->context->param( drinks => [ 'coke', 'pepsi' ] );
- my $context = WorkflowContext->new();
+ my $context = Workflow::Context->new();
  $context->param( drinks => [ 'beer', 'wine' ] );
  $wf->context( $context );
  print 'Current drinks: ', join( ', ', @{ $wf->context->param( 'drinks' ) } );
@@ -538,11 +681,18 @@ One of the conditions for the action in this state is not met.
 
 B<_get_workflow_state( [ $state ] )>
 
-C<$state> defaults to the current state
+Return the L<Workflow::State> object corresponding to C<$state>, which
+defaults to the current state.
 
 B<_set_workflow_state( $wf_state )>
 
-B<_get_next_state()>
+Assign the L<Workflow::State> object C<$wf_state> to the workflow.
+
+B<_get_next_state( $action_name )>
+
+Returns the name of the next state given the action
+C<$action_name>. Throws an exception if C<$action_name> not contained
+in the current state.
 
 =head1 SEE ALSO
 
@@ -564,5 +714,5 @@ it under the same terms as Perl itself.
 Chris Winters E<lt>chris@cwinters.comE<gt>
 
 Dietmar Hanisch E<lt>Dietmar.Hanisch@Bertelsmann.deE<gt> - Provided
-most of the good ideas for the module and a good example of everyday
-usage.
+most of the good ideas for the module and an excellent example of
+everyday usage.

@@ -425,7 +425,7 @@ what driver we are using to determine how to generate IDs. We have the
 ability to use automatically generated IDs for PostgreSQL, MySQL, and
 SQLite. If your database is not included a randomly generated ID will
 be used. (Default length of 8 characters, which you can modify with a
-C<id_length> parameters.)
+C<id_length> parameter.)
 
 You can also create your own adapter for a different type of
 database. Just check out the existing

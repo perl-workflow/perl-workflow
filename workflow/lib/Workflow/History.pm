@@ -88,20 +88,38 @@ Returns true if this history object has been saved, false if not.
 
 =head2 Properties
 
+=over 4
+
+=item *
+
 B<id> - ID of history entry
+
+=item *
 
 B<workflow_id> - ID of workflow to which history is attached
 
+=item *
+
 B<action> - Brief description of action taken
+
+=item *
 
 B<description> - Lengthy description of action taken
 
+=item *
+
 B<date> - Date history noted, set to a L<DateTime> object.
+
+=item *
 
 B<user> - User name (ID, login, or full name, up to you) taking action
 (may be blank)
 
+=item *
+
 B<state> - State of workflow as history was recorded.
+
+=back
 
 =head1 SEE ALSO
 

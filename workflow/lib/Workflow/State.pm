@@ -54,17 +54,20 @@ sub evaluate_action {
     my ( $self, $wf, $action_name ) = @_;
     my $log = get_logger();
 
-    my $state = $self->state;
+    my $state_name = $self->state;
+
+    # NOTE: this will throw an exception if C<$action_name> is not
+    # contained in this state, so there's no need to do it explicitly
+
     my @conditions = $self->get_conditions( $action_name );
     foreach my $condition ( @conditions ) {
         my $condition_name = $condition->name;
         $log->debug( "Will evaluate condition '$condition_name'" );
         eval { $condition->evaluate( $wf ) };
         if ( $@ ) {
-            $log->debug( "Condition '$condition_name' failed!" );
-            # TODO: We may just want to pass the error up...
-            workflow_error "No access to action '$action_name' in state '$state' ",
-                           "because: $@";
+            # TODO: We may just want to pass the error up without wrapping it...
+            workflow_error "No access to action '$action_name' in ",
+                           "state '$state_name' because: $@";
         }
         $log->debug( "Condition '$condition_name' evaluated successfully" );
     }
@@ -140,7 +143,15 @@ Workflow::State - Information about an individual state in a workflow
 
 =head1 SYNOPSIS
 
+ # This is an internal object...
+
 =head1 DESCRIPTION
+
+Each L<Workflow::State> object represents a state in a workflow. Each
+state can report its name, description and all available
+actions. Given the name of an action it can also report what
+conditions are attached to the action and what state will result from
+the action.
 
 =head1 PUBLIC METHODS
 
@@ -152,17 +163,42 @@ C<$action_name> at all.
 
 B<contains_action( $action_name )>
 
-B<get_all_action_names()>
-
-B<get_available_action_names( $workflow )>
+Returns true if this state contains action C<$action_name>, false if
+not.
 
 B<is_action_available( $workflow, $action_name )>
 
+Returns true if C<$action_name> is contained within this state B<and>
+it matches any conditions attached to it, using the data in the
+context of the C<$workflow> to do the checks.
+
 B<evaluate_action( $workflow, $action_name )>
+
+Throws exception if action C<$action_name> is either not contained in
+this state or if it does not pass any of the attached conditions,
+using the data in the context of C<$workflow> to do the checks.
+
+B<get_all_action_names()>
+
+Returns list of all action names available in this state.
+
+B<get_available_action_names( $workflow )>
+
+Returns all actions names that are available given the data in
+C<$workflow>. Each action name returned will return true from
+B<is_action_available()>.
 
 B<get_next_state( $action_name )>
 
+Returns the state that will result if action C<$action_name> executed.
+
 =head1 INTERNAL METHODS
+
+B<init( $config )>
+
+Assigns 'state' and 'description' properties from C<$config>. Also
+assigns configuration for all actions in the state, performing some
+sanity checks like ensuring every action has a 'resulting_state' key.
 
 =head1 SEE ALSO
 
