@@ -167,7 +167,7 @@ sub clear_history {
 
 sub init {
     my ( $self, $id, $current_state, $config, $wf_state_objects ) = @_;
-
+    $id ||= '';
     my $log = get_logger();
     $log->info( "Instantiating workflow of with ID '$id' and type ",
                 "'$config->{type}' with current state '$current_state'" );
@@ -218,6 +218,7 @@ sub _get_action {
 sub _get_workflow_state {
     my ( $self, $state ) = @_;
     my $log = get_logger();
+    $state ||= ''; # get rid of -w...
     my $use_state = $state || $self->state;
     $log->debug( "Finding Workflow::State object for state [given: $state] ",
                  "[internal: ", $self->state, "]" );

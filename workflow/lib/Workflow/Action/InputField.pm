@@ -36,7 +36,7 @@ sub new {
     unless ( $self->label ) {
         $self->label( $name );
     }
-    my $requirement = ( $params->{is_required} eq 'yes' )
+    my $requirement = ( $params->{is_required} && $params->{is_required} eq 'yes' )
                         ? 'required' : 'optional';
     $self->requirement( $requirement );
 
