@@ -4,17 +4,17 @@ Configuration Description
 workflow:
 
    workflow
-      type => $
-      description => $
-      persister => $
-      state => \@
-         name => $
-         description => $
-         action => \@
-            name => $
-            resulting_state => $
-            condition => \@
-               name => $
+      type        $
+      description $
+      persister   $
+      state       \@
+          name          $
+          description   $
+          action        \@
+              name            $
+              resulting_state $
+              condition       \@
+                  name $
 
  - the 'type' and 'description' keys are at the top level
 
@@ -32,23 +32,23 @@ workflow:
 
 conditions:
 
-     condition => \@
-        name => $
-        class => $
-        param => \@
-           name => $
-           value => $
+     condition \@
+        name  $
+        class $
+        param \@
+            name  $
+            value $
 
  - array of one or more hashrefs with 'name' and 'class' keys
 
 validators:
 
-     validator => \@
-        name => $
-        class => $
-        param => \@
-           name => $
-           value => $
+     validator \@
+        name  $
+        class $
+        param \@
+            name  $
+            value $
 
  - array of one or more hashrefs with 'name' and 'class' keys, plus
  possibly one or more 'param' hashrefs each with 'name' and 'value'
@@ -56,21 +56,21 @@ validators:
 
 actions:
 
-    action => \@
-       name => $
-       field => \@
-          name => $
-          is_required => yes|no
-          type => $
-          source_list => \@ of $
-          source_class => $
-          param => \@
-             name => $
-             value => $
-       validator => \@
-          name => $
-          arg => \@
-             value => $
+    action \@
+       name  $
+       field \@
+          name         $
+          is_required  yes|no
+          type         $
+          source_list  \@ of $
+          source_class $
+          param        \@
+              name  $
+              value $
+       validator \@
+           name $
+           arg  \@
+               value $
 
  - array of one or more action hashrefs with 'name', 'class' and 'description' keys
 
@@ -86,7 +86,7 @@ actions:
 
 persister:
 
-   extra_table => $
-   extra_field => $
-   extra_class => $
-   extra_context => $
+   extra_table   $
+   extra_field   $
+   extra_class   $
+   extra_context $

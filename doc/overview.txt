@@ -25,7 +25,7 @@ Basics of Workflows
  changes by the workflow and complete some operations outside of it.
 
  - The Workflow is observable and fires events on state changes.
-y
+
 Action declaration: workflow_action.ini
 
 Validator declaration: workflow_action_validator.ini

@@ -4,3 +4,5 @@ WorkflowFactory initialization process, maybe just keep the built-ins
 configured in a class that's distributed with the module? (We don't
 want to force people to reference a separate file every time...
 
+- Make the action/description of initial history created configurable
+(optional?)
