@@ -116,6 +116,7 @@ sub add_history {
 
 sub get_history {
     my ( $self ) = @_;
+    $self->{_histories} ||= [];
     my @saved_history = FACTORY->get_workflow_history( $self );
     return ( @{ $self->{_histories} }, @saved_history );
 }
