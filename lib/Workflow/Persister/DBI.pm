@@ -307,7 +307,6 @@ Workflow::Persister::DBI - Persist workflow and history to DBI database
 
  <persister name="MainDatabase"
             class="Workflow::Persister::DBI"
-            driver="MySQL"
             dsn="DBI:mysql:database=workflows"
             user="wf"
             password="mypass"/>
