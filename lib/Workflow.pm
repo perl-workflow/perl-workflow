@@ -134,7 +134,9 @@ sub get_history {
     $self->{_histories} ||= [];
     my @uniq_history = ();
     my %seen_ids = ();
-    foreach my $history ( ( FACTORY->get_workflow_history( $self ), @{ $self->{_histories} } ) ) {
+    my @all_history = ( FACTORY->get_workflow_history( $self ),
+                        @{ $self->{_histories} } );
+    foreach my $history ( @all_history ) {
         my $id = $history->id;
         if ( $id ) {
             unless ( $seen_ids{ $id } ) {
