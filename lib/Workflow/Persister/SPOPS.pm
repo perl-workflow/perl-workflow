@@ -46,7 +46,9 @@ sub create_workflow {
 
 sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
-    my $wf_persist = eval { $self->workflow_class->fetch( $wf_id ) };
+    my $wf_persist = eval {
+        $self->workflow_class->fetch( $wf_id )
+    };
     if ( $@ ) {
         persist_error "Failed to fetch workflow '$wf_id': $@";
     }
@@ -61,6 +63,7 @@ sub update_workflow {
         persist_error "Cannot fetch record '$wf_id' for updating: $@";
     }
     $wf_persist->state( $wf->state );
+    $wf_persist->last_update( $wf->last_update );
     eval { $wf_persist->save };
     if ( $@ ) {
         persist_error "Failed to update workflow '$wf_id': $@";
