@@ -65,4 +65,3 @@ struct/workflow_other.sql
 struct/workflow_pg.sql
 struct/workflow_sqlite.sql
 t/factory.t
-t/skel.t
