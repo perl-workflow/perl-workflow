@@ -2,10 +2,13 @@ package App::Ticket;
 
 use strict;
 use base qw( Class::Accessor );
+use Data::Dumper      qw( Dumper );
 use DateTime::Format::Strptime;
+use Log::Log4perl     qw( get_logger );
 use Workflow::Factory qw( FACTORY );
 
-my @FIELDS = qw( ticket_id subject description creator status due_date last_update );
+my @FIELDS = qw( ticket_id subject description creator status
+                 due_date last_update );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 my ( $generator );
@@ -15,9 +18,14 @@ my $update_parser = DateTime::Format::Strptime->new( pattern => '%Y-%m-%d %H:%M'
 
 sub new {
     my ( $class, $params ) = @_;
+    my $log = get_logger();
+    $log->info( "Instantiating new $class" );
     my $self = bless( {}, $class );
     for ( @FIELDS ) {
-        $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
+        if ( $params->{ $_ } ) {
+            $self->$_( $params->{ $_ } );
+            $log->debug( "Assigning parameter '$_': $params->{ $_ }" );
+        }
     }
     $generator ||= Workflow::Persister::RandomId->new({ id_length => 8 });
     return $self;
@@ -29,11 +37,17 @@ sub id {
 
 sub fetch {
     my ( $class, $id ) = @_;
+    my $log = get_logger();
+    $log->info( "Fetching existing ticket with ID '$id'" );
+
     my $sql = q{
-        SELECT ticket_id, subject, description, creator, status, due_date, last_update
+        SELECT subject, description, creator, status, due_date, last_update
           FROM ticket
          WHERE ticket_id = ?
     };
+    $log->debug( "Will use SQL\n$sql" );
+    $log->debug( "Will use parameters: $id" );
+
     my $dbh = FACTORY->get_persister( 'TestPersister' )->handle;
     my ( $sth );
     eval {
@@ -41,9 +55,11 @@ sub fetch {
         $sth->execute( $id );
     };
     if ( $@ ) {
+        $log->error( "Error fetching ticket: $@" );
         die "Failed to retrieve ticket: $@";
     }
-    my $row = $sth->fetchrow_arrayreef;
+    my $row = $sth->fetchrow_arrayref;
+    $log->debug( "Got database row: ", Dumper( $row ) );
     return $class->new({
         ticket_id   => $id,
         subject     => $row->[0],
@@ -57,19 +73,29 @@ sub fetch {
 
 sub create {
     my ( $self ) = @_;
+    my $log = get_logger();
+
     my $id = $generator->pre_fetch_id();
+    $log->info( "Creating new ticket with ID '$id'" );
+    my $due_date    = ( ref $self->due_date )
+                        ? $self->due_date->strftime( '%Y-%m-%d' )
+                        : $self->due_date;
+    my $update_date = ( ref $self->last_update )
+                        ? $self->last_update->strftime( '%Y-%m-%d %H:%M' )
+                        : DateTime->now->strftime( '%Y-%m-%d %H:%M' );
     my @fields = qw( ticket_id subject description creator
-                     status due_date
-                     last_update );
+                     status due_date last_update );
     my @values = ( $id, $self->subject, $self->description, $self->creator,
-                   $self->status, $self->due_date->strftime( '%Y-%m-%d' ),
-                   $self>last_update->strftime( '%Y-%m-%d %H:%M' ) );
+                   $self->status, $due_date, $update_date );
     my $sql = q{
         INSERT INTO ticket ( %s )
         VALUES ( %s )
     };
     $sql = sprintf( $sql, join( ', ', @fields ),
                     join( ', ', map { '?' } @values ) );
+    $log->debug( "Will use SQL\n$sql" );
+    $log->debug( "Will use parameters: ", join( ', ', @values ) );
+
     my $dbh = FACTORY->get_persister( 'TestPersister' )->handle;
     my ( $sth );
     eval {
@@ -77,6 +103,7 @@ sub create {
         $sth->execute( @values );
     };
     if ( $@ ) {
+        $log->error( "Error creating ticket: $@" );
         die "Failed to create ticket: $@";
     }
     $self->ticket_id( $id );
@@ -85,6 +112,8 @@ sub create {
 
 sub update {
     my ( $self ) = @_;
+    my $log = get_logger();
+
     my $sql = q{
         UPDATE ticket
            SET status = ?,
@@ -92,13 +121,19 @@ sub update {
                last_update = ?
          WHERE ticket_id = ?
     };
+    my @values = ( $self->status,
+                   $self->due_date->strftime( '%Y-%m-%d' ),
+                   $self->last_update->strftime( '%Y-%m-%d %H:%M' ),
+                   $self->id );
+
+    $log->debug( "Will use SQL\n$sql" );
+    $log->debug( "Will use parameters: ", join( ', ', @values ) );
+
     my $dbh = FACTORY->get_persister( 'TestPersister' )->handle;
     my ( $sth );
     eval {
         $sth = $dbh->prepare( $sql );
-        $sth->execute( $self->status,
-                       $self->due_date->strftime( '%Y-%m-%d' ),
-                       $self->last_update->strftime( '%Y-%m-%d %H:%M' ) );
+        $sth->execute( @values );
     };
     if ( $@ ) {
         die "Failed to update ticket: $@";
