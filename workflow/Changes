@@ -1,0 +1,10 @@
+Revision history for Perl extension Workflow
+
+0.02  Sat May 22 00:34:43 EDT 2004
+
+      Updates to test scripts and files they require from CPAN tester
+      report -- thanks Barbie!
+
+0.01  Thu May 13 22:08:29 EDT 2004
+
+      First CPAN release -- everything is new!
