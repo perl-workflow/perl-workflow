@@ -80,7 +80,7 @@ sub execute_action {
     eval {
         $action->validate( $self );
         $log->debug( "Action validated ok" );
-        $action->execute( $self );
+        my $rv = $action->execute( $self );
         $log->debug( "Action executed ok" );
 
         # this will save the workflow histories as well; if it fails
@@ -106,6 +106,10 @@ sub execute_action {
         die $error;
     }
 
+    my $new_state = $self->get_state( $self->state );
+    if ( $new_state->is_autorun ) {
+        $self->_auto_execute;
+    }
     return $self->state;
 }
 
