@@ -83,13 +83,11 @@ sub get_next_state {
 sub init {
     my ( $self, $config ) = @_;
     my $log = get_logger();
-    my %copy_config = %{ $config };
-    $self->state( $copy_config{name} );
-    delete $copy_config{name};
-    $self->description( $copy_config{description} );
-    delete $copy_config{description};
+    $self->state( $config->{name} );
+    $self->description( $config->{description} );
     $log->debug( "Constructing Workflow::State object for state ", $self->state );
-    while ( my ( $action_name, $state_action_config ) = each %copy_config ) {
+    foreach my $state_action_config ( @{ $config->{action} } ) {
+        my $action_name = $state_action_config->{name};
         $log->debug( "Adding action '$action_name' to Workflow::State" );
         $self->_add_action_config( $action_name, $state_action_config );
     }
@@ -114,12 +112,14 @@ sub _add_action_config {
 
 sub _create_condition_objects {
     my ( $self, $action_config ) = @_;
-    my @condition_names = $self->normalize_array( $action_config->{condition} );
-    my @conditions = ();
-    foreach my $condition_name ( @condition_names ) {
-        push @conditions, FACTORY->get_condition( $condition_name );
+    my $log = get_logger();
+    my @conditions = $self->normalize_array( $action_config->{condition} );
+    my @condition_objects = ();
+    foreach my $condition_info ( @conditions ) {
+        $log->info( "Fetching condition '$condition_info->{name}'" );
+        push @condition_objects, FACTORY->get_condition( $condition_info->{name} );
     }
-    return @conditions;
+    return @condition_objects;
 }
 
 sub _contains_action_check {
