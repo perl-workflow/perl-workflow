@@ -43,6 +43,8 @@ sub context {
 
 sub get_current_actions {
     my ( $self ) = @_;
+    my $log = get_logger();
+    $log->debug( "Getting current actions for wf '", $self->id, "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_available_action_names( $self );
 }
@@ -57,6 +59,9 @@ sub execute_action {
     my ( $self, $action_name ) = @_;
     my $log = get_logger();
 
+    # This checks the conditions behind the scenes, so there's no
+    # explicit 'check conditions' step here
+
     my $action = $self->_get_action( $action_name );
 
     # Set the state to the new workflow state for the action(s) to use
@@ -66,27 +71,37 @@ sub execute_action {
     my $old_state = $self->state;
     my $new_state = $self->_get_next_state( $action_name );
     if ( $new_state and $new_state ne NO_CHANGE_VALUE ) {
-        $log->info( "Setting new state '$new_state'" );
+        $log->info( "Setting new state '$new_state' before action executes" );
         $self->state( $new_state );
     }
 
     eval {
         $action->validate( $self );
+        $log->debug( "Action validated ok" );
         $action->execute( $self );
+        $log->debug( "Action executed ok" );
 
         # this will save the workflow histories as well; if it fails
         # we should have some means for the factory to rollback other
         # transactions...
 
         FACTORY->save_workflow( $self );
+        $log->info( "Saved workflow with possible new state ok" );
     };
 
     # If there's an exception, reset the state to the original one and
     # rethrow
 
     if ( $@ ) {
+        my $error = $@;
+        $log->error( "Caught exception from action: $error" );
+        $log->info( "Resetting workflow to old state '$old_state'" );
         $self->state( $old_state );
-        die $@;
+
+        # Don't use 'workflow_error' here since $error should already
+        # be a Workflow::Exception object or subclass
+
+        die $error;
     }
 
     return $self->state;
@@ -187,10 +202,13 @@ sub _get_action {
 
 sub _get_workflow_state {
     my ( $self, $state ) = @_;
-    $state ||= $self->state;
-    my $wf_state = $self->{_states}{ $state };
+    my $log = get_logger();
+    my $use_state = $state || $self->state;
+    $log->debug( "Finding Workflow::State object for state [given: $state] ",
+                 "[internal: ", $self->state, "]" );
+    my $wf_state = $self->{_states}{ $use_state };
     unless ( $wf_state ) {
-        workflow_error "No state '$state' exists in workflow '", $self->type, "'";
+        workflow_error "No state '$use_state' exists in workflow '", $self->type, "'";
     }
     return $wf_state;
 }
