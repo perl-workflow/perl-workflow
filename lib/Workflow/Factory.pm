@@ -3,16 +3,39 @@ package Workflow::Factory;
 # $Id$
 
 use strict;
-use base qw( Workflow::Base Exporter );
+use base qw( Workflow::Base );
 use DateTime;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 
 $Workflow::Factory::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-my ( $INSTANCE );
-sub FACTORY { return $INSTANCE }
-@Workflow::Factory::EXPORT_OK = qw( FACTORY );
+my ( $log );
+my ( %INSTANCES );
+
+sub import {
+    my $class = shift;
+    $log ||= get_logger();
+
+    $class = ref $class || $class; # just in case
+    my $package = caller;
+
+    if ( $_[0] eq 'FACTORY' ) {
+        $log->debug( "Trying to import 'FACTORY' of type '$class' to '$package'" );
+        shift;
+        my $instance = _initialize_instance( $class );
+
+        my $import_target = $package . '::FACTORY';
+        no strict 'refs';
+        unless ( defined &{ $import_target } ) {
+            $log->debug( "Target '$import_target' not yet defined, ",
+                         "creating subroutine on the fly" );
+            *{ $import_target } = sub { return $instance };
+        }
+        return $instance;
+    }
+    $class->SUPER::import( @_ );
+}
 
 require Workflow;
 require Workflow::Action;
@@ -30,14 +53,31 @@ my @FIELDS = qw();
 __PACKAGE__->mk_accessors( @FIELDS );
 
 sub new {
+    my $class = ref $_[0] || $_[0];
     workflow_error
-        "Please call 'instance()' to get the Workflow::Factory ",
-        "rather than instantiating a new one."
+        "Please call 'instance()' or import the 'FACTORY' object ",
+        "to get the '$class' object rather than instantiating a ",
+        "new one directly."
+}
+
+sub instance {
+    my $class = ref $_[0] || $_[0];
+    return _initialize_instance( $class );
+}
+
+sub _initialize_instance {
+    my ( $class ) = @_;
+    unless ( $INSTANCES{ $class } ) {
+        $log->debug( "Creating empty instance of '$class' factory for ",
+                     "singleton use" );
+        $INSTANCES{ $class } = bless( {} => $class );
+    }
+    return $INSTANCES{ $class };
 }
 
 sub add_config_from_file {
     my ( $self, %params ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     return unless ( scalar keys %params );
 
     _check_config_keys( %params );
@@ -97,17 +137,13 @@ sub _flatten {
     return ( ref $item eq 'ARRAY' ) ? @{ $item } : ( $item );
 }
 
-sub instance {
-    return $INSTANCE;
-}
-
 ########################################
 # WORKFLOW
 
 sub _add_workflow_config {
     my ( $self, @all_workflow_config ) = @_;
-    my $log = get_logger();
     return unless ( scalar @all_workflow_config );
+    $log ||= get_logger();
 
     foreach my $workflow_config ( @all_workflow_config ) {
         next unless ( ref $workflow_config eq 'HASH' );
@@ -127,7 +163,7 @@ sub _add_workflow_config {
 
 sub create_workflow {
     my ( $self, $wf_type ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
 
     my $wf_config = $self->_get_workflow_config( $wf_type );
     unless ( $wf_config ) {
@@ -163,7 +199,7 @@ sub create_workflow {
 
 sub fetch_workflow {
     my ( $self, $wf_type, $wf_id ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
 
     my $wf_config = $self->_get_workflow_config( $wf_type );
     unless ( $wf_config ) {
@@ -202,7 +238,7 @@ sub _insert_workflow {
 
 sub save_workflow {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
 
     my $old_update = $wf->last_update;
     $wf->last_update( DateTime->now );
@@ -224,7 +260,7 @@ sub save_workflow {
 
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     $log->is_debug &&
         $log->debug( "Trying to fetch history for workflow ", $wf->id );
     my $wf_config = $self->_get_workflow_config( $wf->type );
@@ -238,7 +274,7 @@ sub get_workflow_history {
 
 sub _add_action_config {
     my ( $self, @all_action_config ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     return unless ( scalar @all_action_config );
 
     foreach my $action_config ( @all_action_config ) {
@@ -276,7 +312,7 @@ sub get_action {
 
 sub _add_persister_config {
     my ( $self, @all_persister_config ) = @_;
-    my $log = get_logger();
+    $log ||= get_logger();
     return unless ( scalar @all_persister_config );
 
     foreach my $persister_config ( @all_persister_config ) {
@@ -323,7 +359,7 @@ sub get_persister {
 sub _add_condition_config {
     my ( $self, @all_condition_config ) = @_;
     return unless ( scalar @all_condition_config );
-    my $log = get_logger();
+    $log ||= get_logger();
 
     foreach my $condition_config ( @all_condition_config ) {
         next unless ( ref $condition_config eq 'HASH' );
@@ -367,7 +403,7 @@ sub get_condition {
 sub _add_validator_config {
     my ( $self, @all_validator_config ) = @_;
     return unless ( @all_validator_config );
-    my $log = get_logger();
+    $log ||= get_logger();
 
     foreach my $validator_config ( @all_validator_config ) {
         next unless ( ref $validator_config eq 'HASH' );
@@ -402,9 +438,6 @@ sub get_validator {
     }
     return $self->{_validators}{ $name };
 }
-
-# Create our single instance...
-$INSTANCE = bless( {}, __PACKAGE__ );
 
 1;
 
@@ -619,6 +652,40 @@ validator, if we cannot 'require' that class, or if we cannot
 instantiate an object of that class.
 
 Returns: nothing
+
+=head1 SUBCLASSING
+
+=head2 Implementation and Usage
+
+You can subclass the factory to implement your own methods and still
+use the useful facade of the C<FACTORY> constant. For instance, the
+implementation is typical Perl subclassing:
+
+ package My::Cool::Factory;
+ 
+ use strict;
+ use base qw( Workflow::Factory );
+ 
+ sub some_cool_method {
+     my ( $self ) = @_;
+     ...
+ }
+
+To use your factory you can just do the typical import:
+
+ #!/usr/bin/perl
+ 
+ use strict;
+ use My::Cool::Factory qw( FACTORY );
+
+Or you can call C<instance()> directly:
+
+ #!/usr/bin/perl
+ 
+ use strict;
+ use My::Cool::Factory;
+ 
+ my $factory = My::Cool::Factory->instance();
 
 =head1 SEE ALSO
 
