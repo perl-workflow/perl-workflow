@@ -20,6 +20,12 @@ sub init {
     for ( @FIELDS ) {
         $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
     }
+    unless ( $self->use_random ) {
+        $self->use_random( 'no' );
+    }
+    unless ( $self->use_uuid ) {
+        $self->use_uuid( 'no' );
+    }
     $log->info( "Initializing persister '", $self->name, "'" );
 }
 
