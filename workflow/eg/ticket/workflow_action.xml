@@ -2,15 +2,15 @@
 
 <!-- this is the action name, used in the workflow -->
    <action name="TIX_NEW"
-           class="Action::TicketCreate">
-      <description>Neues ticket estrellen</description>
+           class="App::Action::TicketCreate">
+      <description>Create a new ticket</description>
       <field name="subject"
              description="Subject of ticket"
              is_required="yes"/>
       <field name="description"
              description="Text describing the problem and any details to reproduce, if possible"
              is_required="yes"/>
-      <field name="creator_id"
+      <field name="creator"
              description="ID of user who is creating"
              is_required="yes"/>
       <field name="due_date"
@@ -21,13 +21,32 @@
       </validator>
    </action>
 
+   <action name="TIX_COMMENT"
+           class="App::Action::TicketComment">
+      <field name="ticket"
+             description="Ticket to comment on"
+             is_required="yes"/>
+   </action>
+
    <action name="TIX_EDIT"
-           class="Action::TicketEdit"/>
+           class="App::Action::TicketUpdate">
+      <field name="ticket"
+             description="Ticket to edit"
+             is_required="yes"/>
+   </action>
 
    <action name="TIX_CLOSE"
-           class="Action::TicketClose"/>
+           class="App::Action::TicketUpdate">
+      <field name="ticket"
+             description="Ticket to close"
+             is_required="yes"/>
+   </action>
 
    <action name="TIX_REOPEN"
-           class="Action::TicketReopen"/>
+           class="App::Action::TicketUpdate">
+      <field name="ticket"
+             description="Ticket to reopen"
+             is_required="yes"/>
+   </action>
 
 </actions>

@@ -1,4 +1,4 @@
-package Condition::IsWorker;
+package App::Condition::IsWorker;
 
 # $Id$
 
@@ -8,7 +8,7 @@ use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( condition_error );
 use Workflow::Factory   qw( FACTORY );
 
-$Condition::IsWorker::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$App::Condition::IsWorker::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 sub evaluate {
     my ( $self, $wf ) = @_;
