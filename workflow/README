@@ -29,6 +29,7 @@ The eg/ticket/ directory contains a configured workflow system. You
 can access the same data and logic in two ways:
 
   * a command-line application (ticket.pl)
+  * a CGI script               (ticket.cgi)
   * a web application          (ticket_web.pl)
 
 To initialize:
@@ -39,11 +40,29 @@ To run the command-line application:
 
  perl ticket.pl
 
+To access the database and data from CGI, add the relevant
+configuration for your web server and call ticket.cgi:
+
+ http://www.mysite.com/workflow/ticket.cgi
+
 To start up the standalone web server:
 
  perl ticket_web.pl
 
 For more info, see 'eg/ticket/README'
+
+
+MORE INFO
+========================================
+
+Issues (tasks, feature requests, bugs) are tracked via JIRA at:
+
+  http://jira.openinteract.org/
+
+The Workflow home page:
+
+  http://workflow.openinteract.org/
+
 
 DEPENDENCIES
 ========================================
