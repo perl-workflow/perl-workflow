@@ -4,7 +4,7 @@ package Workflow::Factory;
 
 use strict;
 use base qw( Workflow::Base Exporter );
-use Log::Log4perl qw( get_logger );
+use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 
 $Workflow::Factory::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -35,20 +35,32 @@ sub new {
 
 sub add_config_from_file {
     my ( $self, %params ) = @_;
+    my $log = get_logger();
     return unless ( scalar keys %params );
+
     _check_config_keys( %params );
+    foreach my $type ( sort keys %params ) {
+        $log->debug( "Using '$type' configuration file(s): ",
+                     join( ', ', _flatten( $params{ $type } ) ) );
+    }
+
+    $log->debug( "Adding condition configurations..." );
     $self->_add_condition_config(
         Workflow::Config->parse( 'condition', $params{condition} )
     );
+    $log->debug( "Adding validator configurations..." );
     $self->_add_validator_config(
         Workflow::Config->parse( 'validator', $params{validator} )
     );
+    $log->debug( "Adding persister configurations..." );
     $self->_add_persister_config(
         Workflow::Config->parse( 'persister', $params{persister} )
     );
+    $log->debug( "Adding action configurations..." );
     $self->_add_action_config(
         Workflow::Config->parse( 'action', $params{action} )
     );
+    $log->debug( "Adding workflow configurations..." );
     $self->_add_workflow_config(
         Workflow::Config->parse( 'workflow', $params{workflow} )
     );
@@ -92,33 +104,21 @@ sub instance {
 
 sub _add_workflow_config {
     my ( $self, @all_workflow_config ) = @_;
+    my $log = get_logger();
     return unless ( scalar @all_workflow_config );
+
     foreach my $workflow_config ( @all_workflow_config ) {
         my $wf_type = $workflow_config->{type};
         $self->{_workflow_config}{ $wf_type } = $workflow_config;
 
-        # Ask the workflow class to pull out the state configurations
+        # Create Workflow::State objects for each configured state.
+        # When we instantiate a new workflow we pass these objects
 
-        my @state_config = Workflow::Config->get_all_state_config( $workflow_config );
-
-        # And create Workflow::State objects for each of them. When we
-        # instantiate a new workflow we give it these states
-
-        foreach my $state_conf ( @state_config ) {
+        foreach my $state_conf ( @{ $workflow_config->{state} } ) {
             my $wf_state = Workflow::State->new( $state_conf );
             push @{ $self->{_workflow_state}{ $wf_type } }, $wf_state;
         }
-
-        my $persister_conf = $workflow_config->{persister};
-        # TODO: allow association of named persister
-        my $persister_class = $persister_conf->{class};
-        unless ( $persister_class ) {
-            configuration_error "Workflow '$wf_type' must be associated with ",
-                                "a persister in the key 'persister' along with ",
-                                "a subkey 'class' and any associated parameters.";
-        }
-        my $persister = $persister_class->new( $persister_conf );
-        $self->{_workflow_persister}{ $wf_type } = $persister;
+        $log->info( "Added all workflow states..." );
     }
 }
 
@@ -126,11 +126,11 @@ sub get_workflow {
     my ( $self, $wf_type, $wf_id ) = @_;
     my $log = get_logger();
 
-    my $config = $self->_get_workflow_config( $wf_type );
-    unless ( $config ) {
+    my $wf_config = $self->_get_workflow_config( $wf_type );
+    unless ( $wf_config ) {
         workflow_error "No workflow of type '$wf_type' available";
     }
-    my $persister = $self->get_persister( $config->{persister} );
+    my $persister = $self->get_persister( $wf_config->{persister} );
     my ( $wf );
     if ( $wf_id ) {
         my $wf_info = $persister->fetch_workflow( $wf_id );
@@ -138,18 +138,21 @@ sub get_workflow {
             workflow_error "No workflow found with ID '$wf_id'";
         }
         $log->debug( "Fetched data for workflow '$wf_id' ok" );
-        my $wf = Workflow->new( $wf_id,
-                                $wf_info->{state},
-                                $config,
-                                $self->{_workflow_state}{ $wf_type } );
+        $wf = Workflow->new( $wf_id,
+                             $wf_info->{state},
+                             $wf_config,
+                             $self->{_workflow_state}{ $wf_type } );
+        $wf->last_update( $wf_info->{last_update} );
         $persister->fetch_extra_workflow_data( $wf );
     }
     else {
-        $wf = Workflow->new( $INITIAL_STATE,
-                             $config,
+        $wf = Workflow->new( undef,
+                             $INITIAL_STATE,
+                             $wf_config,
                              $self->{_workflow_state}{ $wf_type } );
         my $id = $persister->create_workflow( $wf );
         $wf->id( $id );
+        $wf->last_update( DateTime->now );
     }
     unless ( $wf->context ) {
         $wf->context( Workflow::Context->new );
@@ -164,8 +167,8 @@ sub _get_workflow_config {
 
 sub _insert_workflow {
     my ( $self, $wf ) = @_;
-    my $config = $self->_get_workflow_config( $wf->type );
-    my $persister = $self->get_persister( $config->{persister} );
+    my $wf_config = $self->_get_workflow_config( $wf->type );
+    my $persister = $self->get_persister( $wf_config->{persister} );
     my $id = $persister->create_workflow( $wf );
     $wf->id( $id );
     return $wf;
@@ -174,10 +177,14 @@ sub _insert_workflow {
 
 sub save_workflow {
     my ( $self, $wf ) = @_;
-    my $config = $self->_get_workflow_config( $wf->type );
-    my $persister = $self->get_persister( $config->{persister} );
+    my $log = get_logger();
+
+    my $wf_config = $self->_get_workflow_config( $wf->type );
+    my $persister = $self->get_persister( $wf_config->{persister} );
     $persister->update_workflow( $wf );
-    $persister->create_history( $wf->get_history );
+    $log->info( "Workflow '", $wf->id, "' updated ok" );
+    $persister->create_history( $wf, $wf->get_unsaved_history );
+    $log->info( "Created necessary history objects ok" );
     return $wf;
 }
 
@@ -186,7 +193,7 @@ sub get_workflow_history {
     my ( $self, $wf ) = @_;
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
-    return $persister->fetch_history( $wf->id );
+    return $persister->fetch_history( $wf );
 }
 
 
@@ -195,8 +202,9 @@ sub get_workflow_history {
 
 sub _add_action_config {
     my ( $self, @all_action_config ) = @_;
-    return unless ( scalar @all_action_config );
     my $log = get_logger();
+    return unless ( scalar @all_action_config );
+
     foreach my $action_config ( @all_action_config ) {
         my $name = $action_config->{name};
         $log->debug( "Adding configuration for action '$name'" );
@@ -228,8 +236,9 @@ sub get_action {
 
 sub _add_persister_config {
     my ( $self, @all_persister_config ) = @_;
-    return unless ( scalar @all_persister_config );
     my $log = get_logger();
+    return unless ( scalar @all_persister_config );
+
     foreach my $persister_config ( @all_persister_config ) {
         my $name = $persister_config->{name};
         $log->debug( "Adding configuration for persister '$name'" );
