@@ -1,0 +1,12 @@
+<hr noshade>
+<p>
+[% IF workflow %]
+ [<a href="/history/?workflow_id=[% workflow.id %]">Show history</a>]
+ [Execute action: 
+ [%- FOREACH action = workflow.get_current_actions %]
+   <a href="/execute/?workflow_id=[% workflow.id %]&action=[% action %]">[% action %]</a> 
+ [% END -%]
+ ]
+[% ELSE %]
+<p>No workflow available to act on.</p>
+[% END %]

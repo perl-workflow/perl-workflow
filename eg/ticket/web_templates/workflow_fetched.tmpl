@@ -1,0 +1,16 @@
+<h1>Workflow Fetched</h1>
+
+[% IF workflow %]
+
+<p>The workflow was successfully fetched. Use the ID below to get
+information and execute actions against it.</p>
+
+[% PROCESS workflow_summary.tmpl( workflow = workflow ) %]
+
+[% PROCESS workflow_actions.tmpl( workflow = workflow ) %]
+
+[% ELSE %]
+
+<p>The workflow with ID [% workflow_id %] does not seem to exist.</p>
+
+[% END %]

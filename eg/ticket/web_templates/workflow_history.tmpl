@@ -1,0 +1,36 @@
+<h1>Workflow History</h1>
+
+[% IF workflow %]
+
+<p>History for:</p>
+
+[% PROCESS workflow_summary.tmpl( workflow = workflow ) %]
+
+<table cellpadding="2" cellspacing="0" border="0">
+<tr bgcolor="#cccccc">
+  <td><b>ID</b></td>
+  <td><b>Action</b></td>
+  <td><b>Description</b></td>
+  <td><b>State</b></td>
+  <td><b>User</b></td>
+  <td><b>Date</b></td>
+</tr>
+[% FOREACH history = history_list %]
+<tr bgcolor="#eeeeee">
+  <td>[% history.id %]</td>
+  <td>[% history.action %]</td>
+  <td>[% history.description %]</td>
+  <td>[% history.state %]</td>
+  <td>[% history.user %]</td>
+  <td>[% history.date.strftime( '%Y-%m-%d %H:%M' ) %]</td>
+</tr>
+[% END %]
+</table>
+
+[% PROCESS workflow_actions.tmpl( workflow = workflow ) %]
+
+[% ELSE %]
+
+<p>No workflow available to get history for.</p>
+
+[% END %]
