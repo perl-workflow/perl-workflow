@@ -1,5 +1,21 @@
 Revision history for Perl extension Workflow
 
+0.03  Mon May 24 19:16:40 EDT 2004
+
+      * Applied patch from Jim Smith (jgsmith@tamu.edu) to do the
+      following:
+
+      - Allow you to read in the XML/Perl configuration file from
+      somewhere else and pass it to Workflow::Config as a scalar
+      reference.
+
+      - You can subclass Workflow::Factory and still use 'FACTORY' to
+      import the factory of the class you want and 'instance()' to do
+      the same.
+
+      * Added docs for these new features, and added tests for at
+        least the factory subclassing feature.
+
 0.02  Sat May 22 00:34:43 EDT 2004
 
       Updates to test scripts and files they require from CPAN tester

@@ -67,6 +67,7 @@ struct/workflow_mysql.sql
 struct/workflow_other.sql
 struct/workflow_pg.sql
 struct/workflow_sqlite.sql
+t/FactorySubclass.pm
 t/TestUtil.pm
 t/TestApp/Ticket.pm
 t/TestApp/User.pm
@@ -83,6 +84,7 @@ t/config.t
 t/context.t
 t/exception.t
 t/factory.t
+t/factory_subclass.t
 t/history.t
 t/log4perl.conf
 t/persister_dbi.t
