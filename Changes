@@ -2,15 +2,40 @@ Revision history for Perl extension Workflow
 
 0.11
 
+  You should now be able to reference the Workflow module via CPAN
+  with 'install Workflow' and such. Thanks to Michael Schwern (RT bug
+  #8011) and the PAUSE indexing server for the reports.
+
+  Also thanks to Michael Roberts for releasing the 'Workflow'
+  namespace to this module. If you're interested in workflows
+  I strongly encourage you to check out his wftk (Workflow Toolkit)
+  project and, when it's released, the Perl interface.
+
+     http://www.vivtek.com/wftk.html
+
+
   Build.PL/Makefile.PL:
 
      - Add Class::Factory as dependency. Thanks to Michael Schwern for
-     the pointer via RT -- during my presentation on the Workflow
-     module no less!
+     the pointer via RT (bug #8010)-- during my presentation to pgh.pm
+     on the Workflow module no less!
+
+     - Add Class::Observable as dependency for new functionality.
 
   eg/ticket/ticket.pl:
 
      - Ensure we actually delete the SQLite database file if it exists.
+
+  Workflow:
+
+     - Workflows are now observable. Big thanks to Tom Moertel
+     <tmoertel@cpan.org> for the suggestion.
+
+  Workflow::Factory:
+
+     - Add the ability to register observers from the 'workflow'
+     configuration and add them to workflows created from
+     fetch_workflow() and create_workflow().
 
 
 0.10  Tue Oct 12 01:02:11 EDT 2004

@@ -38,7 +38,7 @@ with a description of each. Hopefully you can weave your way to
 something interesting.
 
 
-Web Application
+Web Application: Standalone
 --------------------
 
 Next (and probably more fun), you can manipulate the workflow system
@@ -57,6 +57,9 @@ Paste that URL into your browser and fire away. It's a very simple
 application but looking through the 'ticket_web.pl' script (and
 'App/Web.pm' package) should give you an idea of how to integrate the
 workflow system into your display technology.
+
+Web Application: CGI
+--------------------
 
 For using the CGI script you can configure Apache to run CGI scripts
 in the normal manner. I have a vhost definition that does this:
@@ -77,7 +80,13 @@ in the normal manner. I have a vhost definition that does this:
         </Location>
     </VirtualHost>
 
-Configuring your web server to run CGI scripts should be pretty easy.
+Accessing the ticket application is then:
+
+   http://my.coolserver.com/ticket.cgi
+
+Configuring your web server to run CGI scripts in a similar manner
+should be pretty easy.
+
 
 Following Application Progress
 --------------------

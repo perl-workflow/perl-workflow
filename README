@@ -49,6 +49,10 @@ To start up the standalone web server:
 
  perl ticket_web.pl
 
+(Barring changes to HTTP::Daemon and forking the standalone server
+won't work on Win32; use CGI instead, although patches are always
+welcome.)
+
 For more info, see 'eg/ticket/README'
 
 
@@ -60,13 +64,18 @@ Questions, comments, ideas? E-mail them:
   Chris Winters <chris@cwinters.com>
 
 When we get them, issues (tasks, feature requests, bugs) are tracked
-via JIRA at:
+via CPAN's RT at:
 
-  http://jira.openinteract.org/
+ https://rt.cpan.org/NoAuth/Bugs.html?Dist=Workflow
 
 When it gets big enough, the Workflow home page will be at:
 
   http://workflow.openinteract.org/
+
+You can see the slides of a talk 'Workflows in Perl' given to the
+Pittsburgh Perlmongers in October 2004:
+
+  http://www.cwinters.com/pdf/workflow_pgh_pm.pdf
 
 
 DEPENDENCIES
@@ -75,11 +84,12 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
     Class::Accessor
+    Class::Factory
+    Class::Observable
     DateTime
     DateTime::Format::Strptime
     DBD::Mock
     Exception::Class
-    File::Spec
     Log::Dispatch
     Log::Log4perl
     Safe
@@ -111,6 +121,6 @@ http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58)
 COPYRIGHT AND LICENCE
 ========================================
 
-Copyright (c) 2003 - 2004 Chris Winters and Arvato Direct. All rights
+Copyright (c) 2003-2004 Chris Winters and Arvato Direct. All rights
 reserved.  This program is free software; you can redistribute it
 and/or modify it under the same terms as Perl itself.

@@ -4,7 +4,7 @@ package Workflow;
 
 use strict;
 
-use base qw( Workflow::Base );
+use base qw( Workflow::Base Class::Observable );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
@@ -110,6 +110,8 @@ sub execute_action {
 
         die $error;
     }
+
+    $self->notify_observers( 'state change', $old_state );
 
     my $new_state_obj = $self->_get_workflow_state;
     if ( $new_state_obj->autorun ) {
@@ -627,6 +629,32 @@ Once the action passes these checks and successfully executes we
 update the permanent workflow storage with the new state, as long as
 the application has declared it.
 
+=head2 Workflows are Observable
+
+You can attach listeners to workflows and catch events at a few points
+in the workflow lifecycle. The events fired by the workflow are:
+
+=over 4
+
+=item *
+
+B<create> - Issued when a workflow is first created.
+
+=item *
+
+B<fetch> - Issued when a workflow is fetched from the persister.
+
+=item ^
+
+B<execute> - Issued when a workflow is successfully executed and saved.
+
+=item *
+
+B<state change> - Issued when a workflow is successfully executed,
+saved and results in a state change.
+
+=back
+
 =head1 WORKFLOW METHODS
 
 The following documentation is for the workflow object itself rather
@@ -640,6 +668,20 @@ Execute the action C<$action_name>. Typically this changes the state
 of the workflow. If C<$action_name> is not in the current state, fails
 one of the conditions on the action, or fails one of the validators on
 the action an exception is thrown.
+
+After the action has been successfully executed and the workflow saved
+we issue a 'execute' observation with the old state as an additional
+parameter. So if you wanted to write an observer you could create a
+method with the signature:
+
+ sub update {
+     my ( $class, $workflow, $action, $old_state ) = @_;
+     if ( $action eq 'execute' ) { .... }
+ }
+
+See L<Workflows are Observable> above for how we use and register
+observers and L<Class::Observable> for more general information about
+observers as well as implementation details.
 
 Returns: new state of workflow
 
