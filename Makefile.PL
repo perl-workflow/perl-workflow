@@ -8,6 +8,7 @@ my %opts = (
     'VERSION_FROM' => 'VERSION',
     'PL_FILES'     => {},
     'PREREQ_PM'    => {
+      'Class::Accessor'            => 0.18,
       'DateTime'                   => 0.15,
       'DateTime::Format::Strptime' => 1.00,
       'Exception::Class'           => 1.10,
