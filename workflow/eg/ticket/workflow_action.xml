@@ -5,21 +5,26 @@
            class="App::Action::TicketCreate">
       <description>Create a new ticket</description>
       <field name="subject"
+             label="Subject"
              description="Subject of ticket"
              is_required="yes"/>
       <field name="description"
+             label="Description"
              description="Text describing the problem and any details to reproduce, if possible"
              is_required="yes"/>
       <field name="creator"
+             label="Creator"
              description="Name of user who is creating the ticket"
              is_required="yes"
              source_class="App::User"/>
       <field name="type"
+             label="Type"
              description="Type of ticket"
              is_required="yes"
              source_list="Bug,Feature,Improvement,Task"/>
       <field name="due_date"
-             description="Due date (format: yyyy-mm-dd hh:mm)"/>
+             label="Due Date"
+             description="Date ticket is due (format: yyyy-mm-dd hh:mm)"/>
       <validator name="DateValidator">
          <arg>$due_date</arg>
       </validator>
@@ -27,7 +32,7 @@
 
    <action name="TIX_COMMENT"
            class="App::Action::TicketComment">
-      <field name="ticket"
+      <field name="ticket_id"
              description="Ticket to comment on"
              is_required="yes"/>
       <field name="comment"
@@ -40,7 +45,7 @@
 
    <action name="TIX_EDIT"
            class="App::Action::TicketUpdate">
-      <field name="ticket"
+      <field name="ticket_id"
              description="Ticket to edit"
              is_required="yes"/>
       <field name="current_user"
@@ -50,7 +55,7 @@
 
    <action name="TIX_CLOSE"
            class="App::Action::TicketUpdate">
-      <field name="ticket"
+      <field name="ticket_id"
              description="Ticket to close"
              is_required="yes"/>
       <field name="current_user"
@@ -60,7 +65,7 @@
 
    <action name="TIX_REOPEN"
            class="App::Action::TicketUpdate">
-      <field name="ticket"
+      <field name="ticket_id"
              description="Ticket to reopen"
              is_required="yes"/>
       <field name="current_user"
