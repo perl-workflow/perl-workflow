@@ -28,6 +28,7 @@ DEPENDENCIES
 This module requires these other modules and libraries:
 
     DateTime
+    DateTime::Format::Strptime
     Exception::Class
     Log::Dispatch
     Log::Log4perl

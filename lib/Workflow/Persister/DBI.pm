@@ -4,6 +4,7 @@ package Workflow::Persister::DBI;
 
 use strict;
 use base qw( Workflow::Persister );
+use DateTime::Format::Strptime;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::History;
