@@ -1,5 +1,7 @@
 <persisters>
    <persister name="TestPersister"
-              class="Workflow::Persister::DBI"
-              dsn="DBI:SQLite:dbname=ticket.db"/>
+              class="Workflow::Persister::DBI::ExtraData"
+              dsn="DBI:SQLite:dbname=ticket.db"
+              extra_table="workflow_ticket"
+              extra_data_field="ticket_id"/>
 </persisters>
