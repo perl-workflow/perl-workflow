@@ -3,14 +3,12 @@ package Workflow::Config;
 # $Id$
 
 use strict;
+use base qw( Class::Factory );
 use Data::Dumper        qw( Dumper );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
 $Workflow::Config::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
-
-# Make for shorter calls...
-sub new { return bless( {}, $_[0] ) }
 
 my %VALID_TYPES = map { $_ => 1 } qw( action condition persister validator workflow );
 
@@ -23,59 +21,52 @@ sub get_valid_config_types {
     return sort keys %VALID_TYPES;
 }
 
+# Class method that allows you to pass in any type of items in
+# @items. So you can do:
+#
+# Workflow::Config->parse_all_files( 'condition', 'my_condition.xml', 'your_condition.perl' );
+
+sub parse_all_files {
+    my ( $class, $type, @files ) = @_;
+
+    return () unless ( scalar @files );
+
+    my %parsers = ();
+    my %parse_types = map { $_ => 1 } $class->get_registered_types;
+
+    my @configurations = ();
+
+    foreach my $file ( @files ) {
+        next unless ( $file );
+        my ( $file_type ) = $file =~ /\.(\w+)$/;
+        unless ( $parse_types{ $file_type } ) {
+            configuration_error
+                "Cannot parse configuration file '$file' of workflow ",
+                "type '$type'. The file has unknown configuration type ",
+                "'$file_type'; known configuration types are: ",
+                "'", join( ', ', keys %parse_types ), "'";
+        }
+        unless ( $parsers{ $file_type } ) {
+            $parsers{ $file_type } = $class->new( $file_type );
+        }
+        push @configurations, $parsers{ $file_type }->parse( $type, $file );
+    }
+    return @configurations;
+}
+
 sub parse {
-    my ( $class, $type, @items ) = @_;
-    my $log = get_logger();
+    my ( $self, $type, @items ) = @_;
+    my $class = ref( $self ) || $self;
+    configuration_error "Class $class must implement 'parse()'";
+}
+
+sub _check_config_type {
+    my ( $class, $type ) = @_;
     unless ( $class->is_valid_config_type( $type ) ) {
         configuration_error "When parsing a configuration file the ",
                             "configuration type (first argument) must be ",
                             "one of: ", join( ', ', $class->get_valid_config_types );
     }
-    my @config_items = _expand_refs( @items );
-    return () unless ( scalar @config_items );
-    my @config = ();
-    foreach my $item ( @config_items ) {
-        my ( $file_type, $file_name );
-        my $method;
-
-        # $item is a scalar ref with config contents...
-
-        if ( ref $item ) {
-            $file_type = 'perl';
-            $file_type = 'xml' if ( $$item =~ m/^\s*</ && $$item =~ m/>\s*$/ );
-            $method = '_translate_' . $file_type;
-            $file_name = '[scalar ref]';
-        }
-
-        # $item is a filename...
-        else {
-            ( $file_type ) = $item =~ /\.(\w+)$/;
-            $method = '_translate_' . $file_type . '_file';
-            $file_name = $item;
-        }
-        $log->is_info &&
-            $log->info( "'$type' config file '$file_name' is type '$file_type'" );
-
-        my ( $this_config );
-        if ( $class->can( $method ) ) {
-            $this_config = $class->$method( $type, $item );
-        }
-        else {
-            configuration_error "Do not know how to parse configuration ",
-                                "type '$type' from file '$item' of ",
-                                "type '$file_type'";
-        }
-        $log->is_info &&
-            $log->info( "Parsed file '$file_name' ok" );
-        if ( ref $this_config->{ $type } eq 'ARRAY' ) {
-            $log->debug( "Adding multiple configurations for '$type'" );
-            push @config, @{ $this_config->{ $type } };
-        }
-        else {
-            push @config, $this_config;
-        }
-    }
-    return @config;
 }
 
 sub _expand_refs {
@@ -88,85 +79,9 @@ sub _expand_refs {
     return @all;
 }
 
-
-sub _translate_perl_file {
-    my ( $class, $type, $file ) = @_;
-    my $log = get_logger();
-
-    local $/ = undef;
-    open( CONF, '<', $file )
-        || configuration_error "Cannot read file '$file': $!";
-    my $config = <CONF>;
-    close( CONF );
-    my $data = $class->_translate_perl( $type, $config, $file );
-    $log->is_debug &&
-        $log->debug( "Translated '$type' '$file' into: ", Dumper( $data ) );
-    return $data;
-}
-
-sub _translate_perl {
-    my ( $class, $type, $config, $file ) = @_;
-    my $log = get_logger();
-
-    no strict 'vars';
-    my $data = eval $config;
-    if ( $@ ) {
-        configuration_error "Cannot evaluate perl data structure ",
-                            "in '$file': $@";
-    }
-    return $data;
-}
-
-
-my %XML_OPTIONS = (
-    action => {
-        ForceArray => [ 'action', 'field', 'source_list', 'param', 'validator', 'arg' ],
-        KeyAttr    => [],
-    },
-    condition => {
-        ForceArray => [ 'condition', 'param' ],
-        KeyAttr    => [],
-    },
-    persister => {
-        ForceArray => [ 'persister' ],
-        KeyAttr    => [],
-    },
-    validator => {
-        ForceArray => [ 'validator', 'param' ],
-        KeyAttr    => [],
-    },
-    workflow => {
-        ForceArray => [ 'extra_data', 'state', 'action', 'condition' ],
-        KeyAttr    => [],
-    },
-);
-
-my $XML_REQUIRED = 0;
-
-sub _translate_xml_file {
-    my ( $class, $type, $file ) = @_;
-    my $log = get_logger();
-    my $config = $class->_translate_xml( $type, $file, $file );
-    $log->is_debug &&
-        $log->debug( "Translated '$type' '$file' into: ", Dumper( $config ) );
-    return $config;
-}
-
-# $config can either be a filename or scalar ref with file contents
-
-sub _translate_xml {
-    my( $class, $type, $config, $file ) = @_;
-    my $log = get_logger();
-    unless ( $XML_REQUIRED ) {
-        require XML::Simple;
-        XML::Simple->import( ':strict' );
-        $XML_REQUIRED++;
-    };
-
-    my $options = $XML_OPTIONS{ $type } || {};
-    my $data = XMLin( $config, %{ $options } );
-    return $data;
-}
+__PACKAGE__->register_factory_type( perl => 'Workflow::Config::Perl' );
+__PACKAGE__->register_factory_type( pl   => 'Workflow::Config::Perl' );
+__PACKAGE__->register_factory_type( xml  => 'Workflow::Config::XML' );
 
 1;
 
@@ -180,13 +95,22 @@ Workflow::Config - Parse configuration files for the workflow components
 
  # Reference multiple files
  
- my @config = Workflow::Config->parse(
-                    'action', 'workflow_action.xml', 'other_actions.xml' );
+ my $parser = Workflow::Config->new( 'xml' );
+ my @config = $parser->parse(
+     'action', 'workflow_action.xml', 'other_actions.xml'
+ );
  
  # Read in one of the file contents from somewhere else
  my $xml_contents = read_contents_from_db( 'other_actions.xml' );
- my @config = Workflow::Config->parse(
-                    'action', 'workflow_action.xml', \$xml_contents );
+ my @config = $parser->parse(
+     'action', 'workflow_action.xml', \$xml_contents
+ );
+_
+ # Reference multiple files of mixed types
+ 
+ my @action_config = Workflow::Config->parse_all_files(
+     'action', 'my_actions.xml', 'your_actions.perl'
+ );
 
 =head1 DESCRIPTION
 
@@ -197,27 +121,101 @@ files but there was too much deeply nested information. Sorry.)
 
 =head1 CLASS METHODS
 
-B<parse( $config_type, @items )>
+B<parse_all_files( $workflow_config_type, @files )>
 
-Parse each item in C<@items> to a hash reference based on the
-configuration type C<$config_type> which must pass the
-C<is_valid_config_type()> test. An 'item' is either a filename or a
-scalar reference with the contents of a file. (You can mix and match as seen in the L<SYNOPSIS>.)
+Runs through each file in C<@files> and processes it according to the valid
 
-If you are using filenames each must end with 'perl' or 'xml' and will
-be parsed appropriately. If you are using references with the content
-we do a best-guess to figure out what type of content you are passing
-us.
+=head1 SUBCLASSING
 
-Throws an exception if you pass one or more invalid configuration
-types, if I do not know what configuration parser to use (file ends in
-something other than 'xml' or 'perl'), or if any file cannot be read
-or parsed because of permissions, malformed XML, incorrect Perl data
-structure, etc. It does B<not> do a validation check (e.g., to ensure
-that every 'action' within a workflow state has a 'resulting_state'
-key).
+=head2 Creating Your Own Parser
 
-Returns: list of hash references for each file in C<@files>
+If you want to store your configuration in a different format you can
+create your own parser. All you need to do is:
+
+=over 4
+
+=item 1.
+
+subclass L<Workflow::Config>
+
+=item 1.
+
+implement the required methods (listed below)
+
+=item 1.
+
+register your parser with L<Workflow::Config>.
+
+=back
+
+For instance, if you wanted to use YAML for configuration files you
+would do something like:
+
+ # just a convention, you can use any namespace you want
+ package Workflow::Config::YAML;
+ 
+ use strict;
+
+ # Requirement 1: Subclass Workflow::Config
+ use base qw( Workflow::Config );
+ 
+ # Requirement 2: Implement required methods
+ sub parse { ... }
+
+The third requirement is registration, which just tells
+L<Workflow::Config> which parser to use for a particular type. To do
+this you have two options.
+
+B<Registration option one>
+
+Register yourself in your own class, adding the following call
+anywhere the end:
+
+ # Option 1: Register ourselves by name
+ Workflow::Config->register_factory_type( yaml => 'Workflow::Config::YAML' );
+
+Now you just need to include the configuration class in your workflow
+invocation script:
+
+ use strict;
+ use Workflow::Factory qw( FACTORY );
+ use Workflow::Config::YAML; # <-- brings in the registration
+
+B<Registration option two>
+
+You can also just explicitly add the registration from your workflow
+invocation script:
+
+ use strict;
+ use Workflow::Factory qw( FACTORY );
+ use Workflow::Config;
+ 
+ # Option 2: explicitly register your configuration parser
+ Workflow::Config->register_factory_type( yaml => 'Workflow::Config::YAML' );
+
+Whichever one you choose you can now parse (in this example) YAML
+files alongside the built-in parsers for XML and Perl files:
+
+ FACTORY->add_config_from_file(
+     workflow  => 'workflow.yaml',
+     action    => [ 'my_actions.yaml', 'other_actions.xml' ],
+     validator => 'validators.yaml',
+     condition => [ 'my_conditions.yaml', 'other_conditions.xml' ]
+     persister => 'persister.perl',
+ );
+
+=head2 Inherited Methods
+
+B<new( $parser_type )>
+
+Instantiates an object of the correct type -- see L<Class::Factory>
+for how this is implemented:
+
+ # Parser of type 'Workflow::Config::XML'
+ my $xml_parser  = Workflow::Config->new( 'xml' );
+ 
+ # Parser of type 'Workflow::Config::Perl
+ my $perl_parser = Workflow::Config->new( 'perl' );
 
 B<is_valid_config_type( $config_type )>
 
@@ -229,7 +227,43 @@ B<get_valid_config_types()>
 
 Returns list of strings representing the valid configuration types.
 
+=head2 Required Object Methods
+
+B<parse( $workflow_config_type, @items )>
+
+Parse each item in C<@items> to a hash reference based on the
+configuration type C<$config_type> which must pass the
+C<is_valid_config_type()> test. An 'item' is either a filename or a
+scalar reference with the contents of a file. (You can mix and match
+as seen in the L<SYNOPSIS>.)
+
+Should throw an exception if:
+
+=over 4
+
+=item *
+
+You pass an invalid workflow configuration type. Valid workflow
+configuration types are registered in L<Workflow::Config> and are
+available from C<get_valid_config_types()>; you can check whether a
+particular type is valid with C<is_valid_config_type()>. (See above
+for descriptions.)
+
+=item *
+
+You pass in a file that cannot be read or parsed because of
+permissions, malformed XML, incorrect Perl data structure, etc. It
+does B<not> do a validation check (e.g., to ensure that every 'action'
+within a workflow state has a 'resulting_state' key).
+
+=back
+
+Returns: one hash reference for each member of C<@items>
+
 =head1 CONFIGURATION INFORMATION
+
+This gives you an idea of the configuration information in the various
+workflow pieces:
 
 =head2 workflow
 
