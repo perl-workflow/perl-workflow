@@ -1,6 +1,8 @@
 Build.PL
+Changes
 Makefile.PL
 MANIFEST
+META.yml
 README
 VERSION
 eg/ticket/README
@@ -65,6 +67,14 @@ struct/workflow_mysql.sql
 struct/workflow_other.sql
 struct/workflow_pg.sql
 struct/workflow_sqlite.sql
+t/TestUtil.pm
+t/TestApp/Ticket.pm
+t/TestApp/User.pm
+t/TestApp/Web.pm
+t/TestApp/Action/TicketComment.pm
+t/TestApp/Action/TicketCreate.pm
+t/TestApp/Action/TicketUpdate.pm
+t/TestApp/Condition/HasUser.pm
 t/action.t
 t/action_field.t
 t/base.t
@@ -74,6 +84,7 @@ t/context.t
 t/exception.t
 t/factory.t
 t/history.t
+t/log4perl.conf
 t/persister_dbi.t
 t/persister_dbi_extra_data.t
 t/persister_file.t
@@ -86,4 +97,7 @@ t/validator_has_required_field.t
 t/validator_in_enumerated_type.t
 t/validator_matches_date_format.t
 t/workflow.t
-
+t/workflow.xml
+t/workflow_action.xml
+t/workflow_condition.xml
+t/workflow_validator.xml
