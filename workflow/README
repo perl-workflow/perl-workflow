@@ -21,18 +21,15 @@ To install this module type one of the following:
  make test              ./Build test
  make install           ./Build install
 
+
 QUICK START
 ========================================
 
 The eg/ticket/ directory contains a configured workflow system. You
-can access it in two ways:
+can access the same data and logic in two ways:
 
   * a command-line application (ticket.pl)
   * a web application          (ticket_web.pl)
-
-(For Win32 systems you can get the Template Toolkit PPD from
-http://openinteract.sourceforge.net/; the DBD::SQLite PPD is available
-from ActiveState)
 
 To initialize:
 
@@ -56,6 +53,7 @@ This module requires these other modules and libraries:
     Class::Accessor
     DateTime
     DateTime::Format::Strptime
+    DBD::Mock
     Exception::Class
     File::Spec
     Log::Dispatch
@@ -79,6 +77,11 @@ For the sample application you'll also need:
     HTTP::Response
     HTTP::Status
     Template (Template Toolkit)
+
+(For Win32 systems you can get the Template Toolkit and DBD::SQLite
+PPDs from TheoryX:
+http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58)
+
 
 COPYRIGHT AND LICENCE
 ========================================
