@@ -13,7 +13,7 @@ __PACKAGE__->mk_accessors( @FIELDS );
 
 sub new {
     my ( $class, $params ) = @_;
-    my $self = bless( {}, $class );
+    my $self = bless( { _saved => 0 }, $class );
     for ( @FIELDS ) {
         $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
     }
@@ -25,12 +25,17 @@ sub new {
 
 sub is_saved {
     my ( $self ) = @_;
-    return $self->{_set_saved};
+    return $self->{_saved};
 }
 
-sub _set_saved {
+sub set_saved {
     my ( $self ) = @_;
-    $self->{_set_saved} = 1;
+    $self->{_saved} = 1;
+}
+
+sub clear_saved {
+    my ( $self ) = @_;
+    $self->{_saved} = 0;
 }
 
 1;
