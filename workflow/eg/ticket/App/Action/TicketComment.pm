@@ -9,9 +9,19 @@ use Log::Log4perl qw( get_logger );
 $App::Action::TicketComment::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 sub execute {
-    my ( $self ) = @_;
+    my ( $self, $wf ) = @_;
     my $log = get_logger();
-    $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
+
+    $log->info( "Entering comment for workflow ", $wf->id );
+
+    $wf->add_history(
+        Workflow::History->new({
+            action      => "Ticket comment",
+            description => $wf->context->param( 'comment' ),
+            user        => $wf->context->param( 'current_user' ),
+            state       => $wf->state,
+        })
+    );
 }
 
 1;
