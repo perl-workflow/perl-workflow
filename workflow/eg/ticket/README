@@ -2,9 +2,9 @@ Workflow Sample Application
 ========================================
 
 As a sample of the workflow system here is a simple trouble ticket
-system. A *very* simple system. It comes with two interfaces: a
-command-line application and a simple standalone web server. Both are
-interfaces to the same workflows and tickets.
+system. A *very* simple system. It comes with three interfaces: a
+command-line application, a CGI script, and a simple standalone web
+server. Both are interfaces to the same workflows and tickets.
 
 Initializing the System
 --------------------
@@ -14,14 +14,14 @@ while with a little configuration (in 'workflow_persister.xml') you
 can use a different DBMS, you can get the demo running in less than a
 minute with SQLite. Draw your own conclusions.
 
-To initialize the database, just run the command-line application with
+To initialize the database just run the command-line application with
 the '--db' switch:
 
  perl ticket.pl --db
 
 This will create a new database for you. If a database (in the file
-'ticket.db') already exists it will be wiped out. Since it's so easy
-to wipe out and reinitialize the system you should have no qualms
+'db/ticket.db') already exists it will be wiped out. Since it's so
+easy to wipe out and reinitialize the system you should have no qualms
 about playing around, putting bad data in to see what happens, etc.
 
 
@@ -42,7 +42,7 @@ Web Application
 --------------------
 
 Next (and probably more fun), you can manipulate the workflow system
-through the web application:
+through the standalone web application:
 
  perl ticket_web.pl
 
@@ -54,10 +54,30 @@ on:
   Please contact me at [URL: http://shazam.local:57988/]
 
 Paste that URL into your browser and fire away. It's a very simple
-application but looking through the 'ticket_web.pl' should give you an
-idea of how to integrate the workflow system into your display
-technology.
+application but looking through the 'ticket_web.pl' script (and
+'App/Web.pm' package) should give you an idea of how to integrate the
+workflow system into your display technology.
 
+For using the CGI script you can configure Apache to run CGI scripts
+in the normal manner. I have a vhost definition that does this:
+
+    Listen 127.0.0.1:80
+    <VirtualHost 127.0.0.1:80>
+        Port 80
+        ServerName my.coolserver.com
+        DocumentRoot /path/to/workflow/eg/ticket
+
+        <Files *.cgi>
+            SetHandler cgi-script
+        </Files>
+
+        <Location />
+            DirectoryIndex index.html index.shtml
+            Options Indexes ExecCGI
+        </Location>
+    </VirtualHost>
+
+Configuring your web server to run CGI scripts should be pretty easy.
 
 Following Application Progress
 --------------------
@@ -104,11 +124,11 @@ of the workflow system is that it doesn't care. Here's an example:
 1) context current_user Bob   current_user=Bob
 2) wf Ticket                  current_user=Bob;
                               workflow={Workflow object}
-3) execute TIX_NEW
+3) execute create issue
    - get data from user       current_user=Bob;
                               workflow={Workflow object};
                               ticket={Ticket object}
-4) execute TIX_COMMENT
+4) execute add coment
    - get data from user       current_user=Bob;
                               workflow={Workflow object};
                               ticket={Ticket object}
