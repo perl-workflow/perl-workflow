@@ -11,6 +11,8 @@ my @FIELDS = qw( ticket_id type subject description creator
                  status due_date last_update );
 __PACKAGE__->mk_accessors( @FIELDS );
 
+sub get_fields { return @FIELDS }
+
 my ( $generator );
 
 my $due_parser    = DateTime::Format::Strptime->new( pattern => '%Y-%m-%d' );
