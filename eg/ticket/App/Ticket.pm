@@ -124,8 +124,11 @@ sub update {
                last_update = ?
          WHERE ticket_id = ?
     };
+    my $due_date = ( ref $self->due_date )
+                     ? $self->due_date->strftime( '%Y-%m-%d' )
+                     : undef;
     my @values = ( $self->status,
-                   $self->due_date->strftime( '%Y-%m-%d' ),
+                   $due_date,
                    $self->last_update->strftime( '%Y-%m-%d %H:%M' ),
                    $self->id );
 
