@@ -19,6 +19,7 @@ require Workflow::Action;
 require Workflow::Condition;
 require Workflow::Config;
 require Workflow::Context;
+require Workflow::History;
 require Workflow::Persister;
 require Workflow::State;
 require Workflow::Validator;
@@ -109,6 +110,7 @@ sub _add_workflow_config {
     return unless ( scalar @all_workflow_config );
 
     foreach my $workflow_config ( @all_workflow_config ) {
+        next unless ( ref $workflow_config eq 'HASH' );
         my $wf_type = $workflow_config->{type};
         $self->{_workflow_config}{ $wf_type } = $workflow_config;
 
@@ -196,12 +198,21 @@ sub save_workflow {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
 
+    my $old_update = $wf->last_update;
+    $wf->last_update( DateTime->now );
+
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
-    $persister->update_workflow( $wf );
-    $log->info( "Workflow '", $wf->id, "' updated ok" );
-    $persister->create_history( $wf, $wf->get_unsaved_history );
-    $log->info( "Created necessary history objects ok" );
+    eval {
+        $persister->update_workflow( $wf );
+        $log->info( "Workflow '", $wf->id, "' updated ok" );
+        $persister->create_history( $wf, $wf->get_unsaved_history );
+        $log->info( "Created necessary history objects ok" );
+    };
+    if ( $@ ) {
+        $wf->last_update( $old_update );
+        die $@;
+    }
     return $wf;
 }
 
@@ -222,6 +233,7 @@ sub _add_action_config {
     return unless ( scalar @all_action_config );
 
     foreach my $action_config ( @all_action_config ) {
+        next unless ( ref $action_config eq 'HASH' );
         my $name = $action_config->{name};
         $log->debug( "Adding configuration for action '$name'" );
         $self->{_action_config}{ $name } = $action_config;
@@ -259,6 +271,7 @@ sub _add_persister_config {
     return unless ( scalar @all_persister_config );
 
     foreach my $persister_config ( @all_persister_config ) {
+        next unless ( ref $persister_config eq 'HASH' );
         my $name = $persister_config->{name};
         $log->debug( "Adding configuration for persister '$name'" );
         $self->{_persister_config}{ $name } = $persister_config;
@@ -304,6 +317,7 @@ sub _add_condition_config {
     my $log = get_logger();
 
     foreach my $condition_config ( @all_condition_config ) {
+        next unless ( ref $condition_config eq 'HASH' );
         my $name = $condition_config->{name};
         $log->debug( "Adding configuration for condition '$name'" );
         $self->{_condition_config}{ $name } = $condition_config;
@@ -347,6 +361,7 @@ sub _add_validator_config {
     my $log = get_logger();
 
     foreach my $validator_config ( @all_validator_config ) {
+        next unless ( ref $validator_config eq 'HASH' );
         my $name = $validator_config->{name};
         $log->debug( "Adding configuration for validator '$name'" );
         $self->{_validator_config}{ $name } = $validator_config;
