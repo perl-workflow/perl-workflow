@@ -86,12 +86,12 @@ sub is_optional {
 
 sub get_possible_values {
     my ( $self ) = @_;
+    $self->{_enumerated} ||= [];
     return @{ $self->{_enumerated} };
 }
 
 sub add_possible_values {
     my ( $self, @values ) = @_;
-    $self->{_enumerated} ||= [];
     foreach my $value ( @values ) {
         my $this_value = ( ref $value eq 'HASH' )
                            ? $value
