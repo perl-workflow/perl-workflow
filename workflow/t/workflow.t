@@ -3,6 +3,7 @@
 # $Id$
 
 use strict;
+use lib ( 't' );
 use Test::More  tests => 4;
 
 use Log::Log4perl qw( :easy );
