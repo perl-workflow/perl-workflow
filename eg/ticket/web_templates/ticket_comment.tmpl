@@ -1,0 +1,37 @@
+<html>
+<head>
+  <title>Comment on a Ticket</title>
+</head>
+<body bgcolor="#ffffff">
+
+<form method="POST" action="/execute/">
+
+<table border="0" cellpadding="2" cellspacing="0">
+<tr>
+ <td><b>[% ACTION_FIELDS.comment.label %]</b></td>
+ <td>[% ACTION_FIELDS.comment.description %]</td>
+<tr>
+ <td colspan="2">
+    <textarea name="comment"
+              rows="4" cols="40"
+              wrap="virtual">[% comment %]</textarea>
+ </td>
+</tr>
+<tr>
+ <td colspan="2"><input type="submit" value="Comment on Ticket"></td>
+</tr>
+</table>
+
+<input type="hidden" name="action" value="[% action %]">
+<input type="hidden" name="_action_data_entered" value="yes">
+
+<!-- Note that the ticket ID is NOT included here as a hidden variable
+     since the system pulls it up and puts it in the workflow context
+     automatically whenever we fetch the workflow. This is due to the
+     persister we're using and the 'extra_' configuration items in its
+     declaration -->
+
+</form>
+
+</body>
+</html>

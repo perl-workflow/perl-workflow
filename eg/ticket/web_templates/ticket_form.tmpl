@@ -1,0 +1,81 @@
+<html>
+<head>
+  <title>Create a Ticket</title>
+</head>
+<body bgcolor="#ffffff">
+
+[% PROCESS error_message.tmpl %]
+
+<h1>Create a Ticket</h1>
+
+<p>While this <b>looks</b> like it will be calling some part of the
+Ticket framework, it's actually just executing a workflow action and
+setting up the information required by the action. If you neglect to
+enter data for one or more fields you'll be brought back to this form
+and an error message will be displayed.</p>
+
+<form method="POST" action="/execute/">
+
+<table border="0" cellpadding="2" cellspacing="0">
+<tr>
+ <td><b>[% ACTION_FIELDS.type.label %]</b></td>
+ <td>[% ACTION_FIELDS.type.description %]</td>
+<tr>
+ <td colspan="2">
+   <select name="type">
+   <option value="">Select a ticket type...</option>
+[% FOREACH type_info = ACTION_FIELDS.type.get_possible_values %]
+   <option value="[% type_info.value %]">[% type_info.label %]</option>
+[% END %]
+   </select>
+</tr>
+<tr>
+ <td><b>[% ACTION_FIELDS.subject.label %]</b></td>
+ <td>[% ACTION_FIELDS.subject.description %]</td>
+<tr>
+ <td colspan="2"><input type="text" name="subject" value="[% subject %]" size="40"></td>
+</tr>
+<tr>
+ <td><b>[% ACTION_FIELDS.description.label %]</b></td>
+ <td>[% ACTION_FIELDS.description.description %]</td>
+<tr>
+ <td colspan="2">
+    <textarea name="description"
+              rows="4" cols="40"
+              wrap="virtual">[% description %]</textarea>
+ </td>
+</tr>
+<tr>
+ <td><b>[% ACTION_FIELDS.creator.label %]</b></td>
+ <td>[% ACTION_FIELDS.creator.description %]</td>
+<tr>
+ <td colspan="2">
+   <select name="creator">
+   <option value="">Select a creator...</option>
+[% FOREACH creator_info = ACTION_FIELDS.creator.get_possible_values %]
+   <option value="[% creator_info.value %]">[% creator_info.label %]</option>
+[% END %]
+   </select>
+ </td>
+</tr>
+<tr>
+ <td colspan="2"><input type="submit" value="Create Ticket"></td>
+</tr>
+</table>
+
+<!-- This is the name of the action we're executing... -->
+<input type="hidden" name="action" value="[% action %]">
+
+<!-- And this is a flag to the processor to tell it to go ahead
+     and execute the action, sending any condition/validation
+     errors back here... -->
+<input type="hidden" name="_action_data_entered" value="yes">
+
+<!-- Note that the workflow ID isn't included here as a
+     hidden variable since we should be able to pull it
+     from the cookie -->
+
+</form>
+
+</body>
+</html>
