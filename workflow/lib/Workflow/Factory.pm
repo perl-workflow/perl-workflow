@@ -130,7 +130,7 @@ sub get_workflow {
     unless ( $config ) {
         workflow_error "No workflow of type '$wf_type' available";
     }
-    my $persister = $self->_get_persister( $config->{persister} );
+    my $persister = $self->get_persister( $config->{persister} );
     my ( $wf );
     if ( $wf_id ) {
         my $wf_info = $persister->fetch_workflow( $wf_id );
@@ -164,38 +164,28 @@ sub _get_workflow_config {
 
 sub _insert_workflow {
     my ( $self, $wf ) = @_;
-    my $wf_persist = WorkflowPersist->new({ type  => $wf->type,
-                                            state => $wf->state });
-    $wf_persist->{state} = $wf->state;
-    eval { $wf_persist->save };
-    if ( $@ ) {
-        workflow_error "Failed to create new workflow of type '", $wf->type, "': $@";
-    }
-    $wf->id( $wf_persist->id );
+    my $config = $self->_get_workflow_config( $wf->type );
+    my $persister = $self->get_persister( $config->{persister} );
+    my $id = $persister->create_workflow( $wf );
+    $wf->id( $id );
     return $wf;
 
 }
 
 sub save_workflow {
     my ( $self, $wf ) = @_;
-    my $wf_id = $wf->id;
-    my $wf_persist = eval { WorkflowPersist->fetch( $wf_id ) };
-    if ( $@ ) {
-        workflow_error "Failed to fetch workflow data with ID '$wf_id': $@";
-    }
-    $wf_persist->{state} = $wf->state;
-    eval { $wf_persist->save };
-    if ( $@ ) {
-        workflow_error "Failed to save workflow with ID '$wf_id': $@";
-    }
+    my $config = $self->_get_workflow_config( $wf->type );
+    my $persister = $self->get_persister( $config->{persister} );
+    $persister->update_workflow( $wf );
+    $persister->create_history( $wf->get_history );
     return $wf;
 }
 
 
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
-    my $wf_config = $self->_get_workflow_config( $wf_type );
-    my $persister = $self->_get_persister( $wf_config->{persister} );
+    my $wf_config = $self->_get_workflow_config( $wf->type );
+    my $persister = $self->get_persister( $wf_config->{persister} );
     return $persister->fetch_history( $wf->id );
 }
 
@@ -267,10 +257,10 @@ sub _add_persister_config {
     }
 }
 
-sub _get_persister {
+sub get_persister {
     my ( $self, $persister_name ) = @_;
     my $persister = $self->{_persister}{ $persister_name };
-    unless ( $config ) {
+    unless ( $persister ) {
         workflow_error "No persister with name '$persister_name' available";
     }
     return $persister;
@@ -390,6 +380,8 @@ B<save_workflow( $workflow )>
 
 B<get_action( $workflow, $action_name )>
 
+B<get_persister( $persister_name )>
+
 B<get_condition( $condition_name )>
 
 B<get_validator( $validator_name )>
@@ -433,6 +425,8 @@ B<_add_workflow_config( @config_hashrefs )>
 
 B<_add_action_config( @config_hashrefs )>
 
+B<_add_persister_config( @config_hashrefs )>
+
 B<_add_condition_config( @config_hashrefs )>
 
 B<_add_validator_config( @config_hashrefs )>
@@ -444,6 +438,8 @@ L<Workflow>
 L<Workflow::Action>
 
 L<Workflow::Condition>
+
+L<Workflow::Persister>
 
 L<Workflow::Validator>
 
