@@ -1,11 +1,8 @@
-# For each action define how to provide the data it needs
+<!-- For each action define how to provide the data it needs -->
+<actions>
 
-[TIX_CREATE]
+   <action name="TIX_CREATE"
+           class="App::Web::CreateHandler"
+           method="show_form"/>
 
-# if we don't need to provide the form with anything:
-template = task::task_form
-
-# if we do need info...
-class    = OI::Handler::Task
-method   = create
-popup    = 1
+</actions>

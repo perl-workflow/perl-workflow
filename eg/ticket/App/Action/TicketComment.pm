@@ -1,4 +1,4 @@
-package Action::TicketComment;
+package App::Action::TicketComment;
 
 # $Id$
 
@@ -6,7 +6,7 @@ use strict;
 use base qw( Workflow::Action );
 use Log::Log4perl qw( get_logger );
 
-$Action::TicketComment::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$App::Action::TicketComment::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 sub execute {
     my ( $self ) = @_;
@@ -15,5 +15,3 @@ sub execute {
 }
 
 1;
-
-__END__

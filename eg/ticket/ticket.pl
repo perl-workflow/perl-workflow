@@ -2,28 +2,30 @@
 
 use strict;
 use lib qw( ../../../lib );
-use Common;
-use Getopt::Long qw( GetOptions );
-use Log::Log4perl qw( get_logger );
-use SPOPS::Initialize;
-use WorkflowContext;
-use WorkflowFactory qw( FACTORY );
+use App::Ticket;
+use DBI;
+use Getopt::Long      qw( GetOptions );
+use Log::Log4perl     qw( get_logger );
+use Workflow::Factory qw( FACTORY );
 
 Log::Log4perl::init( 'log4perl.conf' );
 
 my ( $OPT_db_init );
-GetOptions( 'db'   => \$OPT_db_init );
+GetOptions( 'db' => \$OPT_db_init );
+
+my $DB_FILE = 'ticket.db';
 
 if ( $OPT_db_init ) {
     create_tables();
+    print "Created database and tables ok\n";
+    exit();
 }
 
-initialize_spops();
-
-my $factory = FACTORY->add_config({ workflow  => 'workflow.ini',
-                                    action    => 'workflow_action.ini',
-                                    validator => 'workflow_validator.ini',
-                                    condition => 'workflow_condition.ini' });
+FACTORY->add_config_from_file( workflow  => 'workflow.xml',
+                               action    => 'workflow_action.xml',
+                               validator => 'workflow_validator.xml',
+                               condition => 'workflow_condition.xml',
+                               persister => 'workflow_persister.xml' );
 my ( $wf, $user, $ticket );
 
 
@@ -53,8 +55,8 @@ while ( 1 ) {
         print "Caught error: $@\n" if ( $@ );
     }
     else {
-        print "Response '$response' not valid; available options: ",
-              join( ', ', sort keys %responses  ), "\n";
+        print "Response '$response' not valid; available options are:\n",
+              "   ", join( ', ', sort keys %responses  ), "\n";
     }
 }
 
@@ -71,14 +73,16 @@ sub prompt_action_data {
     }
     my @action_fields = $wf->get_action_fields( $action_name );
     foreach my $field ( @action_fields ) {
-        if ( $wf->context->param( $field ) ) {
-            print "Field '$field' already exists in context, skipping...\n";
+        if ( $wf->context->param( $field->name ) ) {
+            print "Field '", $field->name, "' already exists in context, skipping...\n";
             next;
         }
-        my $value = get_response( "Value for field '$field->{name}' ($field->{type})\n" .
-                                  "   $field->{description}\ndata: " );
+        my $value = get_response( "Value for field '", $field->name, "' ",
+                                  "(", $field->type, ")\n" .
+                                  "   ", $field->description, "\n",
+                                  "data: " );
         if ( $value ) {
-            $wf->context->param( $field->{name}, $value );
+            $wf->context->param( $field->name, $value );
         }
     }
     print "All data entered\n";
@@ -87,15 +91,13 @@ sub prompt_action_data {
 sub use_ticket {
     my ( $id ) = @_;
     _check_wf();
-
     unless ( $id ) {
         die "Command 'use_ticket' requires the ID of the ticket you wish to use\n";
     }
-    $ticket = Ticket->fetch( $id );
+    $ticket = App::Ticket->fetch( $id );
     print "Ticket '$id' fetched wih subject '$ticket->{subject}\n";
     $wf->context->param( ticket => $ticket );
 }
-
 
 sub get_action_data {
     my ( $action_name ) = @_;
@@ -113,25 +115,8 @@ sub get_action_data {
 sub set_context {
     my ( $name, @values ) = @_;
     _check_wf();
-
-    if ( $name eq 'user' ) {
-        my ( $user );
-        if ( $values[0] =~ /^\d+$/ ) {
-            $user = User->fetch( $values[0] );
-        }
-        else {
-            $user = User->new({ name => $values[0] } )->save();
-        }
-        $wf->context->param( 'current_user', $user );
-        print "Context parameter 'current_user' set to '$user->{name} ($user->{user_id})'\n";
-    }
-    else {
-        $wf->context->param( $name, join( ' ', @values ) );
-        print "Context parameter '$name' set to '", $wf->context->param( $name ), "'\n";
-    }
-#    else {
-#        die "Don't know how to handle multiple values with '$values[0]' yet\n";
-#    }
+    $wf->context->param( $name, join( ' ', @values ) );
+    print "Context parameter '$name' set to '", $wf->context->param( $name ), "'\n";
 }
 
 sub clear_context {
@@ -186,63 +171,49 @@ sub get_workflow {
     my ( $type, $id ) = @_;
     if ( $id ) {
         print "Fetching existing workflow of type '$type' and ID '$id'...\n";
-        $wf = $factory->get_workflow( $type, $id );
+        $wf = FACTORY->get_workflow( $type, $id );
     }
     else {
         print "Creating new workflow of type '$type'...\n";
-        $wf = $factory->get_workflow( $type );
+        $wf = FACTORY->get_workflow( $type );
     }
     print "Workflow of type '", $wf->type, "' available with ID '", $wf->id, "'\n";
 }
 
 
-sub _old_stuff {
-    my @action_fields = $wf->get_action_fields( 'TIX_NEW' );
-
-    print "Fields necessary for TIX_NEW:\n";
-    foreach my $field ( @action_fields ) {
-        print "($field->{type})  $field->{name}: $field->{description}\n";
-    }
-
-    eval {
-        $wf->execute_action( 'TIX_NEW' );
-    };
-
-    print "ID of saved workflow is: ", $wf->id, " with state '", $wf->state, "'\n";
-
-    eval {
-        $wf->execute_action( 'TIX_EDIT' );
-        print "New state of workflow after starting edit: ", $wf->state, "\n";
-    };
-
-    if ( $@ ) {
-        print "Cannot execute action: $@\n";
-    }
-
-    print "\n";
-}
-
+########################################
+# DB INIT
 
 sub create_tables {
     my $log = get_logger();
-    my $db = Common->global_datasource_handle;
-    eval {
-        $db->do( 'DROP TABLE ticket' );
-        $db->do( 'DROP TABLE user' );
-        $db->do( 'DROP TABLE workflow' );
-        $db->do( 'DROP TABLE workflow_ticket' );
-    };
-    $log->debug( 'Dropped tables ok' );
-    eval {
-        $db->do( read_file( 'ticket.sql' ) );
-        $db->do( read_file( 'user.sql' ) );
-        $db->do( read_file( 'workflow.sql' ) );
-        $db->do( read_file( 'workflow_ticket.sql' ) );
-    };
-    if ( $@ ) {
-        die "Failed to create tables: $@";
+    if ( -f $DB_FILE ) {
+        $log->info( "Removing old database file..." );
+        unlink( $DB_FILE );
     }
-    $log->debug( 'Created tables ok' );
+    my $dbh = DBI->connect( "DBI:SQLite:dbname=$DB_FILE", '', '' )
+                  || die "Cannot create database: $DBI::errstr\n";
+    $dbh->{RaiseError} = 1;
+    $log->info( "Connected to database ok" );
+    my @tables = ( read_tables( '../../struct/workflow_sqlite.sql' ),
+                   read_tables( 'ticket.sql' ) );
+    for ( @tables ) {
+        next if ( /^\s*$/ );
+        $log->debug( "Creating table:\n$_" );
+        eval { $dbh->do( $_ ) };
+        if ( $@ ) {
+            die "Failed to create table\n$_\n$@\n";
+        }
+    }
+    $log->info( 'Created tables ok' );
+}
+
+########################################
+# I/O
+
+sub read_tables {
+    my ( $file ) = @_;
+    my $table_file = read_file( $file );
+    return split( ';', $table_file );
 }
 
 sub read_file {
@@ -252,39 +223,6 @@ sub read_file {
     my $content = <IN>;
     close( IN );
     return $content;
-}
-
-sub initialize_spops {
-    my %conf = (
-        ticket => {
-            class => 'Ticket',
-            isa => [ qw/ Common SPOPS::DBI::MySQL SPOPS::DBI / ],
-            field_discover => 'yes',
-            id_field => 'ticket_id',
-            increment_field => 1,
-            rules_from => [ 'SPOPS::Tool::DBI::DiscoverField' ],
-            base_table => 'ticket',
-        },
-        user => {
-            class => 'User',
-            isa => [ qw/ Common SPOPS::DBI::MySQL SPOPS::DBI / ],
-            field_discover => 'yes',
-            id_field => 'user_id',
-            increment_field => 1,
-            rules_from => [ 'SPOPS::Tool::DBI::DiscoverField' ],
-            base_table => 'user',
-        },
-        workflow => {
-            class => 'WorkflowPersist',
-            isa => [ qw/ Common SPOPS::DBI::MySQL SPOPS::DBI / ],
-            field_discover => 'yes',
-            id_field => 'workflow_id',
-            increment_field => 1,
-            rules_from => [ 'SPOPS::Tool::DBI::DiscoverField' ],
-            base_table => 'workflow',
-        },
-    );
-    SPOPS::Initialize->process({ config => \%conf });
 }
 
 # Generic routine to read a response from the command-line (defaults,

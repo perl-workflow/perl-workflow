@@ -1,0 +1,27 @@
+Workflow Sample Application
+========================================
+
+As a sample of the workflow system here is a simple trouble ticket
+system. A *very* simple system. It comes with two interfaces: a
+command-line application and a simple standalone web server. Both are
+interfaces to the same workflows and tickets.
+
+The default setup uses SQLite, a standalone multi-platform database
+that has a great Perl interface (DBD::SQLite) and requires no
+setup. You can use a different database by modifying
+'workflow_persister.xml' to use a different DBI database.
+
+Here's how to initialize the system if you're using SQLite:
+
+ perl ticket.pl --db
+
+ 
+, assuming you're in the
+'eg/ticket/' directory:
+
+ $ sqlite ticket.db < ../../workflow_sqlite.sql
+ $ sqlite ticket.db < ticket.sql
+
+
+========================================
+$Id$

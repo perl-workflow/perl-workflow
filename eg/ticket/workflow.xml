@@ -7,18 +7,7 @@
 <workflow>
  <type>Ticket</type>
  <description>This is the workflow for sample application Ticket</description>
-
-<!-- 
- data from these tables are pulled at workflow instantiation time and
- put into parameters and/or context so they're available from all
- actions, conditions, and validators
--->
-
-  <extra_data
-    table="workflow_ticket"
-    field="ticket_id"
-    class="Ticket"
-    context="ticket"/>
+ <persister>TestPersister</persister>
 
   <state name="INITIAL">
      <description>This is the state the workflow enters when instantiated. It's
@@ -31,18 +20,13 @@ like a 'state zero' but since we're using names rather than IDs we cannot assume
 
   <state name="TIX_CREATED">
      <description>State of ticket after it has been created</description>
+     <action name="TIX_COMMENT"
+             resulting_state="NOCHANGE"/>        
 <!--
-#[TIX_CREATED TIX_COMMENT]
-#resulting_state = NOCHANGE
--->
-
-<!--
-# This action is accessible from this state by environments meeting
-# the 'IsAdminUser' condition
-#[TIX_CREATED TIX_CLOSE]
-#condition = IsAdminUser
-#condition_denied_message = Only administrators can close tickets.
-#resulting_state = TIX_CLOSED
+     <action name="TIX_CLOSE"
+             resulting_state="TIX_CLOSED">
+        <condition name="IsAdminUser"/>
+     </action>
 -->
 
      <action name="TIX_EDIT"
@@ -60,18 +44,17 @@ like a 'state zero' but since we're using names rather than IDs we cannot assume
    </state>
 
 <!--
-#[TIX_AWAITS_APPROVAL]
-#description = State of ticket after developers complete work
-
-#[TIX_AWAITS_APPROVAL TIX_CLOSE]
-#condition = IsCreationUser
-#resulting_state = TIX_CLOSED
-#condition_denied_message = Only ticket creators can close tickets.
-
-#[TIX_AWAITS_APPROVAL TIX_ESCALATE]
-#condition = IsCreationUser
-#resulting_state = TIX_CREATED_ESCALATED
-#condition_denied_message = Only ticket creators can escalate tickets.
+    <state name="TIX_AWAITS_APPROVAL">
+      <description>State of ticket after developers complete work</description>
+       <action name="TIX_CLOSE"
+               resulting_state="TIX_CLOSED">
+          <condition name="IsCreationUser"/>
+       </action>
+       <action name="TIX_ESCALATE"
+               resulting_state="TIX_CREATED_ESCALATED">
+          <condition name="IsCreationUser"/>
+       </action>
+    </state>
 -->
 
    <state name="TIX_CLOSED">
@@ -81,4 +64,5 @@ like a 'state zero' but since we're using names rather than IDs we cannot assume
          <condition name="IsCreator"/>
       </action>
    </state>
+
 </workflow>

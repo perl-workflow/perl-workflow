@@ -1,4 +1,4 @@
-package Condition::HasUserAndTicket;
+package App::Condition::HasUserAndTicket;
 
 # $Id$
 
@@ -7,7 +7,7 @@ use base qw( Workflow::Condition );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( condition_error );
 
-$Condition::HasUserAndTicket::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$App::Condition::HasUserAndTicket::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 sub evaluate {
     my ( $self, $wf ) = @_;
