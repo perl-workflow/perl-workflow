@@ -75,12 +75,16 @@ sub _initialize_instance {
     return $INSTANCES{ $class };
 }
 
+my %CONFIG = ( 'Workflow::Config' => 1 );
+
 sub add_config_from_file {
     my ( $self, %params ) = @_;
-    $log ||= get_logger();
     return unless ( scalar keys %params );
 
+    $log ||= get_logger();
+
     _check_config_keys( %params );
+
     foreach my $type ( sort keys %params ) {
         $log->debug( "Using '$type' configuration file(s): ",
                      join( ', ', _flatten( $params{ $type } ) ) );
@@ -88,23 +92,23 @@ sub add_config_from_file {
 
     $log->debug( "Adding condition configurations..." );
     $self->_add_condition_config(
-        Workflow::Config->parse( 'condition', $params{condition} )
+        Workflow::Config->parse_all_files( 'condition', $params{condition} )
     );
     $log->debug( "Adding validator configurations..." );
     $self->_add_validator_config(
-        Workflow::Config->parse( 'validator', $params{validator} )
+        Workflow::Config->parse_all_files( 'validator', $params{validator} )
     );
     $log->debug( "Adding persister configurations..." );
     $self->_add_persister_config(
-        Workflow::Config->parse( 'persister', $params{persister} )
+        Workflow::Config->parse_all_files( 'persister', $params{persister} )
     );
     $log->debug( "Adding action configurations..." );
     $self->_add_action_config(
-        Workflow::Config->parse( 'action', $params{action} )
+        Workflow::Config->parse_all_files( 'action', $params{action} )
     );
     $log->debug( "Adding workflow configurations..." );
     $self->_add_workflow_config(
-        Workflow::Config->parse( 'workflow', $params{workflow} )
+        Workflow::Config->parse_all_files( 'workflow', $params{workflow} )
     );
 }
 
@@ -121,14 +125,13 @@ sub add_config {
 
 sub _check_config_keys {
     my ( %params ) = @_;
-    my $conf = Workflow::Config->new();
-    my @bad_keys = grep { ! $conf->is_valid_config_type( $_ ) } keys %params;
+    my @bad_keys = grep { ! Workflow::Config->is_valid_config_type( $_ ) } keys %params;
     if ( scalar @bad_keys ) {
         workflow_error "You tried to add configuration information to the ",
                        "workflow factory with one or more bad keys: ",
                        join( ', ', @bad_keys ), ". The following are the ",
                        "keys you have to choose from: ",
-                       join( ', ', $conf->get_valid_config_types ), '.';
+                       join( ', ', Workflow::Config->get_valid_config_types ), '.';
     }
 }
 
@@ -518,19 +521,22 @@ using the keys 'action', 'condition', 'persister', 'validator' and
 of filenames.
 
 The system is familiar with the 'perl' and 'xml' configuration formats
--- see the 'doc/configuration.txt' for what we expect as the
-format. Just give your file the right name and it will be read in
+-- see the 'doc/configuration.txt' for what we expect as the format
+and will autodetect the types based on the file extension of each
+file. Just give your file the right extension and it will be read in
 properly.
 
-You may also use your own custom configuration file format, read it in
-yourself (or subclass L<Workflow::Factory> to do it for you) and add
-the resulting hash reference directly to the factory. However, you
-need to ensure the configurations are added in the proper order --
-when you add an 'action' configuration and reference 'validator'
-objects, those objects should already be read in. A good order is:
-'validator', 'condition', 'action', 'workflow'. Then just pass the
-resulting hash references to C<add_config()> using the right type and
-the behavior should be exactly the same.
+You may also use your own custom configuration file format -- see
+C<SUBCLASSING> in L<Workflow::Config> for what you need to do.
+
+You can also read it in yourself and add the resulting hash reference
+directly to the factory using C<add_config()>. However, you need to
+ensure the configurations are added in the proper order -- when you
+add an 'action' configuration and reference 'validator' objects, those
+objects should already be read in. A good order is: 'validator',
+'condition', 'action', 'workflow'. Then just pass the resulting hash
+references to C<add_config()> using the right type and the behavior
+should be exactly the same.
 
 B<add_config( %config_hashrefs )>
 
@@ -541,7 +547,9 @@ holding the configurations.
 
 You normally will only need to call this if you are creating
 configurations on the fly (e.g., hot-deploying a validator class
-specified by a user) or using a custom configuration format.
+specified by a user) or using a custom configuration format and for
+some reason do not want to use the built-in mechanism in
+L<Workflow::Config> to read it for you.
 
 =head2 Internal Methods
 
@@ -694,6 +702,8 @@ L<Workflow>
 L<Workflow::Action>
 
 L<Workflow::Condition>
+
+L<Workflow::Config>
 
 L<Workflow::Persister>
 
