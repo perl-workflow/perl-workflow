@@ -10,6 +10,10 @@ eval "require SPOPS";
 if ( $@ ) {
     plan skip_all => 'SPOPS not installed';
 }
+my $ver = SPOPS->VERSION;
+if ( $ver < 0.81 ) {
+    plan skip_all => "You need SPOPS version 0.81+ to run tests (you have: $ver)";
+}
 plan tests => NUM_TESTS;
 
 require TestUtil;
