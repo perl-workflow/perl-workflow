@@ -4,6 +4,7 @@ package Workflow::Persister::SPOPS;
 
 use strict;
 use base qw( Workflow::Persister );
+use DateTime;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 
@@ -20,6 +21,26 @@ sub init {
                             "in configuration.";
     }
     $self->workflow_class( $params->{workflow_class} );
+    unless ( $params->{history_class} ) {
+        configuration_error "SPOPS implementation for persistence must ",
+                            "specify 'history_class' parameter ",
+                            "in configuration."
+    }
+    $self->history_class( $params->{history_class} );
+}
+
+sub create_workflow {
+    my ( $self, $wf ) = @_;
+    my $wf_persist = $self->workflow_class->new({
+        state       => $wf->state,
+        type        => $wf->type,
+        last_update => DateTime->now
+     });
+    eval { $wf_persist->save };
+    if ( $@ ) {
+        persist_error "Failed to create new workflow: $@";
+    }
+    return $wf_persist->id;
 }
 
 sub fetch_workflow {
@@ -27,16 +48,6 @@ sub fetch_workflow {
     my $wf_persist = eval { $self->workflow_class->fetch( $wf_id ) };
     if ( $@ ) {
         persist_error "Failed to fetch workflow '$wf_id': $@";
-    }
-    return $wf_persist;
-}
-
-sub create_workflow {
-    my ( $self, $wf ) = @_;
-    my $wf_persist = $self->workflow_class->new({ state => $wf->state });
-    eval { $wf_persist->save };
-    if ( $@ ) {
-        persist_error "Failed to create new workflow: $@";
     }
     return $wf_persist;
 }
@@ -58,14 +69,42 @@ sub update_workflow {
 
 sub create_history {
     my ( $self, $wf, @history ) = @_;
-    persist_error "Persister '", ref( $self ), "' must implement ",
-                  "'create_history()'";
+    my $log = get_logger();
+    $log->debug( "Saving history for workflow ", $wf->id );
+    foreach my $h ( @history ) {
+        next if ( $h->is_saved );
+        my $hist_persist = eval {
+            $self->history_class->new({
+                workflow_id  => $wf->id,
+                action       => $h->action,
+                description  => $h->description,
+                state        => $h->state,
+                user         => $h->user,
+                history_date => $h->date
+            })->save();
+        };
+        if ( $@ ) {
+            persist_error "Failed to save history record: $@";
+        }
+        else {
+            $h->id( $hist_persist->id );
+            $log->info( "Created history record with ID ", $hist_persist->id );
+        }
+    }
+    return @history;
 }
 
 sub fetch_history {
     my ( $self, $wf ) = @_;
-    persist_error "Persister '", ref( $self ), "' must implement ",
-                  "'fetch_history()'";
+    my $histories = eval {
+        $self->history_class->fetch_group({ where => 'workflow_id = ?',
+                                            value => [ $wf->id ],
+                                            order => 'history_date DESC' });
+    };
+    if ( $@ ) {
+        persist_error "Error fetching workflow history: $@";
+    }
+    return @{ $histories };
 }
 
 1;
