@@ -3,6 +3,7 @@
 # $Id$
 
 use strict;
+use lib qw( t/ );
 use constant NUM_TESTS => 1;
 use Test::More;
 
