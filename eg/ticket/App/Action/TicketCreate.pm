@@ -4,6 +4,7 @@ package App::Action::TicketCreate;
 
 use strict;
 use base qw( Workflow::Action );
+use App::Ticket;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( persist_error );
 use Workflow::Factory   qw( FACTORY );
@@ -12,15 +13,18 @@ $App::Action::TicketCreate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\
 
 sub execute {
     my ( $self, $wf ) = @_;
+    my $log = get_logger();
+    $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
+
     my $context = $wf->context;
     my @fields = qw( type subject description due_date creator );
     foreach my $field ( @fields ) {
         $self->param( $field, $context->param( $field ) );
+        $log->debug( "Value for '$field' : ", $self->param( $field ) );
     }
 
-    my $log = get_logger();
-    $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
     my $creator = $self->param( 'creator' ) || $context->param( 'current_user' );
+    $log->debug( "Assigned creator as '$creator'" );
     my $ticket = App::Ticket->new({
         type        => $self->param( 'type' ),
         status      => $wf->state,
@@ -30,7 +34,13 @@ sub execute {
         due_date    => $self->param( 'due_date' ),
         last_update => $self->param( 'last_update' ),
     });
-    $ticket->create;
+    $log->debug( "Created ticket object ok" );
+    eval { $ticket->create };
+    if ( $@ ) {
+        $log->error( $@ );
+        die $@;
+    }
+    $log->debug( "Stored ticket object ok" );
     $context->param( ticket => $ticket );
     $log->info( "Ticket created correctly with ID ", $ticket->id );
 
@@ -48,7 +58,7 @@ sub execute {
         $sth->execute( $wf->id, $ticket->id );
     };
     if ( $@ ) {
-        persist_error "Failed to save additional ticket info: $@";
+        die "Failed to save additional ticket info: $@\n";
     }
     $log->info( "Link table record inserted correctly" );
 
