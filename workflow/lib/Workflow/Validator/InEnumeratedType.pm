@@ -4,7 +4,7 @@ package Workflow::Validator::InEnumeratedType;
 
 use strict;
 use base qw( Workflow::Validator );
-use Workflow::Exception qw( configuration_error validator_error );
+use Workflow::Exception qw( configuration_error validation_error );
 
 $Workflow::Validator::InEnumeratedType::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
