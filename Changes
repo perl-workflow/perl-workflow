@@ -1,5 +1,18 @@
 Revision history for Perl extension Workflow
 
+0.11
+
+  Build.PL/Makefile.PL:
+
+     - Add Class::Factory as dependency. Thanks to Michael Schwern for
+     the pointer via RT -- during my presentation on the Workflow
+     module no less!
+
+  eg/ticket/ticket.pl:
+
+     - Ensure we actually delete the SQLite database file if it exists.
+
+
 0.10  Tue Oct 12 01:02:11 EDT 2004
 
   Workflow
