@@ -191,7 +191,7 @@ sub _load_observers {
     my $wf_type = $workflow_config->{type};
     my $observer_specs = $workflow_config->{observer} || [];
     my @observers = ();
-    foreach my $observer_info ( @{ $observers } ) {
+    foreach my $observer_info ( @{ $observer_specs } ) {
         if ( my $observer_class = $observer_info->{class} ) {
             $self->_load_class( $observer_class,
                     "Cannot require observer '%s' to watch observer " .
@@ -199,7 +199,7 @@ sub _load_observers {
             push @observers, $observer_class;
         }
         elsif ( my $observer_sub = $observer_info->{sub} ) {
-            my ( $observer_class, $observer_sub ) = split /::/, $observer_sub;
+            my ( $observer_class, $observer_sub ) = $observer_sub =~ /^(.*)::(.*)$/;
             $self->_load_class( $observer_class,
                     "Cannot require observer '%s' with sub '$observer_sub' to " .
                     "watch observer of type '$wf_type': %s" );
@@ -214,6 +214,7 @@ sub _load_observers {
                              "class '$observer_class': $error" );
                 workflow_error $error;
             }
+            push @observers, $o_sub;
         }
         else {
             workflow_error "Cannot add observer to '$wf_type': you must ",
@@ -224,7 +225,8 @@ sub _load_observers {
     $log->is_info &&
         $log->info( "Added observers to '$wf_type': ",
                     join( ', ', @observers ) );
-    $self->{_workflow_observers}{ $wf_type } = \@observers;
+    $self->{_workflow_observers}{ $wf_type } = ( scalar @observers )
+                                                 ? \@observers : undef;
 }
 
 sub _load_class {
@@ -260,17 +262,16 @@ sub create_workflow {
     $log->is_info &&
         $log->info( "Persisted workflow with ID '$id'; creating history..." );
     $persister->create_history(
-        $wf, Workflow::History->new(
-                 { workflow_id => $id,
-                   action      => 'Create workflow',
-                   description => 'Create new workflow',
-                   user        => 'n/a',
-                   state       => $wf->state,
-                   date        => DateTime->now,
-               })
+        $wf, Workflow::History->new({
+            workflow_id => $id,
+            action      => 'Create workflow',
+            description => 'Create new workflow',
+            user        => 'n/a',
+            state       => $wf->state,
+            date        => DateTime->now,
+        })
     );
-    $log->is_info &&
-        $log->info( "Created history object ok" );
+    $log->is_info && $log->info( "Created history object ok" );
 
     $self->associate_observers_with_workflow( $wf );
     $wf->notify_observers( 'create' );
@@ -289,8 +290,11 @@ sub fetch_workflow {
     my $persister = $self->get_persister( $wf_config->{persister} );
     my $wf_info = $persister->fetch_workflow( $wf_id );
     return undef unless ( $wf_info );
+    $wf_info->{last_update} ||= '';
     $log->is_debug &&
-        $log->debug( "Fetched data for workflow '$wf_id' ok" );
+        $log->debug( "Fetched data for workflow '$wf_id' ok: ",
+                     "[State: $wf_info->{state}] ",
+                     "[Last update: $wf_info->{last_update}]" );
     my $wf = Workflow->new( $wf_id,
                             $wf_info->{state},
                             $wf_config,
@@ -304,6 +308,13 @@ sub fetch_workflow {
     $wf->notify_observers( 'fetch' );
 
     return $wf;
+}
+
+sub associate_observers_with_workflow {
+    my ( $self, $wf ) = @_;
+    my $observers = $self->{_workflow_observers}{ $wf->type };
+    return unless ( ref $observers eq 'ARRAY' );
+    $wf->add_observer( $_ ) for ( @{ $observers } );
 }
 
 sub _get_workflow_config {
@@ -346,6 +357,9 @@ sub save_workflow {
         $wf->last_update( $old_update );
         die $@;
     }
+
+    $wf->notify_observers( 'save' );
+
     return $wf;
 }
 
@@ -606,6 +620,9 @@ C<$workflow_type> and set the workflow to its initial state.
 Any observers you've associated with this workflow type will be
 attached to the returned workflow object.
 
+This fires a 'create' event from the just-created workflow object. See
+C<WORKFLOWS ARE OBSERVABLE> in L<Workflow> for more.
+
 Returns: newly created workflow object.
 
 B<fetch_workflow( $workflow_type, $workflow_id )>
@@ -617,6 +634,9 @@ C<$workflow_id> is not found C<undef> is returned.
 
 Any observers you've associated with this workflow type will be
 attached to the returned workflow object.
+
+This fires a 'fetch' event from the retrieved workflow object. See
+C<WORKFLOWS ARE OBSERVABLE> in L<Workflow> for more.
 
 Throws exception if no workflow type C<$workflow_type> available.
 
@@ -654,8 +674,8 @@ Similar to C<add_config_from_file()> -- the keys may be 'action',
 values are the actual configuration hashrefs instead of the files
 holding the configurations.
 
-You normally will only need to call this if you are creating
-configurations on the fly (e.g., hot-deploying a validator class
+You normally will only need to call this if you are programmatically
+creating configurations (e.g., hot-deploying a validator class
 specified by a user) or using a custom configuration format and for
 some reason do not want to use the built-in mechanism in
 L<Workflow::Config> to read it for you.
@@ -720,6 +740,10 @@ Adds all configurations in C<@config_hashrefs> to the factory. Also
 cycles through the workflow states and creates a L<Workflow::State>
 object for each. These states are passed to the workflow when it is
 instantiated.
+
+We also require any necessary observer classes and throw an exception
+if we cannot. If successful the observers are kept around and attached
+to a workflow in L<create_workflow()> and L<fetch_workflow()>.
 
 Returns: nothing
 

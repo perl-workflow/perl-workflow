@@ -84,6 +84,7 @@ t/TestApp/Action/TicketUpdate.pm
 t/TestApp/Condition/HasUser.pm
 t/action.t
 t/action_field.t
+t/action_null.t
 t/base.t
 t/condition.t
 t/condition_evaluate.t
@@ -107,6 +108,7 @@ t/validator_in_enumerated_type.t
 t/validator_matches_date_format.t
 t/workflow.t
 t/workflow.xml
+t/workflow_observer.xml
 t/workflow_action.xml
 t/workflow_condition.xml
 t/workflow_validator.xml
