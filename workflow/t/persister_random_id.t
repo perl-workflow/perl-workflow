@@ -3,10 +3,9 @@
 # $Id$
 
 use strict;
-use constant NUM_TESTS => 10;
-use Test::More;
-
-plan tests => NUM_TESTS;
+use lib 't';
+use TestUtil;
+use Test::More tests => 10;
 
 require_ok( 'Workflow::Persister::RandomId' );
 my $generator = Workflow::Persister::RandomId->new();

@@ -3,13 +3,10 @@
 # $Id$
 
 use strict;
+use lib 't';
+use TestUtil;
 use Test::More  tests => 5;
 
-use Log::Log4perl qw( :easy );
-Log::Log4perl->easy_init({ level => $INFO,
-                           file  => ">> workflow_tests.log" });
-
-chdir 't' if ( -d 't' );
 require_ok( 'FactorySubclass' );
 my $factory = FactorySubclass->instance();
 is( ref( $factory ), 'FactorySubclass',

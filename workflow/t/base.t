@@ -3,6 +3,8 @@
 # $Id$
 
 use strict;
+use lib 't';
+use TestUtil;
 use Test::More  tests => 22;
 
 require_ok( 'Workflow::Base' );

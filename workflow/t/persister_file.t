@@ -3,13 +3,12 @@
 # $Id$
 
 use strict;
+use lib 't';
+use TestUtil;
 use File::Path            qw( rmtree );
 use File::Spec::Functions qw( catdir curdir rel2abs );
 use Test::More  tests => 19;
 
-chdir 't' if ( -d 't' );
-
-require TestUtil;
 require Workflow::Factory;
 
 my $persist_dir = catdir( rel2abs( curdir() ), 'tmp_file' );

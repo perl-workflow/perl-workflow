@@ -1,4 +1,5 @@
 <workflow>
+
  <type>ObservedTicket</type>
  <description>This is the workflow for sample application Ticket</description>
  <persister>TestPersister</persister>
@@ -7,35 +8,20 @@
  <observer sub="SomeObserver::other_sub" />
 
  <state name="INITIAL">
-     <description>This is the state the workflow enters when
-        instantiated. It's like a 'state zero' but since we're
-        using names rather than IDs we cannot assume</description>
-     <action name="TIX_NEW"
-        resulting_state="TIX_CREATED"/>
+     <action name="null"  resulting_state="FIRST" />
  </state>
 
- <state name="TIX_CREATED">
-     <description>State of ticket after it has been created</description>
-     <action name="TIX_COMMENT"
-             resulting_state="NOCHANGE"/>        
-     <action name="TIX_EDIT"
-             resulting_state="TIX_IN_PROGRESS">
-        <condition name="HasUser"/>
-     </action>
+ <state name="FIRST">
+     <action name="null2" resulting_state="NOCHANGE" />        
+     <action name="null"  resulting_state="PROGRESS" />
   </state>
 
-  <state name="TIX_IN_PROGRESS">
-      <description>State of ticket after developers start work</description>
-      <action name="TIX_CLOSE"
-              resulting_state="TIX_CLOSED">
-         <condition name="HasUser"/>
-      </action>
+  <state name="PROGRESS">
+      <action name="null" resulting_state="CLOSED" />
   </state>
-  <state name="TIX_CLOSED">
-      <description>State of ticket after creator approves the work done</description>
-      <action name="TIX_REOPEN"
-              resulting_state="TIX_CREATED">
-         <condition name="HasUser"/>
-      </action>
+
+  <state name="CLOSED">
+      <action name="null" resulting_state="FIRST" />
   </state>
+
 </workflow>
