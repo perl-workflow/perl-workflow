@@ -11,6 +11,15 @@ $Workflow::Base::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 sub new {
     my ( $class, @params ) = @_;
     my $self = bless( { PARAMS => {} }, $class );
+
+    # always automatically pull out the name/value pairs from 'param'
+
+    if ( ref $params[0] eq 'HASH' && ref $params[0]->{param} eq 'ARRAY' ) {
+        foreach my $declared ( @{ $params[0]->{param} }) {
+            $params[0]->{ $declared->{name} } = $declared->{value};
+        }
+        delete $params[0]->{param};
+    }
     $self->init( @params );
     return $self;
 }
