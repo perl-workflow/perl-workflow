@@ -7,8 +7,8 @@ use DateTime::Format::Strptime;
 use Log::Log4perl     qw( get_logger );
 use Workflow::Factory qw( FACTORY );
 
-my @FIELDS = qw( ticket_id subject description creator status
-                 due_date last_update );
+my @FIELDS = qw( ticket_id type subject description creator
+                 status due_date last_update );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 my ( $generator );
@@ -41,7 +41,7 @@ sub fetch {
     $log->info( "Fetching existing ticket with ID '$id'" );
 
     my $sql = q{
-        SELECT subject, description, creator, status, due_date, last_update
+        SELECT type, subject, description, creator, status, due_date, last_update
           FROM ticket
          WHERE ticket_id = ?
     };
@@ -62,12 +62,13 @@ sub fetch {
     $log->debug( "Got database row: ", Dumper( $row ) );
     return $class->new({
         ticket_id   => $id,
-        subject     => $row->[0],
-        description => $row->[1],
-        creator     => $row->[2],
-        status      => $row->[3],
-        due_date    => $due_parser->parse_datetime( $row->[4] ),
-        last_update => $update_parser->parse_datetime( $row->[5] )
+        type        => $row->[0],
+        subject     => $row->[1],
+        description => $row->[2],
+        creator     => $row->[3],
+        status      => $row->[4],
+        due_date    => $due_parser->parse_datetime( $row->[5] ),
+        last_update => $update_parser->parse_datetime( $row->[6] )
     });
 }
 
@@ -83,10 +84,10 @@ sub create {
     my $update_date = ( ref $self->last_update )
                         ? $self->last_update->strftime( '%Y-%m-%d %H:%M' )
                         : DateTime->now->strftime( '%Y-%m-%d %H:%M' );
-    my @fields = qw( ticket_id subject description creator
-                     status due_date last_update );
-    my @values = ( $id, $self->subject, $self->description, $self->creator,
-                   $self->status, $due_date, $update_date );
+    my @fields = qw( ticket_id type subject description
+                     creator status due_date last_update );
+    my @values = ( $id, $self->type, $self->subject, $self->description,
+                   $self->creator, $self->status, $due_date, $update_date );
     my $sql = q{
         INSERT INTO ticket ( %s )
         VALUES ( %s )

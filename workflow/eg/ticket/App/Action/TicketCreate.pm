@@ -13,16 +13,16 @@ $App::Action::TicketCreate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\
 sub execute {
     my ( $self, $wf ) = @_;
     my $context = $wf->context;
-    my @fields = qw( subject description due_date creator );
+    my @fields = qw( type subject description due_date creator );
     foreach my $field ( @fields ) {
         $self->param( $field, $context->param( $field ) );
     }
-    $self->param( 'creator',  );
 
     my $log = get_logger();
     $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
     my $creator = $self->param( 'creator' ) || $context->param( 'current_user' );
     my $ticket = App::Ticket->new({
+        type        => $self->param( 'type' ),
         status      => $wf->state,
         subject     => $self->param( 'subject' ),
         description => $self->param( 'description' ),
@@ -33,6 +33,7 @@ sub execute {
     $ticket->create;
     $context->param( ticket => $ticket );
     $log->info( "Ticket created correctly with ID ", $ticket->id );
+
     my $sql = q{
       INSERT INTO workflow_ticket ( workflow_id, ticket_id )
       VALUES ( ?, ? )
@@ -50,14 +51,17 @@ sub execute {
         persist_error "Failed to save additional ticket info: $@";
     }
     $log->info( "Link table record inserted correctly" );
+
     $wf->add_history(
         Workflow::History->new({
             action      => 'Create ticket',
-            description => 'New ticket created',
+            description => sprintf( "New ticket created of type '%s' and subject '%s'",
+                                    $self->param( 'type' ), $self->param( 'subject' ) ),
             user        => $creator,
             state       => $wf->state,
         })
     );
+    $log->info( "History record added to workflow ok" );
 }
 
 1;
