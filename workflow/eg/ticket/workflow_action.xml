@@ -26,12 +26,21 @@
       <field name="ticket"
              description="Ticket to comment on"
              is_required="yes"/>
+      <field name="comment"
+             description="Comment to add"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User doing the commenting"
+             is_required="yes"/>
    </action>
 
    <action name="TIX_EDIT"
            class="App::Action::TicketUpdate">
       <field name="ticket"
              description="Ticket to edit"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User working on the ticket"
              is_required="yes"/>
    </action>
 
@@ -40,12 +49,18 @@
       <field name="ticket"
              description="Ticket to close"
              is_required="yes"/>
+      <field name="current_user"
+             description="User closing the ticket"
+             is_required="yes"/>
    </action>
 
    <action name="TIX_REOPEN"
            class="App::Action::TicketUpdate">
       <field name="ticket"
              description="Ticket to reopen"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User reopening the ticket"
              is_required="yes"/>
    </action>
 
