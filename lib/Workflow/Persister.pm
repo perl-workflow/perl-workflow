@@ -9,6 +9,9 @@ use Workflow::Exception qw( persist_error );
 
 $Workflow::Persister::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
+my @FIELDS = qw( name class );
+__PACKAGE__->mk_accessors( @FIELDS );
+
 sub create_workflow {
     my ( $self, $wf ) = @_;
     persist_error "Persister '", ref( $self ), "' must implement ",
