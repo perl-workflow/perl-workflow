@@ -31,6 +31,16 @@ sub param {
     unless ( $name ) {
         return { %{ $self->{PARAMS} } };
     }
+
+    # Allow multiple parameters to be set at once...
+
+    if ( ref $name eq 'HASH' ) {
+        foreach my $param_name ( keys %{ $name } ) {
+            $self->{PARAMS}{ $param_name } = $name->{ $param_name };
+        }
+        return { %{ $self->{PARAMS} } };
+    }
+
     unless ( $value ) {
         if ( exists $self->{PARAMS}{ $name } ) {
             return $self->{PARAMS}{ $name };
@@ -93,13 +103,32 @@ B<param( [ $name, $value ] )>
 Associate arbitrary parameters with this object.
 
 If neither C<$name> nor C<$value> given, return a hashref of all
-parameters set in object.
+parameters set in object:
 
-If C<$name> given, return the value associated with it, C<undef> if
-C<$name> was not previously set.
+ my $params = $object->param();
+ while ( my ( $name, $value ) = each %{ $params } ) {
+     print "$name = $params->{ $name }\n";
+ }
+
+If C<$name> given and it is a hash reference, assign all the values of
+the reference to the object parameters. This is the way to assign
+multiple parameters at once. Note that these will overwrite any
+existing parameter values. Return a hashref of all parameters set in
+object.
+
+ $object->param({ foo => 'bar',
+                  baz => 'blarney' });
+
+If C<$name> given and it is not a hash reference, return the value
+associated with it, C<undef> if C<$name> was not previously set.
+
+ my $value = $object->param( 'foo' );
+ print "Value of 'foo' is '$value'\n";
 
 If C<$name> and C<$value> given, associate C<$name> with C<$value>,
 overwriting any existing value, and return the new value.
+
+ $object->param( foo => 'blurney' );
 
 B<clear_params()>
 
