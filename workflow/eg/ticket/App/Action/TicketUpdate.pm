@@ -14,7 +14,7 @@ sub execute {
     $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
     my $ticket = $wf->context->param( 'ticket' );
     $ticket->status( $wf->state );
-    $ticket->save;
+    $ticket->update;
 }
 
 1;
