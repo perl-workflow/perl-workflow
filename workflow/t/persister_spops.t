@@ -20,8 +20,9 @@ my $HIST_CLASS = 'My::Persist::WorkflowHistory';
 my $original_time = '2004-02-02 02:22:12';
 
 my $classes = spops_initialize() || [];
-unless ( scalar @{ $classes } == 1 ) {
-    die "Did not initialize classes properly: ", join( ', ', @{ $classes } ), "\n";
+unless ( scalar @{ $classes } == 2 ) {
+    die "Did not initialize classes properly; classes initialized: ",
+        join( ', ', @{ $classes } ), "\n";
 }
 
 
