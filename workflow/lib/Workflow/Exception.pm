@@ -51,23 +51,28 @@ sub _mythrow {
 }
 
 sub condition_error {
-    goto &_mythrow( 'condition_error', @_ );
+    unshift @_, 'condition_error';
+    goto &_mythrow;
 }
 
 sub configuration_error {
-    goto &_mythrow( 'configuration_error', @_ );
+    unshift @_, 'configuration_error';
+    goto &_mythrow;
 }
 
 sub persist_error {
-    goto &_mythrow( 'persist_error', @_ );
+    unshift @_, 'persist_error';
+    goto &_mythrow;
 }
 
 sub validation_error {
-    goto &_mythrow( 'validation_error', @_ );
+    unshift @_, 'validation_error';
+    goto &_mythrow;
 }
 
 sub workflow_error {
-    goto &_mythrow( 'workflow_error', @_ );
+    unshift @_, 'workflow_error';
+    goto &_mythrow;
 }
 
 # Override 'throw' so we can massage the message and parameters into
