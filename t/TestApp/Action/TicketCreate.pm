@@ -4,10 +4,11 @@ package TestApp::Action::TicketCreate;
 
 use strict;
 use base qw( Workflow::Action );
+use File::Spec::Functions qw( catdir );
+use Log::Log4perl         qw( get_logger );
 use TestApp::Ticket;
-use Log::Log4perl       qw( get_logger );
-use Workflow::Exception qw( persist_error );
-use Workflow::Factory   qw( FACTORY );
+use Workflow::Exception   qw( persist_error );
+use Workflow::Factory     qw( FACTORY );
 
 $TestApp::Action::TicketCreate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -72,6 +73,15 @@ sub execute {
         if ( $@ ) {
             die "Failed to save additional ticket info: $@\n";
         }
+    }
+    elsif ( $persister->isa( 'Workflow::Persister::File' ) ) {
+        my %wf_ticket = (
+            workflow_id => $wf->id,
+            ticket_id   => $ticket->id,
+        );
+        my $link_path = catdir( $persister->path,
+                                $wf->id . "_workflow_ticket_link" );
+        $persister->serialize_object( $link_path, \%wf_ticket );
     }
     $log->info( "Link table record inserted correctly" );
 

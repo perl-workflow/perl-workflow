@@ -2,10 +2,11 @@ package TestApp::Ticket;
 
 use strict;
 use base qw( Class::Accessor );
-use Data::Dumper      qw( Dumper );
+use Data::Dumper          qw( Dumper );
 use DateTime::Format::Strptime;
-use Log::Log4perl     qw( get_logger );
-use Workflow::Factory qw( FACTORY );
+use File::Spec::Functions qw( catfile );
+use Log::Log4perl         qw( get_logger );
+use Workflow::Factory     qw( FACTORY );
 use Workflow::Persister::RandomId;
 
 my @FIELDS = qw( ticket_id type subject description creator
@@ -91,6 +92,10 @@ sub fetch {
             last_update => $p_ticket->last_update,
         });
     }
+    elsif ( $persister->isa( 'Workflow::Persister::File' ) ) {
+        my $ticket_path = catfile( $persister->path, "${id}_ticket" );
+        return $persister->constitute_object( $ticket_path );
+    }
 }
 
 sub create {
@@ -149,6 +154,10 @@ sub create {
             die "Failed to create ticket: $@";
         }
     }
+    elsif ( $persister->isa( 'Workflow::Persister::File' ) ) {
+        my $ticket_path = catfile( $persister->path, "${id}_ticket" );
+        $persister->serialize_object( $ticket_path, $self );
+    }
     $log->info( "Ticket '$id' created ok" );
     $self->ticket_id( $id );
     return $self;
@@ -196,6 +205,11 @@ sub update {
         if ( $@ ) {
             die "Failed to update ticket: $@";
         }
+    }
+    elsif ( $persister->isa( 'Workflow::Persister::File' ) ) {
+        my $id = $self->id;
+        my $ticket_path = catfile( $persister->path, "${id}_ticket" );
+        $persister->serialize_object( $self, $ticket_path );
     }
     return $self;
 }
