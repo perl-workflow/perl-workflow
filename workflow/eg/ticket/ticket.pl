@@ -8,7 +8,13 @@ use Getopt::Long      qw( GetOptions );
 use Log::Log4perl     qw( get_logger );
 use Workflow::Factory qw( FACTORY );
 
+$| = 1;
+
+unlink( 'workflow.log' ) if ( -f 'workflow.log' );
 Log::Log4perl::init( 'log4perl.conf' );
+my $log = get_logger();
+
+$log->info( "Starting: ", scalar( localtime ) );
 
 my ( $OPT_db_init );
 GetOptions( 'db' => \$OPT_db_init );
@@ -26,6 +32,8 @@ FACTORY->add_config_from_file( workflow  => 'workflow.xml',
                                validator => 'workflow_validator.xml',
                                condition => 'workflow_condition.xml',
                                persister => 'workflow_persister.xml' );
+$log->info( "Finished configuring workflow factory" );
+
 my ( $wf, $user, $ticket );
 
 
@@ -61,7 +69,7 @@ while ( 1 ) {
 }
 
 print "All done!\n";
-
+$log->info( "Stopping: ", scalar( localtime ) );
 exit();
 
 sub prompt_action_data {
@@ -69,7 +77,7 @@ sub prompt_action_data {
     _check_wf();
 
     unless ( $action_name ) {
-        die "Command 'enter_action_data' requires 'action_name' specified\n";
+        die "Command 'action_data' requires 'action_name' specified\n";
     }
     my @action_fields = $wf->get_action_fields( $action_name );
     foreach my $field ( @action_fields ) {
@@ -77,10 +85,10 @@ sub prompt_action_data {
             print "Field '", $field->name, "' already exists in context, skipping...\n";
             next;
         }
-        my $value = get_response( "Value for field '", $field->name, "' ",
-                                  "(", $field->type, ")\n" .
-                                  "   ", $field->description, "\n",
-                                  "data: " );
+        my $value = get_response(
+            sprintf( "Value for field '%s' (%s)\n   %s\n-> ",
+                     $field->name, $field->type, $field->description )
+        );
         if ( $value ) {
             $wf->context->param( $field->name, $value );
         }
@@ -95,7 +103,7 @@ sub use_ticket {
         die "Command 'use_ticket' requires the ID of the ticket you wish to use\n";
     }
     $ticket = App::Ticket->fetch( $id );
-    print "Ticket '$id' fetched wih subject '$ticket->{subject}\n";
+    print "Ticket '$id' fetched wih subject '", $ticket->subject, "'\n";
     $wf->context->param( ticket => $ticket );
 }
 
@@ -108,7 +116,8 @@ sub get_action_data {
     my @action_fields = $wf->get_action_fields( $action_name );
     print "Data for action '$action_name':\n";
     foreach my $field ( @action_fields ) {
-        print "($field->{type})  $field->{name}: $field->{description}\n";
+        printf( "(%s) (%s) %s: %s\n",
+                $field->type, $field->is_required, $field->name, $field->description );
     }
 }
 
@@ -185,8 +194,7 @@ sub get_workflow {
 # DB INIT
 
 sub create_tables {
-    my $log = get_logger();
-    if ( -f $DB_FILE ) {
+   if ( -f $DB_FILE ) {
         $log->info( "Removing old database file..." );
         unlink( $DB_FILE );
     }
