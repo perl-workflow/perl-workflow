@@ -1,0 +1,97 @@
+<!--
+ This is a single workflow type which can be instantiated separately
+ from the others; all workflows have access to the same universe of
+ validators and conditions (described below)
+-->
+<workflow type="Test">
+   <description>
+      This is the workflow for customer Foo, who is not very nice 
+      to us despite our wonderful workflow system.
+   </description>
+<!--
+ data from these tables are pulled at workflow instantiation time and
+ put into parameters and/or context so they're available from all
+ actions, conditions, and validators
+-->
+   <extra_data>
+      <table>workflow_ticket</table>
+      <field>ticket_id</field>
+      <class>Ticket</class>
+      <context>ticket</context>
+   </extra_data>   
+
+   <state name="INITIAL">
+      <description>
+         This is the state the workflow enters when instantiated. It's
+         like a 'state zero' but since we're using names rather than IDs
+         we cannot assume.
+      </description>
+
+<!-- 
+ This action is accessible from this state by everyone (no
+ conditions)
+-->
+      <action name="TIX_NEW"
+              resulting_state="TIX_CREATED"/>
+   </state>
+
+   <state name="TIX_CREATED">
+      <description>State of ticket after it has been created</description>
+
+<!--
+ Anyone can comment on a ticket and it doesn't change the state
+-->
+      <action name="TIX_COMMENT"
+              resulting_state="NOCHANGE"/>
+
+<!--
+ This action is accessible from this state by environments meeting
+ the 'IsAdminUser' condition
+-->
+      <action name="TIX_CLOSE"
+              resulting_state="TIX_CLOSED">
+         <condition name="IsAdminUser"
+                    denied_message="Only administrators can close tickets"/>
+      </action>
+
+      <action name="TIX_EDIT"
+              resulting_state="TIX_IN_PROGRESS">
+         <condition name="HasUser"
+                    denied_message="Only workers can edit tickets."/>
+      </action>
+   </state>
+
+   <state name="TIX_IN_PROGRESS">
+      <description>State of ticket after developers start work</description>
+      <action name="TIX_FINISH" 
+              resulting_state="TIX_AWAITS_APPROVAL">
+         <condition name="IsMasterUser"
+                    denied_message="Only ticket masters can complete tickets."/>
+      </action>
+   </state>
+
+   <state name="TIX_AWAITS_APPROVAL">
+      <description>State of ticket after developers complete work</description>
+
+      <action name="TIX_CLOSE"
+              resulting_state="TIX_CLOSED">
+         <condition name="IsCreationUser"
+                    denied_message="Only ticket creators can close tickets."/>
+      </action>
+
+      <action name="TIX_ESCALATE"
+              resulting_state="TIX_CREATED_ESCALATED">
+         <condition name="IsCreationUser"
+                    denied_message="Only ticket creators can escalate tickets."/>
+      </action>
+    </state>
+
+    <state name="TIX_CLOSED">
+       <description>State of ticket after creator approves the work done</description>
+       <action name="TIX_REOPEN"
+               resulting_state="TIX_CREATED">
+          <condition name="IsCreationUser"
+                     denied_message="Only ticket creators can reopen tickets."/>
+       </action>
+    </state>
+</workflow>

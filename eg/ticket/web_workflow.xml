@@ -1,0 +1,11 @@
+# For each action define how to provide the data it needs
+
+[TIX_CREATE]
+
+# if we don't need to provide the form with anything:
+template = task::task_form
+
+# if we do need info...
+class    = OI::Handler::Task
+method   = create
+popup    = 1

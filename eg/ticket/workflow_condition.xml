@@ -1,0 +1,8 @@
+<conditions>
+   <condition name="IsCreator"
+              class="Condition::IsCreator"/>
+   <condition name="IsWorker"
+              class="Condition::IsWorker"/>
+   <condition name="HasUserAndTicket"
+              class="Condition::HasUserAndTicket"/>
+</conditions>

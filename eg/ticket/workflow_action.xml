@@ -1,0 +1,33 @@
+<actions>
+
+<!-- this is the action name, used in the workflow -->
+   <action name="TIX_NEW"
+           class="Action::TicketCreate">
+      <description>Neues ticket estrellen</description>
+      <field name="subject"
+             description="Subject of ticket"
+             is_required="yes"/>
+      <field name="description"
+             description="Text describing the problem and any details to reproduce, if possible"
+             is_required="yes"/>
+      <field name="creator_id"
+             description="ID of user who is creating"
+             is_required="yes"/>
+      <field name="due_date"
+             description="Due date"/>
+
+      <validator name="DateValidator">
+         <arg>$due_date</arg>
+      </validator>
+   </action>
+
+   <action name="TIX_EDIT"
+           class="Action::TicketEdit"/>
+
+   <action name="TIX_CLOSE"
+           class="Action::TicketClose"/>
+
+   <action name="TIX_REOPEN"
+           class="Action::TicketReopen"/>
+
+</actions>
