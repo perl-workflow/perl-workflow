@@ -3,7 +3,12 @@
 # $Id$
 
 use strict;
-use lib qw( t/ );
+
+BEGIN {
+	chdir 't' if -d 't';
+	unshift @INC, '../blib/lib', '../lib';
+}
+
 use constant NUM_TESTS => 40;
 use Test::More;
 
