@@ -40,22 +40,27 @@ Workflow::Validator - Ensure data are valid
 =head1 SYNOPSIS
 
  # First declare the validator...
- [DateValidator]
- class       = MyApp::Validator::Date
- date_format = %Y-%m-%d %h:%m
+ <validator name="DateValidator"
+            class="MyApp::Validator::Date">
+   <param name="date_format" value="%Y-%m-%d %h:%m"/>
+ </validator>
  
  # Then associate the validator with runtime data from the context...
- [MyAction validator_one]
- name = DateValidator
- arg  = $due_date
+ <action name="MyAction">
+    <validator name="DateValidator">
+       <arg>$due_date</arg>
+    </validator>
+ </action>
  
- # You can also inintialize and instantiate in one step if you don't
- # need to centralize or reuse
+ # TODO: You can also inintialize and instantiate in one step if you
+ # don't need to centralize or reuse (does this work?)
  
- [MyAction validator_one]
- class       = MyApp::Validator::Date
- date_format = %Y-%m-%d %h:%m
- arg         = $due_date
+ <action name="MyAction">
+    <validator class="MyApp::Validator::Date">
+       <param name="date_format" value="%Y-%m-%d %h:%m"/>
+       <arg>$due_date</arg>
+    </validator>
+ </action>
  
  # Then implement the logic
  
