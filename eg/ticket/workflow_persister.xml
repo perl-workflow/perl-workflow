@@ -1,0 +1,10 @@
+<persisters>
+ <persister name="FilePersister"
+            class="Workflow::Persister::File"
+            path="/home/workflow/storage"/>
+ <persister name="DatabasePerister"
+            class="Workflow::Persister::DBI"
+            dsn="DBI:mysql:database=workflows"
+            user="wf"
+            password="mypass"/>
+</persisters>
