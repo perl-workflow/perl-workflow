@@ -136,8 +136,15 @@ sub get_history {
     my %seen_ids = ();
     foreach my $history ( ( FACTORY->get_workflow_history( $self ), @{ $self->{_histories} } ) ) {
         my $id = $history->id;
-        push @uniq_history, $history unless ( $id and ! $seen_ids{ $id } );
-        $seen_ids{ $id }++;
+        if ( $id ) {
+            unless ( $seen_ids{ $id } ) {
+                push @uniq_history, $history;
+            }
+            $seen_ids{ $id }++;
+        }
+        else {
+            push @uniq_history, $history;
+        }
     }
     return @uniq_history;
 }
