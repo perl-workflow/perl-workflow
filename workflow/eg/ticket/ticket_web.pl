@@ -13,7 +13,13 @@ use Log::Log4perl     qw( get_logger );
 use Template;
 use Workflow::Factory qw( FACTORY );
 
-unlink( 'workflow.log' ) if ( -f 'workflow.log' );
+my $LOG_FILE = 'workflow.log';
+if ( -f $LOG_FILE ) {
+    my $mtime = (stat $LOG_FILE)[9];
+    if ( time - $mtime > 600 ) { # 10 minutes
+        unlink( $LOG_FILE );
+    }
+}
 Log::Log4perl::init( 'log4perl.conf' );
 my $log = get_logger();
 
@@ -33,6 +39,7 @@ my %DISPATCH = (
     fetch       => \&fetch_workflow,
     history     => \&list_history,
     execute     => \&execute_action,
+    login       => \&login,
 );
 
 my %ACTION_DATA = (
@@ -45,49 +52,7 @@ my %ACTION_DATA = (
     print "Please contact me at [URL: ", $d->url, "]\n";
     while ( my $client = $d->accept ) {
         while ( my $request = $client->get_request ) {
-            my $url = $request->uri;
-            my ( $action ) = $url =~ m|^/(\w+)/|;
-            my $cookie_header = $request->header( 'Cookie' );
-            my %cookies_in = CGI::Cookie->parse( $cookie_header );
-            my %cookies_out = ();
-            my %params  = _parse_request( $request );
-            my $status = RC_OK;
-            my ( $content );
-
-            if ( my $dispatch = $DISPATCH{ $action } ) {
-                my $template_name = eval {
-                    $dispatch->( $client, $request, \%cookies_in, \%cookies_out, \%params )
-                };
-                if ( $@ ) {
-                    $params{error_msg} = $@;
-                    $params{action}    = $action;
-                    $status = RC_INTERNAL_SERVER_ERROR;
-                    $template_name = 'error.tmpl';
-                }
-                if ( $params{workflow} ) {
-                    $params{available_actions} = [ $params{workflow}->get_current_actions ];
-                }
-                $template->process( $template_name, \%params, \$content );
-            }
-            elsif ( ! $action ) {
-                $template->process( 'index.tmpl', {}, \$content );
-            }
-            else {
-                $content = "I don't know how to process action '$action'.";
-                $status = RC_NOT_FOUND;
-            }
-
-            my $response = HTTP::Response->new( $status );
-            $response->header( 'Content-Type' => 'text/html' );
-            $response->content( $content );
-            if ( scalar keys %cookies_out ) {
-                my @cookie_obj = map {
-                    CGI::Cookie->new( -name => $_, -value => $cookies_out{ $_ } )
-                }  keys %cookies_out;
-                my @cookie_values = map { $_->as_string } @cookie_obj;
-                $response->header( 'Set-Cookie' => \@cookie_values );
-                $log->info( "Set cookies: ", join( ' || ', @cookie_values ) );
-            }
+            my $response = _handle_request( $client, $request );
             $client->send_response( $response );
         }
         $client->close;
@@ -96,6 +61,103 @@ my %ACTION_DATA = (
 
     $log->info( "Stopping web daemon: ", scalar( localtime ) );
 }
+
+sub _handle_request {
+    my ( $client, $request ) = @_;
+
+    my $cookie_header = $request->header( 'Cookie' );
+    $log->debug( "Got cookie header from client '$cookie_header'" );
+    my %cookies_in = CGI::Cookie->parse( $cookie_header );
+    for ( keys %cookies_in ) {
+        $cookies_in{ $_ } = $cookies_in{ $_ }->value;
+    }
+
+    $log->debug( "Mapped cookie header to: [",
+                 join( '] [', map { "$_ = $cookies_in{ $_ }" }
+                                  keys %cookies_in ), "]" );
+    my %params  = _parse_request( $request );
+    $log->debug( "Got the following parameter names: ",
+                 join( ', ', keys %params ) );
+
+    # Also set the cookies as parameters, but don't stomp
+    for ( keys %cookies_in ) {
+        $params{ $_ } = $cookies_in{ $_ } unless ( $params{ $_ } );
+    }
+
+    my $url = $request->uri;
+    my ( $action ) = $url =~ m|^/(\w+)/|;
+    $log->debug( "Trying to dispatch action '$action'" );
+
+    my $status = RC_OK;
+    my $content = '';
+    my %cookies_out = ();
+
+    if ( my $dispatch = $DISPATCH{ $action } ) {
+        $log->debug( "Dispatch method found for '$action', executing..." );
+        my $template_name = eval {
+            $dispatch->( $client, $request, \%cookies_in, \%cookies_out, \%params )
+        };
+        if ( $@ ) {
+            $log->error( "Caught error executing '$action': $@" );
+            $params{error_msg} = $@;
+            $params{action}    = $action;
+            $status = RC_INTERNAL_SERVER_ERROR;
+            $template_name = 'error.tmpl';
+        }
+        if ( $params{workflow} ) {
+            $log->debug( "Action set 'workflow' in parameters, getting ",
+                         "current actions from it for menu..." );
+            $params{available_actions} = [ $params{workflow}->get_current_actions ];
+        }
+        $log->debug ( "Processing template '$template_name'..." );
+        eval {
+            $template->process( $template_name, \%params, \$content )
+                || die "Cannot process template '$template_name': ",
+                       $template->error(), "\n";
+        };
+        if ( $@ ) {
+            $log->error( $@ );
+            $content = $@;
+            $status = RC_INTERNAL_SERVER_ERROR;
+        }
+        else {
+            $log->debug( "Processed template ok" );
+        }
+    }
+    elsif ( ! $action ) {
+        $log->debug( "Processing index template since no action given" );
+        $template->process( 'index.tmpl', {}, \$content );
+    }
+    else {
+        $log->error( "No dispatch found for action '$action'" );
+        $content = "I don't know how to process action '$action'.";
+        $status = RC_NOT_FOUND;
+    }
+
+    my $response = HTTP::Response->new( $status );
+    $response->header( 'Content-Type' => 'text/html' );
+    $response->content( $content );
+    if ( scalar keys %cookies_out ) {
+        my @values = ();
+        while ( my ( $name, $value ) = each %cookies_out ) {
+            my $obj = CGI::Cookie->new( -name  => $name,
+                                        -value => $value );
+            my $cookie = $obj->as_string;
+            push @values, $cookie;
+            $log->debug( "Adding cookie: '$cookie'" );
+        }
+        $response->header( 'Set-Cookie' => \@values );
+    }
+    return $response;
+}
+
+
+########################################
+# DISPATCH MAPPINGS
+#
+# Each of these routines returns a template name, stuffing data used
+# by the template into \%params and any outbound cookies into
+# \%cookies_out.
 
 sub create_workflow {
     my ( $client, $request, $cookies_in, $cookies_out, $params ) = @_;
@@ -129,12 +191,15 @@ sub execute_action {
         die "To execute an action you must specify an action name!\n";
     }
 
-    # If they haven't entered data yet, redirect to the form for
-    # entering it
+    # If they haven't entered data yet, add the fields (as a map) to
+    # the parameters and redirect to the form for entering it
 
     unless ( $params->{_action_data_entered} || ! $ACTION_DATA{ $action } ) {
         $params->{status_msg} =
             "Action cannot be executed until you enter its data";
+        my @fields = $wf->get_action_fields( $action );
+        my %by_name = map { $_->name => $_ } @fields;
+        $params->{ACTION_FIELDS} = \%by_name;
         return $ACTION_DATA{ $action };
     }
 
@@ -155,15 +220,38 @@ sub execute_action {
         return $ACTION_DATA{ $action };
     }
     $params->{status_msg} = "Action '$action' executed ok";
-    return 'workflow_history.tmpl';
+    return list_history( $client, $request, $cookies_in, $cookies_out, $params );
+}
+
+sub login {
+    my ( $client, $request, $cookies_in, $cookies_out, $params ) = @_;
+    if ( $params->{current_user} ) {
+        $cookies_out->{current_user} = $params->{current_user};
+    }
+    else {
+        $params->{error_msg} = "Please specify a login name I can use!";
+    }
+    return 'index.tmpl';
 }
 
 sub _get_workflow {
     my ( $params, $cookies_in ) = @_;
+    return $params->{workflow} if ( $params->{workflow} );
+    my $log = get_logger();
     my $wf_id = $params->{workflow_id} || $cookies_in->{workflow_id};
+    unless ( $wf_id ) {
+        die "No workflow ID given! Please fetch a workflow or create ",
+            "a new one.\n";
+    }
+    $log->debug( "Fetching workflow with ID '$wf_id'" );
     my $wf = FACTORY->fetch_workflow( 'Ticket', $wf_id );
     if ( $wf ) {
+        $log->debug( "Workflow found, current state is '", $wf->state, "'" );
         $params->{workflow} = $wf;
+    }
+    else {
+        $log->warn( "No workflow found with ID '$wf_id'" );
+        die "No workflow found with ID '$wf_id'\n";
     }
     return $wf;
 }
