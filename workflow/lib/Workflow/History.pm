@@ -8,7 +8,7 @@ use DateTime;
 
 $Workflow::History::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-my @FIELDS = qw( id action description date user user_id state );
+my @FIELDS = qw( id workflow_id action description date user state );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 sub new {
@@ -93,10 +93,8 @@ B<description> - Lengthy description of action taken
 
 B<date> - Date history noted, set to a L<DateTime> object.
 
-B<user> - User name (login or full name, up to you) taking action (may
-be blank)
-
-B<user_id> - ID of user taking action (may be blank)
+B<user> - User name (ID, login, or full name, up to you) taking action
+(may be blank)
 
 B<state> - State of workflow as history was recorded.
 
