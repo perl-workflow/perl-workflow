@@ -22,9 +22,13 @@ sub new {
     $self->requirement( $requirement );
     my $values = $params->{values} || $params->{possible_values};
     if ( $values ) {
-        my @add_values = ( ref $values eq 'ARRAY' )
+        my @add_values = ( ref $values eq 'ARRAY' ) ? @{ $values } : ( $values );
         $self->add_possible_values( @add_values );
     }
+
+    # Assign the default field type, subclasses may override...
+    $self->type( 'basic' );
+
     $self->init( $params );
     return $self;
 }
