@@ -152,10 +152,7 @@ sub create_workflow {
         push @values, $id;
         $log->debug( "Got ID from pre_fetch_id: $id" );
     }
-    my $sql = q/
-        INSERT INTO %s ( %s )
-        VALUES ( %s )
-    /;
+    my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
     $sql = sprintf( $sql, $self->workflow_table,
                           join( ', ', @fields ),
                           join( ', ', map { '?' } @values ));
@@ -186,9 +183,7 @@ sub create_workflow {
 sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
     my $log = get_logger();
-    my $sql = q/
-        SELECT state, last_update FROM %s WHERE workflow_id = ?
-    /;
+    my $sql = 'SELECT state, last_update FROM %s WHERE workflow_id = ?';
     $sql = sprintf( $sql, $self->workflow_table );
 
     $log->debug( "Will use SQL\n$sql" );
@@ -207,12 +202,8 @@ sub fetch_workflow {
 sub update_workflow {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
-    my $sql = q/
-        UPDATE %s
-           SET state = ?,
-               last_update = ?
-         WHERE workflow_id = ?
-    /;
+    my $sql = 'UPDATE %s SET state = ?, last_update = ? ' .
+              'WHERE workflow_id = ?';
     $sql = sprintf( $sql, $self->workflow_table );
     my $update_date = DateTime->now->strftime( '%Y-%m-%d %H:%M' );
 
@@ -244,13 +235,10 @@ sub create_history {
         my @values = ( $wf->id, $h->action, $h->description, $h->state,
                        $h->user, $h->date->strftime( '%Y-%m-%d %H:%M' ) );
         if ( $id ) {
-            unshift @fields, 'workflow_hist_id';
-            unshift @values, $id;
+            push @fields, 'workflow_hist_id';
+            push @values, $id;
         }
-        my $sql = q/
-            INSERT INTO %s ( %s )
-            VALUES ( %s )
-        /;
+        my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
         $sql = sprintf( $sql, $self->history_table,
                               join( ', ', @fields ),
                               join( ', ', map { '?' } @values ) );
@@ -283,14 +271,9 @@ sub create_history {
 sub fetch_history {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
-    my $sql = q/
-        SELECT workflow_hist_id, workflow_id, action, description, state, user, history_date
-          FROM %s
-         WHERE workflow_id = ?
-         ORDER BY history_date DESC
-    /;
-
-    $sql = sprintf( $sql, $self->history_table );
+    my $sql = 'SELECT %s FROM %s WHERE workflow_id = ? ORDER BY history_date DESC';
+    my $history_fields = 'workflow_hist_id, workflow_id, action, description, state, user, history_date';
+    $sql = sprintf( $sql, $history_fields, $self->history_table );
 
     $log->debug( "Will use SQL\n$sql" );
     $log->debug( "Will use parameters: ", $wf->id );
