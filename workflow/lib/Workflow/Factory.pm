@@ -133,14 +133,19 @@ sub create_workflow {
     unless ( $wf_config ) {
         workflow_error "No workflow of type '$wf_type' available";
     }
-    my $persister = $self->get_persister( $wf_config->{persister} );
     my $wf = Workflow->new( undef,
                             $INITIAL_STATE,
                             $wf_config,
                             $self->{_workflow_state}{ $wf_type } );
     $wf->context( Workflow::Context->new );
+    $wf->last_update( DateTime->now );
+    $log->is_info &&
+        $log->info( "Instantiated workflow object properly, persisting..." );
+    my $persister = $self->get_persister( $wf_config->{persister} );
     my $id = $persister->create_workflow( $wf );
     $wf->id( $id );
+    $log->is_info &&
+        $log->info( "Persisted workflow with ID '$id'; creating history..." );
     $persister->create_history(
         $wf, Workflow::History->new(
                  { workflow_id => $id,
@@ -151,7 +156,8 @@ sub create_workflow {
                    date        => DateTime->now,
                })
     );
-    $wf->last_update( DateTime->now );
+    $log->is_info &&
+        $log->info( "Created history object ok" );
     return $wf;
 }
 
@@ -218,6 +224,9 @@ sub save_workflow {
 
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
+    my $log = get_logger();
+    $log->is_debug &&
+        $log->debug( "Trying to fetch history for workflow ", $wf->id );
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
     return $persister->fetch_history( $wf );
