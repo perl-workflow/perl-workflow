@@ -30,14 +30,6 @@ can access it in two ways:
   * a command-line application (ticket.pl)
   * a web application          (ticket_web.pl)
 
-It does have requirements above those of the basic workflow system. These are:
-
- Module            Howto install with CPAN shell
- ===============================================
- DBD::SQLite       'install DBI DBD::SQLite'
- LWP               'install Bundle::LWP'
- Template Toolkit  'install Template'
-
 (For Win32 systems you can get the Template Toolkit PPD from
 http://openinteract.sourceforge.net/; the DBD::SQLite PPD is available
 from ActiveState)
@@ -56,7 +48,6 @@ To start up the standalone web server:
 
 For more info, see 'eg/ticket/README'
 
-
 DEPENDENCIES
 ========================================
 
@@ -66,10 +57,28 @@ This module requires these other modules and libraries:
     DateTime
     DateTime::Format::Strptime
     Exception::Class
+    File::Spec
     Log::Dispatch
     Log::Log4perl
 	Test::More
     XML::Simple
+
+Other optional modules include:
+
+    Data::UUID
+    DBI (plus a relevant DBD)
+    SPOPS
+
+For the sample application you'll also need:
+
+    CGI
+    CGI::Cookie
+    DBD::SQLite
+    HTTP::Daemon
+    HTTP::Request
+    HTTP::Response
+    HTTP::Status
+    Template (Template Toolkit)
 
 COPYRIGHT AND LICENCE
 ========================================
