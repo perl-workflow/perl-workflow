@@ -43,30 +43,63 @@ $log->info( "Finished configuring workflow factory" );
 
 my ( $wf, $user, $ticket );
 
-
 my %responses = (
-   cmd           => \&list_commands,
-   wf            => \&get_workflow,
-   state         => \&get_current_state,
-   actions       => \&get_current_actions,
-   action_data   => \&get_action_data,
-   enter_data    => \&prompt_action_data,
-   context       => \&set_context,
-   context_clear => \&clear_context,
-   context_show  => \&show_context,
-   execute       => \&execute_action,
-   ticket        => \&use_ticket,
-   break         => sub {},
-   quit          => sub {},
+    help          => [
+        'List all commands and a brief description',
+        \&list_commands,
+    ],
+    wf            => [
+        "Create/retrieve a workflow; use 'wf Ticket' to create one, 'wf Ticket ID' to fetch",
+        \&get_workflow,
+    ],
+   state         => [
+       'Get current state of active workflow',
+       \&get_current_state,
+   ],
+   actions       => [
+       'Get current actions of active workflow',
+       \&get_current_actions,
+   ],
+   action_data   => [
+       "Display data required for a particular action; 'action_data FOO_ACTION'",
+       \&get_action_data,
+   ],
+   enter_data    => [
+       "Interactively enter data required for an action and place it in context; 'enter_data FOO_ACTION'",
+       \&prompt_action_data,
+   ],
+   context       => [
+       "Set data into the context; 'context variable value'",
+       \&set_context,
+   ],
+   context_clear => [
+       'Clear data out of context',
+       \&clear_context,
+   ],
+   context_show  => [
+       'Display data in context',
+       \&show_context
+   ],
+   execute       => [
+       'Execute an action; data for the action should be in context',
+       \&execute_action,
+   ],
+   ticket        => [
+       'Fetch a ticket and put it into the context',
+       \&use_ticket,
+   ],
+   quit          => [
+       'Exit the application',
+       sub { exit(0) },
+   ],
 );
 
 while ( 1 ) {
     my $full_response = get_response( "TicketServer: " );
     my @args = split /\s+/, $full_response;
     my $response = shift @args;
-    last if ( $response =~ /^(break|quit)$/ );
-    if ( my $sub = $responses{ $response } ) {
-        eval { $sub->( @args ) };
+    if ( my $info = $responses{ $response } ) {
+        eval { $info->[1]->( @args ) };
         print "Caught error: $@\n" if ( $@ );
     }
     else {
@@ -166,7 +199,13 @@ sub clear_context {
 }
 
 sub list_commands {
-    print "Available commands: ", join( ', ', keys %responses ), "\n";
+    print "Available commands:\n\n";
+    foreach my $cmd ( sort keys %responses ) {
+        printf( "%s\n  %s\n",
+                "$cmd:",
+                $responses{ $cmd }->[0] );
+    }
+    print "\n";
 }
 
 sub get_current_state {
@@ -178,12 +217,6 @@ sub get_current_actions {
     _check_wf();
     print "Actions available in state '", $wf->state, "': ",
           join( ', ', $wf->get_current_actions ), "\n";
-}
-
-sub _check_wf {
-    unless ( $wf ) {
-        die "First create or fetch a workflow!\n";
-    }
 }
 
 sub show_context {
@@ -218,6 +251,12 @@ sub get_workflow {
         $wf = FACTORY->create_workflow( $type );
     }
     print "Workflow of type '", $wf->type, "' available with ID '", $wf->id, "'\n";
+}
+
+sub _check_wf {
+    unless ( $wf ) {
+        die "First create or fetch a workflow!\n";
+    }
 }
 
 
