@@ -3,6 +3,7 @@
 # $Id$
 
 use strict;
+use lib qw( t/ );
 use File::Path            qw( rmtree );
 use File::Spec::Functions qw( catdir curdir rel2abs );
 use Test::More  tests => 19;
@@ -27,10 +28,7 @@ my @persisters = (
 
 my $factory = Workflow::Factory->instance;
 $factory->add_config( persister => \@persisters );
-$factory->add_config_from_file( workflow  => 'workflow.xml',
-                                action    => 'workflow_action.xml',
-                                condition => 'workflow_condition.xml',
-                                validator => 'workflow_validator.xml' );
+TestUtil->init_factory();
 
 my ( $wf_id, $create_date );
 
