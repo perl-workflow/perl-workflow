@@ -1,4 +1,0 @@
-<conditions>
-  <condition name="HasUser"
-             class="Condition::HasUser"/>
-</conditions>
