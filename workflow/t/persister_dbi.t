@@ -19,7 +19,6 @@ require Workflow::Factory;
 my $TICKET_CLASS = 'TestApp::Ticket';
 my $DATE_FORMAT = '%Y-%m-%d %H:%M';
 my $NOW       = DateTime->now->strftime( $DATE_FORMAT );
-#my $formatter = DateTime::Format::Strptime->new( pattern =>  );
 
 require_ok( 'Workflow::Persister::DBI' );
 
@@ -69,6 +68,7 @@ my ( $wf );
 
 {
     TestUtil->set_new_ticket_context( $wf );
+    my $old_state = $wf->state;
     $wf->execute_action( 'TIX_NEW' );
     is( $wf->state, 'TIX_CREATED',
         'State of modified workflow correct' );
@@ -90,7 +90,7 @@ my ( $wf );
           'description', 'creator', 'status',
           'due date', 'last update' ],
         [ $ticket_id, $ticket_info{type}, $ticket_info{subject},
-          $ticket_info{description}, $ticket_info{creator}, $wf->state,
+          $ticket_info{description}, $ticket_info{creator}, $old_state,
           $ticket_info{due_date}->strftime( '%Y-%m-%d' ), $NOW ]
     );
 

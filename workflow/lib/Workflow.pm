@@ -66,29 +66,33 @@ sub execute_action {
 
     my $action = $self->_get_action( $action_name );
 
-    # Set the state to the new workflow state for the action(s) to use
-    # for reporting, etc. If an error occurs we have the old state to
-    # reset the workflow
+    # Need this in case we encounter an exception after we store the
+    # new state
 
     my $old_state = $self->state;
-    my $new_state = $self->_get_next_state( $action_name );
-    if ( $new_state and $new_state ne NO_CHANGE_VALUE ) {
-        $log->info( "Setting new state '$new_state' before action executes" );
-        $self->state( $new_state );
-    }
+    my ( $new_state, $action_return );
 
     eval {
         $action->validate( $self );
-        $log->debug( "Action validated ok" );
-        my $rv = $action->execute( $self );
-        $log->debug( "Action executed ok" );
+        $log->is_debug && $log->debug( "Action validated ok" );
+        $action_return = $action->execute( $self );
+        $log->is_debug && $log->debug( "Action executed ok" );
 
-        # this will save the workflow histories as well; if it fails
-        # we should have some means for the factory to rollback other
-        # transactions...
+        $new_state = $self->_get_next_state( $action_name, $action_return );
+        if ( $new_state ne NO_CHANGE_VALUE ) {
+            $log->is_info &&
+                $log->info( "Set new state '$new_state' after action executed" );
+            $self->state( $new_state );
+        }
+
+        # this will save the workflow histories as well as modify the
+        # state of the workflow history to reflect the NEW state of
+        # the workflow; if it fails we should have some means for the
+        # factory to rollback other transactions...
 
         FACTORY->save_workflow( $self );
-        $log->info( "Saved workflow with possible new state ok" );
+        $log->is_info &&
+            $log->info( "Saved workflow with possible new state ok" );
     };
 
     # If there's an exception, reset the state to the original one and
@@ -97,7 +101,8 @@ sub execute_action {
     if ( $@ ) {
         my $error = $@;
         $log->error( "Caught exception from action: $error" );
-        $log->info( "Resetting workflow to old state '$old_state'" );
+        $log->is_info &&
+            $log->info( "Ensuring that workflow is at old state '$old_state'" );
         $self->state( $old_state );
 
         # Don't use 'workflow_error' here since $error should already
@@ -106,9 +111,12 @@ sub execute_action {
         die $error;
     }
 
-    my $new_state = $self->get_state( $self->state );
-    if ( $new_state->is_autorun ) {
-        $self->_auto_execute;
+    my $new_state_obj = $self->_get_workflow_state;
+    if ( $new_state_obj->autorun ) {
+        $log->is_info &&
+            $log->info( "State '$new_state' marked to be run ",
+                        "automatically; executing that state/action..." );
+        $self->_auto_execute_state( $new_state_obj );
     }
     return $self->state;
 }
@@ -242,11 +250,20 @@ sub _set_workflow_state {
 
 
 sub _get_next_state {
-    my ( $self, $action_name ) = @_;
+    my ( $self, $action_name, $action_return ) = @_;
     my $wf_state = $self->_get_workflow_state;
-    return $wf_state->get_next_state( $action_name );
+    return $wf_state->get_next_state( $action_name, $action_return );
 }
 
+sub _auto_execute_state {
+    my ( $self, $wf_state ) = @_;
+    $log ||= get_logger();
+    my $action_name = $wf_state->get_autorun_action_name;
+    $log->is_debug &&
+        $log->debug( "Found action '$action_name' to execute in ",
+                     "autorun state ", $wf_state->state );
+    $self->execute_action( $action_name );
+}
 
 1;
 

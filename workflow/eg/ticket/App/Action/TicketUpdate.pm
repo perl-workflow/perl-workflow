@@ -23,7 +23,6 @@ sub execute {
             action      => 'Ticket update',
             description => sprintf( 'Ticket updated by %s', $current_user ),
             user        => $current_user,
-            state       => $wf->state,
         })
     );
     $log->info( "History record added to workflow ok" );

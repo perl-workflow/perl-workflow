@@ -251,7 +251,11 @@ sub save_workflow {
     eval {
         $persister->update_workflow( $wf );
         $log->info( "Workflow '", $wf->id, "' updated ok" );
-        $persister->create_history( $wf, $wf->get_unsaved_history );
+        my @unsaved = $wf->get_unsaved_history;
+        foreach my $h ( @unsaved ) {
+            $h->set_new_state( $wf->state );
+        }
+        $persister->create_history( $wf, @unsaved );
         $log->info( "Created necessary history objects ok" );
     };
     if ( $@ ) {

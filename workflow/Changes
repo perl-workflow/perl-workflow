@@ -1,5 +1,65 @@
 Revision history for Perl extension Workflow
 
+0.10
+
+  Workflow
+
+     - Since we've now got 'resulting_state' that is dependent on the
+     action results of the previous action being run, we cannot set
+     the 'new' workflow state before executing the action.
+
+
+     One of the results of this is that you shouldn't set the 'state'
+     property of any created Workflow::History objects -- we'll modify
+     the state of any history objects with an empty state before
+     saving them (see changes for Workflow::Factory)
+
+       Another result is that the value of '$wf->state' inside your
+     Action now refers to the EXISTING state of the workflow not the
+     NEW state. Therefore any code you have using the state of the
+     workflow (such as in our example 'Trouble Ticket' application)
+     will give a different value than the previous Workflow version.
+
+     This behavior seems more consistent, but comments are are
+     welcome.
+
+     - In 'execute_action()' -- once we're done executing the main
+     action, check to see if our new state is an autorun state, and if
+     so run it.
+
+  Workflow::Action::Null
+
+     - New class: use if you want to move the workflow from one state
+     to another without actually doing anything.
+
+  Workflow::Factory
+
+     - In save_workflow(), call 'set_new_state()' with the workflow
+     state on all unsaved Workflow::History objects before saving them.
+
+  Workflow::State
+
+     - Add 'autorun' property and 'get_autorun_action_name()' to
+     retrieve the single valid action name available from an autorun
+     state.
+
+     - The 'resulting_state' property of an action within a state can
+     now be multivalued and may depend on the return value of the
+     action that's executed. For instance, we might have:
+
+     <state name="create user">
+         <action name="create">
+           <resulting_state return="admin"    state="assign as admin" />
+           <resulting_state return="helpdesk" state="assign as helpdesk" />
+           <resulting_state return="*"        state="assign as luser" />
+         </action>
+        ....
+
+     So if the action 'create' returns 'admin', the new state will be
+     'assign as admin'; on 'helpdesk' it will be 'assign as helpdesk',
+     and all other values will go to state 'assign as luser'.
+
+
 0.04  Sun Sep 12 22:17:48 EDT 2004
 
   eg (example application):
@@ -56,10 +116,12 @@ Revision history for Perl extension Workflow
       * Added docs for these new features, and added tests for at
         least the factory subclassing feature.
 
+
 0.02  Sat May 22 00:34:43 EDT 2004
 
       Updates to test scripts and files they require from CPAN tester
       report -- thanks Barbie!
+
 
 0.01  Thu May 13 22:08:29 EDT 2004
 

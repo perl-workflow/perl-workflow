@@ -40,6 +40,7 @@ eg/ticket/App/Condition/IsWorker.pm
 lib/Workflow.pm
 lib/Workflow/Action.pm
 lib/Workflow/Action/InputField.pm
+lib/Workflow/Action/Null.pm
 lib/Workflow/Base.pm
 lib/Workflow/Condition.pm
 lib/Workflow/Condition/HasUser.pm
