@@ -34,7 +34,7 @@ sub get_all_state_config {
 # Make for shorter calls...
 sub new { return bless( {}, $_[0] ) }
 
-my %VALID_TYPES = map { $_ => 1 } qw( action condition validator workflow );
+my %VALID_TYPES = map { $_ => 1 } qw( action condition persister validator workflow );
 
 sub is_valid_config_type {
     my ( $class, $type ) = @_;
@@ -106,20 +106,24 @@ sub _translate_perl {
 
 
 my %XML_OPTIONS = (
-    workflow => {
-        ForceArray => [ 'extra_data', 'state', 'action', 'condition' ],
+    action => {
+        ForceArray => [ 'action', 'field', 'source_list', 'param', 'validator', 'arg' ],
         KeyAttr    => [],
     },
     condition => {
         ForceArray => [ 'condition', 'param' ],
         KeyAttr    => [],
     },
+    persister => {
+        ForceArray => [ 'persisters' ],
+        KeyAttr    => [],
+    },
     validator => {
         ForceArray => [ 'validator', 'param' ],
         KeyAttr    => [],
     },
-    action => {
-        ForceArray => [ 'action', 'field', 'source_list', 'param', 'validator', 'arg' ],
+    workflow => {
+        ForceArray => [ 'extra_data', 'state', 'action', 'condition' ],
         KeyAttr    => [],
     },
 );
