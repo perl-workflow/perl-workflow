@@ -32,11 +32,11 @@
      name to show the user to provide that action the data it needs -->
 
    <action-display
-           name="TIX_NEW"
+           name="create issue"
            template="ticket_form.tmpl"/>
 
    <action-display
-           name="TIX_COMMENT"
+           name="add comment"
            template="ticket_comment.tmpl"/>
 
 </web>
