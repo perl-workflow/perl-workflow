@@ -8,6 +8,7 @@ use Data::Dumper        qw( Dumper );
 use File::Spec          qw( catdir catfile );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
+use Workflow::Persister::RandomId;
 
 $Workflow::Persister::File::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -16,6 +17,7 @@ __PACKAGE__->mk_accessors( @FIELDS );
 
 sub init {
     my ( $self, $params ) = @_;
+    my $generator = Workflow::Persister::RandomId->new({ id_length => 8 });
     unless ( $params->{path} ) {
         configuration_error "The file persister must have the 'path' ",
                             "specified in the configuration";
@@ -31,19 +33,13 @@ sub init {
 sub create_workflow {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
-    my $wf_id = $self->_generate_id();
-    $wf->id( $wf_id );
+    my $wf_id = $generator->pre_fetch_id();
     $log->debug( "Generated workflow ID '$wf_id'" );
     $self->_serialize_workflow( $wf );
     my $full_history_path = $self->_get_history_path( $wf );
     mkdir( $full_history_path, 0777 )
         || persist_error "Cannot create history dir '$full_history_path': $!";
-    return $wf;
-}
-
-sub update_workflow {
-    my ( $self, $wf ) = @_;
-    $self->_serialize_workflow( $wf );
+    return $wf_id;
 }
 
 sub fetch_workflow {
@@ -63,13 +59,18 @@ sub fetch_workflow {
     return $wf_info;
 }
 
+sub update_workflow {
+    my ( $self, $wf ) = @_;
+    $self->_serialize_workflow( $wf );
+}
+
 sub create_history {
     my ( $self, $wf, @history ) = @_;
     my $log = get_logger();
     my $history_dir = $self->_get_history_path( $wf );
     foreach my $history ( $wf->get_history ) {
         next if ( $history->is_saved );
-        my $history_id = $self->_generate_id;
+        my $history_id = $generator->pre_fetch_id();
         $history->id( $history_id );
         my $history_file = catfile( $history_dir, $history_id );
         $self->_serialize_object( $history_file, $history );
@@ -136,10 +137,6 @@ sub _get_workflow_path {
 sub _get_history_path {
     my ( $self, $wf ) = @_;
     return catdir( $self->path, $wf->id . '_history' );
-}
-
-sub _generate_id {
-    return join( '', map { chr( int( rand(26) ) + 65 ) } ( 1 .. 4 ) );
 }
 
 1;
