@@ -6,6 +6,7 @@ Module::Build->new(
     dist_version_from => 'VERSION',
     requires          => {
       'Class::Accessor'            => 0.18,
+      'Class::Factory'             => 1.00,
       'DateTime'                   => 0.15,
       'DateTime::Format::Strptime' => 1.00,
       'DBD::Mock'                  => 0.10,
