@@ -1,0 +1,72 @@
+<actions>
+
+<!-- this is the action name, used in the workflow -->
+   <action name="TIX_NEW"
+           class="Action::TicketCreate">
+
+      <description>Neues ticket estrellen</description>
+
+<!-- declare what values must be given to action and what values can be given -->
+      <required_value name="SUBJECT"
+                      description="Subject of ticket"/>
+      <required_value name="DESCRIPTION"
+                      description="Text describing the problem and any details to reproduce, if possible"/>
+      <required_value name="ONR"
+                      description="One New Review"/>
+      <required_value name="CATEGORY_ID"
+                      description="Category of ticket"/>
+      <optional_value name="WUNSCHDATUM"
+                      description="Due date"/>
+
+<!-- ...and hitchiker parameters that can be used by whatever uses the action... -->
+
+      <param name="input_template" value="create"/>
+      <param name="output_template" value="close_popup"/>
+      <param name="popup" value="yes"/>
+      <param name="link_text" value="Neues Ticket erstellt"/>
+      <param name="status_image" value="/images/red.gif"/>
+      <param name="abbreviation" value="N"/>
+
+<!--
+ ...it also has any number of validators, each of which is called in
+ turn with the inherited 'validate' method; 'arg' declares the
+ arguments passed to the validator, in turn (first 'arg' is the first
+ param, second 'arg' is the second, and so on...). 'Arg' declarations
+ will be evaluated at runtime to return the value specified - so
+ 'action.due_date' will call 'due_date' on the action that's calling
+the validator
+-->
+      <validator name="DateValidator">
+<!--
+ Declare an argument that will (somehow) be eval'd at runtime from the
+ context; don't turn this into an EL...
+-->
+         <arg value="$due_date"/>
+<!--
+ Alternative definition...
+-->
+         <arg from_object="action" property="due_date"/>
+      </validator>
+
+      <validator name="IsWeekdayValidator">
+         <arg value="action.due_date"/>
+      </validator>
+   </action>
+
+   <action name="TIX_EDIT"
+           class="Action::TicketEdit"/>
+
+   <action name="TIX_COMMENT"
+           class="Action::TicketComment"/>
+
+   <action name="TIX_ESCALATE"
+           class="Action::TicketEscalate"/>
+
+   <action name="TIX_FINISH"
+           class="Action::TicketFinish"/>
+
+   <action name="TIX_CLOSE"
+           class="Action::TicketClose"/>
+
+</actions>
+

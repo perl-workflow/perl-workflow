@@ -1,0 +1,8 @@
+\bCVS\b
+~$
+\.old$
+\.bak$
+\.backup$
+^MANIFEST\.
+^tmp
+^_

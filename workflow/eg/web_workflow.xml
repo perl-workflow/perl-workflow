@@ -1,0 +1,17 @@
+<!--  For each action define how to provide the data it needs -->
+<action name="TIX_CREATE">
+
+<!--  one option (tied to OI) -->
+  <template>task::task_form</template>
+
+<!-- another option (tied to OI) -->
+  <oi_action>create_task</oi_action>
+
+<!-- another generic one -->
+  <class>OI::Handler::Task</class>
+  <method>create</method>
+
+<!-- add extra params -->
+  <param name="popup" value="1"/>
+
+</action>

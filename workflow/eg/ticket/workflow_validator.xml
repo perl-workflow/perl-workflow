@@ -1,0 +1,8 @@
+<validators>
+  <validator name="DateValidator"
+             class="Workflow::Validator::MatchesDateFormat">
+     <description>Validator to ensure dates are proper</description>
+     <param name="date_format" value="%Y-%m-%d %H:%M"/>
+  </validator>
+</validators>
+
