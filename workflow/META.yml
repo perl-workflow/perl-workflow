@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name: Workflow
-version: 0.04
+version: 0.05
 license: perl
 distribution_type: module
 requires:
