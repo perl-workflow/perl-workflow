@@ -769,12 +769,12 @@ initialized rather than the system tries to use the observer.
 
 For instance, the following defines two observers:
 
-<workflow>
- <type>ObservedItem</type>
- <description>This is...</description
- 
- <observer class="SomeObserver" />
- <observer sub="SomeOtherObserver::Functions::other_sub" />
+ <workflow>
+   <type>ObservedItem</type>
+   <description>This is...</description>
+  
+   <observer class="SomeObserver" />
+   <observer sub="SomeOtherObserver::Functions::other_sub" />
 
 In the first declaration we specify the class ('SomeObserver') that
 will catch observations using its C<update()> method. In the second
