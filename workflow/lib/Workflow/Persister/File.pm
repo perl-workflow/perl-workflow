@@ -5,7 +5,7 @@ package Workflow::Persister::File;
 use strict;
 use base qw( Workflow::Persister );
 use Data::Dumper        qw( Dumper );
-use File::Spec          qw( catdir catfile );
+use File::Spec::Functions;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::Persister::RandomId;
