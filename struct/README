@@ -23,11 +23,11 @@ For other databases use the generic file 'workflow_other.sql'. The
 only difference between it and the other types is how the ID fields
 are created. The previous three use vendor-specific methods for
 generating ID fields while the generic version just uses a random
-eight-character string. Less readable, but still unique.
+eight-character string. Less readable but still unique.
 
 Also, there's a 'workflow_csv.sql' for delimited text files. There's
 no 'csv' client to create and manipulate such databases, so you can
-just use something like:
+just use this:
 
  my $dbh = DBI->connect( 'DBI:CSV:f_dir=.', '', '' );
  open( SQL, '<', 'struct/workflow_csv.sql' )
