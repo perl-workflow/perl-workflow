@@ -716,3 +716,5 @@ Chris Winters E<lt>chris@cwinters.comE<gt>
 Dietmar Hanisch E<lt>Dietmar.Hanisch@Bertelsmann.deE<gt> - Provided
 most of the good ideas for the module and an excellent example of
 everyday usage.
+
+Jim Smith E<lt>jgsmith@tamu.eduE<gt> - Contributed patches and ideas.
