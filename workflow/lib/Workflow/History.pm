@@ -4,11 +4,24 @@ package Workflow::History;
 
 use strict;
 use base qw( Class::Accessor );
+use DateTime;
 
 $Workflow::History::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-my @FIELDS = qw( id action description action_on user user_id state );
+my @FIELDS = qw( id action description date user user_id state );
 __PACKAGE__->mk_accessors( @FIELDS );
+
+sub new {
+    my ( $class, $params ) = @_;
+    my $self = bless( {}, $class );
+    for ( @FIELDS ) {
+        $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
+    }
+    unless ( $self->date ) {
+        $self->date( DateTime->now() );
+    }
+    return $self;
+}
 
 sub is_saved {
     my ( $self ) = @_;
@@ -42,7 +55,7 @@ Workflow::History - Recorded work on a workflow action or workflow itself
 
  # in your view (using TT2)
  [% FOREACH history = workflow.get_history %]
-    On:     [% OI.format_date( history.action_on, '%Y-%m-%d %H:%M' ) %]<br>
+    On:     [% OI.format_date( history.date, '%Y-%m-%d %H:%M' ) %]<br>
     Action: [% history.action %] (ID: [% history.id %])<br>
     by:     [% history.user %]<br>
     [% history.description %]
@@ -78,7 +91,7 @@ B<action> - Brief description of action taken
 
 B<description> - Lengthy description of action taken
 
-B<action_on> - Date history noted
+B<date> - Date history noted, set to a L<DateTime> object.
 
 B<user> - User name (login or full name, up to you) taking action (may
 be blank)
