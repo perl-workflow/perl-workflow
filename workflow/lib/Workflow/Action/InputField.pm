@@ -4,25 +4,64 @@ package Workflow::Action::InputField;
 
 use strict;
 use base qw( Class::Accessor );
+use Log::Log4perl       qw( get_logger );
+use Workflow::Exception qw( configuration_error );
 
 $Workflow::Action::InputField::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
-my @FIELDS = qw( name description type requirement );
+my @FIELDS = qw( name label description type requirement source_class source_list );
 __PACKAGE__->mk_accessors( @FIELDS );
+
+my %INCLUDED = ();
 
 sub new {
     my ( $class, $params ) = @_;
+    my $log = get_logger();
+    $log->debug( "Instantiating new field '$params->{name}'" );
+
     my $self = bless( {}, $class );
     foreach my $field ( @FIELDS ) {
         next unless ( $params->{ $field } );
         $self->$field( $params->{ $field } );
     }
+    unless ( $self->name ) {
+        my $id_string = '[' .
+                        join( '] [', map { "$_: $params->{$_}" }
+                                         sort keys %{ $params } ) .
+                        ']';
+        configuration_error "Field found without name: $id_string";
+    }
+
+    my $name = $self->name;
+    unless ( $self->label ) {
+        $self->label( $name );
+    }
     my $requirement = ( $params->{is_required} eq 'yes' )
                         ? 'required' : 'optional';
     $self->requirement( $requirement );
+
+    if ( my $source_class = $self->source_class ) {
+        $log->debug( "Possible values for '$name' from '$source_class'" );
+        unless ( $INCLUDED{ $source_class } ) {
+            eval "require $source_class";
+            if ( $@ ) {
+                configuration_error "Failed to include source class ",
+                                    "'$source_class' used in field '$name'";
+            }
+            $INCLUDED{ $source_class }++;
+        }
+        $params->{values} = [ $source_class->get_possible_values( $self ) ];
+    }
+    elsif ( $self->source_list ) {
+        $log->debug( "Possible values for '$name' specified in config" );
+        $params->{values} = [ split( /\s*,\s*/, $self->source_list ) ];
+    }
+
     my $values = $params->{values} || $params->{possible_values};
     if ( $values ) {
         my @add_values = ( ref $values eq 'ARRAY' ) ? @{ $values } : ( $values );
+        $log->debug( "Values to use as source for field '$name': ",
+                     join( ', ', @add_values ) );
         $self->add_possible_values( @add_values );
     }
 
@@ -53,7 +92,12 @@ sub get_possible_values {
 sub add_possible_values {
     my ( $self, @values ) = @_;
     $self->{_enumerated} ||= [];
-    push @{ $self->{_enumerated} }, @values;
+    foreach my $value ( @values ) {
+        my $this_value = ( ref $value eq 'HASH' )
+                           ? $value
+                           : { label => $value, value => $value };
+        push @{ $self->{_enumerated} }, $this_value;
+    }
     return @{ $self->{_enumerated} };
 }
 
@@ -100,7 +144,10 @@ For instance, in the above declaration there are three fields,
            "Required? ", $field->is_required, "\n";
      my @enum = $field->get_possible_values;
      if ( scalar @enum ) {
-         print "Possible values: ", join( ', ', @enum ), "\n";
+         print "Possible values: \n";
+         foreach my $val ( @enum ) {
+             print "  $val->{label} ($val->{value})\n";
+         }
      }
      print "Input? ";
      my $response = <STDIN>;
@@ -125,17 +172,26 @@ Returns 'yes' if field is optional, 'no' if required.
 
 B<get_possible_values()>
 
-Returns list of possible values for this field.
+Returns list of possible values for this field. Each possible value is
+represented by a hashref with the keys 'label' and 'value' which makes
+it easy to create dropdown lists and the like.
 
 B<add_possible_values( @values )>
 
-Adds possible values to be used for this field.
+Adds possible values to be used for this field. Each item in
+C<@values> may be a simple scalar or a hashref with the keys 'label'
+and 'value'.
 
 =head2 Properties
 
 B<name> (required)
 
-Name of the field.
+Name of the field. This is what the action expects as the key in the
+workflow context.
+
+B<label> (optional)
+
+Label of the field. If not set the value for C<name> is used.
 
 B<description> (optional)
 
@@ -145,11 +201,24 @@ you the information without much fuss.
 
 B<type> (optional)
 
-Datatype of field (still under construction...).
+TODO: Datatype of field (still under construction...).
 
 B<requirement> ('required'|'optional')
 
 If field is required, 'required', otherwise 'optional'.
+
+B<source_class> (optional)
+
+If set the field will call 'get_possible_values()' on the class when
+the field is instantiated. This should return a list of either simple
+scalars or a list of hashrefs with 'label' and 'value' keys.
+
+B<source_list> (optional)
+
+If set the field will use the specified comma-separated values as the
+possible values for the field. The resulting list returned from
+C<get_possible_values()> will have the same value for both the 'label'
+and 'value' keys.
 
 =head1 SEE ALSO
 
