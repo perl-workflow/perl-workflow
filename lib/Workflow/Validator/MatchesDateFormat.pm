@@ -28,6 +28,12 @@ sub _init {
 sub validate {
     my ( $self, $wf, $date_string ) = @_;
     return unless ( $date_string );
+
+    # already converted!
+    if ( ref ( $date_string ) and UNIVERSAL::isa( $date_string, 'DateTime' ) ) {
+        return;
+    }
+
     my $fmt = $self->formatter;
     my $date_object = $fmt->parse_datetime( $date_string );
     unless ( $date_object ) {
@@ -67,6 +73,10 @@ B<NOTE>: If you pass an empty string (or no string) to this validator
 it will not throw an error. Why? If you want a value to be defined it
 is more appropriate to use the 'is_required' attribute of the input
 field to ensure it has a value.
+
+Also, if you pass a L<DateTime> object to the validator it will not
+determine whether the date is correct or within a range. As far as it
+is concerned its job is done.
 
 =head1 COPYRIGHT
 
