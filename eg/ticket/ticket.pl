@@ -327,9 +327,9 @@ sub initialize_db {
     my ( $dbh );
     my @tables = ();
     if ( $OPT_db_type eq 'sqlite' ) {
-        if ( -f $DB_FILE ) {
+        if ( -f "$path/$DB_FILE" ) {
             $log->info( "Removing old database file..." );
-            unlink( $DB_FILE );
+            unlink( "$path/$DB_FILE" );
         }
         my $DSN = "DBI:SQLite:dbname=db/$DB_FILE";
         $log->info( "Connecting to SQLite database with DSN '$DSN'..." );
