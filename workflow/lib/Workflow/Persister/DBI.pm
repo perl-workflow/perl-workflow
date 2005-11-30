@@ -40,8 +40,10 @@ sub init {
         $log->debug( "Pulled driver '$driver' from DBI DSN" );
     $self->driver( $driver );
     $self->assign_generators( $params, $driver );
-    $log->info( "Assigned workflow generator '", ref( $self->workflow_id_generator ), "'; ",
-                "history generator '", ref( $self->history_id_generator ), "'" );
+    $log->info( "Assigned workflow generator '",
+                ref( $self->workflow_id_generator ), "'; ",
+                "history generator '",
+                ref( $self->history_id_generator ), "'" );
     $self->assign_tables( $params );
     $log->info( "Assigned workflow table '", $self->workflow_table, "'; ",
                 "history table '", $self->history_table, "'" );
@@ -81,6 +83,12 @@ sub assign_generators {
         ( $wf_gen, $history_gen ) =
             $self->init_postgres_generators( $params );
     }
+    if ( $driver eq 'Oracle' ) {
+        $log->is_debug &&
+            $log->debug( "Assigning ID generators for Oracle" );
+        ( $wf_gen, $history_gen ) =
+            $self->init_oracle_generators( $params );
+    }
     elsif ( $driver eq 'mysql' ) {
         $log->is_debug &&
             $log->debug( "Assigning ID generators for MySQL" );
@@ -119,6 +127,24 @@ sub init_postgres_generators {
         })
     );
 }
+
+sub init_oracle_generators {
+    my ( $self, $params ) = @_;
+    my $sequence_select = q{SELECT %s.NEXTVAL from dual};
+    $params->{workflow_sequence} ||= 'workflow_seq';
+    $params->{history_sequence}  ||= 'workflow_history_seq';
+    return (
+        Workflow::Persister::DBI::SequenceId->new({
+            sequence_name   => $params->{workflow_sequence},
+            sequence_select => $sequence_select
+        }),
+        Workflow::Persister::DBI::SequenceId->new({
+            sequence_name   => $params->{history_sequence},
+            sequence_select => $sequence_select
+        })
+    );
+}
+
 
 sub init_mysql_generators {
     my ( $self, $params ) = @_;
