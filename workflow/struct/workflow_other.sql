@@ -12,7 +12,7 @@ CREATE TABLE workflow_history (
   action            varchar(25) not null,
   description       varchar(255) null,
   state             varchar(30) not null,
-  user              varchar(50) null,
+  workflow_user     varchar(50) null,
   history_date      timestamp,
   primary key( workflow_hist_id )
 );
