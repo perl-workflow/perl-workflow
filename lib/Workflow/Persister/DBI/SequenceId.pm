@@ -4,22 +4,33 @@ package Workflow::Persister::DBI::SequenceId;
 
 use strict;
 use base qw( Class::Accessor );
+use DBI;
+use Log::Log4perl       qw( get_logger );
+use Workflow::Exception qw( persist_error );
 
 $Workflow::Persister::DBI::SequenceId::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
 my @FIELDS = qw( sequence_name sequence_select );
 __PACKAGE__->mk_accessors( @FIELDS );
 
+my ( $log );
+
 sub pre_fetch_id {
     my ( $self, $dbh ) = @_;
+    $log ||= get_logger();
     my $full_select = sprintf( $self->sequence_select, $self->sequence_name );
-    my ( $sth );
+    $log->is_debug &&
+        $log->debug( "SQL to fetch sequence: $full_select" );
+    my ( $row );
     eval {
-        $sth = $dbh->prepare( $full_select );
+        my $sth = $dbh->prepare( $full_select );
         $sth->execute;
+        $row = $sth->fetchrow_arrayref;
+        $sth->finish;
     };
-    my $row = $sth->fetchrow_arrayref;
-    $sth->finish;
+    if ( $@ ) {
+        persist_error "Failed to retrieve sequence: $@";
+    }
     return $row->[0];
 }
 
