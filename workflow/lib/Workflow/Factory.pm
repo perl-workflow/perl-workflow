@@ -123,6 +123,7 @@ sub add_config_from_file {
     $self->_add_workflow_config(
         Workflow::Config->parse_all_files( 'workflow', $params{workflow} )
     );
+    return;
 }
 
 sub add_config {
@@ -134,6 +135,7 @@ sub add_config {
     $self->_add_persister_config( _flatten( $params{persister} ) );
     $self->_add_action_config( _flatten( $params{action} ) );
     $self->_add_workflow_config( _flatten( $params{workflow} ) );
+    return;
 }
 
 sub _check_config_keys {
@@ -667,6 +669,9 @@ objects should already be read in. A good order is: 'validator',
 references to C<add_config()> using the right type and the behavior
 should be exactly the same.
 
+Returns: nothing; if we run into a problem parsing one of the files or
+creating the objects it requires we throw a L<Workflow::Exception>.
+
 B<add_config( %config_hashrefs )>
 
 Similar to C<add_config_from_file()> -- the keys may be 'action',
@@ -679,6 +684,10 @@ creating configurations (e.g., hot-deploying a validator class
 specified by a user) or using a custom configuration format and for
 some reason do not want to use the built-in mechanism in
 L<Workflow::Config> to read it for you.
+
+Returns: nothing; if we encounter an error trying to create the
+objects referenced in a configuration we throw a
+L<Workflow::Exception>.
 
 =head2 Internal Methods
 
