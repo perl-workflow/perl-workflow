@@ -11,6 +11,7 @@ eg/ticket/ticket.cgi
 eg/ticket/ticket.pl
 eg/ticket/ticket.sql
 eg/ticket/ticket_csv.sql
+eg/ticket/ticket_pg.sql
 eg/ticket/ticket_web.pl
 eg/ticket/web_templates/error.tmpl
 eg/ticket/web_templates/error_message.tmpl
