@@ -44,7 +44,7 @@ sub check_workflow_history {
     my ( $class, $tracker, $values ) = @_;
     $class->check_tracker(
         $tracker, 'create workflow history',
-        qr/^INSERT INTO workflow_history \( workflow_id, action, description, state, user, history_date, workflow_hist_id \)/,
+        qr/^INSERT INTO workflow_history \( workflow_id, action, description, state, workflow_user, history_date, workflow_hist_id \)/,
         [ 'workflow ID', 'action', 'description',
           'state', 'user', 'current date',
           'random ID of correct length' ],
