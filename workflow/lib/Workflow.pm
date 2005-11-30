@@ -297,7 +297,7 @@ sub _get_next_state {
 sub _auto_execute_state {
     my ( $self, $wf_state ) = @_;
     $log ||= get_logger();
-    my $action_name = $wf_state->get_autorun_action_name;
+    my $action_name = $wf_state->get_autorun_action_name( $self );
     $log->is_debug &&
         $log->debug( "Found action '$action_name' to execute in ",
                      "autorun state ", $wf_state->state );
