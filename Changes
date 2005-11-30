@@ -1,5 +1,53 @@
 Revision history for Perl extension Workflow
 
+0.16  Tue Nov 29 22:12:25 EST 2005
+
+  META.yml:
+
+     - RT #12360: Added 'no_index' section so demo modules don't get
+     indexed; thanks to Adam Kennedy for report and fix.
+
+  lib/Workflow.pm:
+
+     - RT #14413: Added workflow object to
+     Workflow::State->get_autorun_action_name() call; thanks to Jonas
+     Nielsen for report and fix.
+
+  lib/Workflow/Factory.pm:
+
+     - RT #12361: Add documentation about return values/exceptions
+     from add_config() and add_config_from_file(); thanks to Adam
+     Kennedy for report.
+
+  lib/Workflow/Persister/DBI.pm:
+
+     POTENTIAL BACKWARD INCOMPATIBILITY:
+
+        - Change 'user' field in history table to 'workflow_user' so
+        we don't collide with PostgreSQL reserved word. (It's probably
+        reserved elsewhere too...) If you have existing workflow
+        tables you'll want to ALTER them to the new fieldname or look
+        at the next changeitem to customize the field names.
+
+     - Make the workflow and history fields settable by subclassing
+     the persister -- just define 'get_workflow_fields()' and
+     'get_history_fields()' and return the names you want in the
+     order specified in the docs. Thanks to Michael Graham for the
+     nudge.
+
+     - Be sure to pass in the database handle to the pre_fetch ID
+     generator in create_workflow() (related to RT #15622)
+
+     - RT #15622: While we didn't apply this patch we did cleanup some
+     of the similar code....
+ 
+     - Apply patch from Frank Rothhaupt to work with Oracle sequences.
+
+  lib/Workflow/Persister/DBI/SequenceId.pm:
+
+     - Throw proper exception if we cannot execute the sequence SQL.
+
+
 0.15  Sun Oct 17 11:17:44 EDT 2004
 
   CPAN/Install notes:
