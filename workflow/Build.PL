@@ -24,4 +24,5 @@ Module::Build->new(
     no_index => {
         directory => [ 'eg', 't' ],
     },
+    create_makefile_pl => 'traditional',
 )->create_build_script();
