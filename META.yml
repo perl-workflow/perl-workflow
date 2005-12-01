@@ -1,6 +1,6 @@
 ---
 name: Workflow
-version: 0.16
+version: 0.17
 author:
   - Chris Winters <chris@cwinters.com>
 abstract: 'Simple, flexible system to implement workflows'
