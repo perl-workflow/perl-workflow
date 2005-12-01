@@ -1,5 +1,14 @@
 Revision history for Perl extension Workflow
 
+0.17  Wed Nov 30 21:51:31 EST 2005
+
+  lib/Workflow/Persister/DBI.pm:
+
+  - fix dumb typo that resulted in PostgreSQL getting a random-ID
+  generator instead of a sequence-ID generator, thanks to Michael
+  Graham for pointing it out
+
+
 0.16  Tue Nov 29 22:12:25 EST 2005
 
   META.yml:
