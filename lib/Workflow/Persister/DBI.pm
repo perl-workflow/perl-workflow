@@ -83,7 +83,7 @@ sub assign_generators {
         ( $wf_gen, $history_gen ) =
             $self->init_postgres_generators( $params );
     }
-    if ( $driver eq 'Oracle' ) {
+    elsif ( $driver eq 'Oracle' ) {
         $log->is_debug &&
             $log->debug( "Assigning ID generators for Oracle" );
         ( $wf_gen, $history_gen ) =
