@@ -138,11 +138,11 @@ create your own parser. All you need to do is:
 
 subclass L<Workflow::Config>
 
-=item 1.
+=item 2.
 
 implement the required methods (listed below)
 
-=item 1.
+=item 3.
 
 register your parser with L<Workflow::Config>.
 

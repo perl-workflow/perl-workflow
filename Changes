@@ -2,6 +2,18 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.20 Fri Jul  7 22:29:19 CEST 2006 (update not required)
+
+- Fixed bug reported by Martin Bartosch, Workflow::Factory's
+  add_config_from_file now takes an array ref as stated in the POD.
+
+- Updated t/factory.t to test the above fix, just using the scenarios from the
+  SYNOPSIS. This fix did however not contribute to the coverage of
+  Workflow::Factory, we lost 0.3 percent along the way going from 88.7 to 88.4 
+
+- Fixed two POD errors in Workflow::Config
+
+
 0.19 Fri Jul  7 20:40:33 CEST 2006 (update not required)
 
 - The 0.18 release contained a broken Makefile.PL, thanks to Randal Schwartz
