@@ -3,7 +3,10 @@ package Workflow::Config::Perl;
 # $Id$
 
 use strict;
-use base qw( Workflow::Config );
+use base                qw( Workflow::Config );
+use Log::Log4perl       qw( get_logger );
+use Workflow::Exception qw( configuration_error );
+use Data::Dumper        qw( Dumper );
 
 $Workflow::Config::Perl::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
 
@@ -14,12 +17,12 @@ sub parse {
     $log ||= get_logger();
 
     $self->_check_config_type( $type );
-    my @config_items = _expand_refs( @items );
+    my @config_items = Workflow::Config::_expand_refs( @items );
     return () unless ( scalar @config_items );
 
     my @config = ();
     foreach my $item ( @config_items ) {
-        my ( $file_name );
+        my ( $file_name, $method );
         if ( ref $item ) {
             $method = '_translate_perl';
             $file_name = '[scalar ref]';
@@ -32,7 +35,7 @@ sub parse {
         }
         $log->is_info &&
             $log->info( "Will parse '$type' Perl config file '$file_name'" );
-        my $this_config = $class->$method( $type, $item );
+        my $this_config = $self->$method( $type, $item );
         $log->is_info &&
             $log->info( "Parsed Perl '$file_name' ok" );
         if ( ref $this_config->{ $type } eq 'ARRAY' ) {
@@ -100,17 +103,38 @@ Implementation of configuration parser for serialized Perl data
 structures from files/data. See L<Workflow::Config> for C<parse()>
 description.
 
+=head1 METHODS
+
+=head2 parse
+
+This method is required implemented by L<Workflow::Config>.
+
+It takes two arguments:
+
+=over
+
+=item * a string indicating the type of configuration. For a complete list of
+types please refer to L<Workflow::Config>
+
+=item * a list of filenames containing at least a single file name
+
+=back
+
+The method returns a list of configuration parameters.
+
 =head1 SEE ALSO
 
 L<Workflow::Config>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 Chris Winters. All rights reserved.
+Copyright (c) 2004, 2005, 2006 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
