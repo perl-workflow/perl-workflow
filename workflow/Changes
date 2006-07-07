@@ -2,6 +2,12 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.19 Fri Jul  7 20:40:33 CEST 2006 (update not required)
+
+- The 0.18 release contained a broken Makefile.PL, thanks to Randal Schwartz
+  for sending me the feedback to get this addressed immediately.
+
+
 0.18 Fri Jul  7 14:47:00 CEST 2006 (update not required)
 
 - New maintainer, JONASBN has taken over maintenance of Workflow
