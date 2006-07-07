@@ -2,6 +2,15 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.21 Fri Jul  7 23:25:35 CEST 2006 (update not required)
+
+- Fixed bug reported by Martin Bartosch, Workflow::Context's
+  merge method did not work properly, applied patch from Martin
+
+- Updated t/context.t to test the above fix, this got the coverage from
+  53.3 percent to 93.3 
+
+
 0.20 Fri Jul  7 22:29:19 CEST 2006 (update not required)
 
 - Fixed bug reported by Martin Bartosch, Workflow::Factory's
@@ -32,7 +41,7 @@ Revision history for Perl extension Workflow
 
 - Somewhat applied patch from Chris Brown, the use of Perl as configuration was
   broken, in my attempt to implement tests prior to applying Chris Browns patch
-  I accidently fixed the same bugs it addressed.
+  I accidently fixed the same problems it addressed.
   
   coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
 

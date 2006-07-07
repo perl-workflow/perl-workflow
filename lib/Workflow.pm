@@ -996,7 +996,7 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 The following folks have also helped out:
 
 Martin Bartosch, for bug reporting and giving the solution not even using a
-patch (0.19 to 0.20)
+patch (0.19 to 0.20) and a patch resulting in 0.21
 
 Randal Schwartz, for testing 0.18 and swiftly giving feedback (0.18 to 0.19)
 
