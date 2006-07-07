@@ -18,6 +18,13 @@ Revision history for Perl extension Workflow
   
   coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
 
+- Added new files (for test):
+	t/workflow.perl
+	t/workflow_action.perl
+	t/workflow_condition.perl
+	t/workflow_errorprone.perl
+	t/workflow_validator.perl
+
 - Added POD to Workflow::Config::Perl on parse method
 
 - Added CVS id keywords and author information to README
