@@ -1,5 +1,6 @@
 Configuration Description
 ----------------------------------------
+$Id$
 
 workflow:
 
@@ -90,3 +91,8 @@ persister:
    extra_field   $
    extra_class   $
    extra_context $
+   
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
