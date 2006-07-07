@@ -981,18 +981,21 @@ pgh.pm: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003 Chris Winters and Arvato Direct; 2004 Chris
-Winters. All rights reserved.
+Copyright (c) 2003 Chris Winters and Arvato Direct; 2004, 2005, 2006 
+Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt> is the primary author and
-maintainer.
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
+
+Chris Brown, for a patch to L<Workflow::Config::Perl>
 
 Dietmar Hanisch E<lt>Dietmar.Hanisch@Bertelsmann.deE<gt> - Provided
 most of the good ideas for the module and an excellent example of
