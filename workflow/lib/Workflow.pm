@@ -995,7 +995,12 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
-Chris Brown, for a patch to L<Workflow::Config::Perl>
+Martin Bartosch, for bug reporting and giving the solution not even using a
+patch (0.19 to 0.20)
+
+Randal Schwartz, for testing 0.18 and swiftly giving feedback (0.18 to 0.19)
+
+Chris Brown, for a patch to L<Workflow::Config::Perl> (0.17 to 0.18)
 
 Dietmar Hanisch E<lt>Dietmar.Hanisch@Bertelsmann.deE<gt> - Provided
 most of the good ideas for the module and an excellent example of

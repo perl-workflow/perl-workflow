@@ -96,33 +96,79 @@ sub add_config_from_file {
 
     $log->is_debug &&
         $log->debug( "Adding condition configurations..." );
-    $self->_add_condition_config(
-        Workflow::Config->parse_all_files( 'condition', $params{condition} )
-    );
+    
+    if (ref $params{condition} eq 'ARRAY') {
+		foreach my $condition (@{$params{condition}}) {
+	    	$self->_add_condition_config(
+    	    	Workflow::Config->parse_all_files( 'condition', $condition)
+    		);	
+		}
+    } else {
+    	$self->_add_condition_config(
+        	Workflow::Config->parse_all_files( 'condition', $params{condition} )
+    	);
+    }
 
     $log->is_debug &&
         $log->debug( "Adding validator configurations..." );
-    $self->_add_validator_config(
-        Workflow::Config->parse_all_files( 'validator', $params{validator} )
-    );
+    
+    if (ref $params{validator} eq 'ARRAY') {
+		foreach my $validator (@{$params{validator}}) {
+	    	$self->_add_validator_config(
+    	    	Workflow::Config->parse_all_files( 'validator', $validator )
+    		);	
+		}
+    } else {
+        $self->_add_validator_config(
+            Workflow::Config->parse_all_files( 'validator', $params{validator} )
+        );
+    }
 
     $log->is_debug &&
         $log->debug( "Adding persister configurations..." );
-    $self->_add_persister_config(
-        Workflow::Config->parse_all_files( 'persister', $params{persister} )
-    );
+
+    if (ref $params{persister} eq 'ARRAY') {
+		foreach my $persister (@{$params{persister}}) {
+	    	$self->_add_persister_config(
+    	    	Workflow::Config->parse_all_files( 'persister', $persister )
+    		);	
+		}
+    } else {
+        $self->_add_persister_config(
+            Workflow::Config->parse_all_files( 'persister', $params{persister} )
+        );
+    }
 
     $log->is_debug &&
         $log->debug( "Adding action configurations..." );
-    $self->_add_action_config(
-        Workflow::Config->parse_all_files( 'action', $params{action} )
-    );
+
+    if (ref $params{action} eq 'ARRAY') {
+		foreach my $action (@{$params{action}}) {
+	    	$self->_add_action_config(
+    	    	Workflow::Config->parse_all_files( 'action', $action )
+    		);	
+		}
+    } else {
+        $self->_add_action_config(
+            Workflow::Config->parse_all_files( 'action', $params{action} )
+        );
+    }
 
     $log->is_debug &&
         $log->debug( "Adding workflow configurations..." );
-    $self->_add_workflow_config(
-        Workflow::Config->parse_all_files( 'workflow', $params{workflow} )
-    );
+
+    if (ref $params{workflow} eq 'ARRAY') {
+		foreach my $workflow (@{$params{workflow}}) {
+	    	$self->_add_workflow_config(
+    	    	Workflow::Config->parse_all_files( 'workflow', $workflow )
+    		);	
+		}
+    } else {
+        $self->_add_workflow_config(
+            Workflow::Config->parse_all_files( 'workflow', $params{workflow} )
+        );
+    }
+    
     return;
 }
 
@@ -853,11 +899,15 @@ L<Workflow::Validator>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2006 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut
