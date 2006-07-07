@@ -118,7 +118,6 @@ t/workflow_autorun.xml
 t/workflow_condition.perl
 t/workflow_condition.xml
 t/workflow_errorprone.perl
-t/workflow_observer.perl
 t/workflow_observer.xml
 t/workflow_tests.log
 t/workflow_validator.perl
