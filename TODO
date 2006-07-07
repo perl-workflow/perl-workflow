@@ -1,0 +1,68 @@
+TODO file for Workflow
+
+$Id$
+
+- Implement handling of forgotten filename parameter to parse in
+  Workflow::Config::Perl, this might have to propagate to Workflow::Config::XML
+  also
+
+- Add support for string based configuration instead of file based (copying
+  behavior from XML::Simple) ?
+
+- Investigate failings tests in t/persister_dbi.t, this has only observed twice
+  and does not seem to be consistent. Perhaps this is related to execution time
+  for the test suite and the use of now.
+
+	#   Failed test '...for 'current date' matches'
+	#   in t/TestUtil.pm at line 69.
+	#          got: '2006-07-06 21:45'
+	#     expected: '2006-07-06 21:44'
+	t/persister_dbi....................ok 16/41                                  
+	#   Failed test '...for 'current date' matches'
+	#   in t/TestUtil.pm at line 69.
+	#          got: '2006-07-06 21:45'
+	#     expected: '2006-07-06 21:44'
+	t/persister_dbi....................NOK 31                                    
+	#   Failed test '...for 'last update' matches'
+	#   in t/TestUtil.pm at line 69.
+	#          got: '2006-07-06 21:45'
+	#     expected: '2006-07-06 21:44'
+	t/persister_dbi....................NOK 39                                    
+	#   Failed test '...for 'current date' matches'
+	#   in t/TestUtil.pm at line 69.
+	#          got: '2006-07-06 21:45'
+	#     expected: '2006-07-06 21:44'
+	t/persister_dbi....................ok 41/41# Looks like you failed 4 tests of 41.
+	t/persister_dbi....................dubious                                   
+			Test returned status 4 (wstat 1024, 0x400)
+	DIED. FAILED tests 8, 17, 31, 39
+			Failed 4/41 tests, 90.24% okay
+        
+- Eliminate warnings from DBD::Mock
+
+	t/persister_dbi....................ok 1/41Use of uninitialized value
+	in concatenation (.) or string at /Library/Perl/5.8.6/DBD/Mock.pm
+	line 507.
+
+	t/workflow.........................ok 1/32Use of uninitialized value
+	in concatenation (.) or string at /Library/Perl/5.8.6/DBD/Mock.pm
+	line 507.
+
+- Write more POD, including a tutorial
+
+- Write more tests
+
+- Deal with whatever is in the RT queue
+
+- Examine and apply received patches
+
+From TODO.txt:
+
+- Where to put the configuration for the built-in
+validators/conditions/actions? Should we make it part of the
+WorkflowFactory initialization process, maybe just keep the built-ins
+configured in a class that's distributed with the module? (We don't
+want to force people to reference a separate file every time...
+
+- Make the action/description of initial history created configurable
+(optional?)
