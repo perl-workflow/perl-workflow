@@ -1,7 +1,7 @@
 use Module::Build;
 
 Module::Build->new(
-    dist_author       => 'Chris Winters <chris@cwinters.com>',
+    dist_author       => 'Jonas B. NIelsen <jonasbn@cpan.org>',
     dist_abstract     => 'Simple, flexible system to implement workflows',
     dist_name         => 'Workflow',
     dist_version_from => 'VERSION',
@@ -19,6 +19,7 @@ Module::Build->new(
       'Log::Log4perl'              => 0.34,
       'Safe'                       => 0,
       'Test::More'                 => 0.41,
+      'Test::Exception'            => 0,
       'XML::Simple'                => 2.00,
     },
     no_index => {
