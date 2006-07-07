@@ -1,5 +1,30 @@
 Revision history for Perl extension Workflow
 
+# $Id$
+
+0.18 Fri Jul  7 14:47:00 CEST 2006 (update not required)
+
+- New maintainer, JONASBN has taken over maintenance of Workflow
+
+- Added maintainer information to Workflow.pm
+
+- Added new TODO file
+
+- Added a handful of tests to t/config.t and added dependency on Test::Exception
+
+- Somewhat applied patch from Chris Brown, the use of Perl as configuration was
+  broken, in my attempt to implement tests prior to applying Chris Browns patch
+  I accidently fixed the same bugs it addressed.
+  
+  coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
+
+- Added POD to Workflow::Config::Perl on parse method
+
+- Added CVS id keywords and author information to README
+
+- Added CVS id keywords and author information to .txt files in doc
+
+
 0.17  Wed Nov 30 21:51:31 EST 2005
 
   lib/Workflow/Persister/DBI.pm:
