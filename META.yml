@@ -1,6 +1,6 @@
 ---
 name: Workflow
-version: 0.18
+version: 0.19
 author:
   - 'Jonas B. NIelsen <jonasbn@cpan.org>'
 abstract: 'Simple, flexible system to implement workflows'
