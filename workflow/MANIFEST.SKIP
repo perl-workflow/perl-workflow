@@ -33,7 +33,7 @@
 \.kpf
 
 # Avoid dist files
-findforhandler-\d+\.\d+\.tar\.gz$
+\.gz$
 
 # Avoid coverage stuff
 ^cover_db
