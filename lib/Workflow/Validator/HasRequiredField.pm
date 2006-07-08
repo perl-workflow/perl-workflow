@@ -85,6 +85,10 @@ set of known values or algorithm, just see if the value is defined --
 using the Perl notion for defined rather than true/false, which means
 '0' and the empty string will both be valid.
 
+=head2 METHODS
+
+#=head3 validate
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2004 Chris Winters. All rights reserved.

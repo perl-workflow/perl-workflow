@@ -46,6 +46,14 @@ Implementation for any persister to generate a random ID string. You
 can specify the length using the 'id_length' parameter, but normally
 the default (8 characters) is sufficient.
 
+=head2 METHODS
+
+#=head3 new
+
+#=head3 pre_fetch_id
+
+#=head3 post_fetch_id
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2004 Chris Winters. All rights reserved.

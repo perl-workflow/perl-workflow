@@ -157,15 +157,17 @@ The implementation for the validator might look like:
      $self->SUPER::validate( $wf, $worker_id );
  }
 
-=head2 Methods
+=head2 METHODS
 
-B<_init( \%params )>
+#=head3 _init( \%params )
 
-B<add_enumerated_values( @values )>
+#=head3 validator
 
-B<get_enumerated_values()>
+#=head3 add_enumerated_values( @values )
 
-B<is_enumerated_value( $value )>
+#=head3 get_enumerated_values()
+
+=head3 is_enumerated_value( $value )
 
 This is most often the single method you will want to modify.
 

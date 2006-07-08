@@ -48,7 +48,7 @@ masters can skip the work entirely. So you can do:
 
 =head1 OBJECT METHODS
 
-B<execute()>
+=head3 execute()
 
 Implemented from L<Workflow::Action>. Proudly does nothing and proves
 it by returning C<undef>.

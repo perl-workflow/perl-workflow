@@ -123,12 +123,14 @@ care where it comes from.
 
 =head2 Methods
 
-B<_init( \%params )>
+#=head3 init
+
+=head3 _init( \%params )
 
 Called when the validator is first initialized. If you do not have
 sufficient information in C<\%params> you should throw an exception.
 
-B<validate( $workflow, $data )>
+=head3 validate( $workflow, $data )
 
 Determine whether your C<$data> is true or false. If necessary you can
 get the application context information from the C<$workflow> object.

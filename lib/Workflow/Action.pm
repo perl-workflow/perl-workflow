@@ -187,31 +187,31 @@ use it as such but it is strongly recommended.
 
 =head2 Public Methods
 
-B<add_field( @fields )>
+=head3 add_field( @fields )
 
 Add one or more L<Workflow::Action::InputField>s to the action.
 
-B<required_fields()>
+=head3 required_fields()
 
 Return a list of L<Workflow::Action::InputField> objects that are required.
 
-B<optional_fields()>
+=head3 optional_fields()
 
 Return a list of L<Workflow::Action::InputField> objects that are optional.
 
-B<fields()>
+=head3 fields()
 
 Return a list of all L<Workflow::Action::InputField> objects
 associated with this action.
 
-B<add_validators( @validator_config )>
+=head3 add_validators( @validator_config )
 
 Given the 'validator' configuration declarations in the action
 configuration, ask the L<Workflow::Factory> for the
 L<Workflow::Validator> object associated with each name and store that
 along with the arguments to be used, runtime and otherwise.
 
-B<get_validators()>
+=head3 get_validators()
 
 Get a list of all the validator hashrefs, each with two keys:
 'validator' and 'args'. The 'validator' key contains the appropriate
@@ -219,21 +219,23 @@ L<Workflow::Validator> object, while 'args' contains an arrayref of
 arguments to pass to the validator, some of which may need to be
 evaluated at runtime.
 
-B<validate( $workflow )>
+=head3 validate( $workflow )
 
 Run through all validators for this action. If any fail they will
 throw a L<Workflow::Exception>, the validation subclass.
 
-B<execute( $workflow )>
+=head3 execute( $workflow )
 
 Subclasses B<must> implement -- this will perform the actual
 work. It's not required that you return anything, but if the action
 may be used in a L<Workflow::State> object that has multiple resulting
 states you should return a simple scalar for a return value.
 
+#=head3 add_fields
+
 =head2 Private Methods
 
-B<init( $workflow, \%params )>
+#=head3 init( $workflow, \%params )
 
 =head1 SEE ALSO
 

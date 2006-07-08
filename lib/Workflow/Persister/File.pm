@@ -203,6 +203,24 @@ Main persistence class for storing the workflow and workflow history
 records to a filesystem for later retrieval. Data are stored in
 serialized Perl data structure files.
 
+=head2 METHODS
+
+#=head3 constitute_object
+
+#=head3 create_history
+
+#=head3 create_workflow
+
+#=head3 fetch_history
+
+#=head3 fetch_workflow
+
+#=head3 init
+
+#=head3 serialize_object
+
+#=head3 update_workflow
+
 =head1 SEE ALSO
 
 L<Workflow::Persister>

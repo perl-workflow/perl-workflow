@@ -165,31 +165,33 @@ For instance, in the above declaration there are three fields,
 
 =head2 Public Methods
 
-B<new( \%params )>
+=head3 new( \%params )
 
 Typical constructor; will throw exception if 'name' is not defined or
 if the property 'source_class' is defined but the class it specifies
 is not available.
 
-B<is_required()>
+=head3 is_required()
 
 Returns 'yes' if field is required, 'no' if optional.
 
-B<is_optional()>
+=head3 is_optional()
 
 Returns 'yes' if field is optional, 'no' if required.
 
-B<get_possible_values()>
+=head3 get_possible_values()
 
 Returns list of possible values for this field. Each possible value is
 represented by a hashref with the keys 'label' and 'value' which makes
 it easy to create dropdown lists in templates and the like.
 
-B<add_possible_values( @values )>
+=head3 add_possible_values( @values )
 
 Adds possible values to be used for this field. Each item in
 C<@values> may be a simple scalar or a hashref with the keys 'label'
 and 'value'.
+
+#=head3 init
 
 =head2 Properties
 

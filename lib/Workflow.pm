@@ -791,7 +791,7 @@ than the entire system.
 
 =head2 Object Methods
 
-B<execute_action( $action_name )>
+=head3 execute_action( $action_name )
 
 Execute the action C<$action_name>. Typically this changes the state
 of the workflow. If C<$action_name> is not in the current state, fails
@@ -815,7 +815,7 @@ general information about observers as well as implementation details.
 
 Returns: new state of workflow
 
-B<get_current_actions()>
+=head3 get_current_actions()
 
 Returns a list of action names available from the current state for
 the given environment. So if you keep your C<context()> the same if
@@ -825,7 +825,7 @@ screened for conditions.
 
 Returns: list of strings representing available actions
 
-B<get_action_fields( $action_name )>
+=head3 get_action_fields( $action_name )
 
 Return a list of L<Workflow::Action::InputField> objects for the given
 C<$action_name>. If C<$action_name> not in the current state or not
@@ -833,7 +833,7 @@ accessible by the environment an exception is thrown.
 
 Returns: list of L<Workflow::Action::InputField> objects
 
-B<add_history( @( \%params | $wf_history_object ) )>
+=head3 add_history( @( \%params | $wf_history_object ) )
 
 Adds any number of histories to the workflow, typically done by an
 action in C<execute_action()> or one of the observers of that
@@ -850,16 +850,16 @@ more.
 
 Returns: nothing
 
-B<get_history()>
+=head3 get_history()
 
 Returns list of history objects for this workflow. Note that some may
 be unsaved if you call this during the C<execute_action()> process.
 
-B<get_unsaved_history()>
+=head3 get_unsaved_history()
 
 Returns list of all unsaved history objects for this workflow.
 
-B<clear_history()>
+=head3 clear_history()
 
 Clears all transient history objects from the workflow object, B<not>
 from the long-term storage.
@@ -892,7 +892,7 @@ B<last_update> (read-write)
 
 Date of the workflow's last update.
 
-B<context> (read-write, see below)
+=head3 context (read-write, see below)
 
 A L<Workflow::Context> object associated with this workflow. This
 should never be undefined as the L<Workflow::Factory> sets an empty
@@ -914,7 +914,7 @@ You will see:
 
 =head2 Internal Methods
 
-B<init( $id, $current_state, \%workflow_config, \@wf_states )>
+=head3 init( $id, $current_state, \%workflow_config, \@wf_states )
 
 B<THIS SHOULD ONLY BE CALLED BY THE> L<Workflow::Factory>. Do not call
 this or the C<new()> method yourself -- you will only get an
@@ -926,7 +926,7 @@ C<$current_state> value to the property C<state> and uses the other
 non-state values from C<\%config> to set parameters via the inherited
 C<param()>.
 
-B<_get_action( $action_name )>
+=head3 _get_action( $action_name )
 
 Retrieves the action object associated with C<$action_name> in the
 current workflow state. This will throw an exception if:
@@ -953,20 +953,22 @@ One of the conditions for the action in this state is not met.
 
 =back
 
-B<_get_workflow_state( [ $state ] )>
+=head3 _get_workflow_state( [ $state ] )
 
 Return the L<Workflow::State> object corresponding to C<$state>, which
 defaults to the current state.
 
-B<_set_workflow_state( $wf_state )>
+=head3 _set_workflow_state( $wf_state )
 
 Assign the L<Workflow::State> object C<$wf_state> to the workflow.
 
-B<_get_next_state( $action_name )>
+=head3 _get_next_state( $action_name )
 
 Returns the name of the next state given the action
 C<$action_name>. Throws an exception if C<$action_name> not contained
 in the current state.
+
+#=head3 set
 
 =head1 SEE ALSO
 

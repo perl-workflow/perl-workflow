@@ -80,6 +80,12 @@ Also, if you pass a L<DateTime> object to the validator it will not
 determine whether the date is correct or within a range. As far as it
 is concerned its job is done.
 
+=head2 METHODS
+
+#=head3 _init
+
+#=head3 validate
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2004 Chris Winters. All rights reserved.

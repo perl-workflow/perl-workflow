@@ -106,6 +106,10 @@ Implementation of configuration parser for XML files/data; requires
 L<XML::Simple> to be installed. See L<Workflow::Config> for C<parse()>
 description.
 
+=head2 METHODS
+
+#=head3 parse
+
 =head1 SEE ALSO
 
 L<XML::Simple>

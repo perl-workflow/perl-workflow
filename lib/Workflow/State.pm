@@ -329,40 +329,40 @@ within the autorun state.
 
 =head1 PUBLIC METHODS
 
-B<get_conditions( $action_name )>
+=head3 get_conditions( $action_name )
 
 Returns a list of L<Workflow::Condition> objects for action
 C<$action_name>. Throws exception if object does not contain
 C<$action_name> at all.
 
-B<contains_action( $action_name )>
+=head3 contains_action( $action_name )
 
 Returns true if this state contains action C<$action_name>, false if
 not.
 
-B<is_action_available( $workflow, $action_name )>
+=head3 is_action_available( $workflow, $action_name )
 
 Returns true if C<$action_name> is contained within this state B<and>
 it matches any conditions attached to it, using the data in the
 context of the C<$workflow> to do the checks.
 
-B<evaluate_action( $workflow, $action_name )>
+=head3 evaluate_action( $workflow, $action_name )
 
 Throws exception if action C<$action_name> is either not contained in
 this state or if it does not pass any of the attached conditions,
 using the data in the context of C<$workflow> to do the checks.
 
-B<get_all_action_names()>
+=head3 get_all_action_names()
 
 Returns list of all action names available in this state.
 
-B<get_available_action_names( $workflow )>
+=head3 get_available_action_names( $workflow )
 
 Returns all actions names that are available given the data in
 C<$workflow>. Each action name returned will return true from
 B<is_action_available()>.
 
-B<get_next_state( $action_name, [ $action_return ] )>
+=head3 get_next_state( $action_name, [ $action_return ] )
 
 Returns the state(s) that will result if action C<$action_name>
 is executed. If you've specified multiple return states in the
@@ -370,7 +370,7 @@ configuration then you need to specify the C<$action_return>,
 otherwise we return a hash with action return values as the keys and
 the action names as the values.
 
-B<get_autorun_action_name( $workflow )>
+=head3 get_autorun_action_name( $workflow )
 
 Retrieve the action name to be autorun for this state. If the state
 does not have the 'autorun' property enabled this throws an
@@ -394,14 +394,14 @@ B<description>
 
 Description of this state (optional).
 
-B<autorun>
+=head3 autorun
 
 Returns true if the state should be automatically run, false if
 not. To set to true the property value should be 'yes', 'true' or 1.
 
 =head1 INTERNAL METHODS
 
-B<init( $config )>
+=head3 init( $config )
 
 Assigns 'state', 'description', and 'autorun' properties from
 C<$config>. Also assigns configuration for all actions in the state,
