@@ -45,6 +45,14 @@ UUIDs/GUIDs generated until 3400 CE."
 This uses the L<Data::UUID> module to generate the UUID string, so
 look there if you are curious about the algorithm, efficiency, etc.
 
+=head2 METHODS
+
+#=head3 new
+
+#=head3 pre_fetch_id
+
+#=head3 post_fetch_id
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2004 Chris Winters. All rights reserved.

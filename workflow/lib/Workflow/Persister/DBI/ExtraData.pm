@@ -205,6 +205,12 @@ C<extra_data_field>; we just use the fieldnames for the context keys
 in that case. And if you specify a single data field and do not
 specify a context key we also use the data field name.
 
+=head2 METHODS
+
+#=head3 init
+
+#=head3 fetch_extra_workflow_data
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2004 Chris Winters. All rights reserved.

@@ -141,7 +141,7 @@ exception easier and more readable.
 
 =head1 METHODS
 
-B<throw( @msg, [ \%params ])>
+=head3 throw( @msg, [ \%params ])
 
 This overrides B<throw()> from L<Exception::Class|Exception::Class> to
 add a little syntactic sugar. Instead of:
@@ -163,6 +163,16 @@ makes for very readable code:
  workflow_error "Something went horribly, terribly, dreadfully, "
                 "frightfully wrong: $@",
                 { foo => 'bar' };
+
+#=head3 condition_error
+
+#=head3 configuration_error
+
+#=head3 persist_error
+
+#=head3 validation_error
+
+#=head3 workflow_error
 
 =head1 SHORTCUTS
 

@@ -157,27 +157,37 @@ fetches workflow history records.
 
 =head2 Methods
 
-B<create_workflow( $workflow )>
+=head3 create_workflow( $workflow )
 
 Generate an ID for the workflow, serialize the workflow data (ID and
 state) and set the ID in the workflow.
 
-B<update_workflow( $workflow )>
+=head3 update_workflow( $workflow )
 
 Update the workflow state.
 
-B<fetch_workflow( $workflow_id )>
+=head3 fetch_workflow( $workflow_id )
 
 Retrieve the workflow data corresponding to C<$workflow_id>. It not
 found return undef, if found return a hashref with the data.
 
-B<create_history( $workflow, @history )>
+=head3 create_history( $workflow, @history )
 
 Serialize all objects in C<@history> for later retrieval.
 
-B<fetch_history( $workflow )>
+=head3 fetch_history( $workflow )
 
 Return list of L<Workflow::History> objects.
+
+#=head3 assign_generators
+
+#=head3 fetch_extra_workflow_data
+
+#=head3 init
+
+#=head3 init_random_generators
+
+#=head3 init_uuid_generators
 
 =head1 SEE ALSO
 

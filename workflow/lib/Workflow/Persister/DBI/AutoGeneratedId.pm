@@ -99,6 +99,14 @@ B<func_property>
 Property to pass to the DBI 'func()' call to return the ID value. For
 example, if you are using SQLite this would be 'last_insert_rowid'.
 
+=head2 METHODS
+
+#=head3 new
+
+#=head3 pre_fetch_id
+
+#=head3 post_fetch_id
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2004 Chris Winters. All rights reserved.

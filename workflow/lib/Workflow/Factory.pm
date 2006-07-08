@@ -653,13 +653,13 @@ components of the system are instantiated and stored in the factory.
 
 =head2 Public Methods
 
-B<instance()>
+=head3 instance()
 
 The factory is a singleton, this is how you get access to the
 instance. You can also just import the 'FACTORY' constant as in the
 L<SYNOPSIS>.
 
-B<create_workflow( $workflow_type )>
+=head3 create_workflow( $workflow_type )
 
 Create a new workflow of type C<$workflow_type>. This will create a
 new record in whatever persistence mechanism you have associated with
@@ -673,7 +673,7 @@ C<WORKFLOWS ARE OBSERVABLE> in L<Workflow> for more.
 
 Returns: newly created workflow object.
 
-B<fetch_workflow( $workflow_type, $workflow_id )>
+=head3 fetch_workflow( $workflow_type, $workflow_id )
 
 Retrieve a workflow object of type C<$workflow_type> and ID
 C<$workflow_id>. (The C<$workflow_type> is necessary so we can fetch
@@ -690,7 +690,7 @@ Throws exception if no workflow type C<$workflow_type> available.
 
 Returns: L<Workflow> object
 
-B<add_config_from_file( %config_declarations )>
+=head3 add_config_from_file( %config_declarations )
 
 Pass in filenames for the various components you wish to initialize
 using the keys 'action', 'condition', 'persister', 'validator' and
@@ -718,7 +718,7 @@ should be exactly the same.
 Returns: nothing; if we run into a problem parsing one of the files or
 creating the objects it requires we throw a L<Workflow::Exception>.
 
-B<add_config( %config_hashrefs )>
+=head3 add_config( %config_hashrefs )
 
 Similar to C<add_config_from_file()> -- the keys may be 'action',
 'condition', 'persister', 'validator' and/or 'workflow'. But the
@@ -737,7 +737,7 @@ L<Workflow::Exception>.
 
 =head2 Internal Methods
 
-B<save_workflow( $workflow )>
+=head3 save_workflow( $workflow )
 
 Stores the state and current datetime of the C<$workflow> object. This
 is normally called only from the L<Workflow> C<execute_action()>
@@ -745,7 +745,7 @@ method.
 
 Returns: C<$workflow>
 
-B<get_workflow_history( $workflow )>
+=head3 get_workflow_history( $workflow )
 
 Retrieves all L<Workflow::History> objects related to C<$workflow>.
 
@@ -754,7 +754,7 @@ object itself. Under the covers it calls this.
 
 Returns: list of L<Workflow::History> objects
 
-B<get_action( $workflow, $action_name )>
+=head3 get_action( $workflow, $action_name )
 
 Retrieves the action C<$action_name> from workflow C<$workflow>. Note
 that this does not do any checking as to whether the action is proper
@@ -766,21 +766,21 @@ Throws exception if no action with name C<$action_name> available.
 
 Returns: L<Workflow::Action> object
 
-B<get_persister( $persister_name )>
+=head3 get_persister( $persister_name )
 
 Retrieves the persister with name C<$persister_name>.
 
 Throws exception if no persister with name C<$persister_name>
 available.
 
-B<get_condition( $condition_name )>
+=head3 get_condition( $condition_name )
 
 Retrieves the condition with name C<$condition_name>.
 
 Throws exception if no condition with name C<$condition_name>
 available.
 
-B<get_validator( $validator_name )>
+=head3 get_validator( $validator_name )
 
 Retrieves the validator with name C<$validator_name>.
 
@@ -789,7 +789,7 @@ available.
 
 =head2 Internal Configuration Methods
 
-B<_add_workflow_config( @config_hashrefs )>
+=head3 _add_workflow_config( @config_hashrefs )
 
 Adds all configurations in C<@config_hashrefs> to the factory. Also
 cycles through the workflow states and creates a L<Workflow::State>
@@ -802,7 +802,7 @@ to a workflow in L<create_workflow()> and L<fetch_workflow()>.
 
 Returns: nothing
 
-B<_add_action_config( @config_hashrefs )>
+=head3 _add_action_config( @config_hashrefs )
 
 Adds all configurations in C<@config_hashrefs> to the factory, doing a
 'require' on the class referenced in the 'class' attribute of each
@@ -813,7 +813,7 @@ or if we cannot 'require' that class.
 
 Returns: nothing
 
-B<_add_persister_config( @config_hashrefs )>
+=head3 _add_persister_config( @config_hashrefs )
 
 Adds all configurations in C<@config_hashrefs> to the factory, doing a
 'require' on the class referenced in the 'class' attribute of each
@@ -825,7 +825,7 @@ instantiate an object of that class.
 
 Returns: nothing
 
-B<_add_condition_config( @config_hashrefs )>
+=head3 _add_condition_config( @config_hashrefs )
 
 Adds all configurations in C<@config_hashrefs> to the factory, doing a
 'require' on the class referenced in the 'class' attribute of each
@@ -837,7 +837,7 @@ instantiate an object of that class.
 
 Returns: nothing
 
-B<_add_validator_config( @config_hashrefs )>
+=head3 _add_validator_config( @config_hashrefs )
 
 Adds all configurations in C<@config_hashrefs> to the factory, doing a
 'require' on the class referenced in the 'class' attribute of each
@@ -848,6 +848,10 @@ validator, if we cannot 'require' that class, or if we cannot
 instantiate an object of that class.
 
 Returns: nothing
+
+#=head3 associate_observers_with_workflow
+
+#=head3 new
 
 =head1 SUBCLASSING
 

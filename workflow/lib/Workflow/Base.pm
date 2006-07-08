@@ -83,7 +83,7 @@ Provide a constructor and some other useful methods for subclasses.
 
 =head2 Class Methods
 
-B<new( @params )>
+=head3 new( @params )
 
 Just create a new object (blessed hashref) and pass along C<@params>
 to the C<init()> method, which subclasses can override to initialize
@@ -93,12 +93,12 @@ Returns: new object
 
 =head2 Object Methods
 
-B<init( @params )>
+=head3 init( @params )
 
 Subclasses may implement to do initialization. The C<@params> are
 whatever is passed into C<new()>. Nothing need be returned.
 
-B<param( [ $name, $value ] )>
+=head3 param( [ $name, $value ] )
 
 Associate arbitrary parameters with this object.
 
@@ -130,11 +130,11 @@ overwriting any existing value, and return the new value.
 
  $object->param( foo => 'blurney' );
 
-B<clear_params()>
+=head3 clear_params()
 
 Clears out all parameters associated with this object.
 
-B<normalize_array( \@array | $item )>
+=head3 normalize_array( \@array | $item )
 
 If given C<\@array> return it dereferenced; if given C<$item>, return
 it in a list. If given neither return an empty list.

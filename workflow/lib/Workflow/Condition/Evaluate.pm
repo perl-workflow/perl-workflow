@@ -94,12 +94,12 @@ It should provide a good balance.
 
 =head1 OBJECT METHODS
 
-B<new( \%params )>
+=head3 new( \%params )
 
 One of the C<\%params> should be 'test', which contains the text to
 evaluate for truth.
 
-B<evaluate( $wf )>
+=head3 evaluate( $wf )
 
 Evaluate the text passed into the constructor: if the evaluation
 returns a true value then the condition passes; if it throws an

@@ -84,6 +84,10 @@ Key in workflow context to check for data. If not specified we use
 
 =back
 
+=head2 METHODS
+
+#=head3 evaluate
+
 =head1 SEE ALSO
 
 L<Workflow::Condition>

@@ -53,7 +53,7 @@ including its Actions, Conditions and Validators.
 
 =head1 OBJECT METHODS
 
-B<merge( $other_context )>
+=head3 merge( $other_context )
 
 Merges the values from C<$other_context> into this object. If there
 are duplicate keys in this object and C<$other_context>,

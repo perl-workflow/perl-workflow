@@ -165,6 +165,20 @@ use the L<SPOPS::Tool::DateConvert> to translate the 'history_date'
 field into a L<DateTime> object. We assume when we fetch the history
 object that this has already been done.
 
+=head2 METHODS
+
+#=head3 init
+
+#=head3 create_workflow
+
+#=head3 fetch_workflow
+
+#=head3 update_workflow
+
+#=head3 create_history
+
+#=head3 fetch_history
+
 =head1 SEE ALSO
 
 L<Workflow::Persister>

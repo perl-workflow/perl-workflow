@@ -56,6 +56,12 @@ Workflow::Persister::DBI::SequenceId - Persister to fetch ID from a sequence
 
 Implementation for DBI persister to fetch an ID value from a sequence.
 
+=head2 METHODS
+
+#=head3 pre_fetch_id
+
+#=head3 post_fetch_id
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2004 Chris Winters. All rights reserved.

@@ -114,7 +114,7 @@ keep it short!
 
 To create your own condition you should implement the following:
 
-B<_init( \%params )>
+=head3 _init( \%params )
 
 This is optional, but called when the condition is first
 initialized. It may contain information you will want to initialize
@@ -128,11 +128,13 @@ If you do not have sufficient information in C<\%params> you should
 throw an exception (preferably 'configuration_error' imported from
 L<Workflow::Exception>).
 
-B<evaluate( $workflow )>
+=head3 evaluate( $workflow )
 
 Determine whether your condition fails by throwing an exception. You
 can get the application context information necessary to process your
 condition from the C<$workflow> object.
+
+#=head3 init
 
 =head1 COPYRIGHT
 
