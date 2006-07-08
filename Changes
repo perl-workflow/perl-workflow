@@ -2,6 +2,16 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+HEAD
+
+- Changed POD format to accomodate for Pod::Coverage, where B<> is not
+  recognised, but =head<1..3> and =item is
+  
+  So subs are now marked with head3 instead of B<>, I am also of the opinion
+  that titles should be marked as titles and B<> (bold) should be used to
+  emphasize important information in the POD.
+
+
 0.21 Fri Jul  7 23:25:35 CEST 2006 (update not required)
 
 - Fixed bug reported by Martin Bartosch, Workflow::Context's

@@ -2,9 +2,6 @@ TODO file for Workflow
 
 $Id$
 
-- Change POD format to accomodate for Pod::Coverage, where B<> is not
-  recognised, but =head<1..3> and =item is?
-
 - Implement handling of forgotten filename parameter to parse in
   Workflow::Config::Perl, this might have to propagate to Workflow::Config::XML
   also
