@@ -997,6 +997,8 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
+Michael Bell, for patch resulting in 0.22
+
 Martin Bartosch, for bug reporting and giving the solution not even using a
 patch (0.19 to 0.20) and a patch resulting in 0.21
 

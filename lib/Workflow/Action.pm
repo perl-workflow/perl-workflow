@@ -27,12 +27,12 @@ sub add_fields {
 
 sub required_fields {
     my ( $self ) = @_;
-    return grep { $_->{type} eq 'required' } @{ $self->{_fields} };
+    return grep { $_->requirement() eq 'required' } @{ $self->{_fields} };
 }
 
 sub optional_fields {
     my ( $self ) = @_;
-    return grep { $_->{type} eq 'optional' } @{ $self->{_fields} };
+    return grep { $_->requirement() eq 'optional' } @{ $self->{_fields} };
 }
 
 sub fields {
