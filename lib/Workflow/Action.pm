@@ -10,6 +10,7 @@ use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl     qw( get_logger );
 use Workflow::Action::InputField;
+use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 
 $Workflow::Action::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
@@ -102,11 +103,31 @@ sub init {
     $self->name( $copy_params{name} );
     $self->description( $copy_params{description} );
 
+    ## init normal fields
     my @fields = $self->normalize_array( $copy_params{field} );
     foreach my $field_info ( @fields ) {
         $self->add_fields( Workflow::Action::InputField->new( $field_info ) );
     }
 
+    ## establish validator for fields with is_required="yes"
+    @fields = $self->required_fields();
+    my $validator = Workflow::Validator::HasRequiredField->new (
+                    {
+                        name  => 'HasRequiredField for is_required fields',
+                        class => 'Workflow::Validator::HasRequiredField'
+                    });
+    my @args = ();
+    foreach my $field ( @fields ) {
+        next if (not $field); ## empty @fields array
+        push @args, $field->name();
+    }
+    push @{ $self->{_validators} },
+         {
+             validator => $validator,
+             args      => \@args
+         };
+
+    ## init normal validators
     my @validator_info = $self->normalize_array( $copy_params{validator} );
     $self->add_validators( @validator_info );
 

@@ -2,7 +2,10 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-0.22 candidate
+0.22 Fri Aug 18 23:26:55 CEST 2006 (update not required)
+
+- Applied patch from Michael Bell via rt.cpan.org (#20871), this patch also 
+  contains the patch mentioned below.
 
 - Applied patch to Workflow::Action from Michael Bell, fixing two bugs
 
