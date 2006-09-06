@@ -287,9 +287,37 @@
 </file>
 </folder>
 </folder>
+<file url="t/workflow.perl" id="10D8397A396L34f949810x4a6" name="workflow.perl">
+</file>
+<file url="t/workflow_action.perl" id="10D8397A396L48f78d90x4a6" name="workflow_action.perl">
+</file>
+<file url="t/workflow_condition.perl" id="10D8397A396L4d9c64610x4a6" name="workflow_condition.perl">
+</file>
+<file url="t/workflow_errorprone.perl" id="10D8397A396L3a8d65320x4a6" name="workflow_errorprone.perl">
+</file>
+<file url="t/workflow_validator.perl" id="10D8397A397L1eb9286a0x4a6" name="workflow_validator.perl">
+</file>
 </folder>
 <folder url="prototypes" id="10C4836CFFFL35b6e57b0x367a" name="prototypes">
 <file url="prototypes/ref.pl" id="10C4836CF8FL69784a5d0x367a" name="ref.pl">
+</file>
+<file url="prototypes/pod.html" id="10D8397A395L6d3506570x4a6" name="pod.html">
+</file>
+<file url="prototypes/pod.pod" id="10D8397A395L2b5ba9fe0x4a6" name="pod.pod">
+</file>
+<file url="prototypes/XML2Perl.pl" id="10D8397A396L49fdde720x4a6" name="XML2Perl.pl">
+</file>
+</folder>
+<folder url="notes" id="10D8397A39AL68c307470x4a6" name="notes">
+<file url="notes/test_coverage_0.17.txt" id="10D8397A394L4cef1ab0x4a6" name="test_coverage_0.17.txt">
+</file>
+<file url="notes/test_coverage_0.18.txt" id="10D8397A394Lbe971c50x4a6" name="test_coverage_0.18.txt">
+</file>
+<file url="notes/test_coverage_0.20.txt" id="10D8397A394L48b4b4610x4a6" name="test_coverage_0.20.txt">
+</file>
+<file url="notes/test_coverage_0.21.txt" id="10D8397A395L736127820x4a6" name="test_coverage_0.21.txt">
+</file>
+<file url="notes/Workflow.txt" id="10D8397A395Lb49309d0x4a6" name="Workflow.txt">
 </file>
 </folder>
 </project>
