@@ -45,13 +45,17 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
    </condition>
  ...
  
- # Reference the condition in an action...
- <actions>
-    <action name="MyAction" class="My::Action">
-      ... 
-      <condition name="IsAdminUser" />
-    </action>
- ...
+ # Reference the condition in an action of the state/workflow definition...
+ <workflow>
+   <state>
+     ...
+     <action name="MyAction">
+       ... 
+       <condition name="IsAdminUser" />
+     </action>
+   </state>
+   ...
+ </workflow>
   
  # Then implement the condition
  
@@ -93,6 +97,13 @@ Conditions are used by the workflow to see whether actions are
 available in a particular context. So if user A asks the workflow for
 the available actions she might get a different answer than user B
 since they determine separate contexts.
+
+B<NOTE>: The condition is enforced by Workflow::State. This means that
+the condition name must be visible inside of the state definition. If
+you specify the reference to the condition only inside of the full
+action specification in a seperate file then nothing will happen. The
+reference to the condition must be defined inside of the state/workflow
+specification.
 
 =head1 SUBCLASSING
 
