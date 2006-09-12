@@ -5,7 +5,7 @@
 use strict;
 use lib 't';
 use TestUtil;
-use Test::More  tests => 22;
+use Test::More  tests => 26;
 
 require_ok( 'Workflow::Base' );
 
@@ -36,6 +36,15 @@ is( $b->param( 'baz' ), 'quux',
     'Multiple parameter set value 1 ok' );
 is( $b->param( 'blah' ), 'blech',
     'Multiple parameter set value 2 ok' );
+is( $b->delete_param('baz'), 'quux',
+    'Delete one parameter' );
+is( $b->param( 'baz' ), undef,
+    'Parameter call to nonexistent key returns undef' );
+my $list = $b->delete_param(['blah']);
+is ( $list->{'blah'}, 'blech',
+    'Deleted several parameters' );
+is( $b->param( 'blah' ), undef,
+    'Parameter call to nonexistent key returns undef' );
 ok( $b->clear_params,
     'Cleared param call executed ok' );
 is( scalar keys %{ $b->param }, 0,

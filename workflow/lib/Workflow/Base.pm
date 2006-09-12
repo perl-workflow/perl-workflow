@@ -50,6 +50,35 @@ sub param {
     return $self->{PARAMS}{ $name } = $value;
 }
 
+sub delete_param {
+    my ( $self, $name ) = @_;
+    unless ( defined $name ) {
+        ## this is an error - perhaps an exception is too radical
+        return undef;
+    }
+
+    # Allow multiple parameters to be deleted at once...
+
+    if ( ref $name eq 'ARRAY' ) {
+        my %list = ();
+        foreach my $param_name ( @{ $name } ) {
+	    next if (not exists $self->{PARAMS}{ $param_name });
+	    $list{$param_name} = $self->{PARAMS}{ $param_name }; 
+            delete $self->{PARAMS}{ $param_name }
+        }
+        return { %list };
+    }
+
+    if ( exists $self->{PARAMS}{ $name } ) {
+        my $value = $self->{PARAMS}{ $name };
+	delete $self->{PARAMS}{ $name };
+        return $value;
+    }
+
+    ## this is an error - perhaps an exception is too radical
+    return undef;
+}
+
 sub clear_params {
     my ( $self ) = @_;
     $self->{PARAMS} = {};
@@ -129,6 +158,29 @@ If C<$name> and C<$value> given, associate C<$name> with C<$value>,
 overwriting any existing value, and return the new value.
 
  $object->param( foo => 'blurney' );
+
+=head3 delete_param( [ $name ] )
+
+Delete parameters from this object.
+
+If C<$name> given and it is an array reference, then delete all
+parameters from this object. All deleted parameters will be returned
+as a hash reference together with their values.
+
+ my $deleted = $object->delete_param(['foo','baz']);
+ foreach my $key (keys %{$deleted})
+ {
+   print $key."::=".$deleted->{$key}."\n";
+ }
+
+If C<$name> given and it is not an array reference, delete the
+parameter and return the value of the parameter.
+
+ my $value = $object->delete_param( 'foo' );
+ print "Value of 'foo' was '$value'\n";
+
+If C<$name> is not defined or C<$name> does not exists the
+undef is returned.
 
 =head3 clear_params()
 
