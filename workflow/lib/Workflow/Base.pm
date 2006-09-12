@@ -28,7 +28,7 @@ sub init { return }
 
 sub param {
     my ( $self, $name, $value ) = @_;
-    unless ( $name ) {
+    unless ( defined $name ) {
         return { %{ $self->{PARAMS} } };
     }
 
@@ -41,7 +41,7 @@ sub param {
         return { %{ $self->{PARAMS} } };
     }
 
-    unless ( $value ) {
+    unless ( defined $value ) {
         if ( exists $self->{PARAMS}{ $name } ) {
             return $self->{PARAMS}{ $name };
         }
