@@ -64,7 +64,7 @@ sub get_action_fields {
 
 
 sub execute_action {
-    my ( $self, $action_name ) = @_;
+    my ( $self, $action_name , $autorun ) = @_;
     $log ||= get_logger();
 
     # This checks the conditions behind the scenes, so there's no
@@ -116,10 +116,11 @@ sub execute_action {
         die $error;
     }
 
-    $self->notify_observers( 'execute', $old_state );
+    $self->notify_observers( 'execute', $old_state, $action_name, $autorun );
 
     if ( $old_state ne $new_state ) {
-        $self->notify_observers( 'state change', $old_state );
+        $self->notify_observers( 'state change', $old_state,
+                                 $action_name, $autorun );
     }
 
     my $new_state_obj = $self->_get_workflow_state;
@@ -301,7 +302,7 @@ sub _auto_execute_state {
     $log->is_debug &&
         $log->debug( "Found action '$action_name' to execute in ",
                      "autorun state ", $wf_state->state );
-    $self->execute_action( $action_name );
+    $self->execute_action( $action_name , 1 );
 }
 
 1;
@@ -734,8 +735,11 @@ No additional parameters.
 B<execute> - Issued after a workflow is successfully executed and
 saved.
 
-Adds the parameter C<$old_state> which includes the state of the
-workflow before the action was executed.
+Adds the parameters C<$old_state>, C<$action_name> and C<$autorun>.
+C<$old_state> includes the state of the workflow before the action
+was executed, C<$action_name> is the action name that was executed and
+C<$autorun> is set to 1 if the action just executed was started
+using autorun.
 
 =item *
 
@@ -743,8 +747,10 @@ B<state change> - Issued after a workflow is successfully executed,
 saved and results in a state change. The event will not be fired if
 you executed an action that did not result in a state change.
 
-Adds the parameter C<$old_state> which includes the state of the
-workflow before the action was executed.
+Adds the parameters C<$old_state>, C<$action> and C<$autorun>.
+C<$old_state> includes the state of the workflow before the action
+was executed, C<$action> is the action name that was executed and
+C<$autorun> is set to 1 if the action just executed was autorun.
 
 =item *
 
@@ -791,20 +797,23 @@ than the entire system.
 
 =head2 Object Methods
 
-=head3 execute_action( $action_name )
+=head3 execute_action( $action_name, $autorun )
 
 Execute the action C<$action_name>. Typically this changes the state
 of the workflow. If C<$action_name> is not in the current state, fails
 one of the conditions on the action, or fails one of the validators on
-the action an exception is thrown.
+the action an exception is thrown. $autorun is used internally and
+is set to 1 if the action was executed using autorun.
 
 After the action has been successfully executed and the workflow saved
-we issue a 'execute' observation with the old state as an additional
-parameter. So if you wanted to write an observer you could create a
+we issue a 'execute' observation with the old state, action name and
+an autorun flag as additional parameters. 
+So if you wanted to write an observer you could create a
 method with the signature:
 
  sub update {
-     my ( $class, $workflow, $action, $old_state ) = @_;
+     my ( $class, $workflow, $action, $old_state, $action_name, $autorun )
+        = @_;
      if ( $action eq 'execute' ) { .... }
  }
 
@@ -996,6 +1005,8 @@ Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
+
+Alexander Klink, for patch resulting in 0.23
 
 Michael Bell, for patch resulting in 0.22
 
