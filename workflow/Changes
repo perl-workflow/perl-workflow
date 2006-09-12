@@ -2,6 +2,21 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.23 Tue Sep 12 16:54:25 CEST 2006 (update not required)
+
+- Applied patch from Michael Bell via rt.cpan.org (#21100)
+  Fixes problem with handling of 0 and empty strings as parameters
+  
+- Applied patch from Michael Bell via rt.cpan.org (#21101)
+  Fixes problem with deletion of parameters
+
+- Applied yet another patch from Michael Bell via rt.cpan.org (#21099)
+  The patch fixes some misinforming POD  
+
+- Applied patch from Alexander Klink via rt.cpan.org (#21422)
+  The patch implement more powerful observers
+
+
 0.22 Fri Aug 18 23:26:55 CEST 2006 (update not required)
 
 - Applied patch from Michael Bell via rt.cpan.org (#20871), this patch also 
