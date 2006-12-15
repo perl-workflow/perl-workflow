@@ -2,6 +2,12 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.25 Thu Dec 14 09:11:57 CET 2006 (update not required)
+
+- Applied patch from Alexander Klink via rt.cpan.org (#23736)
+  Introduces caching of the result of a condition's evaluate()
+
+
 0.24 Thu Dec 14 08:55:05 CET 2006 (update not required)
 
 - Applied patch from Alexander Klink via rt.cpan.org (#23925)

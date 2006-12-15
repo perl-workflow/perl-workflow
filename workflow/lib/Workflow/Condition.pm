@@ -49,9 +49,17 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
  <workflow>
    <state>
      ...
-     <action name="MyAction">
+     <action name="SomeAdminAction">
        ... 
        <condition name="IsAdminUser" />
+     </action>
+     <action name="AnotherAdminAction">
+      ...
+      <condition name="IsAdminUser" />
+     </action>
+     <action name="AUserAction">
+      ...
+      <condition name="!IsAdminUser" />
      </action>
    </state>
    ...
@@ -146,6 +154,24 @@ can get the application context information necessary to process your
 condition from the C<$workflow> object.
 
 #=head3 init
+
+=head2 Caching and inverting the result
+
+If in one state, you ask for the same condition again, Workflow uses
+the cached result, so that within one list of available actions, you
+will get a consistent view. Note that if we would not use caching,
+this might not necessary be the case, as something external might
+change between the two evaluate() calls.
+
+Caching is also used with an inverted condition, which you can specify
+in the definition using C<<condition name="!some_condition">>.
+This condition returns exactly the opposite of the original one, i.e.
+if the original condition fails, this one does not and the other way
+round. As caching is used, you can model "yes/no" decisions using this
+feature - if you have both C<<condition name="some_condition">> and
+C<<condition name="!some_condition">> in your workflow state definition,
+exactly one of them will succeed and one will fail - which is particularly
+useful if you use "autorun" a lot.
 
 =head1 COPYRIGHT
 

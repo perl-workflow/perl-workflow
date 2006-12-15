@@ -342,7 +342,7 @@ Workflow - Simple, flexible system to implement workflows
          <action name="upload file" resulting_state="uploaded" />
      </state>
      <state name="uploaded" autorun="yes">
-         <action name="verify file" resulting_state="annotate">
+         <action name="verify file" resulting_state="verified file">
               <!-- everyone other than 'CWINTERS' must verify -->
               <condition test="$context->{user} ne 'CWINTERS'" />
          </action>
@@ -350,9 +350,12 @@ Workflow - Simple, flexible system to implement workflows
               <condition test="$context->{user} eq 'CWINTERS'" />
          </action>
      </state>
-     <state name="verify file">
+     <state name="verified file">
          <action name="annotate">
              <condition name="can_annotate" />
+         </action>
+         <action name="null">
+             <condition name="!can_annotate" />
          </action>
      </state>
      <state name="annotated" autorun="yes" may_stop="yes">
@@ -1022,7 +1025,7 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
-Alexander Klink, for: patch resulting in 0.23 and 0.24
+Alexander Klink, for: patches resulting in 0.23, 0.24 and 0.25
 
 Michael Bell, for patch resulting in 0.22
 

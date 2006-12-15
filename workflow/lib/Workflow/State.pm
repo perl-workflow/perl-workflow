@@ -64,14 +64,101 @@ sub evaluate_action {
 
     my @conditions = $self->get_conditions( $action_name );
     foreach my $condition ( @conditions ) {
-        my $condition_name = $condition->name;
+        my $condition_name;
+        if (exists $condition->{name}) { # hash only, no object
+            $condition_name = $condition->{name};
+        }
+        else {
+           $condition_name = $condition->name;
+        }
+        my $orig_condition = $condition_name;
+        my $opposite = 0;
+            
         $log->is_debug &&
-            $log->debug( "Evaluating condition '$condition_name'" );
-        eval { $condition->evaluate( $wf ) };
-        if ( $@ ) {
-            # TODO: We may just want to pass the error up without wrapping it...
-            workflow_error "No access to action '$action_name' in ",
-                           "state '$state' because: $@";
+            $log->debug( "Checking condition $condition_name" );
+
+        if ($condition_name =~ m{ \A ! }xms) {
+            # this condition starts with a '!' and is thus supposed
+            # to return the opposite of an original condition, whose
+            # name is the same except for the '!'
+            $orig_condition =~ s{ \A ! }{}xms;
+            $opposite = 1; 
+            $log->is_debug &&
+                $log->debug( "Condition starts with a !: '$condition_name'" );
+        }
+        
+        if (exists $self->{'_condition_result_cache'}->{$orig_condition}) {
+            # The condition has already been evaluated and the result
+            # has been cached
+            $log->is_debug &&
+                $log->debug( "Condition has been cached: '$orig_condition', cached result: ", $self->{'_condition_result_cache'}->{$orig_condition} );
+            if (! $opposite) {
+                $log->is_debug &&
+                    $log->debug( "Opposite is false." );
+                if (! $self->{'_condition_result_cache'}->{$orig_condition}) {
+                    $log->is_debug &&
+                        $log->debug( "Cached condition result is false." );
+                    workflow_error "No access to action '$action_name' in ",
+                                   "state '$state' because cached ",
+                                   "condition 'orig_condition' already ",
+                                   "failed before.";
+                }
+            }
+            else {
+                # we have to return an error if the original cached
+                # condition did NOT fail
+                $log->is_debug &&
+                    $log->debug( "Opposite is true." );
+                if ($self->{'_condition_result_cache'}->{$orig_condition}) {
+                    $log->is_debug &&
+                        $log->debug( "Cached condition is true." );
+                    workflow_error "No access to action '$action_name' in ",
+                                   "state '$state' because cached ",
+                                   "condition '$orig_condition' did NOT ",
+                                   "fail before and we are being asked ",
+                                   "for the opposite.";
+                }
+            } 
+        }
+        else {
+            # we did not evaluate the condition yet, we have to do
+            # it now
+            if ($opposite) {
+                # so far, the condition is just a hash containing a
+                # name. As the result has not been cached, we have
+                # to get the real condition with the original
+                # condition name and evaluate that
+                $condition = FACTORY->get_condition( $orig_condition );
+            }
+            $log->is_debug &&
+                $log->debug( q{Evaluating condition '}, $condition->name, q{'} );
+            eval { $condition->evaluate( $wf ) };
+            if ( $@ ) {
+                # TODO: We may just want to pass the error up 
+                # without wrapping it...
+                $self->{'_condition_result_cache'}->{$orig_condition} = 0;
+                if (! $opposite) {
+                    workflow_error "No access to action '$action_name' in ",
+                                   "state '$state' because: $@";
+                }
+                else {
+                    $log->is_debug &&
+                        $log->debug( "Opposite and condition failed" );
+                }
+            }
+            else {
+                $self->{'_condition_result_cache'}->{$orig_condition} = 1;
+                if ($opposite) {
+                    workflow_error "No access to action '$action_name' in ",
+                                   "state '$state' because condition ",
+                                   "$orig_condition did NOT fail and we ",
+                                   "are checking $condition_name.";
+                } 
+                else {
+                    $log->is_debug &&
+                        $log->debug(" Opposite false and condition OK");
+                }
+            }
         }
         $log->is_debug &&
             $log->debug( "Condition '$condition_name' evaluated successfully" );
@@ -247,9 +334,19 @@ sub _create_condition_objects {
             });
         }
         else {
-            $log->is_info &&
-                $log->info( "Fetching condition '$condition_info->{name}'" );
-            push @condition_objects, FACTORY->get_condition( $condition_info->{name} );
+            if ( $condition_info->{name} =~ m{ \A ! }xms ) {
+                $log->is_debug &&
+                    $log->debug( "Condition starts with !, pushing hash with name only" );
+                # push a hashref only, not a real object
+                # the real object will be gotten from the factory
+                # if needed in evaluate_action
+                push @condition_objects, { 'name' => $condition_info->{name} };
+            }
+            else {
+                $log->is_info &&
+                    $log->info( "Fetching condition '$condition_info->{name}'" );
+                push @condition_objects, FACTORY->get_condition( $condition_info->{name} );
+            }
         }
     }
     return @condition_objects;
