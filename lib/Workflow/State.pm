@@ -130,6 +130,18 @@ sub autorun {
     return ( $self->{autorun} eq 'yes' );
 }
 
+sub may_stop {
+    my ( $self, $setting ) = @_;
+    if ( defined $setting ) {
+        if ( $setting =~ /^(true|1|yes)$/i ) {
+            $self->{may_stop} = 'yes';
+        }
+        else {
+            $self->{may_stop} = 'no';
+        }
+    }
+    return ( $self->{may_stop} eq 'yes' );
+}
 
 ########################################
 # INTERNAL
@@ -151,6 +163,12 @@ sub init {
     }
     else {
         $self->autorun( 'no' );
+    }
+    if ( $config->{may_stop} ) {
+        $self->may_stop( $config->{may_stop} );
+    }
+    else {
+        $self->may_stop( 'no' );
     }
     foreach my $state_action_config ( @{ $config->{action} } ) {
         my $action_name = $state_action_config->{name};
@@ -327,6 +345,16 @@ means that only one action is available when the state is entered. For
 example, you might have two actions with mutually exclusive conditions
 within the autorun state.
 
+If no action or more than one action is available at the time the
+workflow enters an autorun state, Workflow will throw an error. There
+are some conditions where this might not be what you want. For example
+when you have a state which contains an action that depends on some
+condition. If it is true, you might be happy to move on to the next
+state, but if it is not, you are fine to come back and try again later
+if the action is available. This behaviour can be achived by setting the
+'may_stop' property to yes, which will cause Workflow to just quietly
+stop automatic execution if it does not have a single action to execute.
+ 
 =head1 PUBLIC METHODS
 
 =head3 get_conditions( $action_name )
@@ -399,11 +427,16 @@ Description of this state (optional).
 Returns true if the state should be automatically run, false if
 not. To set to true the property value should be 'yes', 'true' or 1.
 
+=head3 may_stop
+
+Returns true if the state may stop automatic execution silently, false
+if not. To set to true the property value should be 'yes', 'true' or 1.
+
 =head1 INTERNAL METHODS
 
 =head3 init( $config )
 
-Assigns 'state', 'description', and 'autorun' properties from
+Assigns 'state', 'description', 'autorun' and 'may_stop' properties from
 C<$config>. Also assigns configuration for all actions in the state,
 performing some sanity checks like ensuring every action has a
 'resulting_state' key.
