@@ -298,11 +298,25 @@ sub _get_next_state {
 sub _auto_execute_state {
     my ( $self, $wf_state ) = @_;
     $log ||= get_logger();
-    my $action_name = $wf_state->get_autorun_action_name( $self );
-    $log->is_debug &&
-        $log->debug( "Found action '$action_name' to execute in ",
-                     "autorun state ", $wf_state->state );
-    $self->execute_action( $action_name , 1 );
+    my $action_name;
+    eval {
+        $action_name = $wf_state->get_autorun_action_name( $self );
+    };
+    if ( $@ ) { # we found an error, possibly more than one or none action
+                # are available in this state
+        if ( ! $wf_state->may_stop() ) {
+            # we are in autorun, but stopping is not allowed, so
+            # rethrow
+            my $error = $@;
+            $error->rethrow();
+        }
+    }
+    else { # everything is fine, execute action
+        $log->is_debug &&
+            $log->debug( "Found action '$action_name' to execute in ",
+                         "autorun state ", $wf_state->state );
+        $self->execute_action( $action_name , 1 );
+    }
 }
 
 1;
@@ -341,8 +355,10 @@ Workflow - Simple, flexible system to implement workflows
              <condition name="can_annotate" />
          </action>
      </state>
-     <state name="annotated">
-         <action name="null" resulting_state="finished" />
+     <state name="annotated" autorun="yes" may_stop="yes">
+         <action name="null" resulting_state="finished">
+            <condition name="completed" />
+         </action>
      </state>
      <state name="finished" />
  </workflow>
@@ -1006,7 +1022,7 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
-Alexander Klink, for patch resulting in 0.23
+Alexander Klink, for: patch resulting in 0.23 and 0.24
 
 Michael Bell, for patch resulting in 0.22
 

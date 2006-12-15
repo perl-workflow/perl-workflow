@@ -2,6 +2,16 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.24 Thu Dec 14 08:55:05 CET 2006 (update not required)
+
+- Applied patch from Alexander Klink via rt.cpan.org (#23925)
+  Introducces may_stop property for autorunning workflow
+  
+  This is why this patch introduces the "may_stop" property for a state,
+  which means that Workflow won't complain if the state is autorun and
+  no or too many activities are present.
+
+
 0.23 Tue Sep 12 16:54:25 CEST 2006 (update not required)
 
 - Applied patch from Michael Bell via rt.cpan.org (#21100)
