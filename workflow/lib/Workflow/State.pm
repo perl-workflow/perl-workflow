@@ -194,7 +194,7 @@ sub get_autorun_action_name {
     my $pre_error = "State '$state' should be automatically executed but ";
     if ( scalar @actions > 1 ) {
         workflow_error "$pre_error there are multiple actions available ",
-                       "for execution. Actions are: ", join( @actions, ', ' );
+                       "for execution. Actions are: ", join( ', ', @actions );
     }
     if ( scalar @actions == 0 ) {
         workflow_error "$pre_error there are no actions available for execution.";
