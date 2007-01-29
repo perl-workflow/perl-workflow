@@ -2,6 +2,14 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+- Fixed bug in cached condition handling. The condition cache is now
+  cleared before checking conditions so that the condition results are
+  not taken from the cache when entering the same state again
+
+- Fixed small bug in the error message when autorunning is enabled
+  but more than one action is available (now displays the names of
+  these actions correctly)
+
 0.25 Thu Dec 14 09:11:57 CET 2006 (update not required)
 
 - Applied patch from Alexander Klink via rt.cpan.org (#23736)
