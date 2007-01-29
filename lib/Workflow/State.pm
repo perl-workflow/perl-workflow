@@ -53,6 +53,15 @@ sub is_action_available {
     return ( ! $@ );
 }
 
+sub clear_condition_cache {
+    my ($self) = @_;
+    foreach my $condition (keys %{ $self->{'_condition_result_cache'} }) {
+        delete $self->{'_condition_result_cache'}->{$condition};
+        $log->is_debug &&
+            $log->debug( "Deleted cached condition result for $condition" );
+    } 
+}
+
 sub evaluate_action {
     my ( $self, $wf, $action_name ) = @_;
     $log ||= get_logger();
@@ -61,6 +70,8 @@ sub evaluate_action {
 
     # NOTE: this will throw an exception if C<$action_name> is not
     # contained in this state, so there's no need to do it explicitly
+
+    $self->clear_condition_cache();
 
     my @conditions = $self->get_conditions( $action_name );
     foreach my $condition ( @conditions ) {
