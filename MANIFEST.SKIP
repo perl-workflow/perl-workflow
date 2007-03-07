@@ -3,6 +3,7 @@
 \bCVS\b
 ,v$
 \B\.svn\b
+.cvsignore
 
 # Avoid Makemaker generated and utility files.
 \bMakefile$
@@ -21,6 +22,7 @@
 \.tmp$
 \.old$
 \.bak$
+\.swp$
 \#$
 \.\#
 
@@ -28,6 +30,7 @@
 ^notes
 ^prototypes
 ^bin
+TODO.txt
 
 # Komodo
 \.kpf
@@ -37,3 +40,9 @@
 
 # Avoid coverage stuff
 ^cover_db
+
+# Avoid OS-specific files/dirs
+#   Mac OSX metadata
+\B\.DS_Store
+#   Mac OSX SMB mount metadata files
+\B\._
