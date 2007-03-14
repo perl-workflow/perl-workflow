@@ -2,6 +2,19 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+HEAD
+
+- Updated MANIFEST
+
+- Added t/03_pod-coverage.t, de facto POD coverage test, set the
+  environment variable TEST_POD to enable the test
+  
+  Currently we have BAD POD coverage so the test fails.
+  
+- Added t/02_pod.t, de facto POD syntax test, set the environment
+  variable TEST_POD to enable the test
+  
+
 0.26 Wed Mar  7 09:25:06 CET 2007 (update not required unless you are using 0.25)
 
 - Fixed bug in cached condition handling. The condition cache is now

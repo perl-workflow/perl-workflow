@@ -75,6 +75,8 @@ struct/workflow_mysql.sql
 struct/workflow_other.sql
 struct/workflow_pg.sql
 struct/workflow_sqlite.sql
+t/02_pod.t
+t/03_pod-coverage.t
 t/action.t
 t/action_field.t
 t/action_null.t
