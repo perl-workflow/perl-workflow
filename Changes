@@ -4,6 +4,14 @@ Revision history for Perl extension Workflow
 
 HEAD
 
+- Fixed a problem in t/workflow.t which rely on DBI. DBI is not necessarily 
+  present, since this is not a requirement (DBD::Mock is), so I have made
+  the test conditional as to whether DBI is installed as for some of the
+  other tests.
+  
+  This should address the 'N/A' status, ref:
+  http://www.nntp.perl.org/group/perl.cpan.testers/2007/05/msg492425.html
+
 - Updated MANIFEST
 
 - Added t/03_pod-coverage.t, de facto POD coverage test, set the

@@ -5,7 +5,14 @@
 use strict;
 use lib 't';
 use TestUtil;
-use Test::More  tests => 32;
+use Test::More;
+
+eval "require DBI";
+if ( $@ ) {
+    plan skip_all => 'DBI not installed';
+} else {
+	plan tests => 32;
+}
 
 require_ok( 'Workflow' );
 
