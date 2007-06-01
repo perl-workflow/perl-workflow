@@ -2,6 +2,12 @@ TODO file for Workflow
 
 $Id$
 
+- Should we add DBI as a requirement, our tests seem to rely on it's
+  presence and currently it seems to be required via our dependency 
+  on DBD::Mock, but a more explicit requirement might be in order?
+  
+  Then again we do support persisters, which are not DBI related.
+
 - Implement handling of forgotten filename parameter to parse in
   Workflow::Config::Perl, this might have to propagate to Workflow::Config::XML
   also
