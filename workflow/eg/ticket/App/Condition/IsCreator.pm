@@ -8,7 +8,7 @@ use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( condition_error );
 use Workflow::Factory   qw( FACTORY );
 
-$App::Condition::IsCreator::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$App::Condition::IsCreator::VERSION = '1.02';
 
 my ( $log );
 

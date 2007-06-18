@@ -9,7 +9,7 @@ use Workflow::Exception qw( condition_error );
 
 my ( $log );
 
-$App::Condition::HasUserAndTicket::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$App::Condition::HasUserAndTicket::VERSION = '1.02';
 
 sub evaluate {
     my ( $self, $wf ) = @_;

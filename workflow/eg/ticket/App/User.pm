@@ -4,7 +4,7 @@ package App::User;
 
 use strict;
 
-$App::User::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$App::User::VERSION = '1.01';
 
 my %USERS = (
     Stu => 'Stu Nahan',

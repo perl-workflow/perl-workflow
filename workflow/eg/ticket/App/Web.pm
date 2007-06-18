@@ -1,6 +1,7 @@
 package App::Web;
 
 use strict;
+use vars qw($VERSION);
 use CGI::Cookie;
 use Cwd                   qw( cwd );
 use Data::Dumper          qw( Dumper );
@@ -9,6 +10,8 @@ use Log::Log4perl         qw( get_logger );
 use Template;
 use Workflow::Factory     qw( FACTORY );
 use XML::Simple           qw( :strict );
+
+$VERSION = '0.01';
 
 # Default logfile name; can change with arg to init_logger()
 my $DEFAULT_LOG_FILE = 'workflow.log';
