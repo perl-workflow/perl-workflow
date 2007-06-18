@@ -7,7 +7,7 @@ use base qw( Workflow::Config );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::XML::VERSION = '1.04';
+$Workflow::Config::XML::VERSION = '1.05';
 
 my ( $log );
 
@@ -49,7 +49,13 @@ sub parse {
         my $file_name = ( ref $item ) ? '[scalar ref]' : $item;
         $log->is_info &&
             $log->info( "Will parse '$type' XML config file '$file_name'" );
-        my $this_config = $self->_translate_xml( $type, $item );
+        my $this_config;
+        eval{
+            $this_config = $self->_translate_xml( $type, $item );
+        };
+        # If processing multiple config files, this makes it much easier
+        # to find a problem.
+        die "Processing $file_name: $@" if $@;
         $log->is_info &&
             $log->info( "Parsed XML '$file_name' ok" );
         if ( ref $this_config->{ $type } eq 'ARRAY' ) {

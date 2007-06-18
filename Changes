@@ -7,7 +7,10 @@ HEAD
 - Added t/00_load.t, de facto usage syntax test catches compilation
   errors etc.
 
-- Applied patch from Jim Brandt to Workflow::Config::XML
+- Applied patch from Jim Brandt to Workflow::Config::XML, the patch helps to
+  catch bad XML
+
+  Updated version to 1.05
 
 - Hard coded latest versions from CPAN to all modules, Subversion uses different
   scheme so we no longer use automatically updated version number.
