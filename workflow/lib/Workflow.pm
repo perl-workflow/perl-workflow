@@ -1025,7 +1025,9 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
-Alexander Klink, for: patches resulting in 0.23, 0.24 and 0.25
+Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27/candidate
+
+Alexander Klink, for: patches resulting in 0.23, 0.24, 0.25 and 0.26
 
 Michael Bell, for patch resulting in 0.22
 
