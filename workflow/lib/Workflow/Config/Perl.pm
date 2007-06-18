@@ -8,7 +8,7 @@ use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use Data::Dumper        qw( Dumper );
 
-$Workflow::Config::Perl::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Config::Perl::VERSION = '1.02';
 
 my ( $log );
 

@@ -5,7 +5,7 @@ package Workflow::Context;
 use strict;
 use base qw( Workflow::Base );
 
-$Workflow::Context::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Context::VERSION = '1.05';
 
 sub merge {
     my ( $self, $other ) = @_;

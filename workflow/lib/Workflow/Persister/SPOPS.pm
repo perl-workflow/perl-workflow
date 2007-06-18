@@ -8,7 +8,7 @@ use DateTime;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 
-$Workflow::Persister::SPOPS::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Persister::SPOPS::VERSION = '1.07';
 
 my @FIELDS = qw( workflow_class history_class );
 __PACKAGE__->mk_accessors( @FIELDS );

@@ -9,7 +9,7 @@ use Workflow::Condition::Evaluate;
 use Workflow::Exception qw( workflow_error );
 use Workflow::Factory   qw( FACTORY );
 
-$Workflow::State::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::State::VERSION = '1.13';
 
 my @FIELDS = qw( state description );
 __PACKAGE__->mk_accessors( @FIELDS );

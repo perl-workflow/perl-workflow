@@ -5,7 +5,7 @@ package Workflow::Persister::UUID;
 use strict;
 use Data::UUID;
 
-$Workflow::Persister::UUID::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Persister::UUID::VERSION = '1.03';
 
 sub new {
     my ( $class, $params ) = @_;

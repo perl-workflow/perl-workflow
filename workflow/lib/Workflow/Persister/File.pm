@@ -10,7 +10,7 @@ use Log::Log4perl         qw( get_logger );
 use Workflow::Exception   qw( configuration_error persist_error );
 use Workflow::Persister::RandomId;
 
-$Workflow::Persister::File::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Persister::File::VERSION = '1.10';
 
 my @FIELDS = qw( path );
 __PACKAGE__->mk_accessors( @FIELDS );

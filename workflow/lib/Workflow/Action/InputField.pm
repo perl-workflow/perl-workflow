@@ -7,7 +7,7 @@ use base qw( Class::Accessor );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Action::InputField::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Action::InputField::VERSION = '1.09';
 
 my @FIELDS = qw( name label description type requirement source_class source_list );
 __PACKAGE__->mk_accessors( @FIELDS );

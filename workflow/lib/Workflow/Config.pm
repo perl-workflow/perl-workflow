@@ -8,7 +8,7 @@ use Data::Dumper        qw( Dumper );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Config::VERSION = '1.11';
 
 my %VALID_TYPES = map { $_ => 1 } qw( action condition persister validator workflow );
 

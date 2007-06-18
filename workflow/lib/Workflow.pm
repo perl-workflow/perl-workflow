@@ -13,7 +13,7 @@ use Workflow::Factory   qw( FACTORY );
 my @FIELDS = qw( id type description state last_update );
 __PACKAGE__->mk_accessors( @FIELDS );
 
-$Workflow::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::VERSION  = '1.32';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 

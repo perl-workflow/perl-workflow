@@ -35,7 +35,7 @@ my %TYPE_CLASSES = (
     workflow_error      => 'Workflow::Exception',
 );
 
-$Workflow::Exception::VERSION   = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Exception::VERSION   = '1.08';
 @Workflow::Exception::ISA       = qw( Exporter Exception::Class::Base );
 @Workflow::Exception::EXPORT_OK = keys %TYPE_CLASSES;
 

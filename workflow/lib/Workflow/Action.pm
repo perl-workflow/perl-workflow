@@ -13,7 +13,7 @@ use Workflow::Action::InputField;
 use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 
-$Workflow::Action::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Action::VERSION = '1.09';
 
 my @FIELDS = qw( name class description );
 __PACKAGE__->mk_accessors( @FIELDS );

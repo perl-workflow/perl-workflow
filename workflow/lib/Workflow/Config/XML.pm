@@ -7,7 +7,7 @@ use base qw( Workflow::Config );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::XML::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Config::XML::VERSION = '1.04';
 
 my ( $log );
 

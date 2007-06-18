@@ -8,7 +8,7 @@ use DateTime;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 
-$Workflow::Factory::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Factory::VERSION = '1.18';
 
 my ( $log );
 my ( %INSTANCES );
