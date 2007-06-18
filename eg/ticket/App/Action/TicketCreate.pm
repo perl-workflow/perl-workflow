@@ -9,7 +9,7 @@ use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( persist_error );
 use Workflow::Factory   qw( FACTORY );
 
-$App::Action::TicketCreate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$App::Action::TicketCreate::VERSION = '1.06';
 
 sub execute {
     my ( $self, $wf ) = @_;

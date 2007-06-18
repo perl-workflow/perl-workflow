@@ -2,10 +2,13 @@ package App::Ticket;
 
 use strict;
 use base qw( Class::Accessor );
+use vars qw($VERSION);
 use Data::Dumper      qw( Dumper );
 use DateTime::Format::Strptime;
 use Log::Log4perl     qw( get_logger );
 use Workflow::Factory qw( FACTORY );
+
+$VERSION = '0.01';
 
 my @FIELDS = qw( ticket_id type subject description creator
                  status due_date last_update );
