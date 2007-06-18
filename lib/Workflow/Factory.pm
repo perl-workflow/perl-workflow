@@ -20,7 +20,7 @@ sub import {
     $class = ref $class || $class; # just in case
     my $package = caller;
 
-    if ( $_[0] eq 'FACTORY' ) {
+    if ( defined $_[0] && $_[0] eq 'FACTORY' ) {
         $log->is_debug &&
             $log->debug( "Trying to import 'FACTORY' of type '$class' to '$package'" );
         shift;
