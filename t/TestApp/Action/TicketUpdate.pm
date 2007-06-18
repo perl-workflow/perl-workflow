@@ -6,7 +6,7 @@ use strict;
 use base qw( Workflow::Action );
 use Log::Log4perl qw( get_logger );
 
-$TestApp::Action::TicketUpdate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$TestApp::Action::TicketUpdate::VERSION = '1.05';
 
 sub execute {
     my ( $self, $wf ) = @_;

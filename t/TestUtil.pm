@@ -3,8 +3,11 @@ package TestUtil;
 # $Id$
 
 use strict;
+use vars qw($VERSION);
 use DateTime;
 use Test::More;
+
+$VERSION = '0.01';
 
 my ( $original_dir );
 

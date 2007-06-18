@@ -1,9 +1,12 @@
 package App::Web;
 
 use strict;
+use vars qw($VERSION);
 use Log::Log4perl     qw( get_logger );
 use Workflow::Factory qw( FACTORY );
 use XML::Simple       qw( :strict );
+
+$VERSION = '0.01';
 
 my ( $log );
 
