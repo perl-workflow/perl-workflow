@@ -5,7 +5,7 @@ package Workflow::Condition;
 use strict;
 use base qw( Workflow::Base );
 
-$Workflow::Condition::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Condition::VERSION = '1.07';
 
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors( @FIELDS );

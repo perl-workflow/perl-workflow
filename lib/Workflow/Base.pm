@@ -6,7 +6,7 @@ use strict;
 use base qw( Class::Accessor );
 use Log::Log4perl;
 
-$Workflow::Base::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Base::VERSION  = '1.08';
 
 sub new {
     my ( $class, @params ) = @_;

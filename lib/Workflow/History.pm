@@ -6,7 +6,7 @@ use strict;
 use base qw( Class::Accessor );
 use DateTime;
 
-$Workflow::History::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::History::VERSION = '1.09';
 
 my @FIELDS = qw( id workflow_id action description date user state );
 __PACKAGE__->mk_accessors( @FIELDS );

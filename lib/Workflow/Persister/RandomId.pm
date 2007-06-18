@@ -5,7 +5,7 @@ package Workflow::Persister::RandomId;
 use strict;
 use base qw( Class::Accessor );
 
-$Workflow::Persister::RandomId::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Persister::RandomId::VERSION = '1.03';
 
 my @FIELDS = qw( id_length );
 __PACKAGE__->mk_accessors( @FIELDS );

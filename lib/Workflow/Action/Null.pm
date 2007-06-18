@@ -5,7 +5,7 @@ package Workflow::Action::Null;
 use strict;
 use base qw( Workflow::Action );
 
-$Workflow::Action::Null::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Action::Null::VERSION = '1.03';
 
 sub execute {
     my ( $self ) = @_;

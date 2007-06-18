@@ -7,7 +7,7 @@ use base qw( Workflow::Persister::DBI );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 
-$Workflow::Persister::DBI::ExtraData::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Workflow::Persister::DBI::ExtraData::VERSION = '1.05';
 
 my @FIELDS = qw( table data_field context_key );
 __PACKAGE__->mk_accessors( @FIELDS );

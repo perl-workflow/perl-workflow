@@ -5,7 +5,7 @@ package Action::Mailer;
 use strict;
 use base qw( Action );
 
-$Action::Mailer::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$Action::Mailer::VERSION  = '1.01';
 
 sub execute {
     
