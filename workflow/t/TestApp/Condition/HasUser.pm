@@ -7,7 +7,7 @@ use base qw( Workflow::Condition );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( condition_error );
 
-$TestApp::Condition::HasUser::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$TestApp::Condition::HasUser::VERSION = '0.01';
 
 sub evaluate {
     my ( $self, $wf ) = @_;

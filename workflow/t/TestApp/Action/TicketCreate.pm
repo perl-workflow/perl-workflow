@@ -10,7 +10,7 @@ use TestApp::Ticket;
 use Workflow::Exception   qw( persist_error );
 use Workflow::Factory     qw( FACTORY );
 
-$TestApp::Action::TicketCreate::VERSION  = sprintf("%d.%02d", q$Revision$ =~ /(\d+)\.(\d+)/);
+$TestApp::Action::TicketCreate::VERSION = '1.06';
 
 sub execute {
     my ( $self, $wf ) = @_;
