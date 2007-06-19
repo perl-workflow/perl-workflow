@@ -2,6 +2,8 @@ TODO file for Workflow
 
 $Id$
 
+- Add test of validator in Workflow::Validator::InEnumeratedType
+
 - Should Action::Mailer not be called Workflow::Action::Mailer, looks like a
   stub that was never finalized
 
