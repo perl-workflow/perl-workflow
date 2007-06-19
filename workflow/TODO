@@ -2,6 +2,12 @@ TODO file for Workflow
 
 $Id$
 
+- Add test of validate in Workflow::Validator::MatchesDateFormat
+
+- Investigate if either Workflow::Validator::InEnumeratedType or
+  Workflow::Validator::MatchesDateFormat are violation an (undefined) abstract 
+  class. One holds a validate method the other a validator method.
+
 - Add test of validator in Workflow::Validator::InEnumeratedType
 
 - Should Action::Mailer not be called Workflow::Action::Mailer, looks like a

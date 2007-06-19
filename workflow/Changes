@@ -4,6 +4,11 @@ Revision history for Perl extension Workflow
 
 HEAD
 
+- Added POD more POD to Workflow::Validator::MatchesDateFormat
+
+- Added more tests of Workflow::Validator::MatchesDateFormat to
+  t/validator_matches_date_format.t
+
 - Added POD more POD to Workflow::Validator::InEnumeratedType
 
 - Added more tests of Workflow::Validator::InEnumeratedType to

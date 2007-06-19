@@ -61,6 +61,11 @@ Workflow::Validator::MatchesDateFormat - Ensure a stringified date matches a giv
    </validator>
  </action>
 
+=head1 VERSION
+
+This documentation describes version 1.04 of
+L<Workflow::Validator::MatchesDateFormat>
+
 =head1 DESCRIPTION
 
 This validator ensures that a given date string matches a C<strptime>
@@ -82,17 +87,57 @@ is concerned its job is done.
 
 =head2 METHODS
 
-#=head3 _init
+=head3 _init
 
-#=head3 validate
+This method initializes the class and the enumerated class.
+
+It uses L</add_enumerated_values> to add the set of values for enumeration.
+
+The primary parameter is value, which should be used to specify the
+either a single value or a reference to array of values to be added.
+
+=head3 validate
+
+The validator method is the public API. It works with L<Workflow>.
+
+Based on the initialized L<Workflow::Validator> it validates a provided
+parameter, which should adhere to a predefined date format.
+
+=head1 EXCEPTIONS
+
+=over
+
+=item * You must define a value for 'date_format' in declaration of validator <name>
+
+=item * The value for 'date_format' must be a simple scalar in declaration of validator <name>
+
+=item * Date '<date_string>' does not match required pattern <pattern>
+
+=back
+
+=head1 SEE ALSO
+
+=over
+
+=item L<Workflow>
+
+=item L<Workflow::Validator>
+
+=item L<Workflow::Exception>
+
+=item L<DateTime>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Current maintainer Jonas B. Nielsen E<lt>jonasbn@cpan.orgE<gt>
+
+Original author Chris Winters E<lt>chris@cwinters.comE<gt>
