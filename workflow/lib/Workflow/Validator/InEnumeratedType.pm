@@ -82,6 +82,11 @@ Workflow::Validator::InEnumeratedType - Ensure a value is one of a declared set 
     </validator>
  </action>
 
+=head1 VERSION
+
+This documentation describes version 1.04 of
+L<Workflow::Validator::InEnumeratedType>
+
 =head1 DESCRIPTION
 
 This validator ensures that a value matches one of a set of
@@ -159,25 +164,64 @@ The implementation for the validator might look like:
 
 =head2 METHODS
 
-#=head3 _init( \%params )
+=head3 _init( \%params )
 
-#=head3 validator
+This method initializes the class and the enumerated class.
 
-#=head3 add_enumerated_values( @values )
+It uses L</add_enumerated_values> to add the set of values for enumeration.
 
-#=head3 get_enumerated_values()
+The primary parameter is value, which should be used to specify the
+either a single value or a reference to array of values to be added.
+
+=head3 validator
+
+The validator method is the public API. It encapulates L</is_enumerated:value>
+and works with L<Workflow>.
+
+=head3 add_enumerated_values( @values )
+
+This method ads an array of values to be regarded as enumerations for the
+validator.
+
+=head3 get_enumerated_values()
+
+This method returns the defined enumerated values for the class as an array.
 
 =head3 is_enumerated_value( $value )
 
 This is most often the single method you will want to modify.
 
+The method offers assertion of a given value, as to whether it is an enumerated
+type as defined in the class.
+
+=head1 EXCEPTIONS
+
+=over
+
+=item * Validator 'InEnumeratedType' must be initialized with the values you wish to validate against using the parameter 'value'.
+
+This L<Workflow::Exception> is thrown from L</_init> if the 'value'
+parameter is not set.
+
+=item * Value '$value' must be one of: <@values>
+
+This L<Workflow::Exception> is thrown from L</_validator> if the value
+to be asserted is not mathing any of the enumerated values defined as
+part of the set.
+
+=back
+
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Current maintainer Jonas B. Nielsen E<lt>jonasbn@cpan.orgE<gt>
+
+Original author Chris Winters E<lt>chris@cwinters.comE<gt>
+
+

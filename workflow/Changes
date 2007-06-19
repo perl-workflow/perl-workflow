@@ -4,6 +4,11 @@ Revision history for Perl extension Workflow
 
 HEAD
 
+- Added POD more POD to Workflow::Validator::InEnumeratedType
+
+- Added more tests of Workflow::Validator::InEnumeratedType to
+  t/validator_in_enumerated_type.t
+
 - Small fix to a test on an empty array. Empty arrays evaluate to false
   t/config.t, cleaned some code in Workflow::Config and Workflow::Config::Perl
   nothing significant
