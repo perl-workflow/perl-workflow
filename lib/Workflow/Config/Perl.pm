@@ -8,7 +8,7 @@ use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use Data::Dumper        qw( Dumper );
 
-$Workflow::Config::Perl::VERSION = '1.02';
+$Workflow::Config::Perl::VERSION = '1.03';
 
 my ( $log );
 
@@ -17,6 +17,11 @@ sub parse {
     $log ||= get_logger();
 
     $self->_check_config_type( $type );
+
+    if (! scalar @items) {
+        return @items;
+    }
+
     my @config_items = Workflow::Config::_expand_refs( @items );
     return () unless ( scalar @config_items );
 

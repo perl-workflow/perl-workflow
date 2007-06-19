@@ -4,6 +4,10 @@ Revision history for Perl extension Workflow
 
 HEAD
 
+- Small fix to a test on an empty array. Empty arrays evaluate to false
+  t/config.t, cleaned some code in Workflow::Config and Workflow::Config::Perl
+  nothing significant
+
 - Hard coded version numbers to all modules in t/
   Subversion uses different scheme so we no longer use automatically updated
   version numbers, added version 0.01 where no version was present
