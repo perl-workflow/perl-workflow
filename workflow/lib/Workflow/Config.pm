@@ -8,7 +8,7 @@ use Data::Dumper        qw( Dumper );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::VERSION = '1.11';
+$Workflow::Config::VERSION = '1.12';
 
 my %VALID_TYPES = map { $_ => 1 } qw( action condition persister validator workflow );
 
@@ -72,6 +72,11 @@ sub _check_config_type {
 sub _expand_refs {
     my ( @items ) = @_;
     my @all = ();
+
+    if (! scalar @items) {
+        return @all;
+    }
+    
     foreach my $item ( @items ) {
         next unless ( $item );
         push @all, ( ref $item eq 'ARRAY' ) ? @{ $item } : $item;

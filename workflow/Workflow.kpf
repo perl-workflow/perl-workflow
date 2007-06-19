@@ -323,8 +323,60 @@
 </file>
 <folder url="lib/Workflow" idref="10C4836CFC3L326a57f50x367a" id="10C4836CFC6L242d04ae0x367a" name="Workflow">
 </folder>
+<preference-set idref="10C4836CF8AL7cb7daea0x367a">
+  <string id="lastInvocation">default</string>
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="postparams"></string>
+  <string id="language">Perl</string>
+  <string id="warnings">enabled</string>
+  <boolean id="use-console">0</boolean>
+  <string id="getparams"></string>
+  <string relative="path" id="filename">t/config.t</string>
+  <string id="mpostparams"></string>
+  <boolean id="show-dialog">1</boolean>
+  <string id="userCGIEnvironment"></string>
+  <string id="request-method">GET</string>
+  <string id="params"></string>
+  <string id="executable-params">-I /Users/jonasbn/develop/svn-SourceForge/perl-workflow/trunk/workflow/lib</string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="documentRoot"></string>
+  <string id="cookieparams"></string>
+  <string id="userEnvironment"></string>
+  <boolean id="sim-cgi">0</boolean>
+  <string id="cwd"></string>
+  <long id="debugger.io-port">9011</long>
+</preference-set>
+</preference-set>
+</preference-set>
 <preference-set idref="10C4836CFE9L563609b40x367a">
   <string relative="path" id="import_dirname">t</string>
+</preference-set>
+<preference-set idref="10C4836CF8DL55110af10x367a">
+  <string id="lastInvocation">default</string>
+<preference-set id="Invocations">
+<preference-set id="default">
+  <string id="postparams"></string>
+  <string id="language">Perl</string>
+  <string id="warnings">enabled</string>
+  <boolean id="use-console">0</boolean>
+  <string id="getparams"></string>
+  <string relative="path" id="filename">t/persister_dbi.t</string>
+  <string id="mpostparams"></string>
+  <boolean id="show-dialog">1</boolean>
+  <string id="userCGIEnvironment"></string>
+  <string id="request-method">GET</string>
+  <string id="params"></string>
+  <string id="executable-params">-I /Users/jonasbn/develop/svn-SourceForge/perl-workflow/trunk/workflow/lib</string>
+  <string id="posttype">application/x-www-form-urlencoded</string>
+  <string id="documentRoot"></string>
+  <string id="cookieparams"></string>
+  <string id="userEnvironment"></string>
+  <boolean id="sim-cgi">0</boolean>
+  <string id="cwd"></string>
+  <long id="debugger.io-port">9011</long>
+</preference-set>
+</preference-set>
 </preference-set>
 <preference-set idref="10C4835D0AEL6a8b1c130x367a">
   <string id="import_dirname">/Users/jonasbn/develop/cvs-logicLAB/modules/workflow</string>
