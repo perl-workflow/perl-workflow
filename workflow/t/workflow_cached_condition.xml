@@ -1,0 +1,17 @@
+<workflow>
+ <type>CachedCondition</type>
+ <description>This is the workflow for the cached condition tests</description>
+ <persister>TestPersister</persister>
+ <state name="INITIAL">
+     <action name="TEST" resulting_state="INITIAL">
+         <condition name="EvenSeconds"/>
+     </action>
+     <action name="TEST2" resulting_state="INITIAL">
+         <condition name="!EvenSeconds"/>
+     </action>
+     <action name="FORWARD" resulting_state="SECOND"/>
+ </state>
+ <state name="SECOND">
+     <action name="BACK" resulting_state="INITIAL"/>
+ </state>
+</workflow>

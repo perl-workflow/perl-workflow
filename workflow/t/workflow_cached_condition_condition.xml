@@ -1,0 +1,4 @@
+<conditions>
+   <condition name="EvenSeconds"
+              class="TestCachedApp::Condition::EvenSeconds"/>
+</conditions>
