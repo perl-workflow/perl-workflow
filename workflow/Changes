@@ -2,7 +2,12 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-HEAD
+HEAD (update not required unless you are using 0.26 or 0.25)
+
+- Fixed bug in cached condition handling (0.26 reintroduced the original
+  race condition that was solved using the condition cache in 0.25).
+  Condition cache is now cleared on state change and when calling
+  get_available_action_names()
 
 - Added POD more POD to Workflow::Validator::MatchesDateFormat
 
