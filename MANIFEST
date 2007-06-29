@@ -75,12 +75,14 @@ struct/workflow_mysql.sql
 struct/workflow_other.sql
 struct/workflow_pg.sql
 struct/workflow_sqlite.sql
+t/00_load.t
 t/02_pod.t
 t/03_pod-coverage.t
 t/action.t
 t/action_field.t
 t/action_null.t
 t/base.t
+t/cached_conditions.t
 t/condition.t
 t/condition_evaluate.t
 t/config.t
@@ -106,6 +108,7 @@ t/TestApp/Condition/HasUser.pm
 t/TestApp/Ticket.pm
 t/TestApp/User.pm
 t/TestApp/Web.pm
+t/TestCachedApp/Condition/EvenSeconds.pm
 t/TestUtil.pm
 t/validator.t
 t/validator_has_required_field.t
@@ -117,6 +120,9 @@ t/workflow.xml
 t/workflow_action.perl
 t/workflow_action.xml
 t/workflow_autorun.xml
+t/workflow_cached_condition.xml
+t/workflow_cached_condition_action.xml
+t/workflow_cached_condition_condition.xml
 t/workflow_condition.perl
 t/workflow_condition.xml
 t/workflow_errorprone.perl
