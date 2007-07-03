@@ -2,6 +2,13 @@ TODO file for Workflow
 
 $Id$
 
+- Implement post_fetch_id in Workflow::Persister::UUID, seens unimplemented
+
+- Document general workflow initialization phase and the call to the
+  Workflow classes init method in a more general way
+
+- Document relation between actions and validators
+
 - Add test of validate in Workflow::Validator::MatchesDateFormat
 
 - Investigate if either Workflow::Validator::InEnumeratedType or
