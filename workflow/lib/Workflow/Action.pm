@@ -252,11 +252,18 @@ work. It's not required that you return anything, but if the action
 may be used in a L<Workflow::State> object that has multiple resulting
 states you should return a simple scalar for a return value.
 
-#=head3 add_fields
+=head3 add_fields
+
+Method to add fields to the workflow. The method takes an array of
+fields.
 
 =head2 Private Methods
 
-#=head3 init( $workflow, \%params )
+=head3 init( $workflow, \%params )
+
+init is called in conjuction with the overall workflow initialization.
+
+It sets up the necessary validators based on the on configured actions, input fields and required fields.
 
 =head1 SEE ALSO
 
