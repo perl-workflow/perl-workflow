@@ -2,6 +2,12 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+HEAD
+
+- Added missing version number to Workflow::Persister (1.09), the PAUSE indexer
+  failed for this module, I am not sure what this means, but I will find out
+
+
 0.27 Tue Jul  3 16:50:15 CEST 2007 
 (update not required unless you are using 0.26 or 0.25)
 
