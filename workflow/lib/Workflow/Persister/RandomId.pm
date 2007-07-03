@@ -48,11 +48,26 @@ the default (8 characters) is sufficient.
 
 =head2 METHODS
 
-#=head3 new
+Instantiates a Workflow::Persister::RandomId object, this object can generate
+randon Id's based on the 'id_length' parameter provided. This parameter defaults
+to 8.
 
-#=head3 pre_fetch_id
+=head3 pre_fetch_id
 
-#=head3 post_fetch_id
+L</pre_fetch_id> can then be used to generate/retrieve a random ID, generated
+adhering to the length specified in the constructor call.
+
+=head3 post_fetch_id
+
+This method is unimplemented at this time, please see the TODO.
+
+=head1 TODO
+
+=over
+
+=item * Implement L</post_fetch_id>
+
+=back
 
 =head1 COPYRIGHT
 
