@@ -7,7 +7,7 @@ use base qw( Workflow::Base );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( persist_error );
 
-$Workflow::Persister::VERSION = '1.09';
+$Workflow::Persister::VERSION = '';
 
 my @FIELDS = qw( name class
                  use_random use_uuid
