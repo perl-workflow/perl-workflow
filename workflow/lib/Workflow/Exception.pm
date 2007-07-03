@@ -164,15 +164,35 @@ makes for very readable code:
                 "frightfully wrong: $@",
                 { foo => 'bar' };
 
-#=head3 condition_error
+=head3 condition_error
 
-#=head3 configuration_error
+This method transforms the error to a condition error.
 
-#=head3 persist_error
+This exception is thrown via </mythrow> when a condition of a workflow is invalid.
 
-#=head3 validation_error
+=head3 configuration_error
 
-#=head3 workflow_error
+This method transforms the error to a configuration error.
+
+This exception is thrown via </mythrow> when configuration of a workflow is unsuccessful.
+
+=head3 persist_error
+
+This method transforms the error to a persistance error.
+
+This exception is thrown via </mythrow> when the save of a workflow is unsuccessful.
+
+=head3 validation_error
+
+This method transforms the error to a validation error.
+
+This exception is thrown via </mythrow> when input data or similar of a workflow is unsuccessful.
+
+=head3 workflow_error
+
+This method transforms the error to a workflow error.
+
+This exception is thrown via </mythrow> when input data or similar of a workflow is unsuccessful.
 
 =head1 SHORTCUTS
 
