@@ -4,6 +4,8 @@ Revision history for Perl extension Workflow
 
 HEAD
 
+- Added missing version number to Workflow::Persister (1.09), the PAUSE
+  indexer complained over degrading version number, investigating consequences
 
 
 0.27 Tue Jul  3 16:50:15 CEST 2007 
