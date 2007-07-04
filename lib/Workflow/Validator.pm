@@ -123,12 +123,14 @@ care where it comes from.
 
 =head2 Methods
 
-#=head3 init
-
-=head3 _init( \%params )
+=head3 init( \%params )
 
 Called when the validator is first initialized. If you do not have
 sufficient information in C<\%params> you should throw an exception.
+
+=head3 _init
+
+This is a I<dummy> method, please see L</init>.
 
 =head3 validate( $workflow, $data )
 

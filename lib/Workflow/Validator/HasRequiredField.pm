@@ -87,15 +87,26 @@ using the Perl notion for defined rather than true/false, which means
 
 =head2 METHODS
 
-#=head3 validate
+=head3 validate
+
+Validates whether a given set of required fields are defined.
+
+Takes two parameters: a workflow object and an array of names of fields.
+
+The provided fields are matched against the workflow in question and
+L<Workflow::Exception>'s are thrown in case of missing fields.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut
