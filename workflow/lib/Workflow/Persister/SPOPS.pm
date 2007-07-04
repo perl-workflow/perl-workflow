@@ -167,17 +167,63 @@ object that this has already been done.
 
 =head2 METHODS
 
-#=head3 init
+=head3 init ( \%params)
 
-#=head3 create_workflow
+This method initializes the SPOPS persistance entity.
 
-#=head3 fetch_workflow
+It requires that a workflow_class and a history_class are specified. If not the
+case L<Workflow::Exception>s are thrown.
 
-#=head3 update_workflow
+=head3 create_workflow
 
-#=head3 create_history
+Serializes a workflow into the persistance entity configured by our workflow.
 
-#=head3 fetch_history
+Takes a single parameter: a workflow object
+
+Returns a single value, a id for unique identification of out serialized
+workflow for possible deserialization.
+
+=head3 fetch_workflow
+
+Deserializes a workflow from the persistance entity configured by our workflow.
+
+Takes a single parameter: the unique id assigned to our workflow upon
+serialization (see L</create_workflow>).
+
+Returns a hashref consisting of two keys:
+
+=over
+
+=item * state, the workflows current state
+
+=item * last_update, date indicating last update
+
+=back
+
+=head3 update_workflow
+
+Updates a serialized workflow in the persistance entity configured by our
+workflow.
+
+Takes a single parameter: a workflow object
+
+Returns: Nothing
+
+=head3 create_history
+
+Serializes history records associated with a workflow object
+
+Takes two parameters: a workflow object and an array of workflow history objects
+
+Returns: provided array of workflow history objects upon success
+
+=head3 fetch_history
+
+Deserializes history records associated with a workflow object
+
+Takes a single parameter: a workflow object
+
+Returns an array of workflow history objects upon success
 
 =head1 SEE ALSO
 
@@ -189,11 +235,15 @@ L<SPOPS::Tool::DateConvert>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut

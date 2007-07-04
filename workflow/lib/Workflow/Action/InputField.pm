@@ -191,7 +191,9 @@ Adds possible values to be used for this field. Each item in
 C<@values> may be a simple scalar or a hashref with the keys 'label'
 and 'value'.
 
-#=head3 init
+=head3 init
+
+Init is a I<dummy> and just returns no special actions are taken
 
 =head2 Properties
 
@@ -238,11 +240,15 @@ L<Workflow::Action>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut

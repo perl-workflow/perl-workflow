@@ -101,19 +101,40 @@ example, if you are using SQLite this would be 'last_insert_rowid'.
 
 =head2 METHODS
 
-#=head3 new
+=head3 new ( \%params )
 
-#=head3 pre_fetch_id
+This method instantiates a class for retrieval of auto-generated ids from a
+L<DBI> based persistance entity.
 
-#=head3 post_fetch_id
+It takes a hashref containing keys matching the properties outlines in the
+section above or throws L<Workflow::Exception>s if these are not defined.
+
+Returns instantiated object upon success.
+
+=head3 pre_fetch_id
+
+This is a I<dummy> method, use L</post_fetch_id>
+
+=head3 post_fetch_id
+
+Returns a unique sequence id from a database.
+
+Takes a two parameters, a L<DBI> database handle and a statement handle
+
+Returns a single value, a integer representing a sequence id from the provided
+database handle, based on the statement handle.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut

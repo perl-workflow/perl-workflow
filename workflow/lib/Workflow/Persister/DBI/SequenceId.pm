@@ -58,17 +58,30 @@ Implementation for DBI persister to fetch an ID value from a sequence.
 
 =head2 METHODS
 
-#=head3 pre_fetch_id
+=head3 pre_fetch_id
 
-#=head3 post_fetch_id
+Returns a unique sequence id from a database.
+
+Takes a single parameter, a L<DBI> database handle.
+
+Returns a single value, a integer representing a sequence id from the provided
+database handle.
+
+=head3 post_fetch_id
+
+This is a I<dummy> method, use L</pre_fetch_id>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut

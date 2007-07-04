@@ -25,8 +25,23 @@ use_ok('Workflow::Persister::DBI::SequenceId');
 use_ok('Workflow::Persister::DBI');
 use_ok('Workflow::Persister::File');
 use_ok('Workflow::Persister::RandomId');
-use_ok('Workflow::Persister::SPOPS');
-use_ok('Workflow::Persister::UUID');
+
+SKIP: {
+    eval "require SPOPS";
+
+    skip "SPOPS not installed", 1 if $@;
+
+    use_ok('Workflow::Persister::SPOPS');
+}
+
+SKIP: {
+    eval "require Data::UUID";
+
+    skip "Data::UUID not installed", 1 if $@;
+
+    use_ok('Workflow::Persister::UUID');
+}
+
 use_ok('Workflow::Persister');
 use_ok('Workflow::State');
 use_ok('Workflow::Validator::HasRequiredField');

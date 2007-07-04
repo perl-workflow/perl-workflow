@@ -518,6 +518,10 @@ available or if there are no actions available.
 
 Returns name of action to be used for autorunning the state.
 
+=head3 clear_condition_cache ( )
+
+Empties the condition result cache for a given state.
+
 =head1 PROPERTIES
 
 All property methods act as a getter and setter. For example:
@@ -562,11 +566,15 @@ L<Workflow::Factory>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

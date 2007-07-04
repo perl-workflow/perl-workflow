@@ -114,7 +114,13 @@ description.
 
 =head2 METHODS
 
-#=head3 parse
+=head3 parse ( $type, @items )
+
+This method parses the configuration provided it is in XML format.
+
+Takes two parameters: a $type indication and an array of of items
+
+Returns a list of config parameters as a array upon success.
 
 =head1 SEE ALSO
 

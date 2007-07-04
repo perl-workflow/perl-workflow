@@ -48,6 +48,8 @@ the default (8 characters) is sufficient.
 
 =head2 METHODS
 
+=head3 new
+
 Instantiates a Workflow::Persister::RandomId object, this object can generate
 randon Id's based on the 'id_length' parameter provided. This parameter defaults
 to 8.
