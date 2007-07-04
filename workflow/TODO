@@ -2,7 +2,7 @@ TODO file for Workflow
 
 $Id$
 
-- Implement post_fetch_id in Workflow::Persister::UUID, seens unimplemented
+- Implement post_fetch_id in Workflow::Persister::UUID, seems unimplemented
 
 - Document general workflow initialization phase and the call to the
   Workflow classes init method in a more general way
