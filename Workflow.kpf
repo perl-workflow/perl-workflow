@@ -3,6 +3,8 @@
 <project id="10C4835D0AEL6a8b1c130x367a" name="Workflow.kpf" kpf_version="3">
 <file url="prototypes/ref.pl" idref="10C4836CFFFL35b6e57b0x367a" id="10C4836CF8FL69784a5d0x367a" name="ref.pl">
 </file>
+<file url="prototypes/emptyarray.pl" idref="10C4836CFFFL35b6e57b0x367a" id="dea14d52-228b-a543-832b-9cfa0fe40918" name="emptyarray.pl">
+</file>
 <file url="t/TestApp/Ticket.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8EL69a1946f0x367a" name="Ticket.pm">
 </file>
 <file url="t/TestApp/User.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8EL6dd6a4e00x367a" name="User.pm">
