@@ -159,35 +159,84 @@ fetches workflow history records.
 
 =head3 create_workflow( $workflow )
 
+Stub that warns that the method should be overwritten in the derived
+Persister. Since this is a SUPER class.
+
 Generate an ID for the workflow, serialize the workflow data (ID and
 state) and set the ID in the workflow.
 
 =head3 update_workflow( $workflow )
 
+Stub that warns that the method should be overwritten in the derived
+Persister. Since this is a SUPER class.
+
 Update the workflow state.
 
 =head3 fetch_workflow( $workflow_id )
+
+Stub that warns that the method should be overwritten in the derived
+Persister. Since this is a SUPER class.
 
 Retrieve the workflow data corresponding to C<$workflow_id>. It not
 found return undef, if found return a hashref with the data.
 
 =head3 create_history( $workflow, @history )
 
+Stub that warns that the method should be overwritten in the derived
+Persister. Since this is a SUPER class.
+
 Serialize all objects in C<@history> for later retrieval.
 
 =head3 fetch_history( $workflow )
 
-Return list of L<Workflow::History> objects.
+Stub that warns that the method should be overwritten in the derived
+Persister. Since this is a SUPER class.
 
-#=head3 assign_generators
+The derived class method should return a list of L<Workflow::History> objects.
 
-#=head3 fetch_extra_workflow_data
+=head3 assign_generators( \%params ) 
 
-#=head3 init
+Assigns proper generators based on intialization, see L</init>
 
-#=head3 init_random_generators
+=head3 fetch_extra_workflow_data ( $workflow )
 
-#=head3 init_uuid_generators
+A stub that warns that the method should be overwritten in the derived
+Persister. Since this is a SUPER class.
+
+=head3 init
+
+Method to initialize persister based on configuration.
+
+=head3 init_random_generators( \%params )
+
+Initializes random id generators, takes the following named parameters:
+
+=over
+
+=item * length, of random id to be generated
+
+=back
+
+Returns two identical random id generator objects in list context.
+
+=head3 init_uuid_generators( \%params )
+
+Initializes UUID generators, takes no parameters
+
+Returns two identical UUID generator objects in list context.
+
+=head1 TODO
+
+=over
+
+=item * refactor init_random_generators, returns two similar objects?
+
+=item * refactor init_uuid_generators, returns two similar objects?
+
+=item * refactor init_uuid_generators, takes no parameters, even though
+we shift parameters in?
+
+=back
 
 =head1 SEE ALSO
 
@@ -197,11 +246,15 @@ L<Workflow::History>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut

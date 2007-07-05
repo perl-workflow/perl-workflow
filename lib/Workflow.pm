@@ -894,6 +894,13 @@ Returns list of all unsaved history objects for this workflow.
 Clears all transient history objects from the workflow object, B<not>
 from the long-term storage.
 
+=head3 set( $property, $value )
+
+Method used to overwrite L<Class::Accessor> so only certain callers can set
+properties caller has to be a L<Workflow> namespace package.
+
+Sets property to value or throws L<Workflow::Exception>
+
 =head2 Properties
 
 Unless otherwise noted properties are B<read-only>.
@@ -998,8 +1005,6 @@ Returns the name of the next state given the action
 C<$action_name>. Throws an exception if C<$action_name> not contained
 in the current state.
 
-#=head3 set
-
 =head1 SEE ALSO
 
 L<Workflow::Context>
@@ -1013,8 +1018,8 @@ pgh.pm: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003 Chris Winters and Arvato Direct; 2004, 2005, 2006 
-Chris Winters. All rights reserved.
+Copyright (c) 2003 Chris Winters and Arvato Direct;
+Copyright (c) 2004-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -1027,9 +1032,9 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
-Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27/candidate
+Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27
 
-Alexander Klink, for: patches resulting in 0.23, 0.24, 0.25 and 0.26
+Alexander Klink, for: patches resulting in 0.23, 0.24, 0.25, 0.26 and 0.27
 
 Michael Bell, for patch resulting in 0.22
 

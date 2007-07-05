@@ -133,7 +133,7 @@ keep it short!
 
 To create your own condition you should implement the following:
 
-=head3 _init( \%params )
+=head3 init( \%params )
 
 This is optional, but called when the condition is first
 initialized. It may contain information you will want to initialize
@@ -153,7 +153,9 @@ Determine whether your condition fails by throwing an exception. You
 can get the application context information necessary to process your
 condition from the C<$workflow> object.
 
-#=head3 init
+=head3 _init
+
+This is a I<dummy>, please refer to L</init>
 
 =head2 Caching and inverting the result
 
@@ -175,11 +177,15 @@ useful if you use "autorun" a lot.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2007 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
+
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut
