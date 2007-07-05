@@ -49,6 +49,8 @@
 </file>
 <file url="notes/test_coverage_0.25.txt" idref="10D8397A39AL68c307470x4a6" id="23855459-5dbc-eb48-b063-32315a00ebd7" name="test_coverage_0.25.txt">
 </file>
+<file url="notes/test_coverage_0.28.txt" idref="10D8397A39AL68c307470x4a6" id="e9e8b42b-bf77-234a-ac11-2000bc629bf2" name="test_coverage_0.28.txt">
+</file>
 <file url="t/TestApp/Condition/HasUser.pm" idref="10C4836CFFBL3216e66f0x367a" id="10C4836CF8FL14285e1a0x367a" name="HasUser.pm">
 </file>
 <file url="t/FactorySubclass.pm" idref="10C4836CFE9L563609b40x367a" id="10C4836CF89L5d1aefa90x367a" name="FactorySubclass.pm">
@@ -209,8 +211,6 @@
 </file>
 <file url="MANIFEST.SKIP" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF82L7489e0220x367a" name="MANIFEST.SKIP">
 </file>
-<file url="META.yml" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF82L5912b0010x367a" name="META.yml">
-</file>
 <file url="README" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF82L39db8d720x367a" name="README">
 </file>
 <file url="VERSION" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF82L6e921fc70x367a" name="VERSION">
@@ -260,6 +260,8 @@
 <file url="doc/configuration.txt" idref="10C4836CF97L5b6960340x367a" id="10C4836CF83L373796890x367a" name="configuration.txt">
 </file>
 <file url="doc/overview.txt" idref="10C4836CF97L5b6960340x367a" id="10C4836CF83L7686606c0x367a" name="overview.txt">
+</file>
+<file url="doc/developing.txt" idref="10C4836CF97L5b6960340x367a" id="9aa4e0d6-cdc8-cc4a-a39d-ef18fba141f2" name="developing.txt">
 </file>
 <file url="lib/Workflow/Action.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86Le3aa99f0x367a" name="Action.pm">
 </file>
@@ -319,9 +321,6 @@
 </file>
 <folder url="lib/Workflow" idref="10C4836CFC3L326a57f50x367a" id="10C4836CFC6L242d04ae0x367a" name="Workflow">
 </folder>
-<preference-set idref="10C4835D0AEL6a8b1c130x367a">
-  <string id="import_dirname">/Users/jonasbn/develop/cvs-logicLAB/modules/workflow</string>
-</preference-set>
 <preference-set idref="10C4836CF8AL7cb7daea0x367a">
   <string id="lastInvocation">default</string>
 <preference-set id="Invocations">
@@ -348,6 +347,12 @@
 </preference-set>
 </preference-set>
 </preference-set>
+<preference-set idref="10C4836CFE9L563609b40x367a">
+  <string relative="path" id="import_dirname">t</string>
+</preference-set>
+<preference-set idref="10C4835D0AEL6a8b1c130x367a">
+  <string id="import_dirname">/Users/jonasbn/develop/cvs-logicLAB/modules/workflow</string>
+</preference-set>
 <preference-set idref="10C4836CF8DL55110af10x367a">
   <string id="lastInvocation">default</string>
 <preference-set id="Invocations">
@@ -373,8 +378,5 @@
   <string id="executable-params">-I /Users/jonasbn/develop/svn-SourceForge/perl-workflow/trunk/workflow/lib</string>
 </preference-set>
 </preference-set>
-</preference-set>
-<preference-set idref="10C4836CFE9L563609b40x367a">
-  <string relative="path" id="import_dirname">t</string>
 </preference-set>
 </project>

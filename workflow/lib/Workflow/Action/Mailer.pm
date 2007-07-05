@@ -7,9 +7,7 @@ use base qw( Workflow::Action );
 
 $Workflow::Action::Mailer::VERSION  = '1.01';
 
-sub execute {
-    
-}
+sub execute {}
 
 1;
 
@@ -23,9 +21,15 @@ Workflow::Action::Mailer - a stub for a SMTP capable action
 
 =head1 DESCRIPTION
 
-=head1 CLASS METHODS
+=head2 CLASS METHODS
 
-=head1 OBJECT METHODS
+=head2 OBJECT METHODS
+
+=head3 execute
+
+I<Currently a stub>
+
+=head1 SEE ALSO
 
 =over
 

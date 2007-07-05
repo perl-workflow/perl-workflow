@@ -1,0 +1,99 @@
+Developing/Maintaining of the Workflow distribution 
+------------------------------------------------------
+$Id$
+
+This is intended as a developer handbook for developers and maintainers of the
+Workflow distribution.
+
+This document is a collection of notes and are currently far from complete.
+Feedback additions, corrections and suggestions are more than welcome.
+
+
+VERSION NUMBERS
+
+The main version number for Workflow is isolated in the file VERSION in the root
+of the distribution directory, this file is increased accodingly when a new
+release is prepared. See RELEASING below.
+
+All modules and scripts carry a version number, that is maintained manually. We
+update this when functionality changes. Whitespace changes, POD additions does
+not necessarily require an version update, but this is left to the developers
+descretion, but please update the version of bugs are fixed, functionality is
+changed or added since the version can be used to identify differing behaviour
+at load time.
+
+
+PATCHES
+
+Patches are more than welcome, patches should adhere to the strategy described
+in VERSION NUMBERS.
+
+Patches are preferred accompanied by documentation and tests. If this is not the
+case, please make an appropriate entry in the Changes file, which in-depth
+describes the purpose/motivation of the patch and what it influences.
+
+To create a patch using the diff command, use the following format:
+
+    % diff -u file.new file.org > file.patch
+    
+    Using subversion to generate a patch
+    
+    % svn diff -u file.new > file.patch
+    
+
+RELEASES
+
+We aim for release early release often. We do currently not run with a beta
+release schema.
+
+
+RELEASING
+
+In order to make a release the following steps should be taken. This process
+will hopefully be automated at some point, perhaps using release from CPAN,
+which supports both CPAN and SourceForge.
+
+1. Close the changes file
+
+    Insert proper version number in Changes file
+    
+    Insert date in Changes file
+    
+    Update VERSION file
+
+2. Clean the directory and prepare the for the build
+
+    % ./Build realclean
+    
+    % perl Build.PL
+
+3. Make sure all tests pass
+
+    % export TEST_POD=1
+
+    % ./Build test
+
+4. Update MANIFEST file
+
+    % ./Build manifest
+    
+5. Make dist
+
+    % ./Build dist
+
+6. Make distcheck
+
+    % ./Build distcheck
+
+7. Upload to appropriate distribution channels like PAUSE/CPAN and Sourceforge
+
+TESTS
+
+todo...
+
+BUGS
+
+todo...
+
+
+Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.

@@ -207,9 +207,20 @@ specify a context key we also use the data field name.
 
 =head2 METHODS
 
-#=head3 init
+=head3 init ( \%params )
 
-#=head3 fetch_extra_workflow_data
+Initializes persister for extra workflow data.
+
+Throws L<Workflow::Exception> if initialization is not successful.
+
+=head3 fetch_extra_workflow_data ( $wf )
+
+Fetches extra data from database and feeds this to context of given workflow.
+
+Takes a single parameter, a workflow object to which extra data are feed if
+retrieved successfully.
+
+Throws L<Workflow::Exception> if retrieval is not successful.
 
 =head1 COPYRIGHT
 
