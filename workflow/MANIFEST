@@ -1,6 +1,7 @@
 Build.PL
 Changes
 doc/configuration.txt
+doc/developing.txt
 doc/overview.txt
 eg/ticket/App/Action/TicketComment.pm
 eg/ticket/App/Action/TicketCreate.pm
