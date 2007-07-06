@@ -107,7 +107,7 @@ Commit mailing list and RSS feed
 
 perl-workflow-svn@lists.sourceforge.net
 
-RSS: http://rss.gmane.org/gmane.comp.lang.perl.modules.workflow
+RSS: http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.workflow.scm 
 Archive: http://dir.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
 NNTP: nntp://news.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
 
