@@ -95,5 +95,20 @@ BUGS
 
 todo...
 
+RESOURCES
+
+Subversion
+
+Developer mailing list
+
+perl-workflow-devel@lists.sourceforge.net
+
+Commit mailing list and RSS feed
+
+perl-workflow-svn@lists.sourceforge.net
+
+RSS: http://rss.gmane.org/gmane.comp.lang.perl.modules.workflow
+Archive: http://dir.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
+NNTP: nntp://news.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
 
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
