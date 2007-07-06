@@ -2,7 +2,7 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-TRUNK
+0.28 Fri Jul  6 16:42:30 CEST 2007 (update not required)
 
 - Removed TODO.txt, the files contents have long gone been merged into the TODO
   file
