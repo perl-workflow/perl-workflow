@@ -22,6 +22,22 @@ descretion, but please update the version of bugs are fixed, functionality is
 changed or added since the version can be used to identify differing behaviour
 at load time.
 
+SCM
+
+	HTTP: http://perl-workflow.svn.sourceforge.net/viewvc/perl-workflow/
+
+	Checking out:
+	
+	% svn co https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow perl-workflow
+
+TAGGING
+
+	Example:
+	
+	%  svn cp https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow/trunk/workflow \
+	https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow/tags/Release_0_28
+
+	see also VERSION NUMBERS
 
 PATCHES
 
@@ -87,6 +103,8 @@ which supports both CPAN and SourceForge.
 
 7. Upload to appropriate distribution channels like PAUSE/CPAN and Sourceforge
 
+8. Make a tag in the SCM, see TAGGING above
+
 TESTS
 
 todo...
@@ -101,14 +119,14 @@ Subversion
 
 Developer mailing list
 
-perl-workflow-devel@lists.sourceforge.net
+	perl-workflow-devel@lists.sourceforge.net
 
 Commit mailing list and RSS feed
 
-perl-workflow-svn@lists.sourceforge.net
+	perl-workflow-svn@lists.sourceforge.net
 
 RSS: http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.workflow.scm 
-Archive: http://dir.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
+HTTP: http://dir.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
 NNTP: nntp://news.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+Jonas B. Nielsen (jonasbn) <jonasbn@cpan.org>, current maintainer.
