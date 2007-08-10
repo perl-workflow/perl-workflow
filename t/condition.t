@@ -5,9 +5,6 @@
 use strict;
 use lib 't';
 use TestUtil;
-use Test::More  tests => 2;
-use Test::Exception;
+use Test::More  tests => 1;
 
 require_ok( 'Workflow::Condition' );
-
-dies_ok { Workflow::Condition->evaluate() };

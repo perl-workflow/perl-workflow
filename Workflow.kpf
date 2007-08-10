@@ -5,6 +5,16 @@
 </file>
 <file url="prototypes/emptyarray.pl" idref="10C4836CFFFL35b6e57b0x367a" id="dea14d52-228b-a543-832b-9cfa0fe40918" name="emptyarray.pl">
 </file>
+<file url="t/TestApp/Ticket.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8EL69a1946f0x367a" name="Ticket.pm">
+</file>
+<file url="t/TestApp/User.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8EL6dd6a4e00x367a" name="User.pm">
+</file>
+<file url="t/TestApp/Web.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8FL3a3b1a110x367a" name="Web.pm">
+</file>
+<folder url="t/TestApp/Action" idref="10C4836CFF3L44bac5300x367a" id="10C4836CFF7L12fd75e20x367a" name="Action">
+</folder>
+<folder url="t/TestApp/Condition" idref="10C4836CFF3L44bac5300x367a" id="10C4836CFFBL3216e66f0x367a" name="Condition">
+</folder>
 <file url="lib/Workflow/Persister/File.pm" idref="10C4836CFD8L167116fe0x367a" id="10C4836CF87L1964691c0x367a" name="File.pm">
 </file>
 <file url="lib/Workflow/Persister/DBI.pm" idref="10C4836CFD8L167116fe0x367a" id="10C4836CF87L72d02dec0x367a" name="DBI.pm">
@@ -29,50 +39,22 @@
 </file>
 <file url="lib/Workflow/Action/Null.pm" idref="10C4836CFCCL3d0d47fa0x367a" id="10C4836CF87L203ed6500x367a" name="Null.pm">
 </file>
-<file url="lib/Workflow/Action.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86Le3aa99f0x367a" name="Action.pm">
+<file url="notes/test_coverage_0.17.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A394L4cef1ab0x4a6" name="test_coverage_0.17.txt">
 </file>
-<file url="lib/Workflow/Base.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L4e527b120x367a" name="Base.pm">
+<file url="notes/test_coverage_0.18.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A394Lbe971c50x4a6" name="test_coverage_0.18.txt">
 </file>
-<file url="lib/Workflow/Condition.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L1947aace0x367a" name="Condition.pm">
+<file url="notes/test_coverage_0.20.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A394L48b4b4610x4a6" name="test_coverage_0.20.txt">
 </file>
-<file url="lib/Workflow/Config.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L6261a5d00x367a" name="Config.pm">
+<file url="notes/test_coverage_0.21.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A395L736127820x4a6" name="test_coverage_0.21.txt">
 </file>
-<file url="lib/Workflow/Context.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L5f30d48f0x367a" name="Context.pm">
+<file url="notes/test_coverage_0.27.txt" idref="10D8397A39AL68c307470x4a6" id="304e4801-2467-9845-a0eb-65deeba8b4fd" name="test_coverage_0.27.txt">
 </file>
-<file url="lib/Workflow/Exception.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L5f192ea80x367a" name="Exception.pm">
+<file url="notes/test_coverage_0.25.txt" idref="10D8397A39AL68c307470x4a6" id="23855459-5dbc-eb48-b063-32315a00ebd7" name="test_coverage_0.25.txt">
 </file>
-<file url="lib/Workflow/Factory.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L1bf55dd0x367a" name="Factory.pm">
+<file url="notes/test_coverage_0.28.txt" idref="10D8397A39AL68c307470x4a6" id="e9e8b42b-bf77-234a-ac11-2000bc629bf2" name="test_coverage_0.28.txt">
 </file>
-<file url="lib/Workflow/History.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L5e282bc90x367a" name="History.pm">
-</file>
-<file url="lib/Workflow/Persister.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF87L102efab40x367a" name="Persister.pm">
-</file>
-<file url="lib/Workflow/State.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF87L3ea301a50x367a" name="State.pm">
-</file>
-<file url="lib/Workflow/Validator.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF87L433e20d80x367a" name="Validator.pm">
-</file>
-<folder url="lib/Workflow/Action" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFCCL3d0d47fa0x367a" name="Action">
-</folder>
-<folder url="lib/Workflow/Condition" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFD0L3ee8194a0x367a" name="Condition">
-</folder>
-<folder url="lib/Workflow/Config" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFD4L72c48ec30x367a" name="Config">
-</folder>
-<folder url="lib/Workflow/Persister" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFD8L167116fe0x367a" name="Persister">
-</folder>
-<folder url="lib/Workflow/Validator" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFE2L7e28adef0x367a" name="Validator">
-</folder>
 <file url="t/TestApp/Condition/HasUser.pm" idref="10C4836CFFBL3216e66f0x367a" id="10C4836CF8FL14285e1a0x367a" name="HasUser.pm">
 </file>
-<file url="t/TestApp/Ticket.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8EL69a1946f0x367a" name="Ticket.pm">
-</file>
-<file url="t/TestApp/User.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8EL6dd6a4e00x367a" name="User.pm">
-</file>
-<file url="t/TestApp/Web.pm" idref="10C4836CFF3L44bac5300x367a" id="10C4836CF8FL3a3b1a110x367a" name="Web.pm">
-</file>
-<folder url="t/TestApp/Action" idref="10C4836CFF3L44bac5300x367a" id="10C4836CFF7L12fd75e20x367a" name="Action">
-</folder>
-<folder url="t/TestApp/Condition" idref="10C4836CFF3L44bac5300x367a" id="10C4836CFFBL3216e66f0x367a" name="Condition">
-</folder>
 <file url="t/FactorySubclass.pm" idref="10C4836CFE9L563609b40x367a" id="10C4836CF89L5d1aefa90x367a" name="FactorySubclass.pm">
 </file>
 <file url="t/SomeObserver.pm" idref="10C4836CFE9L563609b40x367a" id="10C4836CF89L64a653110x367a" name="SomeObserver.pm">
@@ -161,8 +143,6 @@
 </file>
 <file url="t/03_pod-coverage.t" idref="10C4836CFE9L563609b40x367a" id="fe794282-f6c7-d247-b008-5aa9273a97e0" name="03_pod-coverage.t">
 </file>
-<file url="t/action_mailer.t" idref="10C4836CFE9L563609b40x367a" id="f40d0aa7-8bc4-5d41-8101-13a5b703088c" name="action_mailer.t">
-</file>
 <file url="t/persister.t" idref="10C4836CFE9L563609b40x367a" id="945927c2-deb1-7d46-a2be-c132cc323d6c" name="persister.t">
 </file>
 <file url="eg/ticket/ticket.cgi" idref="10C4836CF9BL7efab0e00x367a" id="10C4836CF83L383cf5500x367a" name="ticket.cgi">
@@ -207,11 +187,25 @@
 </file>
 <file url="lib/Workflow/Condition/HasUser.pm" idref="10C4836CFD0L3ee8194a0x367a" id="10C4836CF87L6f81d1590x367a" name="HasUser.pm">
 </file>
-<file url="doc/configuration.txt" idref="10C4836CF97L5b6960340x367a" id="10C4836CF83L373796890x367a" name="configuration.txt">
+<file url="eg/ticket/web_templates/error.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L3a7042d80x367a" name="error.tmpl">
 </file>
-<file url="doc/overview.txt" idref="10C4836CF97L5b6960340x367a" id="10C4836CF83L7686606c0x367a" name="overview.txt">
+<file url="eg/ticket/web_templates/error_message.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L3ec94260x367a" name="error_message.tmpl">
 </file>
-<file url="doc/developing.txt" idref="10C4836CF97L5b6960340x367a" id="9aa4e0d6-cdc8-cc4a-a39d-ef18fba141f2" name="developing.txt">
+<file url="eg/ticket/web_templates/index.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L71b9a30a0x367a" name="index.tmpl">
+</file>
+<file url="eg/ticket/web_templates/ticket_comment.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L49b2bedf0x367a" name="ticket_comment.tmpl">
+</file>
+<file url="eg/ticket/web_templates/ticket_form.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L23e605350x367a" name="ticket_form.tmpl">
+</file>
+<file url="eg/ticket/web_templates/workflow_actions.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L7b615df40x367a" name="workflow_actions.tmpl">
+</file>
+<file url="eg/ticket/web_templates/workflow_created.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L53089d210x367a" name="workflow_created.tmpl">
+</file>
+<file url="eg/ticket/web_templates/workflow_fetched.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L7a90f0760x367a" name="workflow_fetched.tmpl">
+</file>
+<file url="eg/ticket/web_templates/workflow_history.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF86L633b5daf0x367a" name="workflow_history.tmpl">
+</file>
+<file url="eg/ticket/web_templates/workflow_summary.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF86L37b189450x367a" name="workflow_summary.tmpl">
 </file>
 <file url="Build.PL" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF81L528fcc0b0x367a" name="Build.PL">
 </file>
@@ -227,6 +221,8 @@
 </file>
 <file url="TODO" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF82L47b3d020x367a" name="TODO">
 </file>
+<ProjectRef url="Workflow.kpf" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF82L75f82b20x367a" name="Workflow.kpf">
+</ProjectRef>
 <folder url="doc" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF97L5b6960340x367a" name="doc">
 </folder>
 <folder url="eg" idref="10C4835D0AEL6a8b1c130x367a" id="10C4836CF9AL55853c720x367a" name="eg">
@@ -265,20 +261,44 @@
 </file>
 <file url="eg/ticket/App/Action/TicketUpdate.pm" idref="10C4836CFB4L35bee5320x367a" id="10C4836CF84L4e1c8a470x367a" name="TicketUpdate.pm">
 </file>
-<file url="notes/test_coverage_0.17.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A394L4cef1ab0x4a6" name="test_coverage_0.17.txt">
+<file url="doc/configuration.txt" idref="10C4836CF97L5b6960340x367a" id="10C4836CF83L373796890x367a" name="configuration.txt">
 </file>
-<file url="notes/test_coverage_0.18.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A394Lbe971c50x4a6" name="test_coverage_0.18.txt">
+<file url="doc/overview.txt" idref="10C4836CF97L5b6960340x367a" id="10C4836CF83L7686606c0x367a" name="overview.txt">
 </file>
-<file url="notes/test_coverage_0.20.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A394L48b4b4610x4a6" name="test_coverage_0.20.txt">
+<file url="doc/developing.txt" idref="10C4836CF97L5b6960340x367a" id="9aa4e0d6-cdc8-cc4a-a39d-ef18fba141f2" name="developing.txt">
 </file>
-<file url="notes/test_coverage_0.21.txt" idref="10D8397A39AL68c307470x4a6" id="10D8397A395L736127820x4a6" name="test_coverage_0.21.txt">
+<file url="lib/Workflow/Action.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86Le3aa99f0x367a" name="Action.pm">
 </file>
-<file url="notes/test_coverage_0.27.txt" idref="10D8397A39AL68c307470x4a6" id="304e4801-2467-9845-a0eb-65deeba8b4fd" name="test_coverage_0.27.txt">
+<file url="lib/Workflow/Base.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L4e527b120x367a" name="Base.pm">
 </file>
-<file url="notes/test_coverage_0.25.txt" idref="10D8397A39AL68c307470x4a6" id="23855459-5dbc-eb48-b063-32315a00ebd7" name="test_coverage_0.25.txt">
+<file url="lib/Workflow/Condition.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L1947aace0x367a" name="Condition.pm">
 </file>
-<file url="notes/test_coverage_0.28.txt" idref="10D8397A39AL68c307470x4a6" id="e9e8b42b-bf77-234a-ac11-2000bc629bf2" name="test_coverage_0.28.txt">
+<file url="lib/Workflow/Config.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L6261a5d00x367a" name="Config.pm">
 </file>
+<file url="lib/Workflow/Context.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L5f30d48f0x367a" name="Context.pm">
+</file>
+<file url="lib/Workflow/Exception.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L5f192ea80x367a" name="Exception.pm">
+</file>
+<file url="lib/Workflow/Factory.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L1bf55dd0x367a" name="Factory.pm">
+</file>
+<file url="lib/Workflow/History.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF86L5e282bc90x367a" name="History.pm">
+</file>
+<file url="lib/Workflow/Persister.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF87L102efab40x367a" name="Persister.pm">
+</file>
+<file url="lib/Workflow/State.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF87L3ea301a50x367a" name="State.pm">
+</file>
+<file url="lib/Workflow/Validator.pm" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CF87L433e20d80x367a" name="Validator.pm">
+</file>
+<folder url="lib/Workflow/Action" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFCCL3d0d47fa0x367a" name="Action">
+</folder>
+<folder url="lib/Workflow/Condition" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFD0L3ee8194a0x367a" name="Condition">
+</folder>
+<folder url="lib/Workflow/Config" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFD4L72c48ec30x367a" name="Config">
+</folder>
+<folder url="lib/Workflow/Persister" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFD8L167116fe0x367a" name="Persister">
+</folder>
+<folder url="lib/Workflow/Validator" idref="10C4836CFC6L242d04ae0x367a" id="10C4836CFE2L7e28adef0x367a" name="Validator">
+</folder>
 <file url="eg/ticket/App/Ticket.pm" idref="10C4836CFB0L785f8c7f0x367a" id="10C4836CF84L7a4498d30x367a" name="Ticket.pm">
 </file>
 <file url="eg/ticket/App/User.pm" idref="10C4836CFB0L785f8c7f0x367a" id="10C4836CF84L3ca4d7650x367a" name="User.pm">
@@ -299,88 +319,68 @@
 </file>
 <file url="lib/Workflow/Validator/MatchesDateFormat.pm" idref="10C4836CFE2L7e28adef0x367a" id="10C4836CF88L3fa5f0d30x367a" name="MatchesDateFormat.pm">
 </file>
-<file url="eg/ticket/web_templates/error.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L3a7042d80x367a" name="error.tmpl">
-</file>
-<file url="eg/ticket/web_templates/error_message.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L3ec94260x367a" name="error_message.tmpl">
-</file>
-<file url="eg/ticket/web_templates/index.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L71b9a30a0x367a" name="index.tmpl">
-</file>
-<file url="eg/ticket/web_templates/ticket_comment.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L49b2bedf0x367a" name="ticket_comment.tmpl">
-</file>
-<file url="eg/ticket/web_templates/ticket_form.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L23e605350x367a" name="ticket_form.tmpl">
-</file>
-<file url="eg/ticket/web_templates/workflow_actions.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L7b615df40x367a" name="workflow_actions.tmpl">
-</file>
-<file url="eg/ticket/web_templates/workflow_created.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L53089d210x367a" name="workflow_created.tmpl">
-</file>
-<file url="eg/ticket/web_templates/workflow_fetched.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF85L7a90f0760x367a" name="workflow_fetched.tmpl">
-</file>
-<file url="eg/ticket/web_templates/workflow_history.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF86L633b5daf0x367a" name="workflow_history.tmpl">
-</file>
-<file url="eg/ticket/web_templates/workflow_summary.tmpl" idref="10C4836CFBFL43b3b56a0x367a" id="10C4836CF86L37b189450x367a" name="workflow_summary.tmpl">
-</file>
 <folder url="eg/ticket" idref="10C4836CF9AL55853c720x367a" id="10C4836CF9BL7efab0e00x367a" name="ticket">
 </folder>
 <file url="lib/Workflow.pm" idref="10C4836CFC3L326a57f50x367a" id="10C4836CF86L422955af0x367a" name="Workflow.pm">
 </file>
 <folder url="lib/Workflow" idref="10C4836CFC3L326a57f50x367a" id="10C4836CFC6L242d04ae0x367a" name="Workflow">
 </folder>
-<preference-set idref="10C4835D0AEL6a8b1c130x367a">
-  <string id="import_dirname">/Users/jonasbn/develop/cvs-logicLAB/modules/workflow</string>
-</preference-set>
 <preference-set idref="10C4836CF8AL7cb7daea0x367a">
   <string id="lastInvocation">default</string>
 <preference-set id="Invocations">
 <preference-set id="default">
   <string id="postparams"></string>
-  <string id="userEnvironment"></string>
   <string id="language">Perl</string>
-  <string id="warnings">enabled</string>
-  <boolean id="use-console">0</boolean>
   <string id="getparams"></string>
-  <string id="executable-params">-I /Users/jonasbn/develop/svn-SourceForge/perl-workflow/trunk/workflow/lib</string>
-  <string id="mpostparams"></string>
   <boolean id="show-dialog">1</boolean>
+  <boolean id="use-console">0</boolean>
+  <string id="warnings">enabled</string>
+  <string id="mpostparams"></string>
+  <string relative="path" id="filename">t/config.t</string>
   <string id="request-method">GET</string>
+  <long id="debugger.io-port">9011</long>
   <string id="params"></string>
   <string id="userCGIEnvironment"></string>
   <string id="posttype">application/x-www-form-urlencoded</string>
   <string id="documentRoot"></string>
   <string id="cookieparams"></string>
-  <string relative="path" id="filename">t/config.t</string>
+  <string id="userEnvironment"></string>
   <boolean id="sim-cgi">0</boolean>
   <string id="cwd"></string>
-  <long id="debugger.io-port">9011</long>
+  <string id="executable-params">-I /Users/jonasbn/develop/svn-SourceForge/perl-workflow/trunk/workflow/lib</string>
 </preference-set>
 </preference-set>
+</preference-set>
+<preference-set idref="10C4836CFE9L563609b40x367a">
+  <string relative="path" id="import_dirname">t</string>
+</preference-set>
+<preference-set idref="10C4835D0AEL6a8b1c130x367a">
+  <string id="import_dirname">/Users/jonasbn/develop/cvs-logicLAB/modules/workflow</string>
 </preference-set>
 <preference-set idref="10C4836CF8DL55110af10x367a">
   <string id="lastInvocation">default</string>
 <preference-set id="Invocations">
 <preference-set id="default">
   <string id="postparams"></string>
-  <string id="userEnvironment"></string>
   <string id="language">Perl</string>
-  <string id="warnings">enabled</string>
-  <boolean id="use-console">0</boolean>
   <string id="getparams"></string>
-  <string id="executable-params">-I /Users/jonasbn/develop/svn-SourceForge/perl-workflow/trunk/workflow/lib</string>
-  <string id="mpostparams"></string>
   <boolean id="show-dialog">1</boolean>
+  <boolean id="use-console">0</boolean>
+  <string id="warnings">enabled</string>
+  <string id="mpostparams"></string>
+  <string relative="path" id="filename">t/persister_dbi.t</string>
   <string id="request-method">GET</string>
+  <long id="debugger.io-port">9011</long>
   <string id="params"></string>
   <string id="userCGIEnvironment"></string>
   <string id="posttype">application/x-www-form-urlencoded</string>
   <string id="documentRoot"></string>
   <string id="cookieparams"></string>
-  <string relative="path" id="filename">t/persister_dbi.t</string>
+  <string id="userEnvironment"></string>
   <boolean id="sim-cgi">0</boolean>
   <string id="cwd"></string>
-  <long id="debugger.io-port">9011</long>
+  <string id="executable-params">-I /Users/jonasbn/develop/svn-SourceForge/perl-workflow/trunk/workflow/lib</string>
 </preference-set>
 </preference-set>
-</preference-set>
-<preference-set idref="10C4836CFE9L563609b40x367a">
-  <string relative="path" id="import_dirname">t</string>
 </preference-set>
 </project>
