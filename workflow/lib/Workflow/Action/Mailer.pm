@@ -7,7 +7,10 @@ use base qw( Workflow::Action );
 
 $Workflow::Action::Mailer::VERSION  = '1.01';
 
-sub execute {}
+sub execute {
+    my ( $self ) = @_;
+    return 1;
+}
 
 1;
 
