@@ -81,6 +81,7 @@ t/02_pod.t
 t/03_pod-coverage.t
 t/action.t
 t/action_field.t
+t/action_mailer.t
 t/action_null.t
 t/base.t
 t/cached_conditions.t
@@ -94,6 +95,7 @@ t/factory_subclass.t
 t/FactorySubclass.pm
 t/history.t
 t/log4perl.conf
+t/persister.t
 t/persister_dbi.t
 t/persister_dbi_extra_data.t
 t/persister_file.t

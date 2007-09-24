@@ -163,6 +163,8 @@
 </file>
 <file url="t/persister.t" idref="10C4836CFE9L563609b40x367a" id="ebea7e1a-d2a2-b14f-950a-f363960bf38b" name="persister.t">
 </file>
+<file url="t/action_mailer.t" idref="10C4836CFE9L563609b40x367a" id="840876a4-9ce5-7c41-b231-8155c354dac4" name="action_mailer.t">
+</file>
 <file url="eg/ticket/ticket.cgi" idref="10C4836CF9BL7efab0e00x367a" id="10C4836CF83L383cf5500x367a" name="ticket.cgi">
 </file>
 <file url="eg/ticket/README" idref="10C4836CF9BL7efab0e00x367a" id="10C4836CF83L576258a0x367a" name="README">
