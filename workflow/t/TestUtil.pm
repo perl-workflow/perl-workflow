@@ -95,6 +95,7 @@ sub init_mock_persister {
         name  => 'TestPersister',
         class => 'Workflow::Persister::DBI',
         dsn   => 'DBI:Mock:',
+	user => 'DBTester',
     );
     $factory->add_config( persister => [ \%persister ] );
 }

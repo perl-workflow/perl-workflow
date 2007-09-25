@@ -5,7 +5,7 @@
 use strict;
 use lib 't';
 use TestUtil;
-use constant NUM_TESTS => 41;
+use constant NUM_TESTS => 43;
 use Test::More;
 
 eval "require DBI";
@@ -18,7 +18,6 @@ require Workflow::Factory;
 
 my $TICKET_CLASS = 'TestApp::Ticket';
 my $DATE_FORMAT = '%Y-%m-%d %H:%M';
-my $NOW       = DateTime->now->strftime( $DATE_FORMAT );
 
 require_ok( 'Workflow::Persister::DBI' );
 
@@ -26,6 +25,8 @@ my @persisters = ({
     name  => 'TestPersister',
     class => 'Workflow::Persister::DBI',
     dsn   => 'DBI:Mock:',
+    user => 'DBTester',
+    date_format => $DATE_FORMAT,
 });
 
 my $factory = Workflow::Factory->instance;
@@ -36,6 +37,9 @@ my ( $wf_id, $create_date );
 
 my $persister = $factory->get_persister( 'TestPersister' );
 my $handle = $persister->handle;
+
+is ($persister->dsn(), 'DBI:Mock:', 'Got back dsn from config.');
+is ($persister->date_format(), '%Y-%m-%d %H:%M', 'Got back date format from config.');
 
 my ( $wf );
 
@@ -52,7 +56,7 @@ my ( $wf );
         qr/^INSERT INTO workflow \( type, state, last_update, workflow_id \)/,
         [ 'type', 'state', 'current date',
           'random ID of correct length' ],
-        [ 'Ticket', 'INITIAL', $NOW,
+        [ 'Ticket', 'INITIAL', DateTime->now->strftime( $DATE_FORMAT ),
           sub { my ( $val ) = @_; return ( length( $val ), 8 ) } ]
     );
 
@@ -60,7 +64,7 @@ my ( $wf );
     TestUtil->check_workflow_history(
         $hst_history,
         [ $wf_id, 'Create workflow', 'Create new workflow',
-          'INITIAL', 'n/a', $NOW,
+          'INITIAL', 'n/a', DateTime->now->strftime( $DATE_FORMAT ),
           sub { my ( $val ) = @_; return ( length( $val ), 8 ) } ]
     );
     $handle->{mock_clear_history} = 1;
@@ -91,7 +95,7 @@ my ( $wf );
           'due date', 'last update' ],
         [ $ticket_id, $ticket_info{type}, $ticket_info{subject},
           $ticket_info{description}, $ticket_info{creator}, $old_state,
-          $ticket_info{due_date}->strftime( '%Y-%m-%d' ), $NOW ]
+          $ticket_info{due_date}->strftime( '%Y-%m-%d' ), DateTime->now->strftime( $DATE_FORMAT ) ]
     );
 
     my $link_create = $history->[1];
@@ -102,7 +106,7 @@ my ( $wf );
     TestUtil->check_workflow_history(
         $hst_update,
         [ $wf_id, 'Create ticket', $history_desc,
-          'TIX_CREATED', $ticket_info{creator}, $NOW,
+          'TIX_CREATED', $ticket_info{creator}, DateTime->now->strftime( $DATE_FORMAT ),
           sub { my ( $val ) = @_; return ( length( $val ), 8 ) } ]
     );
 
