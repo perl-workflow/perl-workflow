@@ -17,11 +17,10 @@ use Workflow::Persister::DBI::SequenceId;
 $Workflow::Persister::DBI::VERSION = '1.19';
 
 my @FIELDS = qw( handle dsn user password driver
-                 workflow_table history_table );
+                 workflow_table history_table date_format parser);
 __PACKAGE__->mk_accessors( @FIELDS );
 
 my ( $log );
-my $parser = DateTime::Format::Strptime->new( pattern => '%Y-%m-%d %H:%M' );
 my @WF_FIELDS   = ();
 my @HIST_FIELDS = ();
 
@@ -48,9 +47,15 @@ sub init {
     $log->info( "Assigned workflow table '", $self->workflow_table, "'; ",
                 "history table '", $self->history_table, "'" );
 
-    for ( qw( dsn user password ) ) {
+    # Default to old date format if not provided so we don't break old configurations.
+    $self->date_format( '%Y-%m-%d %H:%M' );
+
+    for ( qw( dsn user password date_format ) ) {
         $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
     }
+
+    my $parser = DateTime::Format::Strptime->new( pattern => $self->date_format );
+    $self->parser($parser);
 
     my $dbh = eval {
         DBI->connect( $self->dsn, $self->user, $self->password )
@@ -183,7 +188,7 @@ sub create_workflow {
     my @fields = @WF_FIELDS[1,2,3];
     my @values = ( $wf->type,
                    $wf->state,
-                   DateTime->now->strftime( '%Y-%m-%d %H:%M' ) );
+                   DateTime->now->strftime( $self->date_format() ) );
     my $dbh = $self->handle;
 
     my $id = $self->workflow_id_generator->pre_fetch_id( $dbh );
@@ -249,7 +254,7 @@ sub fetch_workflow {
     my $row = $sth->fetchrow_arrayref;
     return undef unless ( $row );
     return { state       => $row->[0],
-             last_update => $parser->parse_datetime( $row->[1] ), };
+             last_update => $self->parser->parse_datetime( $row->[1] ), };
 }
 
 sub update_workflow {
@@ -263,7 +268,7 @@ sub update_workflow {
          WHERE $WF_FIELDS[0] = ?
     };
     $sql = sprintf( $sql, $self->workflow_table );
-    my $update_date = DateTime->now->strftime( '%Y-%m-%d %H:%M' );
+    my $update_date = DateTime->now->strftime( $self->date_format() );
 
     if ( $log->is_debug ) {
         $log->debug( "Will use SQL\n$sql" );
@@ -293,7 +298,7 @@ sub create_history {
         my $id = $generator->pre_fetch_id( $dbh );
         my @fields = @HIST_FIELDS[1..6];
         my @values = ( $wf->id, $h->action, $h->description, $h->state,
-                       $h->user, $h->date->strftime( '%Y-%m-%d %H:%M' ) );
+                       $h->user, $h->date->strftime( $self->date_format() ) );
         if ( $id ) {
             push @fields, $HIST_FIELDS[0];
             push @values, $id;
@@ -368,7 +373,7 @@ sub fetch_history {
             description => $row->[3],
             state       => $row->[4],
             user        => $row->[5],
-            date        => $parser->parse_datetime( $row->[6] ),
+            date        => $self->parser->parse_datetime( $row->[6] ),
         });
         $log->is_debug &&
             $log->debug( "Fetched history object '$row->[0]'" );
@@ -529,6 +534,15 @@ Name of user to login with.
 =item B<password>
 
 Password for C<user> to login with.
+
+=item B<date_format>
+
+Date format to use when working with the database. Accepts a format string
+that can be processed by the DateTime module. See
+L<http://search.cpan.org/~drolsky/DateTime-0.39/lib/DateTime.pm#strftime_Specifiers>
+for the format options.
+
+The default is '%Y-%m-%d %H:%M' for backward compatibility.
 
 =item B<workflow_table>
 
