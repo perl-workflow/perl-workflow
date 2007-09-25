@@ -1032,7 +1032,8 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
-Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27
+
+Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27 and 0.30
 
 Alexander Klink, for: patches resulting in 0.23, 0.24, 0.25, 0.26 and 0.27
 
