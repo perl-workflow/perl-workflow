@@ -21,6 +21,8 @@ Module::Build->new(
       'Test::More'                 => 0.41,
       'Test::Exception'            => 0,
       'XML::Simple'                => 2.00,
+      'DBI'                        => 0,
+      'Data::Dumper'               => 0,
     },
     no_index => {
         directory => [ 'eg', 't' ],

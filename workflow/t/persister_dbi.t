@@ -56,7 +56,7 @@ my ( $wf );
         qr/^INSERT INTO workflow \( type, state, last_update, workflow_id \)/,
         [ 'type', 'state', 'current date',
           'random ID of correct length' ],
-        [ 'Ticket', 'INITIAL', DateTime->now->strftime( $DATE_FORMAT ),
+        [ 'Ticket', 'INITIAL', $wf_history->{bound_params}->[2],
           sub { my ( $val ) = @_; return ( length( $val ), 8 ) } ]
     );
 
@@ -64,7 +64,7 @@ my ( $wf );
     TestUtil->check_workflow_history(
         $hst_history,
         [ $wf_id, 'Create workflow', 'Create new workflow',
-          'INITIAL', 'n/a', DateTime->now->strftime( $DATE_FORMAT ),
+          'INITIAL', 'n/a', $hst_history->{bound_params}->[5],
           sub { my ( $val ) = @_; return ( length( $val ), 8 ) } ]
     );
     $handle->{mock_clear_history} = 1;
