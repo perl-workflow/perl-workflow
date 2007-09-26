@@ -2,39 +2,14 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-HEAD
+0.31 Wed Sep 26 20:26:49 CEST 2007 (update not required)
 
 - Fixed failing tests in t/persister_dbi.t, this has only observed twice
   and does not seem to be consistent. This is related to execution time
   for the test suite and the use of now, using the debugger would demonstrate
   this.
 
-  Resolves: https://rt.cpan.org/Public/Bug/Display.html?id=29037
-
-	#   Failed test '...for 'current date' matches'
-	#   in t/TestUtil.pm at line 69.
-	#          got: '2006-07-06 21:45'
-	#     expected: '2006-07-06 21:44'
-	t/persister_dbi....................ok 16/41                                 
-	#   Failed test '...for 'current date' matches'
-	#   in t/TestUtil.pm at line 69.
-	#          got: '2006-07-06 21:45'
-	#     expected: '2006-07-06 21:44'
-	t/persister_dbi....................NOK 31                                   
-	#   Failed test '...for 'last update' matches'
-	#   in t/TestUtil.pm at line 69.
-	#          got: '2006-07-06 21:45'
-	#     expected: '2006-07-06 21:44'
-	t/persister_dbi....................NOK 39                                   
-	#   Failed test '...for 'current date' matches'
-	#   in t/TestUtil.pm at line 69.
-	#          got: '2006-07-06 21:45'
-	#     expected: '2006-07-06 21:44'
-	t/persister_dbi....................ok 41/41# Looks like you failed 4 tests of 41.
-	t/persister_dbi....................dubious                                  
-			Test returned status 4 (wstat 1024, 0x400)
-	DIED. FAILED tests 8, 17, 31, 39
-			Failed 4/41 tests, 90.24% okay
+  Resolves: RT #29037 - https://rt.cpan.org/Public/Bug/Display.html?id=29037
 
 - Cleaned TODO file a bit
 
