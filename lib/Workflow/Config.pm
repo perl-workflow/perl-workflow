@@ -245,6 +245,11 @@ if not. Valid configuration types are: 'action', 'condition',
 
 Returns list of strings representing the valid configuration types.
 
+=head3 get_config_type_tag( $class, $type )
+
+Returns string representing a valid configuration type, looking up the type
+parameter in a lookuptable defined in Workflow::Config class.
+
 =head2 Required Object Methods
 
 =head3 parse( $workflow_config_type, @items )
