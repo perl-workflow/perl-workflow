@@ -11,7 +11,7 @@ eval "require DBI";
 if ( $@ ) {
     plan skip_all => 'DBI not installed';
 } else {
-	plan tests => 32;
+	plan tests => 35;
 }
 
 require_ok( 'Workflow' );
@@ -51,6 +51,18 @@ ok( ! $@, "Added configuration for workflow with observer" );
 my $date = DateTime->now;
 my @result_fields = ( 'state',   'last_update' );
 my @result_data   = ( 'INITIAL', $date );
+
+# Check object data.
+{
+  $handle->{mock_add_resultset} = [ \@result_fields, \@result_data ];
+
+  my $wf = $factory->fetch_workflow( 'ObservedTicket', 1 );
+  is( $wf->type(), 'ObservedTicket', 'Got workflow type.');
+  is( $wf->description(),
+      'This is the workflow for sample application Ticket',
+      'Got workflow description.');
+  is( $wf->time_zone(), 'floating', 'Got floating time zone.');
+}
 
 {
     $handle->{mock_add_resultset} = [ \@result_fields, \@result_data ];

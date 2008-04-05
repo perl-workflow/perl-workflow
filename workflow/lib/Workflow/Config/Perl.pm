@@ -41,9 +41,23 @@ sub parse {
         $log->is_info &&
             $log->info( "Will parse '$type' Perl config file '$file_name'" );
         my $this_config = $self->$method( $type, $item );
+#warn "This config looks like:";
+#warn Dumper (\$this_config);
         $log->is_info &&
             $log->info( "Parsed Perl '$file_name' ok" );
-        if ( ref $this_config->{ $type } eq 'ARRAY' ) {
+
+	if ( exists $this_config->{'type'} ) {
+	  $log->debug( "Adding typed configuration for '$type'" );
+	  push @config, $this_config;
+	}
+        elsif ( $type eq 'persister'
+		and ref $this_config->{ $type } eq 'ARRAY' ) {
+
+	  # This special exception for persister is required because
+	  # the config design for persisters was different from the
+	  # other config types. It didn't have a top level 'persister'
+	  # element. For backward compatibility, I'm adding this
+	  # exception here.
             $log->debug( "Adding multiple configurations for '$type'" );
             push @config, @{ $this_config->{ $type } };
         }

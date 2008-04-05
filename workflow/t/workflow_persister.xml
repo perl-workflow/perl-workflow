@@ -1,0 +1,9 @@
+ <persister name="BackupDatabase"
+            class="Workflow::Persister::DBI"
+            dsn="DBI:Pg:dbname=workflows"
+            user="wf"
+            password="mypass"
+            workflow_table="wf"
+            workflow_sequence="wf_seq"
+            history_table="wf_history"
+            history_sequence="wf_history_seq"/>

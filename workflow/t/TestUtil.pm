@@ -74,16 +74,30 @@ sub check_tracker {
 }
 
 # Tests call this to initialize the workflow factory with common
-# information
+# information. This tests the xml config files.
 
 sub init_factory {
     require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     $factory->add_config_from_file(
-        workflow  => "workflow.xml",
-        action    => "workflow_action.xml",
-        condition => "workflow_condition.xml",
+        workflow  => [ 'workflow.xml', 'workflow_type.xml' ],
+        action    => [ 'workflow_action.xml', 'workflow_action_type.xml' ],
+        condition => [ 'workflow_condition.xml', 'workflow_condition_type.xml'],
         validator => "workflow_validator.xml"
+    );
+    return $factory;
+}
+
+# Initialize with perl config files.
+
+sub init_factory_perl_config {
+    require Workflow::Factory;
+    my $factory = Workflow::Factory->instance;
+    $factory->add_config_from_file(
+        workflow  => [ 'workflow.perl', 'workflow_type.perl' ],
+        action    => [ 'workflow_action.perl', 'workflow_action_type.perl' ],
+        condition => [ 'workflow_condition.perl', 'workflow_condition_type.perl' ],
+        validator => 'workflow_validator.perl'
     );
     return $factory;
 }
@@ -123,5 +137,66 @@ sub init {
 }
 
 init();
+
+# Used with state tests with various configs.
+sub run_state_tests{
+  my $factory = shift;
+
+  # Call Type2 first. It gets loaded second, so this
+  # should verify that both types are available.
+  my $wf2 = $factory->create_workflow( 'Type2' );
+
+  my $wf_state = $wf2->_get_workflow_state();
+  is( $wf_state->state(), 'INITIAL', 'In INITIAL state.');
+
+  my @actions = $wf_state->get_available_action_names( $wf2 );
+  is( (scalar @actions), 1, 'Got back one available action.');
+  is( $actions[0], 'TIX_NEW', 'Got TIX_NEW as available action.');
+
+  # Verify the correct action and class.
+  my $wf_action = $wf2->_get_action('TIX_NEW');
+  is( $wf_action->name(), 'TIX_NEW', 'Got TIX_NEW action for Type2.');
+  is( $wf_action->class(), 'TestApp::Action::TicketCreateType',
+      'Got TicketCreateType class.');
+
+  TestUtil->set_new_ticket_context( $wf2 );
+  ok( $wf2->execute_action('TIX_NEW'), 'Ran TIX_NEW action.');
+
+  $wf_state = $wf2->_get_workflow_state();
+  is( $wf_state->state(), 'Ticket_Created', 'In Ticket_Created state.');
+
+  @actions = $wf_state->get_available_action_names( $wf2 );
+  is( (scalar @actions), 1, 'Got back one available action.');
+  is( $actions[0], 'Ticket_Close', 'Got Ticket_Close as available action.');
+
+  # Repeat on the Ticket workflow where the actions have no type.
+
+  my $wf = $factory->create_workflow( 'Ticket' );
+
+  $wf_state = $wf->_get_workflow_state();
+  is( $wf_state->state(), 'INITIAL', 'In INITIAL state for Ticket type.');
+
+  @actions = $wf_state->get_available_action_names( $wf );
+  is( (scalar @actions), 1, 'Got back one available action.');
+  is( $actions[0], 'TIX_NEW', 'Got TIX_NEW as available action.');
+
+  # Verify the correct action and class.
+  $wf_action = $wf->_get_action('TIX_NEW');
+  is( $wf_action->name(), 'TIX_NEW', 'Got TIX_NEW action for Ticket.');
+  is( $wf_action->class(), 'TestApp::Action::TicketCreate',
+      'Got TicketCreate class.');
+
+  TestUtil->set_new_ticket_context( $wf );
+  ok( $wf->execute_action('TIX_NEW'), 'Ran TIX_NEW action.');
+
+  $wf_state = $wf->_get_workflow_state();
+  is( $wf_state->state(), 'TIX_CREATED', 'In TIX_CREATED state.');
+
+  @actions = $wf_state->get_available_action_names( $wf2 );
+  is( (scalar @actions), 2, 'Got back two available actions.');
+  is( $actions[0], 'TIX_EDIT', 'Got TIX_EDIT as first available action.');
+  is( $actions[1], 'TIX_COMMENT', 'Got TIX_COMMENT as second available action.');
+
+}
 
 'I am true!';

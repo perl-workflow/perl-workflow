@@ -8,7 +8,7 @@ use DateTime;
 
 $Workflow::History::VERSION = '1.09';
 
-my @FIELDS = qw( id workflow_id action description date user state );
+my @FIELDS = qw( id workflow_id action description date user state time_zone );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 sub new {
@@ -17,8 +17,12 @@ sub new {
     for ( @FIELDS ) {
         $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
     }
+
+    my $time_zone = exists $params->{time_zone} ? $params->{time_zone} : 'floating';
+    $self->time_zone($time_zone);
+
     unless ( $self->date ) {
-        $self->date( DateTime->now() );
+        $self->date( DateTime->now(time_zone => $self->time_zone()) );
     }
     return $self;
 }
@@ -136,6 +140,10 @@ B<description> - Lengthy description of action taken
 =item *
 
 B<date> - Date history noted, set to a L<DateTime> object.
+
+=item *
+
+B<time_zone> - Time zone to pass to the L<DateTime> object.
 
 =item *
 

@@ -165,36 +165,36 @@ Workflow::Action - Base class for Workflow actions
  </action>
 
  # Define the action
- 
+
  package MyApp::Action::CreateUser;
- 
+
  use base qw( Workflow::Action );
  use Workflow::Exception qw( workflow_error );
- 
+
  sub execute {
      my ( $self, $wf ) = @_;
      my $context = $wf->context;
- 
+
      # Since 'username' and 'email' have already been validated we
      # don't need to check them for uniqueness, well-formedness, etc.
- 
+
      my $user = eval {
          User->create({ username => $context->param( 'username' ),
                         email    => $context->param( 'email' ) })
      };
- 
+
      # Wrap all errors returned...
- 
+
      if ( $@ ) {
          workflow_error
              "Cannot create new user with name '", $context->param( 'username' ), "': $@";
      }
- 
+
      # Set the created user in the context for the application and/or
      # other actions (observers) to use
- 
+
      $context->param( user => $user );
- 
+
      # return the username since it might be used elsewhere...
      return $user->username;
  }
@@ -203,6 +203,35 @@ Workflow::Action - Base class for Workflow actions
 
 This is the base class for all Workflow Actions. You do not have to
 use it as such but it is strongly recommended.
+
+=head1 CONFIGURATION
+
+You configure your actions and map them to a specific module in your actions
+configuration file using the syntax
+above and that shown in L<Workflow>. In some cases, you'll have actions
+that apply to all workflows. In more elaborate configurations, you may have
+one workflow server loading multiple workflows and multiple actions for each.
+In these
+cases, you'll have multiple workflow types and you may want actions
+with the same names to have different behaviors for each type.
+
+For example, you may have a workflow type Ticket and another type Order_Parts.
+They both may have a Submit action, but you'll want the Submit to be different
+for each.
+
+You can specify a type in your actions configuration to associate that action
+with that workflow type. If you don't provide a type, the action is available
+to all types. For example:
+
+  <actions>
+    <type>Ticket</type>
+    <description>Actions for the Ticket workflow only.</description>
+    <action name="TIX_NEW"
+           class="TestApp::Action::TicketCreate">
+  ...Addtional configuration...
+
+The type must match an existing workflow type or the action will never
+be called.
 
 =head1 OBJECT METHODS
 

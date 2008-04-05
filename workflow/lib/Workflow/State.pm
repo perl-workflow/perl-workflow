@@ -11,7 +11,7 @@ use Workflow::Factory   qw( FACTORY );
 
 $Workflow::State::VERSION = '1.13';
 
-my @FIELDS = qw( state description );
+my @FIELDS = qw( state description type );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 my ( $log );
@@ -87,7 +87,7 @@ sub evaluate_action {
         }
         my $orig_condition = $condition_name;
         my $opposite = 0;
-            
+
         $log->is_debug &&
             $log->debug( "Checking condition $condition_name" );
 
@@ -142,7 +142,7 @@ sub evaluate_action {
                 # name. As the result has not been cached, we have
                 # to get the real condition with the original
                 # condition name and evaluate that
-                $condition = FACTORY->get_condition( $orig_condition );
+                $condition = FACTORY->get_condition( $orig_condition, $self->type() );
             }
             $log->is_debug &&
                 $log->debug( q{Evaluating condition '}, $condition->name, q{'} );
@@ -258,6 +258,8 @@ sub init {
         $log->debug( "Constructing '$class' object for state $name" );
 
     $self->state( $name );
+    # Note this is the workflow type.
+    $self->type( $config->{type} );
     $self->description( $config->{description} );
     if ( $config->{autorun} ) {
         $self->autorun( $config->{autorun} );
@@ -359,7 +361,8 @@ sub _create_condition_objects {
             else {
                 $log->is_info &&
                     $log->info( "Fetching condition '$condition_info->{name}'" );
-                push @condition_objects, FACTORY->get_condition( $condition_info->{name} );
+                push @condition_objects,
+		  FACTORY->get_condition( $condition_info->{name}, $self->type() );
             }
         }
     }
