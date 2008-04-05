@@ -10,7 +10,15 @@ use Workflow::Exception qw( configuration_error );
 
 $Workflow::Config::VERSION = '1.12';
 
-my %VALID_TYPES = map { $_ => 1 } qw( action condition persister validator workflow );
+# Map the valid type to the top-level XML tag or data
+# structure to look for.
+my %VALID_TYPES = (
+		   action => 'actions',
+		   condition => 'conditions',
+		   persister => 'persister',
+		   validator => 'validators',
+		   workflow => 'workflow'
+		  );
 
 sub is_valid_config_type {
     my ( $class, $type ) = @_;
@@ -19,6 +27,11 @@ sub is_valid_config_type {
 
 sub get_valid_config_types {
     return sort keys %VALID_TYPES;
+}
+
+sub get_config_type_tag {
+  my ( $class, $type ) = @_;
+  return $VALID_TYPES{$type};
 }
 
 # Class method that allows you to pass in any type of items in

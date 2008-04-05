@@ -3,8 +3,8 @@ use warnings;
 
 use lib 't';
 use Test::More;
-use Workflow::Factory;
 use TestUtil;
+use Workflow::Factory;
 use Data::Dumper;
 plan tests => 3;
 

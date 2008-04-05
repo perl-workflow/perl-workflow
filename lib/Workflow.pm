@@ -10,7 +10,7 @@ use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
 use Workflow::Factory   qw( FACTORY );
 
-my @FIELDS = qw( id type description state last_update );
+my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors( @FIELDS );
 
 $Workflow::VERSION  = '1.32';
@@ -144,6 +144,7 @@ sub add_history {
     foreach my $item ( @items ) {
         if ( ref $item eq 'HASH' ) {
             $item->{workflow_id} = $self->id;
+	    $item->{time_zone} = $self->time_zone();
             push @to_add, Workflow::History->new( $item );
             $log->is_debug && $log->debug( "Adding history from hashref" );
         }
@@ -212,6 +213,8 @@ sub init {
     $self->state( $current_state );
     $self->type( $config->{type} );
     $self->description( $config->{description} );
+    my $time_zone = exists $config->{time_zone} ? $config->{time_zone} : 'floating';
+    $self->time_zone($time_zone);
 
     # other properties go into 'param'...
     while ( my ( $key, $value ) = each %{ $config } ) {
@@ -340,6 +343,9 @@ Workflow - Simple, flexible system to implement workflows
  
  <workflow>
      <type>myworkflow</type>
+     <time_zone>local</time_zone>
+     <description>This is my workflow.</description>
+
      <state name="INITIAL">
          <action name="upload file" resulting_state="uploaded" />
      </state>
@@ -799,7 +805,7 @@ For instance, the following defines two observers:
  <workflow>
    <type>ObservedItem</type>
    <description>This is...</description>
-  
+
    <observer class="SomeObserver" />
    <observer sub="SomeOtherObserver::Functions::other_sub" />
 
@@ -903,23 +909,40 @@ Sets property to value or throws L<Workflow::Exception>
 
 =head2 Properties
 
-Unless otherwise noted properties are B<read-only>.
+Unless otherwise noted, properties are B<read-only>.
+
+=head3 Configuration Properties
+
+Some properties are set in the configuration file for each
+workflow. These remain static once the workflow is instantiated.
+
+B<type>
+
+Type of workflow this is. You may have many individual workflows
+associated with a type or you may have many different types
+running in a single workflow engine.
+
+B<description>
+
+Description (usually brief, hopefully with a URL...)  of this
+workflow.
+
+B<time_zone>
+
+Workflow uses the DateTime module to create all date objects. The time_zone
+parameter allows you to pass a time zone value directly to the DateTime
+new method for all cases where Workflow needs to create a date object.
+See the DateTime module for acceptable values.
+
+=head3 Dynamic Properties
+
+You can get the following properties from any workflow object.
 
 B<id>
 
 ID of this workflow. This will B<always> be defined, since when the
 L<Workflow::Factory> creates a new workflow it first saves it to
 long-term storage.
-
-B<type>
-
-Type of workflow this is. You may have many individual workflows
-associated with a type.
-
-B<description>
-
-Description (usually brief, hopefully with a URL...)  of this
-workflow.
 
 B<state>
 

@@ -1,0 +1,43 @@
+<actions>
+   <type>Type2</type>
+   <description>Actions for the Type2 workflow only.</description>
+   <action name="TIX_NEW"
+           class="TestApp::Action::TicketCreateType">
+      <description>Create a new ticket</description>
+      <field name="subject"
+             label="Subject"
+             description="Subject of ticket"
+             is_required="yes"/>
+      <field name="description"
+             label="Description"
+             description="Text describing the problem and any details to reproduce, if possible"
+             is_required="yes"/>
+      <field name="creator"
+             label="Creator"
+             description="Name of user who is creating the ticket"
+             is_required="yes"
+             source_class="TestApp::User"/>
+      <field name="type"
+             label="Type"
+             description="Type of ticket"
+             is_required="yes"
+             source_list="Bug,Feature,Improvement,Task"/>
+      <field name="due_date"
+             label="Due Date"
+             description="Date ticket is due (format: yyyy-mm-dd hh:mm)"/>
+      <validator name="DateValidator">
+         <arg>$due_date</arg>
+      </validator>
+   </action>
+
+   <action name="Ticket_Close"
+           class="TestApp::Action::TicketUpdate">
+      <field name="ticket_id"
+             description="Ticket to close"
+             is_required="yes"/>
+      <field name="current_user"
+             description="User closing the ticket"
+             is_required="yes"/>
+   </action>
+
+</actions>

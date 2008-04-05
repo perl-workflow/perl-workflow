@@ -1,7 +1,5 @@
 # -*-perl-*-
 
-# $Id$
-
 use strict;
 use lib 't';
 use TestUtil;
@@ -11,10 +9,9 @@ require_ok( 'Workflow::State' );
 
 my $factory;
 
-$factory = TestUtil->init_factory();
+# Run again with perl-based config.
+diag "Running with perl config.";
+$factory = TestUtil->init_factory_perl_config();
 TestUtil->init_mock_persister();
 
-# Run the tests with XML-based config.
-diag "Running with XML config.";
 TestUtil::run_state_tests($factory);
-

@@ -5,7 +5,7 @@
 use strict;
 use lib 't';
 use TestUtil;
-use Test::More  tests => 24;
+use Test::More  tests => 47;
 use Test::Exception;
 
 my ($parser);
@@ -20,15 +20,29 @@ dies_ok { Workflow::Config->new( 'SCAML' ) };
 ok($parser = Workflow::Config->new( 'xml' ));
 
 ok(my @validtypes = $parser->get_valid_config_types());
+is( $validtypes[0], 'action', 'Got array with valid types and action is first.');
+
 isa_ok($parser, 'Workflow::Config');
 
-ok($parser->parse( 'workflow', 'workflow.xml' ));
-ok($parser->parse( 'action', 'workflow_action.xml' ));
-ok($parser->parse( 'condition', 'workflow_condition.xml' ));
-ok($parser->parse( 'validator', 'workflow_validator.xml' ));
+my %config_xml = (
+		  'workflow' => ['workflow.xml', 'workflow_type.xml'],
+		  'action' => ['workflow_action.xml', 'workflow_action_type.xml'],
+		  'condition' => ['workflow_condition.xml', 'workflow_condition_type.xml'],
+		  'validator' => ['workflow_validator.xml'],
+		  'persister' => ['workflow_persister.xml'],
+		 );
+
+for my $type ( sort keys %config_xml ){
+  for my $source ( @{$config_xml{$type}} ){
+
+    my @config = $parser->parse( $type, $source );
+    ok( $config[0], "Parsed a config from $source for $type.");
+    is( (ref $config[0]), 'HASH', 'Got a hashref.');
+  }
+}
 
 $parser = Workflow::Config->new( 'xml' );
-ok($parser->parse( 'workflow', 'workflow.xml', 'workflow_action.xml', 'workflow_condition.xml', 'workflow_validator.xml' ));
+ok($parser->parse( 'workflow', 'workflow.xml', 'workflow_type.xml', 'workflow_action.xml', 'workflow_action_type.xml', 'workflow_condition.xml', 'workflow_condition_type.xml', 'workflow_validator.xml' ));
 
 #testing good config language Perl
 ok($parser = Workflow::Config->new( 'perl' ));
@@ -41,11 +55,22 @@ dies_ok { $parser->parse( '123_NOSUCHTYPE', 'workflow_errorprone.perl' ) };
 my @config = $parser->parse( 'workflow' );
 is(scalar(@config), 0, 'forgotten file, asserting length of array returned'); 
 
-ok($parser->parse( 'workflow', 'workflow.perl' ));
-ok($parser->parse( 'action', 'workflow_action.perl' ));
-ok($parser->parse( 'condition', 'workflow_condition.perl' ));
-ok($parser->parse( 'validator', 'workflow_validator.perl' ));
+my %config_perl = (
+		   'workflow' => ['workflow.perl', 'workflow_type.perl'],
+		   'action' => ['workflow_action.perl'],
+		   'condition' => ['workflow_condition.perl', 'workflow_condition_type.perl'],
+		   'validator' => ['workflow_validator.perl'],
+		   'persister' => ['workflow_persister.perl'],
+		 );
 
+for my $type ( sort keys %config_perl ){
+  for my $source ( @{$config_perl{$type}} ){
+
+    my @config = $parser->parse( $type, $source );
+    ok( $config[0], "Parsed a config from $source for $type.");
+    is( (ref $config[0]), 'HASH', 'Got a hashref.');
+  }
+}
 
 $parser = Workflow::Config->new( 'perl' );
 ok($parser->parse( 'workflow', 'workflow.perl', 'workflow_action.perl', 'workflow_condition.perl', 'workflow_validator.perl' ));
