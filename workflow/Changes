@@ -2,6 +2,24 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.32_1 Sun Apr  6 09:02:42 CEST 2008 (update not required)
+
+- This is an alpha release introducing typed condition, implemented by 
+  Jim Brandt, we are very interested in feedback on this release, so please
+  consider joining the mailing list or send feedback to jonasbn@cpan.org 
+  directly.
+
+- Typed conditions makes it possible for different workflows to hold 
+  unique methods for workflow steps even with names coliding.
+  
+  Example workflow foo and bar can have a condition baz, but baz are two 
+  different implementations in foo and bar respectively 
+
+- This release also holds new tests of persister configs
+
+
+room for more
+
 0.31 Wed Sep 26 20:26:49 CEST 2007 (update not required)
 
 - Fixed failing tests in t/persister_dbi.t, this has only observed twice
