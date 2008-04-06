@@ -15,21 +15,47 @@ Revision history for Perl extension Workflow
   Example workflow foo and bar can have a condition baz, but baz are two 
   different implementations in foo and bar respectively 
 
+	Updated:
+		t/cached_conditions.t
+		t/factory.t
+		t/state.t
+		t/TestUtil.t
+		t/condition.t
+		t/workflow_type.t
+		t/config.t
+		t/workflow.t
+
+		Workflow		
+		Workflow::Factory
+		Workflow::Config
+		Workflow::Config::XML
+		Workflow::Config::Perl
+		Workflow::Action
+		Workflow::State
+		Workflow::Condition
+		Workflow::Persister::DBI
+		Workflow::History
+		Workflow::Persister::SPOPS
+
+	Introduced
+		t/state_perl.t
+		t/TestApp/Action/TicketCreateType.pm
+		t/TestApp/Condition/HasUserType.pm
+		t/workflow_action_type.perl
+		t/workflow_action_type.xml
+		t/workflow_condition_type.perl
+		t/workflow_condition_type.xml
+		t/workflow_persister.perl
+		t/workflow_persister.xml
+		t/workflow_type.perl
+		t/workflow_type.xml
+		
 - This release also holds new tests of persister configs, there is however 
   always room for more
 
-	t/state_perl.t
-	t/TestApp/Action/TicketCreateType.pm
-	t/TestApp/Condition/HasUserType.pm
-	t/workflow_action_type.perl
-	t/workflow_action_type.xml
-	t/workflow_condition_type.perl
-	t/workflow_condition_type.xml
-	t/workflow_persister.perl
-	t/workflow_persister.xml
-	t/workflow_type.perl
-	t/workflow_type.xml
-	
+- time_zone parameter can now be passer around for use by the Workflow 
+  DateTime objects internally
+
 
 0.31 Wed Sep 26 20:26:49 CEST 2007 (update not required)
 
