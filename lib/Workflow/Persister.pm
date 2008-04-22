@@ -115,6 +115,15 @@ sub fetch_history {
                   "'fetch_history()'";
 }
 
+# Only required for DBI persisters.
+sub commit_transaction {
+    return;
+}
+
+sub rollback_transaction {
+  return;
+}
+
 1;
 
 __END__
@@ -202,6 +211,18 @@ Assigns proper generators based on intialization, see L</init>
 
 A stub that warns that the method should be overwritten in the derived
 Persister. Since this is a SUPER class.
+
+=head3 commit_transaction
+
+Commit the current transaction if the persister supports transactions.
+This stub does not have to be overridden. It is not executed if
+autocommit is on.
+
+=head3 rollback_transaction
+
+Roll back the current transaction if the persister supports transactions.
+This stub does not have to be overridden. It is not executed if
+autocommit is on.
 
 =head3 init
 

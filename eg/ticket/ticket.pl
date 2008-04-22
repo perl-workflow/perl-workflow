@@ -2,12 +2,12 @@
 
 use strict;
 use App::Ticket;
-use Cwd               qw( cwd );
 use DBI;
-use File::Spec::Functions;
 use Getopt::Long      qw( GetOptions );
 use Log::Log4perl     qw( get_logger );
 use Workflow::Factory qw( FACTORY );
+
+require '../../t/TestDBUtil.pm';
 
 $| = 1;
 
@@ -31,9 +31,12 @@ $OPT_db_type ||= 'sqlite';
 my $DB_FILE = 'ticket.db';
 
 if ( $OPT_db_init ) {
-    create_tables();
-    print "Created database and tables ok\n";
-    exit();
+  TestDBUtil::create_tables({
+			     db_type => $OPT_db_type,
+			     db_file => $DB_FILE,
+			    });
+  print "Created database and tables ok\n";
+  exit();
 }
 
 FACTORY->add_config_from_file( workflow  => 'workflow.xml',
@@ -297,88 +300,6 @@ sub _check_wf {
     }
 }
 
-
-########################################
-# DB INIT
-
-sub create_tables {
-    my $log = get_logger();
-    my ( $dbh, @tables ) = initialize_db();
-    for ( @tables ) {
-        next if ( /^\s*$/ );
-        $log->debug( "Creating table:\n$_" );
-        eval { $dbh->do( $_ ) };
-        if ( $@ ) {
-            die "Failed to create table\n$_\n$@\n";
-        }
-    }
-    $log->info( 'Created tables ok' );
-}
-
-sub initialize_db {
-    my $log = get_logger();
-
-    my $path = catdir( cwd(), 'db' );
-    unless( -d $path ) {
-        mkdir( $path, 0777 ) || die "Cannot create directory '$path': $!";
-        $log->info( "Created db directory '$path' ok" );
-    }
-
-    my ( $dbh );
-    my @tables = ();
-    if ( $OPT_db_type eq 'sqlite' ) {
-        if ( -f "$path/$DB_FILE" ) {
-            $log->info( "Removing old database file..." );
-            unlink( "$path/$DB_FILE" );
-        }
-        my $DSN = "DBI:SQLite:dbname=db/$DB_FILE";
-        $log->info( "Connecting to SQLite database with DSN '$DSN'..." );
-        $dbh = DBI->connect( $DSN, '', '',
-                             { RaiseError => 1, PrintError => 0 } )
-                    || die "Cannot create database: $DBI::errstr\n";
-        $log->info( "Connected to database ok" );
-        @tables = (
-            read_tables( '../../struct/workflow_sqlite.sql' ),
-            read_tables( 'ticket.sql' )
-        );
-    }
-    elsif ( $OPT_db_type eq 'csv' ) {
-        my @names = qw( workflow workflow_history ticket workflow_ticket );
-        for ( @names ) {
-            if ( -f $_ ) {
-                $log->info( "Removing old database file '$_'..." );
-                unlink( $_ );
-            }
-        }
-        $dbh = DBI->connect( "DBI:CSV:f_dir=db", '', '' )
-                    || die "Cannot create database: $DBI::errstr\n";
-        $dbh->{RaiseError} = 1;
-        $log->info( "Connected to database ok" );
-        @tables = (
-            read_tables( '../../struct/workflow_csv.sql' ),
-            read_tables( 'ticket_csv.sql' )
-        );
-    }
-    return ( $dbh, @tables );
-}
-
-########################################
-# I/O
-
-sub read_tables {
-    my ( $file ) = @_;
-    my $table_file = read_file( $file );
-    return split( ';', $table_file );
-}
-
-sub read_file {
-    my ( $file ) = @_;
-    local $/ = undef;
-    open( IN, '<', $file ) || die "Cannot read '$file': $!";
-    my $content = <IN>;
-    close( IN );
-    return $content;
-}
 
 # Generic routine to read a response from the command-line (defaults,
 # etc.) Note that return value has whitespace at the end/beginning of

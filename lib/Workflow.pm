@@ -96,7 +96,15 @@ sub execute_action {
         # the workflow; if it fails we should have some means for the
         # factory to rollback other transactions...
 
+	# Update
+	# Jim Brandt 4/16/2008: Implemented transactions for DBI persisters.
+	# Implementation still depends on each persister.
+
         FACTORY->save_workflow( $self );
+	
+	# If using a DBI persister with no autocommit, commit here.
+	FACTORY->_commit_transaction($self);
+
         $log->is_info &&
             $log->info( "Saved workflow with possible new state ok" );
     };
@@ -109,6 +117,8 @@ sub execute_action {
         $log->error( "Caught exception from action: $error; reset ",
                      "workflow to old state '$old_state'" );
         $self->state( $old_state );
+
+	FACTORY->_rollback_transaction($self);
 
         # Don't use 'workflow_error' here since $error should already
         # be a Workflow::Exception object or subclass

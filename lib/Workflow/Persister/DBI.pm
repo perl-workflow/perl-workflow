@@ -17,7 +17,7 @@ use Workflow::Persister::DBI::SequenceId;
 $Workflow::Persister::DBI::VERSION = '1.19';
 
 my @FIELDS = qw( handle dsn user password driver
-                 workflow_table history_table date_format parser);
+                 workflow_table history_table date_format parser autocommit);
 __PACKAGE__->mk_accessors( @FIELDS );
 
 my ( $log );
@@ -50,8 +50,12 @@ sub init {
     # Default to old date format if not provided so we don't break old configurations.
     $self->date_format( '%Y-%m-%d %H:%M' );
 
-    for ( qw( dsn user password date_format ) ) {
-        $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
+    # Default to autocommit on for backward compatibility.
+    $self->autocommit(1);
+
+    # Load user-provided values from config.
+    for ( qw( dsn user password date_format autocommit ) ) {
+        $self->$_( $params->{ $_ } ) if ( defined $params->{ $_ } );
     }
 
     my $parser = DateTime::Format::Strptime->new( pattern => $self->date_format );
@@ -67,7 +71,7 @@ sub init {
     $dbh->{RaiseError} = 1;
     $dbh->{PrintError} = 0;
     $dbh->{ChopBlanks} = 1;
-    $dbh->{AutoCommit} = 1;
+    $dbh->{AutoCommit} = $self->autocommit();
     $self->handle( $dbh );
     $log->is_debug &&
         $log->debug( "Connected to database '", $self->dsn, "' and ",
@@ -387,6 +391,32 @@ sub fetch_history {
 }
 
 
+sub commit_transaction {
+  my ( $self, $wf ) = @_;
+  if( not $self->autocommit() ){
+    eval{
+      $self->handle->commit();
+    };
+    if ( $@ ) {
+      $log->error( "Caught error committing transaction: $@" );
+      persist_error $@;
+    }
+  }
+}
+
+sub rollback_transaction {
+  my ( $self, $wf ) = @_;
+  if( not $self->autocommit() ){
+    eval{
+      $self->handle->rollback();
+    };
+    if ( $@ ) {
+      $log->error( "Caught error rolling back transaction: $@" );
+      persist_error $@;
+    }
+  }
+}
+
 ##########
 # FIELDS
 
@@ -428,17 +458,19 @@ Workflow::Persister::DBI - Persist workflow and history to DBI database
             dsn="DBI:mysql:database=workflows"
             user="wf"
             password="mypass"/>
- 
+
  <persister name="BackupDatabase"
             class="Workflow::Persister::DBI"
             dsn="DBI:Pg:dbname=workflows"
             user="wf"
             password="mypass"
+            date_format="%Y-%m-%d %H:%M"
+            autocommit="0"
             workflow_table="wf"
             workflow_sequence="wf_seq"
             history_table="wf_history"
             history_sequence="wf_history_seq"/>
- 
+
 
 =head1 DESCRIPTION
 
@@ -525,6 +557,9 @@ Create a database handle from the given parameters. You are only
 required to provide 'dsn', which is the full DBI DSN you normally use
 as the first argument to C<connect()>.
 
+You can set these parameters in your persister configuration file and
+they will be passed to init.
+
 You may also use:
 
 =over 4
@@ -545,6 +580,22 @@ L<http://search.cpan.org/~drolsky/DateTime-0.39/lib/DateTime.pm#strftime_Specifi
 for the format options.
 
 The default is '%Y-%m-%d %H:%M' for backward compatibility.
+
+=item B<autocommit>
+
+0 or 1 to turn autocommit off or on for the database handle.
+
+Setting autocommit to off will run Workflow with transactions. If there is
+a failure somewhere and the persister supports it, Workflow will attempt
+to roll back all database activity in the current transaction.
+
+If you turn autocommit off, you must still
+commit transactions for L<Workflow::Persister::DBI::ExtraData> yourself. Also,
+if you are sharing the database handle, you must be careful to not pass control
+to the workflow engine with pending transactions as they will be committed if
+the workflow actions are successful.
+
+The default autocommit value for the database handle is on.
 
 =item B<workflow_table>
 
