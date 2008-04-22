@@ -139,7 +139,6 @@ t/workflow_errorprone.perl
 t/workflow_observer.xml
 t/workflow_persister.perl
 t/workflow_persister.xml
-t/workflow_tests.log
 t/workflow_type.perl
 t/workflow_type.xml
 t/workflow_validator.perl

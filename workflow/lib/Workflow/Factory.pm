@@ -344,6 +344,8 @@ sub create_workflow {
     );
     $log->is_info && $log->info( "Created history object ok" );
 
+    $self->_commit_transaction($wf);
+
     $self->associate_observers_with_workflow( $wf );
     $wf->notify_observers( 'create' );
 
@@ -433,6 +435,29 @@ sub save_workflow {
 
     return $wf;
 }
+
+# Only implemented for DBI. Don't know if this could be implemented
+# for other persisters.
+sub _commit_transaction {
+  my ( $self, $wf ) = @_;
+  $log ||= get_logger();
+  my $wf_config = $self->_get_workflow_config( $wf->type );
+  my $persister = $self->get_persister( $wf_config->{persister} );
+  $persister->commit_transaction();
+  $log->debug('Committed transaction.');
+  return;
+}
+
+sub _rollback_transaction {
+  my ( $self, $wf ) = @_;
+  $log ||= get_logger();
+  my $wf_config = $self->_get_workflow_config( $wf->type );
+  my $persister = $self->get_persister( $wf_config->{persister} );
+  $persister->rollback_transaction();
+  $log->debug('Rolled back transaction.');
+  return;
+}
+
 
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
@@ -807,6 +832,12 @@ Stores the state and current datetime of the C<$workflow> object. This
 is normally called only from the L<Workflow> C<execute_action()>
 method.
 
+This method respects transactions if the selected persister supports it.
+Currently, the DBI-based persisters will commit the workflow transaction
+if everything executes successfully and roll back if something fails.
+Note that you need to manage any L<Workflow::Persister::DBI::ExtraData>
+transactions yourself.
+
 Returns: C<$workflow>
 
 =head3 get_workflow_history( $workflow )
@@ -913,6 +944,16 @@ instantiate an object of that class.
 
 Returns: nothing
 
+=head3 _commit_transaction
+
+Calls the commit method in the workflow's persister.
+
+Returns: nothing
+
+=head3 _rollback_transaction
+
+Calls the rollback method in the workflow's persister.
+
 =head3 associate_observers_with_workflow
 
 Add defined observers with workflow.
@@ -921,7 +962,7 @@ The workflow has to be provided as the single parameter accepted by this
 method.
 
 The observers added will have to be of the type relevant to the workflow type.
-    
+
 =head3 new
 
 The new method is a dummy constructor, since we are using a factory it makes

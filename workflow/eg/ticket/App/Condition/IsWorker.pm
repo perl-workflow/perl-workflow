@@ -8,7 +8,7 @@ use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( condition_error );
 use Workflow::Factory   qw( FACTORY );
 
-$App::Condition::IsWorker::VERSION = '1.02'
+$App::Condition::IsWorker::VERSION = '1.02';
 
 my ( $log );
 
