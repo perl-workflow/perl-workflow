@@ -739,6 +739,19 @@ Takes a single parameter: a workflow object
 
 Returns an array of workflow history objects upon success
 
+=head3 commit_transaction ( $wf )
+
+Commit the transaction for a workflow if autocommit is not enabled.
+
+Returns nothing 
+
+=head3 rollback_transaction
+
+Rollsback the transaction for a workflow if autocommit is not enabled.
+
+Returns nothing 
+
+
 =head1 SEE ALSO
 
 =over
