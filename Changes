@@ -2,6 +2,12 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+HEAD
+
+- Fixed minor bug in error message in: Workflow::State, reported
+  by Robert Stockdale, RT #38023
+
+
 0.32_2 Sun Apr 20 20:37:56 CEST 2008 (update not required)
 
 - This is yet another developer release introducing a more fine grained control 

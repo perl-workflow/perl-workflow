@@ -114,7 +114,7 @@ sub evaluate_action {
                         $log->debug( "Cached condition result is false." );
                     workflow_error "No access to action '$action_name' in ",
                                    "state '$state' because cached ",
-                                   "condition 'orig_condition' already ",
+                                   "condition '$orig_condition' already ",
                                    "failed before.";
                 }
             }
