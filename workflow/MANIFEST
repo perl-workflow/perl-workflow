@@ -89,6 +89,7 @@ t/condition.t
 t/condition_evaluate.t
 t/config.t
 t/context.t
+t/db/workflow.db
 t/exception.t
 t/factory.t
 t/factory_subclass.t
@@ -98,6 +99,7 @@ t/log4perl.conf
 t/persister.t
 t/persister_dbi.t
 t/persister_dbi_extra_data.t
+t/persister_dbi_sqlite.t
 t/persister_file.t
 t/persister_random_id.t
 t/persister_spops.t
@@ -115,6 +117,7 @@ t/TestApp/Ticket.pm
 t/TestApp/User.pm
 t/TestApp/Web.pm
 t/TestCachedApp/Condition/EvenSeconds.pm
+t/TestDBUtil.pm
 t/TestUtil.pm
 t/validator.t
 t/validator_has_required_field.t

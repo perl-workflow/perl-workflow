@@ -2,7 +2,9 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-HEAD
+0.32_3 Sat Aug 16 17:52:20 CEST 2008 (update not required)
+
+- Updated MANIFEST and MANIFEST.SKIP, some stuff was not included
 
 - Fixed minor bug in error message in: Workflow::State, reported
   by Robert Stockdale, RT #38023
