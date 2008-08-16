@@ -31,6 +31,9 @@
 ^prototypes
 ^bin
 TODO.txt
+Workflow_patch_caching.diff
+Workflow_patch_autorun_maystop.diff
+t/workflow_tests.log
 
 # Komodo
 \.kpf
