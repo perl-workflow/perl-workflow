@@ -2,7 +2,7 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-0.32_4 candidate (update not required)
+0.32_4 Tue Aug 19 23:14:37 CEST 2008 candidate (update not required)
 
 - Added List::MoreUtils to requirements, we use this for test, I have moved the
   test related modules to the build_requires section in Build.PL, so
