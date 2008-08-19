@@ -14,7 +14,7 @@ Revision history for Perl extension Workflow
   
   Updated the test and bumped up the version of t/TestUtil.pm to 0.02
 
-  Refactored two tests, to use List::MoreUtils all method (asserting precense of
+  Refactored two tests, to use List::MoreUtils all method (asserting presence of
   numerous actions)
 
 
