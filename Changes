@@ -2,6 +2,22 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.32_4 candidate (update not required)
+
+- Added List::MoreUtils to requirements, we use this for test, I have moved the
+  test related modules to the build_requires section in Build.PL, so
+  List::MoreUtils is not mistaken for an application level module
+
+- Some of the new tests distributed with 0.32_3 fail. We are looking at actions
+  returned as an array, but since they originate from a hash, the order is not
+  given as assumed in the test.
+  
+  Updated the test and bumped up the version of t/TestUtil.pm to 0.02
+
+  Refactored two tests, to use List::MoreUtils all method (asserting precense of
+  numerous actions)
+
+
 0.32_3 Sat Aug 16 17:52:20 CEST 2008 (update not required)
 
 - Updated MANIFEST and MANIFEST.SKIP, some stuff was not included
