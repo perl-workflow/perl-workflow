@@ -6,8 +6,9 @@ use strict;
 use vars qw($VERSION);
 use DateTime;
 use Test::More;
+use List::MoreUtils qw(all);
 
-$VERSION = '0.01';
+$VERSION = '0.02';
 
 my ( $original_dir );
 
@@ -194,9 +195,7 @@ sub run_state_tests{
 
   @actions = $wf_state->get_available_action_names( $wf2 );
   is( (scalar @actions), 2, 'Got back two available actions.');
-  is( $actions[0], 'TIX_EDIT', 'Got TIX_EDIT as first available action.');
-  is( $actions[1], 'TIX_COMMENT', 'Got TIX_COMMENT as second available action.');
-
+  ok(all { defined $_ } qw(TIX_EDIT TIX_COMMENT), 'Got TIX_EDIT and TIX_COMMENT as available actions.');
 }
 
 'I am true!';

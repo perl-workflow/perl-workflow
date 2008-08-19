@@ -3,7 +3,7 @@
 use strict;
 use lib 't';
 use TestUtil;
-use Test::More  tests => 20;
+use Test::More  tests => 19;
 
 require_ok( 'Workflow::State' );
 
