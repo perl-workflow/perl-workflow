@@ -4,6 +4,8 @@ Revision history for Perl extension Workflow
 
 1.32
 
+- Removed VERSION file, this has now been obsoleted
+
 - Addressing RT #40750
   http://rt.cpan.org/Ticket/Display.html?id=40750
 
