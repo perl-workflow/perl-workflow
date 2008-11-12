@@ -4,7 +4,7 @@ Module::Build->new(
     dist_author       => 'Jonas B. NIelsen <jonasbn@cpan.org>',
     dist_abstract     => 'Simple, flexible system to implement workflows',
     dist_name         => 'Workflow',
-    dist_version_from => 'VERSION',
+    dist_version_from => 'lib/Workflow.pm',
     distribution_type => 'module',
     license           => 'perl',
     build_requires    => {
@@ -32,3 +32,5 @@ Module::Build->new(
     },
     create_makefile_pl => 'traditional',
 )->create_build_script();
+
+exit 0;
