@@ -31,7 +31,7 @@ sub initialize_db {
 
   # Get the base workflow directory.
   my $workflow_base = cwd();
-  $workflow_base =~ s/\A(.*)\/workflow(.*)/$1\/workflow/;
+  $workflow_base =~ s/\A(.*)\/t/$1/;
 
     my $path = catdir( cwd(), 'db' );
     unless( -d $path ) {
