@@ -12,7 +12,8 @@ use Workflow::Factory   qw( FACTORY );
 $Workflow::State::VERSION = '1.13';
 
 my @FIELDS = qw( state description type );
-__PACKAGE__->mk_accessors( @FIELDS );
+my @INTERNAL = qw( _test_condition_count );
+__PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
 my ( $log );
 
@@ -261,6 +262,7 @@ sub init {
     # Note this is the workflow type.
     $self->type( $config->{type} );
     $self->description( $config->{description} );
+
     if ( $config->{autorun} ) {
         $self->autorun( $config->{autorun} );
     }
@@ -343,8 +345,11 @@ sub _create_condition_objects {
 
         # Special case: a 'test' denotes our 'evaluate' condition
         if ( $condition_info->{test} ) {
+            my $state  = $self->state();
+            my $action = $action_config->{name};
+            my $count  = $self->_get_next_condition_count();
             push @condition_objects, Workflow::Condition::Evaluate->new({
-                name  => 'evaluate',
+                name  => "_$state\_$action\_condition\_$count",
                 class => 'Workflow::Condition::Evaluate',
                 test  => $condition_info->{test},
             });
@@ -375,6 +380,18 @@ sub _contains_action_check {
         workflow_error "State '", $self->state, "' does not contain ",
                        "action '$action_name'"
     }
+}
+
+sub _get_next_condition_count { 
+    my ($self) = @_;
+
+    # Initialize if not set.
+    my $count 
+        = defined $self->_test_condition_count()
+        ? $self->_test_condition_count() + 1
+        : 1;
+
+    return $self->_test_condition_count($count);
 }
 
 1;

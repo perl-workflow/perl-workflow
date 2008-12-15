@@ -81,7 +81,7 @@ sub init_factory {
     require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     $factory->add_config_from_file(
-        workflow  => [ 'workflow.xml', 'workflow_type.xml' ],
+        workflow  => [ 'workflow.xml', 'workflow_type.xml', 'workflow_evaluate_condition.xml' ],
         action    => [ 'workflow_action.xml', 'workflow_action_type.xml' ],
         condition => [ 'workflow_condition.xml', 'workflow_condition_type.xml'],
         validator => "workflow_validator.xml"
