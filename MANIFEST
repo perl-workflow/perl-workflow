@@ -139,6 +139,7 @@ t/workflow_condition.xml
 t/workflow_condition_type.perl
 t/workflow_condition_type.xml
 t/workflow_errorprone.perl
+t/workflow_evaluate_condition.xml
 t/workflow_observer.xml
 t/workflow_persister.perl
 t/workflow_persister.xml
