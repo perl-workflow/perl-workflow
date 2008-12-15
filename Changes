@@ -2,7 +2,19 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-0.32_4 Tue Aug 19 23:14:37 CEST 2008 candidate (update not required)
+0.32_5 Thu Nov 13 20:11:50 CET 2008 (update not required)
+
+- Fixed regular expression in t/TestDBUtil.pm, we see alot of failing tests
+  because the root directory did not necessarily match the expected. The
+  new regex is a bit more loose. The branch itself (t_vs_struct) demonstrates
+  the problem.
+  
+  See also failing tests at:
+  
+  http://www.cpantesters.org/show/Workflow.html#Workflow-0.32_4
+  
+
+0.32_4 Tue Aug 19 23:14:37 CEST 2008 (update not required)
 
 - Added List::MoreUtils to requirements, we use this for test, I have moved the
   test related modules to the build_requires section in Build.PL, so
