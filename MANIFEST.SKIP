@@ -4,6 +4,8 @@
 ,v$
 \B\.svn\b
 .cvsignore
+.diff
+.orig
 
 # Avoid Makemaker generated and utility files.
 \bMakefile$
@@ -34,6 +36,7 @@ TODO.txt
 Workflow_patch_caching.diff
 Workflow_patch_autorun_maystop.diff
 t/workflow_tests.log
+t/db/workflow.db
 
 # Komodo
 \.kpf

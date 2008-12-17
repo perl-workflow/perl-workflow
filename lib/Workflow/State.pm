@@ -37,7 +37,7 @@ sub get_all_action_names {
 }
 
 sub get_available_action_names {
-    my ( $self, $wf ) = @_;
+    my ( $self, $wf, $group ) = @_;
     my @all_actions = $self->get_all_action_names;
     my @available_actions = ();
 
@@ -46,6 +46,13 @@ sub get_available_action_names {
     $self->clear_condition_cache();
 
     foreach my $action_name ( @all_actions ) {
+        my $action_group = FACTORY->{_action_config}{ $action_name }{'group'};   
+        if (defined $group && length($group)) {
+            if ($action_group ne $group) {
+               next;
+            }
+        }
+	    
         if ( $self->is_action_available( $wf, $action_name ) ) {
             push @available_actions, $action_name;
         }
@@ -515,11 +522,13 @@ using the data in the context of C<$workflow> to do the checks.
 
 Returns list of all action names available in this state.
 
-=head3 get_available_action_names( $workflow )
+=head3 get_available_action_names( $workflow, $group )
 
 Returns all actions names that are available given the data in
 C<$workflow>. Each action name returned will return true from
 B<is_action_available()>.
+$group is optional parameter. If it is set, additional check for group 
+membership will be performed.
 
 =head3 get_next_state( $action_name, [ $action_return ] )
 

@@ -47,12 +47,12 @@ sub context {
 
 
 sub get_current_actions {
-    my ( $self ) = @_;
+    my ( $self, $group ) = @_;
     $log ||= get_logger();
     $log->is_debug &&
         $log->debug( "Getting current actions for wf '", $self->id, "'" );
     my $wf_state = $self->_get_workflow_state;
-    return $wf_state->get_available_action_names( $self );
+    return $wf_state->get_available_action_names( $self, $group );
 }
 
 
@@ -861,14 +861,26 @@ general information about observers as well as implementation details.
 
 Returns: new state of workflow
 
-=head3 get_current_actions()
+=head3 get_current_actions( $group )
 
 Returns a list of action names available from the current state for
 the given environment. So if you keep your C<context()> the same if
 you call C<execute_action()> with one of the action names you should
 not trigger any condition error since the action has already been
-screened for conditions.
+screened for conditions. 
+If you want to divide actions in groups (for example state change group, 
+approval group, which have to be shown at different places on the page) add group property 
+to your action
 
+<action name="terminate request"  group="state change"  class="MyApp::Action::Terminate" />
+<action name="approve request"  group="approval"  class="MyApp::Action::Approve" />
+
+my @actions = $wf->get_current_actions("approval");
+
+$group should be string that reperesents desired group name. In @actions you will get
+list of action names available from the current state for the given environment limited by group.
+$group is optional parameter.
+ 
 Returns: list of strings representing available actions
 
 =head3 get_action_fields( $action_name )

@@ -2,6 +2,13 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+0.32_7 Wed Dec 17 15:00:56 CET 2008 (update not required)
+
+- Applied patches from Ivan Paponov. This implements support for a group tag on actions.
+
+- Added t/db/workflow.db to MANIFEST.SKIP
+
+
 0.32_6 Mon Dec 15 21:27:25 CET 2008 (update not required)
 
 - Patch to implement proper dynamic names for conditions with a 'test' attribute
