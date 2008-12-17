@@ -1,0 +1,25 @@
+<workflow>
+ <type>TestCondition</type>
+ <description>This is a sample workflow using the 'test' condition</description>
+ <persister>TestPersister</persister>
+ <state name="INITIAL">
+     <description>This is the state the workflow enters when
+        instantiated. It's like a 'state zero' but since we're
+        using names rather than IDs we cannot assume</description>
+     <action name="TIX_NEW"
+        resulting_state="Ticket_Created"/>
+ </state>
+
+ <state name="Ticket_Created">
+     <description>State of ticket after it has been created</description>
+     <action name="Ticket_Close"
+             resulting_state="Ticket_Closed">
+        <condition test="1"/>
+        <condition test="1"/>
+     </action>
+  </state>
+
+  <state name="Ticket_Closed">
+      <description>State of ticket after creator approves the work done</description>
+  </state>
+</workflow>

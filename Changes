@@ -14,8 +14,13 @@ Revision history for Perl extension Workflow
   an installation can be traced back to a given distribution
 
 
-0.32_5 Thu Nov 13 20:11:50 CET 2008 (update not required)
+0.32_6 Mon Dec 15 21:27:25 CET 2008 (update not required)
 
+- Patch to implement proper dynamic names for conditions with a 'test' attribute
+  Added RT: #38024
+
+
+0.32_5 Thu Nov 13 20:11:50 CET 2008 (update not required)
 
 - Fixed regular expression in t/TestDBUtil.pm, we see alot of failing tests
   because the root directory did not necessarily match the expected. The
