@@ -12,6 +12,7 @@ use Log::Log4perl     qw( get_logger );
 use Workflow::Action::InputField;
 use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
+use Carp qw(croak);
 
 $Workflow::Action::VERSION = '1.09';
 
@@ -87,7 +88,7 @@ sub validate {
 
 sub execute  {
     my ( $self, $wf ) = @_;
-    die "Class ", ref( $self ), " must implement 'execute()'\n";
+    croak "Class ", ref( $self ), " must implement 'execute()'\n";
 }
 
 ########################################

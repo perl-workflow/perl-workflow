@@ -26,7 +26,6 @@ allow_leading_tabs = 0
 [-ControlStructures::ProhibitCascadingIfElse]
 [-ControlStructures::ProhibitPostfixControls]
 [-ControlStructures::ProhibitUnlessBlocks]
-[-ErrorHandling::RequireCarping]
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
 [-InputOutput::ProhibitBarewordFileHandles]
 [-InputOutput::ProhibitJoinedReadline]

@@ -7,6 +7,7 @@ use base qw( Workflow::Base );
 use DateTime;
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
+use Carp qw(croak);
 
 $Workflow::Factory::VERSION = '1.18';
 
@@ -428,7 +429,7 @@ sub save_workflow {
     };
     if ( $@ ) {
         $wf->last_update( $old_update );
-        die $@;
+        croak $@;
     }
 
     $wf->notify_observers( 'save' );

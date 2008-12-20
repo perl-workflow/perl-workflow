@@ -26,6 +26,7 @@ Module::Build->new(
       'XML::Simple'                => 2.00,
       'DBI'                        => 0,
       'Data::Dumper'               => 0,
+      'Carp'                       => 0,
     },
     no_index => {
         directory => [ 'eg', 't' ],
