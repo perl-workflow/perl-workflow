@@ -1078,6 +1078,10 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
+Ivan Paponov, for patch implementing action groups, See Changes file, 0.32_7
+
+Robert Stockdale, for patch implementing dynamic names for conditions,
+See Changes file, 0.32_6
 
 Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27 and 0.30
 
