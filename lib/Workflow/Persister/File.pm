@@ -10,6 +10,7 @@ use File::Spec::Functions qw( catdir catfile );
 use Log::Log4perl         qw( get_logger );
 use Workflow::Exception   qw( configuration_error persist_error );
 use Workflow::Persister::RandomId;
+use File::Slurp qw(slurp);
 
 $Workflow::Persister::File::VERSION = '1.10';
 
@@ -160,9 +161,9 @@ sub serialize_object {
 
 sub constitute_object {
     my ( $self, $object_path ) = @_;
-    open( IN, '<', $object_path );
-    my $content = join( '', <IN> );
-    close( IN );
+
+    my $content = slurp($object_path);
+
     no strict;
     my $object = eval $content;
     croak $@ if ( $@ );
