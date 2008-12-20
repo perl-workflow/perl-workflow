@@ -8,6 +8,8 @@ use base qw( Workflow::Base );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( persist_error );
 
+use constant DEFAULT_ID_LENGTH  => 8;
+
 $Workflow::Persister::VERSION = '1.09';
 
 my @FIELDS = qw( name class
@@ -58,7 +60,7 @@ sub assign_generators {
 
 sub init_random_generators {
     my ( $self, $params ) = @_;
-    my $length = $params->{id_length} || 8;
+    my $length = $params->{id_length} || DEFAULT_ID_LENGTH;
     my $generator =
         Workflow::Persister::RandomId->new({ id_length => $length });
     return ( $generator, $generator );
