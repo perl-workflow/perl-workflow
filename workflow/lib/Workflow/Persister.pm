@@ -2,6 +2,7 @@ package Workflow::Persister;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl       qw( get_logger );

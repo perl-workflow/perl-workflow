@@ -2,6 +2,7 @@ package Workflow::Persister::File;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Persister );
 use Data::Dumper          qw( Dumper );

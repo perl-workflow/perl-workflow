@@ -2,6 +2,7 @@ package Workflow::Persister::DBI::SequenceId;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Class::Accessor );
 use DBI;

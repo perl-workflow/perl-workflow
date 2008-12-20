@@ -2,6 +2,7 @@ package Workflow::Action::InputField;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Class::Accessor );
 use Log::Log4perl       qw( get_logger );

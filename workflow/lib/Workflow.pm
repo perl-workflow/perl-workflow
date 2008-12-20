@@ -2,8 +2,8 @@ package Workflow;
 
 # $Id$
 
+use warnings;
 use strict;
-
 use base qw( Workflow::Base Class::Observable );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Context;

@@ -2,6 +2,7 @@ package Workflow::Action::Null;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Action );
 

@@ -2,6 +2,7 @@ package Workflow::Config;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Class::Factory );
 use Data::Dumper        qw( Dumper );
