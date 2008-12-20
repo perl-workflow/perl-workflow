@@ -4,6 +4,7 @@ package Workflow::Validator;
 
 use strict;
 use base qw( Workflow::Base );
+use Carp qw(croak);
 
 $Workflow::Validator::VERSION = '1.05'; 
 
@@ -26,7 +27,7 @@ sub _init { return }
 
 sub validate {
     my ( $self ) = @_;
-    die "Class ", ref( $self ), " must implement 'validate()'!\n";
+    croak "Class ", ref( $self ), " must implement 'validate()'!\n";
 }
 
 1;

@@ -9,6 +9,7 @@ use Log::Log4perl       qw( get_logger );
 use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
 use Workflow::Factory   qw( FACTORY );
+use Carp qw(croak carp);
 
 my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors( @FIELDS );
@@ -123,7 +124,7 @@ sub execute_action {
         # Don't use 'workflow_error' here since $error should already
         # be a Workflow::Exception object or subclass
 
-        die $error;
+        croak $error;
     }
 
     $self->notify_observers( 'execute', $old_state, $action_name, $autorun );
@@ -250,7 +251,7 @@ sub set {
     my ( $self, $prop, $value ) = @_;
     my $calling_pkg = (caller(1))[0];
     unless ( $calling_pkg =~ /^Workflow/ ) {
-        warn "Tried to set from: ", join( ', ', caller(1) );
+        carp "Tried to set from: ", join( ', ', caller(1) );
         workflow_error "Don't try to use my private setters from '$calling_pkg'!";
     }
     $self->{ $prop } = $value;

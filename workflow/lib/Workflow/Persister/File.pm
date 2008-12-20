@@ -164,7 +164,7 @@ sub constitute_object {
     close( IN );
     no strict;
     my $object = eval $content;
-    die $@ if ( $@ );
+    croak $@ if ( $@ );
     return $object;
 
 }
@@ -285,8 +285,6 @@ Returns: Nothing
 =head1 TODO
 
 =over
-
-=item * exchange die for croak in L</constitute_object>
 
 =item * refactor L</constitute_object>, no checks are made on filesystem prior
 to deserialization attempt.

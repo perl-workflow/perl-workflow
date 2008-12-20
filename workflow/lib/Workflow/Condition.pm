@@ -4,6 +4,7 @@ package Workflow::Condition;
 
 use strict;
 use base qw( Workflow::Base );
+use Carp qw(croak);
 
 $Workflow::Condition::VERSION = '1.07';
 
@@ -21,7 +22,7 @@ sub _init { return }
 
 sub evaluate {
     my ( $self ) = @_;
-    die "Class ", ref( $self ), " must implement 'evaluate()'!\n";
+    croak "Class ", ref( $self ), " must implement 'evaluate()'!\n";
 }
 
 1;

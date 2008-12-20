@@ -6,6 +6,7 @@ use strict;
 use base qw( Workflow::Config );
 use Log::Log4perl       qw( get_logger );
 use Workflow::Exception qw( configuration_error );
+use Carp qw(croak);
 
 $Workflow::Config::XML::VERSION = '1.05';
 
@@ -55,7 +56,7 @@ sub parse {
         };
         # If processing multiple config files, this makes it much easier
         # to find a problem.
-        die "Processing $file_name: $@" if $@;
+        croak "Processing $file_name: $@" if $@;
         $log->is_info &&
             $log->info( "Parsed XML '$file_name' ok" );
 
