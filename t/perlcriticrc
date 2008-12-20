@@ -1,0 +1,58 @@
+
+# $Id$
+
+severity = 1
+verbose  = 8
+
+#------------------------------------------------------------------------------
+
+[Documentation::RequirePodSections]
+lib_sections    = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
+script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
+
+[Miscellanea::RequireRcsKeywords]
+keywords = Id
+
+[-BuiltinFunctions::ProhibitStringyEval]
+[-BuiltinFunctions::ProhibitStringySplit]
+[-BuiltinFunctions::ProhibitUniversalIsa]
+[-CodeLayout::ProhibitHardTabs]
+allow_leading_tabs = 0
+[-CodeLayout::ProhibitParensWithBuiltins]
+[-CodeLayout::ProhibitTrailingWhitespace]
+[-CodeLayout::RequireTidyCode]
+[-CodeLayout::RequireTrailingCommas]
+[-ControlStructures::ProhibitCStyleForLoops]
+[-ControlStructures::ProhibitCascadingIfElse]
+[-ControlStructures::ProhibitPostfixControls]
+[-ControlStructures::ProhibitUnlessBlocks]
+[-ErrorHandling::RequireCarping]
+[-ErrorHandling::RequireCheckingReturnValueOfEval]
+[-InputOutput::ProhibitBarewordFileHandles]
+[-InputOutput::ProhibitJoinedReadline]
+[-InputOutput::RequireBracedFileHandleWithPrint]
+[-InputOutput::RequireCheckedClose]
+[-InputOutput::RequireCheckedOpen]
+[-InputOutput::RequireCheckedSyscalls]
+[-NamingConventions::ProhibitAmbiguousNames]
+[-RegularExpressions::ProhibitFixedStringMatches]
+[-RegularExpressions::RequireExtendedFormatting]
+[-RegularExpressions::RequireLineBoundaryMatching]
+[-Subroutines::ProhibitExcessComplexity]
+[-Subroutines::ProhibitExplicitReturnUndef]
+[-Subroutines::ProtectPrivateSubs]
+[-Subroutines::RequireArgUnpacking]
+[-Subroutines::RequireFinalReturn]
+[-TestingAndDebugging::ProhibitNoStrict]
+[-TestingAndDebugging::RequireUseWarnings]
+[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
+[-ValuesAndExpressions::ProhibitConstantPragma]
+[-ValuesAndExpressions::ProhibitEmptyQuotes]
+[-ValuesAndExpressions::ProhibitImplicitNewlines]
+[-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
+[-ValuesAndExpressions::ProhibitMagicNumbers]
+[-ValuesAndExpressions::ProhibitMixedBooleanOperators]
+[-ValuesAndExpressions::ProhibitNoisyQuotes]
+[-ValuesAndExpressions::RequireInterpolationOfMetachars]
+[-Variables::ProhibitPackageVars]
+[-Variables::ProhibitPunctuationVars]
