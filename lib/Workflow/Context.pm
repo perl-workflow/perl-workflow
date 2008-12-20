@@ -2,6 +2,7 @@ package Workflow::Context;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Base );
 

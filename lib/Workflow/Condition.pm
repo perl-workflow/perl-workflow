@@ -2,6 +2,7 @@ package Workflow::Condition;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);

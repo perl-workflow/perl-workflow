@@ -2,6 +2,7 @@ package Workflow::Config::Perl;
 
 # $Id$
 
+use warnings;
 use strict;
 use base                qw( Workflow::Config );
 use Log::Log4perl       qw( get_logger );

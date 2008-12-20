@@ -43,7 +43,6 @@ allow_leading_tabs = 0
 [-Subroutines::RequireArgUnpacking]
 [-Subroutines::RequireFinalReturn]
 [-TestingAndDebugging::ProhibitNoStrict]
-[-TestingAndDebugging::RequireUseWarnings]
 [-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
 [-ValuesAndExpressions::ProhibitConstantPragma]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]

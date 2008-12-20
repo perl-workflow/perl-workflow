@@ -2,6 +2,7 @@ package Workflow::Persister::UUID;
 
 # $Id$
 
+use warnings;
 use strict;
 use Data::UUID;
 

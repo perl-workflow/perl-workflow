@@ -2,6 +2,7 @@ package Workflow::Persister::DBI::ExtraData;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Persister::DBI );
 use Log::Log4perl       qw( get_logger );

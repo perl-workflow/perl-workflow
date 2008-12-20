@@ -2,6 +2,7 @@ package Workflow::Factory;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Base );
 use DateTime;

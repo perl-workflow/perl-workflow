@@ -6,6 +6,7 @@ package Workflow::Action;
 # can trigger other code (use 'Class::Observable'? read observations
 # from database?)
 
+use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl     qw( get_logger );

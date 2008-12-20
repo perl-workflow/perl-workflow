@@ -2,6 +2,7 @@ package Workflow::Exception;
 
 # $Id$
 
+use warnings;
 use strict;
 
 # Declare some of our exceptions...

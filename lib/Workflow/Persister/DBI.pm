@@ -2,6 +2,7 @@ package Workflow::Persister::DBI;
 
 # $Id$
 
+use warnings;
 use strict;
 use base qw( Workflow::Persister );
 use DateTime;
