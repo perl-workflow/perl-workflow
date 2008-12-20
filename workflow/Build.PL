@@ -27,6 +27,7 @@ Module::Build->new(
       'DBI'                        => 0,
       'Data::Dumper'               => 0,
       'Carp'                       => 0,
+      'File::Slurp'                => 0,
     },
     no_index => {
         directory => [ 'eg', 't' ],

@@ -31,7 +31,6 @@ allow_leading_tabs = 0
 [-ControlStructures::ProhibitUnlessBlocks]
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
 [-InputOutput::ProhibitBarewordFileHandles]
-[InputOutput::ProhibitJoinedReadline]
 [-InputOutput::RequireBracedFileHandleWithPrint]
 [-InputOutput::RequireCheckedClose]
 [-InputOutput::RequireCheckedOpen]
