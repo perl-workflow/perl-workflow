@@ -13,6 +13,9 @@ script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 [Miscellanea::RequireRcsKeywords]
 keywords = Id
 
+#Needs to be readdressed at some point
+[-ValuesAndExpressions::ProhibitMagicNumbers]
+
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitStringySplit]
 [-BuiltinFunctions::ProhibitUniversalIsa]
@@ -28,7 +31,7 @@ allow_leading_tabs = 0
 [-ControlStructures::ProhibitUnlessBlocks]
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
 [-InputOutput::ProhibitBarewordFileHandles]
-[-InputOutput::ProhibitJoinedReadline]
+[InputOutput::ProhibitJoinedReadline]
 [-InputOutput::RequireBracedFileHandleWithPrint]
 [-InputOutput::RequireCheckedClose]
 [-InputOutput::RequireCheckedOpen]
@@ -48,7 +51,6 @@ allow_leading_tabs = 0
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
 [-ValuesAndExpressions::ProhibitImplicitNewlines]
 [-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
-[-ValuesAndExpressions::ProhibitMagicNumbers]
 [-ValuesAndExpressions::ProhibitMixedBooleanOperators]
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::RequireInterpolationOfMetachars]
