@@ -19,6 +19,9 @@ keywords = Id
 #Might be to late to address
 [-Subroutines::ProhibitExplicitReturnUndef]
 
+#The violater of this is an overwrite for Class::Accessor
+[-NamingConventions::ProhibitAmbiguousNames]
+
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitStringySplit]
 [-BuiltinFunctions::ProhibitUniversalIsa]
@@ -38,7 +41,6 @@ allow_leading_tabs = 0
 [-InputOutput::RequireCheckedClose]
 [-InputOutput::RequireCheckedOpen]
 [-InputOutput::RequireCheckedSyscalls]
-[NamingConventions::ProhibitAmbiguousNames]
 [-RegularExpressions::ProhibitFixedStringMatches]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
