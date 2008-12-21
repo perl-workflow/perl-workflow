@@ -12,13 +12,9 @@ $Id$
 
 - Document relation between actions and validators
 
-- Add test of validate in Workflow::Validator::MatchesDateFormat
-
 - Investigate if either Workflow::Validator::InEnumeratedType or
   Workflow::Validator::MatchesDateFormat are violation an (undefined) abstract 
   class. One holds a validate method the other a validator method.
-
-- Add test of validator in Workflow::Validator::InEnumeratedType
 
 - Implement handling of forgotten filename parameter to parse in
   Workflow::Config::Perl, this might have to propagate to Workflow::Config::XML
