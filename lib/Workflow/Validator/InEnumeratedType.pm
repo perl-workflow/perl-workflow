@@ -11,40 +11,42 @@ $Workflow::Validator::InEnumeratedType::VERSION = '1.04';
 
 sub _init {
     my ( $self, $params ) = @_;
-    $self->{_enum} = [];
+    $self->{_enum}       = [];
     $self->{_enum_match} = {};
     unless ( $params->{value} ) {
         configuration_error "Validator 'InEnumeratedType' must be ",
-                            "initialized with the values you wish to ",
-                            "validate against using the parameter 'value'.";
+            "initialized with the values you wish to ",
+            "validate against using the parameter 'value'.";
     }
-    my @values = ( ref $params->{value} eq 'ARRAY' )
-                   ? @{ $params->{value} } : ( $params->{value} );
-    $self->add_enumerated_values( @values )
+    my @values =
+        ( ref $params->{value} eq 'ARRAY' )
+        ? @{ $params->{value} }
+        : ( $params->{value} );
+    $self->add_enumerated_values(@values);
 }
 
 sub validator {
     my ( $self, $wf, $value ) = @_;
-    unless ( $self->is_enumerated_value( $value ) ) {
+    unless ( $self->is_enumerated_value($value) ) {
         validation_error "Value '$value' must be one of: ",
-                         join( ", ", $self->get_enumerated_values );
+            join( ", ", $self->get_enumerated_values );
     }
 }
 
 sub add_enumerated_values {
     my ( $self, @values ) = @_;
     push @{ $self->{_enum} }, @values;
-    $self->{_enum_match}{ $_ } = 1 for ( @values );
+    $self->{_enum_match}{$_} = 1 for (@values);
 }
 
 sub get_enumerated_values {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return @{ $self->{_enum} };
 }
 
 sub is_enumerated_value {
     my ( $self, $value ) = @_;
-    return $self->{_enum_match}{ $value };
+    return $self->{_enum_match}{$value};
 }
 
 1;

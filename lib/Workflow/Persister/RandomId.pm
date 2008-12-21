@@ -13,22 +13,24 @@ use constant CONSTANT_INCREMENT => 65;
 $Workflow::Persister::RandomId::VERSION = '1.03';
 
 my @FIELDS = qw( id_length );
-__PACKAGE__->mk_accessors( @FIELDS );
+__PACKAGE__->mk_accessors(@FIELDS);
 
 sub new {
     my ( $class, $params ) = @_;
     my $self = bless( {}, $class );
     my $length = $params->{id_length} || DEFAULT_ID_LENGTH;
-    $self->id_length( $length );
+    $self->id_length($length);
     return $self;
 }
 
 sub pre_fetch_id {
     my ( $self, $dbh ) = @_;
-    return join( '', map { chr( int( rand(RANDOM_SEED) ) + CONSTANT_INCREMENT ) } ( 1 .. $self->id_length ) );
+    return join( '',
+        map { chr( int( rand(RANDOM_SEED) ) + CONSTANT_INCREMENT ) }
+            ( 1 .. $self->id_length ) );
 }
 
-sub post_fetch_id { return }
+sub post_fetch_id {return}
 
 1;
 

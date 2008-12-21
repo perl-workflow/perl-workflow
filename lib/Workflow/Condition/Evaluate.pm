@@ -5,19 +5,19 @@ package Workflow::Condition::Evaluate;
 use warnings;
 use strict;
 use base qw( Workflow::Condition );
-use Log::Log4perl       qw( get_logger );
+use Log::Log4perl qw( get_logger );
 use Safe;
 use Workflow::Exception qw( condition_error configuration_error );
 
 $Workflow::Condition::Evaluate::VERSION = '1.02';
 
 my @FIELDS = qw( test );
-__PACKAGE__->mk_accessors( @FIELDS );
+__PACKAGE__->mk_accessors(@FIELDS);
 
 # These get put into the safe compartment...
 $Workflow::Condition::Evaluate::context = undef;
 
-my ( $log );
+my ($log);
 
 sub _init {
     my ( $self, $params ) = @_;
@@ -25,10 +25,11 @@ sub _init {
 
     $self->test( $params->{test} );
     unless ( $self->test ) {
-        configuration_error "The evaluate condition must be configured with 'test'";
+        configuration_error
+            "The evaluate condition must be configured with 'test'";
     }
-    $log->is_info &&
-        $log->info( "Added evaluation condition with '$params->{test}'" );
+    $log->is_info
+        && $log->info("Added evaluation condition with '$params->{test}'");
 }
 
 sub evaluate {
@@ -36,25 +37,25 @@ sub evaluate {
     $log ||= get_logger();
 
     my $to_eval = $self->test;
-    $log->is_info &&
-        $log->info( "Evaluating '$to_eval' to see if it returns true..." );
+    $log->is_info
+        && $log->info("Evaluating '$to_eval' to see if it returns true...");
 
     # Assign our local stuff to package variables...
     $Workflow::Condition::Evaluate::context = $wf->context->param;
 
     # Create the Safe compartment and safely eval the test...
     my $safe = Safe->new();
-    $safe->share( '$context' );
-    my $rv = $safe->reval( $to_eval );
-    if ( $@ ) {
-        $log->error( "Eval code '$to_eval' threw exception: $@" );
+    $safe->share('$context');
+    my $rv = $safe->reval($to_eval);
+    if ($@) {
+        $log->error("Eval code '$to_eval' threw exception: $@");
         condition_error "Condition expressed in code threw exception: $@";
     }
 
-    $log->is_debug && $log->debug( "Safe eval ran ok, returned: '$rv'" );
-    unless ( $rv ) {
+    $log->is_debug && $log->debug("Safe eval ran ok, returned: '$rv'");
+    unless ($rv) {
         condition_error "Condition expressed by test '$to_eval' did not ",
-                        "return a true value.";
+            "return a true value.";
     }
     return $rv;
 }

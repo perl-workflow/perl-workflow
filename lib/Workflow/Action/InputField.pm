@@ -5,104 +5,106 @@ package Workflow::Action::InputField;
 use warnings;
 use strict;
 use base qw( Class::Accessor );
-use Log::Log4perl       qw( get_logger );
+use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
 $Workflow::Action::InputField::VERSION = '1.09';
 
-my @FIELDS = qw( name label description type requirement source_class source_list );
-__PACKAGE__->mk_accessors( @FIELDS );
+my @FIELDS
+    = qw( name label description type requirement source_class source_list );
+__PACKAGE__->mk_accessors(@FIELDS);
 
 my %INCLUDED = ();
 
 sub new {
     my ( $class, $params ) = @_;
     my $log = get_logger();
-    $log->debug( "Instantiating new field '$params->{name}'" )
-      if $params->{name};
+    $log->debug("Instantiating new field '$params->{name}'")
+        if $params->{name};
 
     my $self = bless( {}, $class );
 
     # Set all our parameters
-    foreach my $field ( @FIELDS ) {
-        next unless ( $params->{ $field } );
-        $self->$field( $params->{ $field } );
+    foreach my $field (@FIELDS) {
+        next unless ( $params->{$field} );
+        $self->$field( $params->{$field} );
     }
 
     # ...ensure our name is defined
     unless ( $self->name ) {
-        my $id_string = '[' .
-                        join( '] [', map { "$_: $params->{$_}" }
-                                         sort keys %{ $params } ) .
-                        ']';
+        my $id_string = '['
+            . join(
+            '] [', map {"$_: $params->{$_}"}
+                sort keys %{$params}
+            ) . ']';
         configuration_error "Field found without name: $id_string";
     }
 
     my $name = $self->name;
     unless ( $self->label ) {
-        $self->label( $name );
+        $self->label($name);
     }
-    my $requirement = ( defined $params->{is_required} && $params->{is_required} eq 'yes' )
-                        ? 'required' : 'optional';
-    $self->requirement( $requirement );
+    my $requirement = ( defined $params->{is_required}
+            && $params->{is_required} eq 'yes' ) ? 'required' : 'optional';
+    $self->requirement($requirement);
 
     # ...ensure a class associated with the input source exists
     if ( my $source_class = $self->source_class ) {
-        $log->debug( "Possible values for '$name' from '$source_class'" );
-        unless ( $INCLUDED{ $source_class } ) {
+        $log->debug("Possible values for '$name' from '$source_class'");
+        unless ( $INCLUDED{$source_class} ) {
             eval "require $source_class";
-            if ( $@ ) {
+            if ($@) {
                 configuration_error "Failed to include source class ",
-                                    "'$source_class' used in field '$name'";
+                    "'$source_class' used in field '$name'";
             }
-            $INCLUDED{ $source_class }++;
+            $INCLUDED{$source_class}++;
         }
-        $params->{values} = [ $source_class->get_possible_values( $self ) ];
-    }
-    elsif ( $self->source_list ) {
-        $log->debug( "Possible values for '$name' specified in config" );
+        $params->{values} = [ $source_class->get_possible_values($self) ];
+    } elsif ( $self->source_list ) {
+        $log->debug("Possible values for '$name' specified in config");
         $params->{values} = [ split( /\s*,\s*/, $self->source_list ) ];
     }
 
     my $values = $params->{values} || $params->{possible_values};
-    if ( $values ) {
-        my @add_values = ( ref $values eq 'ARRAY' ) ? @{ $values } : ( $values );
+    if ($values) {
+        my @add_values = ( ref $values eq 'ARRAY' ) ? @{$values} : ($values);
         $log->debug( "Values to use as source for field '$name': ",
-                     join( ', ', @add_values ) );
-        $self->add_possible_values( @add_values );
+            join( ', ', @add_values ) );
+        $self->add_possible_values(@add_values);
     }
 
     # Assign the default field type, subclasses may override...
-    $self->type( 'basic' );
+    $self->type('basic');
 
-    $self->init( $params );
+    $self->init($params);
     return $self;
 }
 
-sub init { return }
+sub init {return}
 
 sub is_required {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return ( $self->requirement eq 'required' ) ? 'yes' : 'no';
 }
 
 sub is_optional {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return ( $self->requirement eq 'optional' ) ? 'yes' : 'no';
 }
 
 sub get_possible_values {
-    my ( $self ) = @_;
+    my ($self) = @_;
     $self->{_enumerated} ||= [];
     return @{ $self->{_enumerated} };
 }
 
 sub add_possible_values {
     my ( $self, @values ) = @_;
-    foreach my $value ( @values ) {
-        my $this_value = ( ref $value eq 'HASH' )
-                           ? $value
-                           : { label => $value, value => $value };
+    foreach my $value (@values) {
+        my $this_value =
+            ( ref $value eq 'HASH' )
+            ? $value
+            : { label => $value, value => $value };
         push @{ $self->{_enumerated} }, $this_value;
     }
     return @{ $self->{_enumerated} };

@@ -25,11 +25,7 @@ keywords = Id
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitStringySplit]
 [-BuiltinFunctions::ProhibitUniversalIsa]
-[-CodeLayout::ProhibitHardTabs]
-allow_leading_tabs = 0
 [-CodeLayout::ProhibitParensWithBuiltins]
-[-CodeLayout::ProhibitTrailingWhitespace]
-[-CodeLayout::RequireTidyCode]
 [-CodeLayout::RequireTrailingCommas]
 [-ControlStructures::ProhibitCStyleForLoops]
 [-ControlStructures::ProhibitCascadingIfElse]

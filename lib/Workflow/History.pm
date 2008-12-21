@@ -9,21 +9,23 @@ use DateTime;
 
 $Workflow::History::VERSION = '1.09';
 
-my @FIELDS = qw( id workflow_id action description date user state time_zone );
-__PACKAGE__->mk_accessors( @FIELDS );
+my @FIELDS
+    = qw( id workflow_id action description date user state time_zone );
+__PACKAGE__->mk_accessors(@FIELDS);
 
 sub new {
     my ( $class, $params ) = @_;
     my $self = bless( { _saved => 0 }, $class );
-    for ( @FIELDS ) {
-        $self->$_( $params->{ $_ } ) if ( $params->{ $_ } );
+    for (@FIELDS) {
+        $self->$_( $params->{$_} ) if ( $params->{$_} );
     }
 
-    my $time_zone = exists $params->{time_zone} ? $params->{time_zone} : 'floating';
+    my $time_zone
+        = exists $params->{time_zone} ? $params->{time_zone} : 'floating';
     $self->time_zone($time_zone);
 
     unless ( $self->date ) {
-        $self->date( DateTime->now(time_zone => $self->time_zone()) );
+        $self->date( DateTime->now( time_zone => $self->time_zone() ) );
     }
     return $self;
 }
@@ -31,22 +33,22 @@ sub new {
 sub set_new_state {
     my ( $self, $new_state ) = @_;
     unless ( $self->state ) {
-        $self->state( $new_state );
+        $self->state($new_state);
     }
 }
 
 sub is_saved {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return $self->{_saved};
 }
 
 sub set_saved {
-    my ( $self ) = @_;
+    my ($self) = @_;
     $self->{_saved} = 1;
 }
 
 sub clear_saved {
-    my ( $self ) = @_;
+    my ($self) = @_;
     $self->{_saved} = 0;
 }
 

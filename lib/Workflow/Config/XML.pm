@@ -5,25 +5,26 @@ package Workflow::Config::XML;
 use warnings;
 use strict;
 use base qw( Workflow::Config );
-use Log::Log4perl       qw( get_logger );
+use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 
 $Workflow::Config::XML::VERSION = '1.05';
 
-my ( $log );
+my ($log);
 
 my %XML_OPTIONS = (
     action => {
-        ForceArray => [ 'action', 'field', 'source_list', 'param', 'validator', 'arg' ],
-        KeyAttr    => [],
+        ForceArray =>
+            [ 'action', 'field', 'source_list', 'param', 'validator', 'arg' ],
+        KeyAttr => [],
     },
     condition => {
         ForceArray => [ 'condition', 'param' ],
         KeyAttr    => [],
     },
     persister => {
-        ForceArray => [ 'persister' ],
+        ForceArray => ['persister'],
         KeyAttr    => [],
     },
     validator => {
@@ -31,8 +32,12 @@ my %XML_OPTIONS = (
         KeyAttr    => [],
     },
     workflow => {
-        ForceArray => [ 'extra_data', 'state', 'action',  'resulting_state', 'condition', 'observer' ],
-        KeyAttr    => [],
+        ForceArray => [
+            'extra_data', 'state',
+            'action',     'resulting_state',
+            'condition',  'observer'
+        ],
+        KeyAttr => [],
     },
 );
 
@@ -42,36 +47,34 @@ sub parse {
     my ( $self, $type, @items ) = @_;
     $log ||= get_logger();
 
-    $self->_check_config_type( $type );
-    my @config_items = Workflow::Config::_expand_refs( @items );
+    $self->_check_config_type($type);
+    my @config_items = Workflow::Config::_expand_refs(@items);
     return () unless ( scalar @config_items );
 
     my @config = ();
-    foreach my $item ( @config_items ) {
+    foreach my $item (@config_items) {
         my $file_name = ( ref $item ) ? '[scalar ref]' : $item;
-        $log->is_info &&
-            $log->info( "Will parse '$type' XML config file '$file_name'" );
+        $log->is_info
+            && $log->info("Will parse '$type' XML config file '$file_name'");
         my $this_config;
-        eval{
-            $this_config = $self->_translate_xml( $type, $item );
-        };
+        eval { $this_config = $self->_translate_xml( $type, $item ); };
+
         # If processing multiple config files, this makes it much easier
         # to find a problem.
         croak "Processing $file_name: $@" if $@;
-        $log->is_info &&
-            $log->info( "Parsed XML '$file_name' ok" );
+        $log->is_info
+            && $log->info("Parsed XML '$file_name' ok");
 
-	# This sets the outer-most tag to use
-	# when returning the parsed XML.
-	my $outer_tag = $self->get_config_type_tag($type);
-        if ( ref $this_config->{ $outer_tag } eq 'ARRAY' ) {
-            $log->is_debug &&
-                $log->debug( "Adding multiple configurations for '$type'" );
-            push @config, @{ $this_config->{ $outer_tag } };
-        }
-        else {
-            $log->is_debug &&
-                $log->debug( "Adding single configuration for '$type'" );
+        # This sets the outer-most tag to use
+        # when returning the parsed XML.
+        my $outer_tag = $self->get_config_type_tag($type);
+        if ( ref $this_config->{$outer_tag} eq 'ARRAY' ) {
+            $log->is_debug
+                && $log->debug("Adding multiple configurations for '$type'");
+            push @config, @{ $this_config->{$outer_tag} };
+        } else {
+            $log->is_debug
+                && $log->debug("Adding single configuration for '$type'");
             push @config, $this_config;
         }
     }
@@ -81,20 +84,19 @@ sub parse {
 # $config can either be a filename or scalar ref with file contents
 
 sub _translate_xml {
-    my( $self, $type, $config ) = @_;
-    unless ( $XML_REQUIRED ) {
+    my ( $self, $type, $config ) = @_;
+    unless ($XML_REQUIRED) {
         eval { require XML::Simple };
-        if ( $@ ) {
+        if ($@) {
             configuration_error "XML::Simple must be installed to parse ",
-                                "configuration files/data in XML format";
-        }
-        else {
-            XML::Simple->import( ':strict' );
+                "configuration files/data in XML format";
+        } else {
+            XML::Simple->import(':strict');
             $XML_REQUIRED++;
         }
-    };
-    my $options = $XML_OPTIONS{ $type } || {};
-    my $data = XMLin( $config, %{ $options } );
+    }
+    my $options = $XML_OPTIONS{$type} || {};
+    my $data = XMLin( $config, %{$options} );
     return $data;
 }
 

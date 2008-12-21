@@ -9,7 +9,7 @@ use base qw( Workflow::Action );
 $Workflow::Action::Null::VERSION = '1.03';
 
 sub execute {
-    my ( $self ) = @_;
+    my ($self) = @_;
     return undef;
 }
 

@@ -10,20 +10,20 @@ use Carp qw(croak);
 $Workflow::Condition::VERSION = '1.07';
 
 my @FIELDS = qw( name class );
-__PACKAGE__->mk_accessors( @FIELDS );
+__PACKAGE__->mk_accessors(@FIELDS);
 
 sub init {
     my ( $self, $params ) = @_;
     $self->name( $params->{name} );
     $self->class( $params->{class} );
-    $self->_init( $params );
+    $self->_init($params);
 }
 
-sub _init { return }
+sub _init {return}
 
 sub evaluate {
-    my ( $self ) = @_;
-    croak "Class ", ref( $self ), " must implement 'evaluate()'!\n";
+    my ($self) = @_;
+    croak "Class ", ref($self), " must implement 'evaluate()'!\n";
 }
 
 1;

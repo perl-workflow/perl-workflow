@@ -5,26 +5,26 @@ package Workflow::Persister::DBI::ExtraData;
 use warnings;
 use strict;
 use base qw( Workflow::Persister::DBI );
-use Log::Log4perl       qw( get_logger );
+use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 
 $Workflow::Persister::DBI::ExtraData::VERSION = '1.05';
 
 my @FIELDS = qw( table data_field context_key );
-__PACKAGE__->mk_accessors( @FIELDS );
+__PACKAGE__->mk_accessors(@FIELDS);
 
 sub init {
     my ( $self, $params ) = @_;
-    $self->SUPER::init( $params );
+    $self->SUPER::init($params);
     my $log = get_logger();
 
     my @not_found = ();
-    foreach ( qw( table data_field ) ) {
+    foreach (qw( table data_field )) {
         push @not_found, $_ unless ( $params->{"extra_$_"} );
     }
     if ( scalar @not_found ) {
         $log->error( "Required configuration fields not found: ",
-                     join( ', ', @not_found ) );
+            join( ', ', @not_found ) );
         configuration_error
             "To fetch extra data with each workflow with this implementation ",
             "you must specify: ", join( ', ', @not_found );
@@ -38,72 +38,75 @@ sub init {
 
     if ( $data_field =~ /,/ ) {
         $self->data_field( [ split /\s*,\s*/, $data_field ] );
-    }
-    else {
-        $self->data_field( $data_field );
+    } else {
+        $self->data_field($data_field);
         my $context_key = $params->{extra_context_key} || $data_field;
-        $self->context_key( $context_key );
+        $self->context_key($context_key);
     }
-    $log->is_info &&
-        $log->info( "Configured extra data fetch with: ",
-                    join( '; ', $self->table, $data_field,
-                                $self->context_key ) );
+    $log->is_info
+        && $log->info( "Configured extra data fetch with: ",
+        join( '; ', $self->table, $data_field, $self->context_key ) );
 }
 
 sub fetch_extra_workflow_data {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
 
-    $log->is_debug &&
-        $log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
+    $log->is_debug
+        && $log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
 
     my $sql = q{
        SELECT %s FROM %s
         WHERE workflow_id = ?
     };
     my $data_field = $self->data_field;
-    my $select_data_fields = ( ref $data_field )
-                               ? join( ', ', @{ $data_field } )
-                               : $data_field;
+    my $select_data_fields =
+        ( ref $data_field )
+        ? join( ', ', @{$data_field} )
+        : $data_field;
     $sql = sprintf( $sql, $select_data_fields, $self->table );
-    $log->is_debug &&
-        $log->debug( "Using SQL\n$sql" );
-    $log->is_debug &&
-        $log->debug( "Bind parameters: ", $wf->id );
+    $log->is_debug
+        && $log->debug("Using SQL\n$sql");
+    $log->is_debug
+        && $log->debug( "Bind parameters: ", $wf->id );
 
-    my ( $sth );
+    my ($sth);
     eval {
-        $sth = $self->handle->prepare( $sql );
+        $sth = $self->handle->prepare($sql);
         $sth->execute( $wf->id );
     };
-    if ( $@ ) {
+    if ($@) {
         persist_error "Failed to retrieve extra data from table ",
-                      $self->table, ": $@";
-    }
-    else {
-        $log->is_debug &&
-            $log->debug( "Prepared/executed extra data fetch ok" );
+            $self->table, ": $@";
+    } else {
+        $log->is_debug
+            && $log->debug("Prepared/executed extra data fetch ok");
         my $row = $sth->fetchrow_arrayref;
         if ( ref $data_field ) {
-            for ( my $i = 0; $i < scalar @{ $data_field }; $i++ ) {
-                $wf->context->param( $data_field->[ $i ], $row->[ $i ] );
-                $log->is_info &&
-                    $log->info(
-                        sprintf( "Set data from %s.%s into context key %s ok",
-                                 $self->table, $data_field->[$i], $data_field->[$i] ) );
+            for ( my $i = 0; $i < scalar @{$data_field}; $i++ ) {
+                $wf->context->param( $data_field->[$i], $row->[$i] );
+                $log->is_info
+                    && $log->info(
+                    sprintf(
+                        "Set data from %s.%s into context key %s ok",
+                        $self->table, $data_field->[$i],
+                        $data_field->[$i]
+                    )
+                    );
             }
-        }
-        else {
+        } else {
             my $value = $row->[0];
             $wf->context->param( $self->context_key, $value );
-            $log->is_info &&
-                $log->info(
-                    sprintf( "Set data from %s.%s into context key %s ok",
-                             $self->table, $self->data_field, $self->context_key ) );
+            $log->is_info
+                && $log->info(
+                sprintf(
+                    "Set data from %s.%s into context key %s ok",
+                    $self->table, $self->data_field, $self->context_key
+                )
+                );
         }
     }
 }
-
 
 1;
 
