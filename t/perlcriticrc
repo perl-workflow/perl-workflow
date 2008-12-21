@@ -22,6 +22,9 @@ keywords = Id
 #The violater of this is an overwrite for Class::Accessor
 [-NamingConventions::ProhibitAmbiguousNames]
 
+#We are using Constants
+[-ValuesAndExpressions::ProhibitConstantPragma]
+
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitStringySplit]
 [-BuiltinFunctions::ProhibitUniversalIsa]
@@ -46,7 +49,6 @@ keywords = Id
 [-Subroutines::RequireFinalReturn]
 [-TestingAndDebugging::ProhibitNoStrict]
 [-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
-[-ValuesAndExpressions::ProhibitConstantPragma]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
 [-ValuesAndExpressions::ProhibitImplicitNewlines]
 [-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
