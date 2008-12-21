@@ -13,6 +13,51 @@ Revision history for Perl extension Workflow
   the main module, this mean a jump from 0.32 to 1.32, but it does mean that 
   an installation can be traced back to a given distribution
 
+- All packages have been run through perltidy addressing the following
+  Perl::Critic policies:
+  
+  [CodeLayout::ProhibitHardTabs]
+  [CodeLayout::ProhibitTrailingWhitespace]
+  [CodeLayout::RequireTidyCode]
+
+- Perl::Critic policy [Subroutines::ProhibitExplicitReturnUndef] disabled
+  this would break APIs at does not seem like a good idea, a more thorough
+  analysis should however be completed at some point
+
+- Perl::Critic policy [NamingConventions::ProhibitAmbiguousNames] disabled
+  we have an overwrite of Class::Accessor, which happens to violate this policy
+
+- Added use of File::Slurp refactoring a potential problematic body of code
+  addressing Perl::Critic policy [InputOutput::ProhibitJoinedReadline]
+  File::Slurp added to Build.PL
+
+- Some hardcoded numbers have been made into constants, some of these are
+  candidates however for propagation to a central place. (See TODO file)
+  This addresses Perl::Critic policy
+  [ValuesAndExpressions::ProhibitMagicNumbers] We do however run with this
+  policy disabled since, it warns about some numbers, which it does not make
+  sense to refactor into constants. In addition
+  [ValuesAndExpressions::ProhibitConstantPragma] is deactivated since we
+  are using constants
+
+- Added use of warnings pragma, addressing Perl::Critic policy
+  [TestingAndDebugging::RequireUseWarnings], I am however not sure whether this
+  breaks backwards compatibility towards older perls. So this will have to be
+  investigated (added to TODO file)
+
+- Exchanged calls to die and warn to croak and carp addressing Perl::Critic
+  policy [ErrorHandling::RequireCarping], this is also considered a good module
+  practive so errors are perceived from the callers perspective. In addition
+  Carp was listed in relevant packages and Build.PL
+
+- Added Id keyword to Workflow::Validator::MatchesDateFormat addressing
+  Perl::Critic policy [Miscellanea::RequireRcsKeywords] 
+
+- Added t/critic.t and t/perlcriticrc getting started on improving code
+  quality based on Perl::Critic, the number of contributors are increasing and
+  Perl::Critic might prove a good tool in assisting in quality assurance for
+  Workflow in the future
+
 
 0.32_7 Wed Dec 17 15:00:56 CET 2008 (update not required)
 
