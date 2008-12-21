@@ -16,6 +16,9 @@ keywords = Id
 #Needs to be readdressed at some point
 [-ValuesAndExpressions::ProhibitMagicNumbers]
 
+#Might be to late to address
+[-Subroutines::ProhibitExplicitReturnUndef]
+
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitStringySplit]
 [-BuiltinFunctions::ProhibitUniversalIsa]
@@ -35,12 +38,11 @@ allow_leading_tabs = 0
 [-InputOutput::RequireCheckedClose]
 [-InputOutput::RequireCheckedOpen]
 [-InputOutput::RequireCheckedSyscalls]
-[-NamingConventions::ProhibitAmbiguousNames]
+[NamingConventions::ProhibitAmbiguousNames]
 [-RegularExpressions::ProhibitFixedStringMatches]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
 [-Subroutines::ProhibitExcessComplexity]
-[-Subroutines::ProhibitExplicitReturnUndef]
 [-Subroutines::ProtectPrivateSubs]
 [-Subroutines::RequireArgUnpacking]
 [-Subroutines::RequireFinalReturn]
