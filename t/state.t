@@ -15,7 +15,6 @@ $factory = TestUtil->init_factory();
 TestUtil->init_mock_persister();
 
 # Run the tests with XML-based config.
-diag "Running with XML config.";
 TestUtil::run_state_tests($factory);
 
 
