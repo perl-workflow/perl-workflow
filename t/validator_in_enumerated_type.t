@@ -6,7 +6,7 @@ use strict;
 use lib 't';
 use TestUtil;
 use Test::Exception;
-use Test::More tests => 14;
+use Test::More tests => 16;
 
 require_ok( 'Workflow::Validator::InEnumeratedType' );
 
@@ -43,3 +43,7 @@ ok($validator = Workflow::Validator::InEnumeratedType->new({
 ok(@enumerated_values = $validator->get_enumerated_values());
 
 is(scalar @enumerated_values, 3);
+
+ok($validator->validator(undef, 'foo'));
+
+dies_ok { $validator->validator(undef, 'bad'); };
