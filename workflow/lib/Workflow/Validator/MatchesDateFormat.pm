@@ -10,13 +10,12 @@ use Workflow::Exception qw( configuration_error validation_error );
 
 $Workflow::Validator::MatchesDateFormat::VERSION = '1.06';
 
-__PACKAGE__->mk_accessors( 'formatter' );
+__PACKAGE__->mk_accessors('formatter');
 
 sub _init {
     my ( $self, $params ) = @_;
     unless ( $params->{date_format} ) {
-        configuration_error
-            "You must define a value for 'date_format' in ",
+        configuration_error "You must define a value for 'date_format' in ",
             "declaration of validator ", $self->name;
     }
     if ( ref $params->{date_format} ) {
@@ -25,25 +24,27 @@ sub _init {
             "declaration of validator ", $self->name;
     }
     my $formatter = DateTime::Format::Strptime->new(
-                             pattern => $params->{date_format},
-                             on_error => 'undef' );
-    $self->formatter( $formatter );
+        pattern  => $params->{date_format},
+        on_error => 'undef'
+    );
+    $self->formatter($formatter);
 }
 
 sub validate {
     my ( $self, $wf, $date_string ) = @_;
-    return unless ( $date_string );
+    return unless ($date_string);
 
     # already converted!
-    if ( ref ( $date_string ) and UNIVERSAL::isa( $date_string, 'DateTime' ) ) {
+    if ( ref($date_string) and UNIVERSAL::isa( $date_string, 'DateTime' ) ) {
         return;
     }
 
-    my $fmt = $self->formatter;
-    my $date_object = $fmt->parse_datetime( $date_string );
-    unless ( $date_object ) {
+    my $fmt         = $self->formatter;
+    my $date_object = $fmt->parse_datetime($date_string);
+    unless ($date_object) {
         validation_error
-            "Date '$date_string' does not match required pattern '", $fmt->pattern, "'";
+            "Date '$date_string' does not match required pattern '",
+            $fmt->pattern, "'";
     }
 }
 

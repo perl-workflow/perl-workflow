@@ -19,7 +19,7 @@ sub pre_fetch_id {
     return $self->{gen}->create_str();
 }
 
-sub post_fetch_id { return }
+sub post_fetch_id {return}
 
 1;
 

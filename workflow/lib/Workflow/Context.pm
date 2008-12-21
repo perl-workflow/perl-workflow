@@ -11,7 +11,7 @@ $Workflow::Context::VERSION = '1.05';
 sub merge {
     my ( $self, $other ) = @_;
     my $other_params = $other->param();
-    while ( my ( $k, $v ) = each %{ $other_params } ) {
+    while ( my ( $k, $v ) = each %{$other_params} ) {
         $self->param( $k, $v );
     }
 }

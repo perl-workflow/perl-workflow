@@ -11,16 +11,16 @@ $Workflow::Validator::HasRequiredField::VERSION = '1.04';
 
 sub validate {
     my ( $self, $wf, @required_fields ) = @_;
-    my $context = $wf->context;
+    my $context  = $wf->context;
     my @no_value = ();
-    foreach my $field ( @required_fields ) {
-        unless ( defined $context->param( $field ) ) {
+    foreach my $field (@required_fields) {
+        unless ( defined $context->param($field) ) {
             push @no_value, $field;
         }
     }
     if ( scalar @no_value ) {
         validation_error "The following fields require a value: ",
-                         join( ', ', @no_value );
+            join( ', ', @no_value );
     }
 }
 

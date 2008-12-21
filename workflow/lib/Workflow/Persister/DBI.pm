@@ -8,7 +8,7 @@ use base qw( Workflow::Persister );
 use DateTime;
 use DateTime::Format::Strptime;
 use DBI;
-use Log::Log4perl       qw( get_logger );
+use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::History;
 use Workflow::Persister::RandomId;
@@ -19,107 +19,107 @@ use Carp qw(croak);
 $Workflow::Persister::DBI::VERSION = '1.19';
 
 my @FIELDS = qw( handle dsn user password driver
-                 workflow_table history_table date_format parser autocommit);
-__PACKAGE__->mk_accessors( @FIELDS );
+    workflow_table history_table date_format parser autocommit);
+__PACKAGE__->mk_accessors(@FIELDS);
 
-my ( $log );
+my ($log);
 my @WF_FIELDS   = ();
 my @HIST_FIELDS = ();
 
 sub init {
     my ( $self, $params ) = @_;
-    $self->SUPER::init( $params );
+    $self->SUPER::init($params);
     $log ||= get_logger();
     unless ( $params->{dsn} ) {
         configuration_error "DBI persister configuration must include ",
-                            "key 'dsn' which maps to the first paramter ",
-                            "in the DBI 'connect()' call.";
+            "key 'dsn' which maps to the first paramter ",
+            "in the DBI 'connect()' call.";
     }
 
     my ( $dbi, $driver, $etc ) = split ':', $params->{dsn}, 3;
-    $log->is_debug &&
-        $log->debug( "Pulled driver '$driver' from DBI DSN" );
-    $self->driver( $driver );
+    $log->is_debug
+        && $log->debug("Pulled driver '$driver' from DBI DSN");
+    $self->driver($driver);
     $self->assign_generators( $params, $driver );
-    $log->info( "Assigned workflow generator '",
-                ref( $self->workflow_id_generator ), "'; ",
-                "history generator '",
-                ref( $self->history_id_generator ), "'" );
-    $self->assign_tables( $params );
-    $log->info( "Assigned workflow table '", $self->workflow_table, "'; ",
-                "history table '", $self->history_table, "'" );
+    $log->info(
+        "Assigned workflow generator '",
+        ref( $self->workflow_id_generator ),
+        "'; ",
+        "history generator '",
+        ref( $self->history_id_generator ),
+        "'"
+    );
+    $self->assign_tables($params);
+    $log->info(
+        "Assigned workflow table '",
+        $self->workflow_table, "'; ", "history table '",
+        $self->history_table, "'"
+    );
 
-    # Default to old date format if not provided so we don't break old configurations.
-    $self->date_format( '%Y-%m-%d %H:%M' );
+# Default to old date format if not provided so we don't break old configurations.
+    $self->date_format('%Y-%m-%d %H:%M');
 
     # Default to autocommit on for backward compatibility.
     $self->autocommit(1);
 
     # Load user-provided values from config.
-    for ( qw( dsn user password date_format autocommit ) ) {
-        $self->$_( $params->{ $_ } ) if ( defined $params->{ $_ } );
+    for (qw( dsn user password date_format autocommit )) {
+        $self->$_( $params->{$_} ) if ( defined $params->{$_} );
     }
 
-    my $parser = DateTime::Format::Strptime->new( pattern => $self->date_format );
+    my $parser
+        = DateTime::Format::Strptime->new( pattern => $self->date_format );
     $self->parser($parser);
 
     my $dbh = eval {
-        DBI->connect( $self->dsn, $self->user, $self->password )
+               DBI->connect( $self->dsn, $self->user, $self->password )
             || croak "Cannot connect to database: $DBI::errstr";
     };
-    if ( $@ ) {
+    if ($@) {
         persist_error $@;
     }
     $dbh->{RaiseError} = 1;
     $dbh->{PrintError} = 0;
     $dbh->{ChopBlanks} = 1;
     $dbh->{AutoCommit} = $self->autocommit();
-    $self->handle( $dbh );
-    $log->is_debug &&
-        $log->debug( "Connected to database '", $self->dsn, "' and ",
-                     "assigned to persister ok" );
+    $self->handle($dbh);
+    $log->is_debug
+        && $log->debug( "Connected to database '",
+        $self->dsn, "' and ", "assigned to persister ok" );
 }
 
 sub assign_generators {
     my ( $self, $params, $driver ) = @_;
-    $self->SUPER::assign_generators( $params );
-    return if ( $self->workflow_id_generator and
-                $self->history_id_generator );
+    $self->SUPER::assign_generators($params);
+    return
+        if ($self->workflow_id_generator
+        and $self->history_id_generator );
 
     $log ||= get_logger();
     my ( $wf_gen, $history_gen );
     if ( $driver eq 'Pg' ) {
-        $log->is_debug &&
-            $log->debug( "Assigning ID generators for PostgreSQL" );
-        ( $wf_gen, $history_gen ) =
-            $self->init_postgres_generators( $params );
+        $log->is_debug
+            && $log->debug("Assigning ID generators for PostgreSQL");
+        ( $wf_gen, $history_gen ) = $self->init_postgres_generators($params);
+    } elsif ( $driver eq 'Oracle' ) {
+        $log->is_debug
+            && $log->debug("Assigning ID generators for Oracle");
+        ( $wf_gen, $history_gen ) = $self->init_oracle_generators($params);
+    } elsif ( $driver eq 'mysql' ) {
+        $log->is_debug
+            && $log->debug("Assigning ID generators for MySQL");
+        ( $wf_gen, $history_gen ) = $self->init_mysql_generators($params);
+    } elsif ( $driver eq 'SQLite' ) {
+        $log->is_debug
+            && $log->debug("Assigning ID generators for SQLite");
+        ( $wf_gen, $history_gen ) = $self->init_sqlite_generators($params);
+    } else {
+        $log->is_debug
+            && $log->debug("Assigning random ID generators");
+        ( $wf_gen, $history_gen ) = $self->init_random_generators($params);
     }
-    elsif ( $driver eq 'Oracle' ) {
-        $log->is_debug &&
-            $log->debug( "Assigning ID generators for Oracle" );
-        ( $wf_gen, $history_gen ) =
-            $self->init_oracle_generators( $params );
-    }
-    elsif ( $driver eq 'mysql' ) {
-        $log->is_debug &&
-            $log->debug( "Assigning ID generators for MySQL" );
-        ( $wf_gen, $history_gen ) =
-            $self->init_mysql_generators( $params );
-    }
-    elsif ( $driver eq 'SQLite' ) {
-        $log->is_debug &&
-            $log->debug( "Assigning ID generators for SQLite" );
-        ( $wf_gen, $history_gen ) =
-            $self->init_sqlite_generators( $params );
-    }
-    else {
-        $log->is_debug &&
-            $log->debug( "Assigning random ID generators" );
-        ( $wf_gen, $history_gen ) =
-            $self->init_random_generators( $params );
-    }
-    $self->workflow_id_generator( $wf_gen );
-    $self->history_id_generator( $history_gen );
+    $self->workflow_id_generator($wf_gen);
+    $self->history_id_generator($history_gen);
 }
 
 sub init_postgres_generators {
@@ -128,14 +128,16 @@ sub init_postgres_generators {
     $params->{workflow_sequence} ||= 'workflow_seq';
     $params->{history_sequence}  ||= 'workflow_history_seq';
     return (
-        Workflow::Persister::DBI::SequenceId->new({
-            sequence_name   => $params->{workflow_sequence},
-            sequence_select => $sequence_select
-        }),
-        Workflow::Persister::DBI::SequenceId->new({
-            sequence_name   => $params->{history_sequence},
-            sequence_select => $sequence_select
-        })
+        Workflow::Persister::DBI::SequenceId->new(
+            {   sequence_name   => $params->{workflow_sequence},
+                sequence_select => $sequence_select
+            }
+        ),
+        Workflow::Persister::DBI::SequenceId->new(
+            {   sequence_name   => $params->{history_sequence},
+                sequence_select => $sequence_select
+            }
+        )
     );
 }
 
@@ -145,43 +147,42 @@ sub init_oracle_generators {
     $params->{workflow_sequence} ||= 'workflow_seq';
     $params->{history_sequence}  ||= 'workflow_history_seq';
     return (
-        Workflow::Persister::DBI::SequenceId->new({
-            sequence_name   => $params->{workflow_sequence},
-            sequence_select => $sequence_select
-        }),
-        Workflow::Persister::DBI::SequenceId->new({
-            sequence_name   => $params->{history_sequence},
-            sequence_select => $sequence_select
-        })
+        Workflow::Persister::DBI::SequenceId->new(
+            {   sequence_name   => $params->{workflow_sequence},
+                sequence_select => $sequence_select
+            }
+        ),
+        Workflow::Persister::DBI::SequenceId->new(
+            {   sequence_name   => $params->{history_sequence},
+                sequence_select => $sequence_select
+            }
+        )
     );
 }
 
-
 sub init_mysql_generators {
     my ( $self, $params ) = @_;
-    my $generator =
-        Workflow::Persister::DBI::AutoGeneratedId->new({
-            from_handle     => 'database',
+    my $generator = Workflow::Persister::DBI::AutoGeneratedId->new(
+        {   from_handle     => 'database',
             handle_property => 'mysql_insertid',
-        });
+        }
+    );
     return ( $generator, $generator );
 }
 
 sub init_sqlite_generators {
     my ( $self, $params ) = @_;
-    my $generator =
-        Workflow::Persister::DBI::AutoGeneratedId->new({
-            func_property => 'last_insert_rowid'
-        });
+    my $generator = Workflow::Persister::DBI::AutoGeneratedId->new(
+        { func_property => 'last_insert_rowid' } );
     return ( $generator, $generator );
 }
 
 sub assign_tables {
     my ( $self, $params ) = @_;
     my $wf_table   = $params->{workflow_table} || 'workflow';
-    my $hist_table = $params->{history_table} || 'workflow_history';
-    $self->workflow_table( $wf_table );
-    $self->history_table( $hist_table );
+    my $hist_table = $params->{history_table}  || 'workflow_history';
+    $self->workflow_table($wf_table);
+    $self->history_table($hist_table);
 }
 
 ########################################
@@ -191,43 +192,45 @@ sub create_workflow {
     my ( $self, $wf ) = @_;
     $log ||= get_logger();
     $self->_init_fields();
-    my @fields = @WF_FIELDS[1,2,3];
-    my @values = ( $wf->type,
-                   $wf->state,
-                   DateTime->now(time_zone => $wf->time_zone())
-		     ->strftime( $self->date_format() ) );
+    my @fields = @WF_FIELDS[ 1, 2, 3 ];
+    my @values = (
+        $wf->type, $wf->state,
+        DateTime->now( time_zone => $wf->time_zone() )
+            ->strftime( $self->date_format() )
+    );
     my $dbh = $self->handle;
 
-    my $id = $self->workflow_id_generator->pre_fetch_id( $dbh );
-    if ( $id ) {
+    my $id = $self->workflow_id_generator->pre_fetch_id($dbh);
+    if ($id) {
         push @fields, $WF_FIELDS[0];
         push @values, $id;
-        $log->is_debug &&
-            $log->debug( "Got ID from pre_fetch_id: $id" );
+        $log->is_debug
+            && $log->debug("Got ID from pre_fetch_id: $id");
     }
     my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
-    $sql = sprintf( $sql, $self->workflow_table,
-                          join( ', ', @fields ),
-                          join( ', ', map { '?' } @values ));
+    $sql = sprintf( $sql,
+        $self->workflow_table,
+        join( ', ', @fields ),
+        join( ', ', map {'?'} @values ) );
 
     if ( $log->is_debug ) {
-        $log->debug( "Will use SQL\n$sql" );
+        $log->debug("Will use SQL\n$sql");
         $log->debug( "Will use parameters\n", join( ', ', @values ) );
     }
 
-    my ( $sth );
+    my ($sth);
     eval {
-        $sth = $dbh->prepare( $sql );
-        $sth->execute( @values );
+        $sth = $dbh->prepare($sql);
+        $sth->execute(@values);
     };
-    if ( $@ ) {
+    if ($@) {
         persist_error "Failed to create workflow: $@";
     }
-    unless ( $id ) {
+    unless ($id) {
         $id = $self->workflow_id_generator->post_fetch_id( $dbh, $sth );
-        unless ( $id ) {
+        unless ($id) {
             persist_error "No ID found using generator '",
-                          ref( $self->workflow_id_generator ), "'";
+                ref( $self->workflow_id_generator ), "'";
         }
     }
     $sth->finish;
@@ -246,22 +249,24 @@ sub fetch_workflow {
     $sql = sprintf( $sql, $self->workflow_table );
 
     if ( $log->is_debug ) {
-        $log->debug( "Will use SQL\n$sql" );
-        $log->debug( "Will use parameters: $wf_id" );
+        $log->debug("Will use SQL\n$sql");
+        $log->debug("Will use parameters: $wf_id");
     }
 
-    my ( $sth );
+    my ($sth);
     eval {
-        $sth = $self->handle->prepare( $sql );
-        $sth->execute( $wf_id );
+        $sth = $self->handle->prepare($sql);
+        $sth->execute($wf_id);
     };
-    if ( $@ ) {
+    if ($@) {
         persist_error "Cannot fetch workflow: $@";
     }
     my $row = $sth->fetchrow_arrayref;
-    return undef unless ( $row );
-    return { state       => $row->[0],
-             last_update => $self->parser->parse_datetime( $row->[1] ), };
+    return undef unless ($row);
+    return {
+        state       => $row->[0],
+        last_update => $self->parser->parse_datetime( $row->[1] ),
+    };
 }
 
 sub update_workflow {
@@ -275,21 +280,21 @@ sub update_workflow {
          WHERE $WF_FIELDS[0] = ?
     };
     $sql = sprintf( $sql, $self->workflow_table );
-    my $update_date = DateTime->now(time_zone => $wf->time_zone())
-                        ->strftime( $self->date_format() );
+    my $update_date = DateTime->now( time_zone => $wf->time_zone() )
+        ->strftime( $self->date_format() );
 
     if ( $log->is_debug ) {
-        $log->debug( "Will use SQL\n$sql" );
-        $log->debug( "Will use parameters\n", 
-                     join( ', ', $wf->state, $update_date, $wf->id ) );
+        $log->debug("Will use SQL\n$sql");
+        $log->debug( "Will use parameters\n",
+            join( ', ', $wf->state, $update_date, $wf->id ) );
     }
 
-    my ( $sth );
+    my ($sth);
     eval {
-        $sth = $self->handle->prepare( $sql );
+        $sth = $self->handle->prepare($sql);
         $sth->execute( $wf->state, $update_date, $wf->id );
     };
-    if ( $@ ) {
+    if ($@) {
         persist_error $@;
     }
     $log->info( "Workflow ", $wf->id, " updated ok" );
@@ -299,43 +304,46 @@ sub create_history {
     my ( $self, $wf, @history ) = @_;
     $self->_init_fields();
     $log ||= get_logger();
-    my $dbh = $self->handle;
+    my $dbh       = $self->handle;
     my $generator = $self->history_id_generator;
-    foreach my $h ( @history ) {
+    foreach my $h (@history) {
         next if ( $h->is_saved );
-        my $id = $generator->pre_fetch_id( $dbh );
-        my @fields = @HIST_FIELDS[1..6];
-        my @values = ( $wf->id, $h->action, $h->description, $h->state,
-                       $h->user, $h->date->strftime( $self->date_format() ) );
-        if ( $id ) {
+        my $id     = $generator->pre_fetch_id($dbh);
+        my @fields = @HIST_FIELDS[ 1 .. 6 ];
+        my @values = (
+            $wf->id, $h->action, $h->description, $h->state, $h->user,
+            $h->date->strftime( $self->date_format() )
+        );
+        if ($id) {
             push @fields, $HIST_FIELDS[0];
             push @values, $id;
         }
         my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
-        $sql = sprintf( $sql, $self->history_table,
-                              join( ', ', @fields ),
-                              join( ', ', map { '?' } @values ) );
+        $sql = sprintf( $sql,
+            $self->history_table,
+            join( ', ', @fields ),
+            join( ', ', map {'?'} @values ) );
         if ( $log->is_debug ) {
-            $log->debug( "Will use SQL\n$sql" );
+            $log->debug("Will use SQL\n$sql");
             $log->debug( "Will use parameters\n", join( ', ', @values ) );
         }
 
-        my ( $sth );
+        my ($sth);
         eval {
-            $sth = $dbh->prepare( $sql );
-            $sth->execute( @values );
+            $sth = $dbh->prepare($sql);
+            $sth->execute(@values);
         };
-        if ( $@ ) {
+        if ($@) {
             persist_error $@;
         }
-        unless ( $id ) {
+        unless ($id) {
             $id = $self->history_id_generator->post_fetch_id( $dbh, $sth );
-            unless ( $id ) {
+            unless ($id) {
                 persist_error "No ID found using generator '",
-                              ref( $self->history_id_generator ), "'";
+                    ref( $self->history_id_generator ), "'";
             }
         }
-        $h->id( $id );
+        $h->id($id);
         $h->set_saved();
         $log->info( "Workflow history entry ", $id, " created ok" );
     }
@@ -356,35 +364,36 @@ sub fetch_history {
     $sql = sprintf( $sql, $history_fields, $self->history_table );
 
     if ( $log->is_debug ) {
-        $log->debug( "Will use SQL\n$sql" );
+        $log->debug("Will use SQL\n$sql");
         $log->debug( "Will use parameters: ", $wf->id );
     }
 
-    my ( $sth );
+    my ($sth);
     eval {
-        $sth = $self->handle->prepare( $sql );
+        $sth = $self->handle->prepare($sql);
         $sth->execute( $wf->id );
     };
-    if ( $@ ) {
-        $log->error( "Caught error fetching workflow history: $@" );
+    if ($@) {
+        $log->error("Caught error fetching workflow history: $@");
         persist_error $@;
     }
-    $log->is_debug &&
-        $log->debug( "Prepared and executed ok" );
+    $log->is_debug
+        && $log->debug("Prepared and executed ok");
 
     my @history = ();
     while ( my $row = $sth->fetchrow_arrayref ) {
-        my $hist = Workflow::History->new({
-            id          => $row->[0],
-            workflow_id => $row->[1],
-            action      => $row->[2],
-            description => $row->[3],
-            state       => $row->[4],
-            user        => $row->[5],
-            date        => $self->parser->parse_datetime( $row->[6] ),
-        });
-        $log->is_debug &&
-            $log->debug( "Fetched history object '$row->[0]'" );
+        my $hist = Workflow::History->new(
+            {   id          => $row->[0],
+                workflow_id => $row->[1],
+                action      => $row->[2],
+                description => $row->[3],
+                state       => $row->[4],
+                user        => $row->[5],
+                date        => $self->parser->parse_datetime( $row->[6] ),
+            }
+        );
+        $log->is_debug
+            && $log->debug("Fetched history object '$row->[0]'");
         $hist->set_saved();
         push @history, $hist;
     }
@@ -392,31 +401,26 @@ sub fetch_history {
     return @history;
 }
 
-
 sub commit_transaction {
-  my ( $self, $wf ) = @_;
-  if( not $self->autocommit() ){
-    eval{
-      $self->handle->commit();
-    };
-    if ( $@ ) {
-      $log->error( "Caught error committing transaction: $@" );
-      persist_error $@;
+    my ( $self, $wf ) = @_;
+    if ( not $self->autocommit() ) {
+        eval { $self->handle->commit(); };
+        if ($@) {
+            $log->error("Caught error committing transaction: $@");
+            persist_error $@;
+        }
     }
-  }
 }
 
 sub rollback_transaction {
-  my ( $self, $wf ) = @_;
-  if( not $self->autocommit() ){
-    eval{
-      $self->handle->rollback();
-    };
-    if ( $@ ) {
-      $log->error( "Caught error rolling back transaction: $@" );
-      persist_error $@;
+    my ( $self, $wf ) = @_;
+    if ( not $self->autocommit() ) {
+        eval { $self->handle->rollback(); };
+        if ($@) {
+            $log->error("Caught error rolling back transaction: $@");
+            persist_error $@;
+        }
     }
-  }
 }
 
 ##########
@@ -425,7 +429,7 @@ sub rollback_transaction {
 # Allow subclasses to override the fieldnames
 
 sub _init_fields {
-    my ( $self ) = @_;
+    my ($self) = @_;
     unless ( scalar @WF_FIELDS ) {
         @WF_FIELDS = $self->get_workflow_fields();
     }
@@ -440,10 +444,9 @@ sub get_workflow_fields {
 
 sub get_history_fields {
     return qw( workflow_hist_id workflow_id
-               action description state
-               workflow_user history_date );
+        action description state
+        workflow_user history_date );
 }
-
 
 1;
 
