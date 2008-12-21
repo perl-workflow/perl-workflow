@@ -13,6 +13,9 @@ Revision history for Perl extension Workflow
   the main module, this mean a jump from 0.32 to 1.32, but it does mean that 
   an installation can be traced back to a given distribution
 
+- Added new test file t/workflow_history.t, the new tests of Workflow::History
+  methods. Added explicit returns so we return a true value when run
+
 - All packages have been run through perltidy addressing the following
   Perl::Critic policies:
   

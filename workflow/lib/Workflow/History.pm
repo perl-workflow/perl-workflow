@@ -7,7 +7,7 @@ use strict;
 use base qw( Class::Accessor );
 use DateTime;
 
-$Workflow::History::VERSION = '1.09';
+$Workflow::History::VERSION = '1.10';
 
 my @FIELDS
     = qw( id workflow_id action description date user state time_zone );
@@ -45,11 +45,15 @@ sub is_saved {
 sub set_saved {
     my ($self) = @_;
     $self->{_saved} = 1;
+
+    return 1;
 }
 
 sub clear_saved {
     my ($self) = @_;
     $self->{_saved} = 0;
+
+    return 0;
 }
 
 1;
@@ -118,7 +122,7 @@ history objects.
 
 =head3 is_saved()
 
-Returns true if this history object has been saved, false if not.
+Returns true (1) if this history object has been saved, false (0) if not.
 
 =head2 Properties
 
