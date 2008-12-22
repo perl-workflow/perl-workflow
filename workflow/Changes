@@ -4,6 +4,12 @@ Revision history for Perl extension Workflow
 
 1.32
 
+- Bumped up version for Workflow::State to 1.14 considering patches from
+  action_group and test_condition patches
+
+- Added POD, primarily focused on development, resources and test to the
+  Workflow POD - would love to eliminate the 
+
 - Removed VERSION file, this has now been obsoleted
 
 - Addressing RT #40750
@@ -64,7 +70,8 @@ Revision history for Perl extension Workflow
 
 0.32_7 Wed Dec 17 15:00:56 CET 2008 (update not required)
 
-- Applied patches from Ivan Paponov. This implements support for a group tag on actions.
+- Applied patches from Ivan Paponov. This implements support for a group tag on
+  actions.
 
 - Added t/db/workflow.db to MANIFEST.SKIP
 
@@ -91,7 +98,7 @@ Revision history for Perl extension Workflow
 
 - Added List::MoreUtils to requirements, we use this for test, I have moved the
   test related modules to the build_requires section in Build.PL, so
-  List::MoreUtils is not mistaken for an application level module
+  List::MoreUtils is not mistaken for an application level requirement
 
 - Some of the new tests distributed with 0.32_3 fail. We are looking at actions
   returned as an array, but since they originate from a hash, the order is not
