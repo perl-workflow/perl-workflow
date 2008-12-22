@@ -48,6 +48,9 @@ $Id$
 - Investigate violations of Perl::Critic policy
   [ValuesAndExpressions::ProhibitMagicNumbers]
 
+- Added POD sections on diagnostics to all classes.
+
+- Add VERSION section to all classes
 
 From TODO.txt:
 
