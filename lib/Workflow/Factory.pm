@@ -767,7 +767,7 @@ components of the system are instantiated and stored in the factory.
 
 The factory is a singleton, this is how you get access to the
 instance. You can also just import the 'FACTORY' constant as in the
-L<SYNOPSIS>.
+L</SYNOPSIS>.
 
 =head3 create_workflow( $workflow_type )
 
@@ -914,7 +914,7 @@ instantiated.
 
 We also require any necessary observer classes and throw an exception
 if we cannot. If successful the observers are kept around and attached
-to a workflow in L<create_workflow()> and L<fetch_workflow()>.
+to a workflow in L</create_workflow()> and L</fetch_workflow()>.
 
 Returns: nothing
 
