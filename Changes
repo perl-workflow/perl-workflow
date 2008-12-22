@@ -8,7 +8,8 @@ Revision history for Perl extension Workflow
   action_group and test_condition patches
 
 - Added POD, primarily focused on development, resources and test to the
-  Workflow POD - would love to eliminate the 
+  Workflow POD - would love to eliminate the original README and merge in the
+  information from this file and let it be auto-generated in the future
 
 - Removed VERSION file, this has now been obsoleted
 
