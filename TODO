@@ -3,7 +3,7 @@ TODO file for Workflow
 $Id$
 
 - Look into inconsistent XML configuration for persisters, this might however 
-  break backwards compitability
+  break backwards compatibility
 
 - Add more tests of persister configurations
 
