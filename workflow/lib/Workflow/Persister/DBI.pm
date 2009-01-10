@@ -37,7 +37,7 @@ sub init {
             "in the DBI 'connect()' call.";
     }
 
-    my ( $dbi, $driver, $etc ) = split ':', $params->{dsn}, 3;
+    my ( $dbi, $driver, $etc ) = split m/[:]/, $params->{dsn}, 3;
     $log->is_debug
         && $log->debug("Pulled driver '$driver' from DBI DSN");
     $self->driver($driver);
