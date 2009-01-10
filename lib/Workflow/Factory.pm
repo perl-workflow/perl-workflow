@@ -59,14 +59,18 @@ my @FIELDS = qw();
 __PACKAGE__->mk_accessors(@FIELDS);
 
 sub new {
-    my $class = ref $_[0] || $_[0];
+    my $proto = shift;
+    my $class = ref $proto || $proto;
+
     workflow_error "Please call 'instance()' or import the 'FACTORY' object ",
         "to get the '$class' object rather than instantiating a ",
         "new one directly.";
 }
 
 sub instance {
-    my $class = ref $_[0] || $_[0];
+    my $proto = shift;
+    my $class = ref $proto || $proto;
+
     return _initialize_instance($class);
 }
 
