@@ -156,7 +156,8 @@ sub serialize_object {
         ref($object), "' ", "to path '$path'" );
     open( THINGY, '>', $path )
         || persist_error "Cannot write to '$path': $!";
-    print THINGY Dumper($object);
+    print THINGY Dumper($object)
+        || persist_error "Error writing to '$path': $!";
     close(THINGY) || persist_error "Cannot close '$path': $!";
     $log->is_debug
         && $log->debug("Wrote object to file ok");
