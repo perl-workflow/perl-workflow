@@ -57,4 +57,3 @@ keywords = Id
 [-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 [-ValuesAndExpressions::ProhibitMixedBooleanOperators]
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
-[-ValuesAndExpressions::RequireInterpolationOfMetachars]
