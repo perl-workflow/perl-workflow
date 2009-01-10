@@ -195,9 +195,10 @@ sub create_workflow {
     $self->_init_fields();
     my @fields = @WF_FIELDS[ 1, 2, 3 ];
     my @values = (
-        $wf->type, $wf->state,
+        $wf->type,
+        $wf->state,
         DateTime->now( time_zone => $wf->time_zone() )
-            ->strftime( $self->date_format() )
+            ->strftime( $self->date_format() ),
     );
     my $dbh = $self->handle;
 
@@ -313,7 +314,7 @@ sub create_history {
         my @fields = @HIST_FIELDS[ 1 .. 6 ];
         my @values = (
             $wf->id, $h->action, $h->description, $h->state, $h->user,
-            $h->date->strftime( $self->date_format() )
+            $h->date->strftime( $self->date_format() ),
         );
         if ($id) {
             push @fields, $HIST_FIELDS[0];

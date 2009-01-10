@@ -18,7 +18,7 @@ my %VALID_TYPES = (
     condition => 'conditions',
     persister => 'persister',
     validator => 'validators',
-    workflow  => 'workflow'
+    workflow  => 'workflow',
 );
 
 sub is_valid_config_type {
