@@ -32,7 +32,9 @@ keywords = Id
 #For embedded SQL this is perfectly ok
 [-ValuesAndExpressions::ProhibitImplicitNewlines]
 
+#Exchange for Module::Load?
 [-BuiltinFunctions::ProhibitStringyEval]
+
 [-BuiltinFunctions::ProhibitUniversalIsa]
 [-CodeLayout::ProhibitParensWithBuiltins]
 [-ControlStructures::ProhibitCStyleForLoops]
