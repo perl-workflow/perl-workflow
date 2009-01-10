@@ -265,6 +265,8 @@ sub fetch_workflow {
     }
     my $row = $sth->fetchrow_arrayref;
     return undef unless ($row);
+
+    ## no critic (ProhibitCommaSeparatedStatements)
     return {
         state       => $row->[0],
         last_update => $self->parser->parse_datetime( $row->[1] ),
