@@ -23,6 +23,9 @@ Revision history for Perl extension Workflow
 - Added new test file t/workflow_history.t, the new tests of Workflow::History
   methods. Added explicit returns so we return a true value when run
 
+- Addressed [ValuesAndExpressions::RequireInterpolationOfMetachars], disabled
+  locally in Workflow::Condition::Evaluate
+
 - Addressed [CodeLayout::RequireTrailingCommas] Perl::Critic policy, few
   violations nothing serious
 
