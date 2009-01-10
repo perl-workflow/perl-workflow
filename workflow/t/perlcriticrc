@@ -37,8 +37,6 @@ keywords = Id
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
 [-InputOutput::ProhibitBarewordFileHandles]
 [-InputOutput::RequireBracedFileHandleWithPrint]
-[-InputOutput::RequireCheckedClose]
-[-InputOutput::RequireCheckedOpen]
 [-InputOutput::RequireCheckedSyscalls]
 [-RegularExpressions::ProhibitFixedStringMatches]
 [-RegularExpressions::RequireExtendedFormatting]
