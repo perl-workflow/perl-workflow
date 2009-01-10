@@ -35,7 +35,6 @@ keywords = Id
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitUniversalIsa]
 [-CodeLayout::ProhibitParensWithBuiltins]
-[-CodeLayout::RequireTrailingCommas]
 [-ControlStructures::ProhibitCStyleForLoops]
 [-ControlStructures::ProhibitCascadingIfElse]
 [-ControlStructures::ProhibitPostfixControls]
