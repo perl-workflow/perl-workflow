@@ -28,6 +28,10 @@ keywords = Id
 #Our violation of this Policy is minimal
 [-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
 
+#We currently utilize a package variable deliberately, should be addressed
+#again
+[-Variables::ProhibitPackageVars]
+
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitUniversalIsa]
 [-CodeLayout::ProhibitParensWithBuiltins]
@@ -54,4 +58,3 @@ keywords = Id
 [-ValuesAndExpressions::ProhibitMixedBooleanOperators]
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::RequireInterpolationOfMetachars]
-[-Variables::ProhibitPackageVars]
