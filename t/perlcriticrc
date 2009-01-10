@@ -25,8 +25,10 @@ keywords = Id
 #We are using Constants
 [-ValuesAndExpressions::ProhibitConstantPragma]
 
+#Our violation of this Policy is minimal
+[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
+
 [-BuiltinFunctions::ProhibitStringyEval]
-[-BuiltinFunctions::ProhibitStringySplit]
 [-BuiltinFunctions::ProhibitUniversalIsa]
 [-CodeLayout::ProhibitParensWithBuiltins]
 [-CodeLayout::RequireTrailingCommas]
@@ -46,7 +48,6 @@ keywords = Id
 [-Subroutines::RequireArgUnpacking]
 [-Subroutines::RequireFinalReturn]
 [-TestingAndDebugging::ProhibitNoStrict]
-[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
 [-ValuesAndExpressions::ProhibitImplicitNewlines]
 [-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
