@@ -8,6 +8,7 @@ use base qw( Workflow::Config );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use Data::Dumper qw( Dumper );
+use English qw( -no_match_vars );
 
 $Workflow::Config::Perl::VERSION = '1.03';
 
@@ -74,7 +75,7 @@ sub _translate_perl_file {
     my ( $class, $type, $file ) = @_;
     my $log = get_logger();
 
-    local $/ = undef;
+    local $INPUT_RECORD_SEPARATOR = undef;
     open( CONF, '<', $file )
         || configuration_error "Cannot read file '$file': $!";
     my $config = <CONF>;
@@ -91,9 +92,9 @@ sub _translate_perl {
 
     no strict 'vars';
     my $data = eval $config;
-    if ($@) {
+    if ($EVAL_ERROR) {
         configuration_error "Cannot evaluate perl data structure ",
-            "in '$file': $@";
+            "in '$file': $EVAL_ERROR";
     }
     return $data;
 }

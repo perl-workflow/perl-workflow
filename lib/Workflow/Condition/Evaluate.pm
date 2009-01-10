@@ -8,6 +8,7 @@ use base qw( Workflow::Condition );
 use Log::Log4perl qw( get_logger );
 use Safe;
 use Workflow::Exception qw( condition_error configuration_error );
+use English qw( -no_match_vars );
 
 $Workflow::Condition::Evaluate::VERSION = '1.02';
 
@@ -47,9 +48,10 @@ sub evaluate {
     my $safe = Safe->new();
     $safe->share('$context');
     my $rv = $safe->reval($to_eval);
-    if ($@) {
-        $log->error("Eval code '$to_eval' threw exception: $@");
-        condition_error "Condition expressed in code threw exception: $@";
+    if ($EVAL_ERROR) {
+        $log->error("Eval code '$to_eval' threw exception: $EVAL_ERROR");
+        condition_error
+            "Condition expressed in code threw exception: $EVAL_ERROR";
     }
 
     $log->is_debug && $log->debug("Safe eval ran ok, returned: '$rv'");

@@ -8,6 +8,7 @@ use base qw( Workflow::Persister );
 use DateTime;
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
+use English qw( -no_match_vars );
 
 $Workflow::Persister::SPOPS::VERSION = '1.07';
 
@@ -38,8 +39,8 @@ sub create_workflow {
         }
     );
     eval { $wf_persist->save };
-    if ($@) {
-        persist_error "Failed to create new workflow: $@";
+    if ($EVAL_ERROR) {
+        persist_error "Failed to create new workflow: $EVAL_ERROR";
     }
     return $wf_persist->id;
 }
@@ -47,8 +48,8 @@ sub create_workflow {
 sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
     my $wf_persist = eval { $self->workflow_class->fetch($wf_id) };
-    if ($@) {
-        persist_error "Failed to fetch workflow '$wf_id': $@";
+    if ($EVAL_ERROR) {
+        persist_error "Failed to fetch workflow '$wf_id': $EVAL_ERROR";
     }
     return $wf_persist;
 }
@@ -57,14 +58,15 @@ sub update_workflow {
     my ( $self, $wf ) = @_;
     my $wf_id = $wf->id;
     my $wf_persist = eval { $self->workflow_class->fetch($wf_id) };
-    if ($@) {
-        persist_error "Cannot fetch record '$wf_id' for updating: $@";
+    if ($EVAL_ERROR) {
+        persist_error
+            "Cannot fetch record '$wf_id' for updating: $EVAL_ERROR";
     }
     $wf_persist->state( $wf->state );
     $wf_persist->last_update( $wf->last_update );
     eval { $wf_persist->save };
-    if ($@) {
-        persist_error "Failed to update workflow '$wf_id': $@";
+    if ($EVAL_ERROR) {
+        persist_error "Failed to update workflow '$wf_id': $EVAL_ERROR";
     }
     return $wf_persist;
 }
@@ -86,8 +88,8 @@ sub create_history {
                 }
             )->save();
         };
-        if ($@) {
-            persist_error "Failed to save history record: $@";
+        if ($EVAL_ERROR) {
+            persist_error "Failed to save history record: $EVAL_ERROR";
         } else {
             $h->id( $hist_persist->id );
             $h->set_saved();
@@ -108,8 +110,8 @@ sub fetch_history {
             }
         );
     };
-    if ($@) {
-        persist_error "Error fetching workflow history: $@";
+    if ($EVAL_ERROR) {
+        persist_error "Error fetching workflow history: $EVAL_ERROR";
     }
     my @histories = ();
     for ( @{$persist_histories} ) {

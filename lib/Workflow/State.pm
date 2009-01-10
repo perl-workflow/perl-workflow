@@ -9,6 +9,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Condition::Evaluate;
 use Workflow::Exception qw( workflow_error );
 use Workflow::Factory qw( FACTORY );
+use English qw( -no_match_vars );
 
 $Workflow::State::VERSION = '1.14';
 
@@ -64,7 +65,7 @@ sub get_available_action_names {
 sub is_action_available {
     my ( $self, $wf, $action_name ) = @_;
     eval { $self->evaluate_action( $wf, $action_name ) };
-    return ( !$@ );
+    return ( !$EVAL_ERROR );
 }
 
 sub clear_condition_cache {
@@ -165,14 +166,14 @@ sub evaluate_action {
                 && $log->debug( q{Evaluating condition '},
                 $condition->name, q{'} );
             eval { $condition->evaluate($wf) };
-            if ($@) {
+            if ($EVAL_ERROR) {
 
                 # TODO: We may just want to pass the error up
                 # without wrapping it...
                 $self->{'_condition_result_cache'}->{$orig_condition} = 0;
                 if ( !$opposite ) {
                     workflow_error "No access to action '$action_name' in ",
-                        "state '$state' because: $@";
+                        "state '$state' because: $EVAL_ERROR";
                 } else {
                     $log->is_debug
                         && $log->debug("Opposite and condition failed");

@@ -56,4 +56,3 @@ keywords = Id
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
 [-ValuesAndExpressions::RequireInterpolationOfMetachars]
 [-Variables::ProhibitPackageVars]
-[-Variables::ProhibitPunctuationVars]

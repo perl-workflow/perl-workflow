@@ -23,6 +23,9 @@ Revision history for Perl extension Workflow
 - Added new test file t/workflow_history.t, the new tests of Workflow::History
   methods. Added explicit returns so we return a true value when run
 
+- Addressed [Variables::ProhibitPunctuationVars] Perl::Critic policy, we now
+  use English
+
 - All packages have been run through perltidy addressing the following
   Perl::Critic policies:
   

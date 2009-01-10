@@ -11,6 +11,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
+use English qw( -no_match_vars );
 
 $Workflow::Persister::File::VERSION = '1.10';
 
@@ -68,9 +69,9 @@ sub fetch_workflow {
     $log->is_debug
         && $log->debug("File exists, reconstituting workflow");
     my $wf_info = eval { $self->constitute_object($full_path) };
-    if ($@) {
+    if ($EVAL_ERROR) {
         persist_error "Cannot reconstitute data from file for ",
-            "workflow '$wf_id': $@";
+            "workflow '$wf_id': $EVAL_ERROR";
     }
     return $wf_info;
 }
@@ -168,7 +169,7 @@ sub constitute_object {
 
     no strict;
     my $object = eval $content;
-    croak $@ if ($@);
+    croak $EVAL_ERROR if ($EVAL_ERROR);
     return $object;
 
 }

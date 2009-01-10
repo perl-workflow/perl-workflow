@@ -7,6 +7,7 @@ use strict;
 use base qw( Workflow::Persister::DBI );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
+use English qw( -no_match_vars );
 
 $Workflow::Persister::DBI::ExtraData::VERSION = '1.05';
 
@@ -75,9 +76,9 @@ sub fetch_extra_workflow_data {
         $sth = $self->handle->prepare($sql);
         $sth->execute( $wf->id );
     };
-    if ($@) {
+    if ($EVAL_ERROR) {
         persist_error "Failed to retrieve extra data from table ",
-            $self->table, ": $@";
+            $self->table, ": $EVAL_ERROR";
     } else {
         $log->is_debug
             && $log->debug("Prepared/executed extra data fetch ok");
