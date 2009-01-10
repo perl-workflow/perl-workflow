@@ -43,8 +43,9 @@ $Workflow::Exception::VERSION   = '1.08';
 # Exported shortcuts
 
 sub _mythrow {
-    my $type = shift @_;
-    my ( $msg, %params ) = _massage(@_);
+    my ( $type, @items ) = @_;
+
+    my ( $msg, %params ) = _massage(@items);
     my $log = get_logger();
     my ( $pkg, $line ) = (caller)[ 0, 2 ];
     my ( $prev_pkg, $prev_line ) = ( caller(1) )[ 0, 2 ];
@@ -88,15 +89,17 @@ sub workflow_error {
 # the right format for E::C
 
 sub throw {
-    my $class = shift @_;
-    my ( $msg, %params ) = _massage(@_);
+    my ( $class, @items ) = @_;
+
+    my ( $msg, %params ) = _massage(@items);
     goto &Exception::Class::Base::throw( $class, message => $msg, %params );
 }
 
 sub _massage {
-    my @items  = @_;
+    my @items = @_;
+
     my %params = ( ref $items[-1] eq 'HASH' ) ? %{ pop(@items) } : ();
-    my $msg    = join( '', @items );
+    my $msg = join( '', @items );
     return ( $msg, %params );
 }
 
