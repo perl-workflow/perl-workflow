@@ -79,7 +79,7 @@ sub _translate_perl_file {
     open( CONF, '<', $file )
         || configuration_error "Cannot read file '$file': $!";
     my $config = <CONF>;
-    close(CONF);
+    close(CONF) || configuration_error "Cannot close file '$file': $!";
     my $data = $class->_translate_perl( $type, $config, $file );
     $log->is_debug
         && $log->debug( "Translated '$type' '$file' into: ", Dumper($data) );

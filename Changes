@@ -23,6 +23,11 @@ Revision history for Perl extension Workflow
 - Added new test file t/workflow_history.t, the new tests of Workflow::History
   methods. Added explicit returns so we return a true value when run
 
+- Addressed [InputOutput::RequireCheckedClose] Perl::Critic policy, this
+  required addition of some code, which will throw relevant exceptions
+  [InputOutput::RequireCheckedClose] was removed from the t/perlcriticrc, it
+  is no longer violated so it's listing might have been a mistake
+  
 - Addressed [Variables::ProhibitPunctuationVars] Perl::Critic policy, we now
   use English
 
