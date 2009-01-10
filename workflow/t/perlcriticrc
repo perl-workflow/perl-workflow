@@ -43,7 +43,6 @@ keywords = Id
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
 [-InputOutput::ProhibitBarewordFileHandles]
 [-InputOutput::RequireBracedFileHandleWithPrint]
-[-InputOutput::RequireCheckedSyscalls]
 [-RegularExpressions::ProhibitFixedStringMatches]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]

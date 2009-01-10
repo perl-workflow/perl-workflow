@@ -26,6 +26,9 @@ Revision history for Perl extension Workflow
 - Addressed [BuiltinFunctions::ProhibitStringySplit] Perl::Critic policy, single
   violation
 
+- Addressed [InputOutput::RequireCheckedSyscalls] Perl::Critic policy, this
+  required addition of some code, which will throw relevant exception
+
 - Addressed [InputOutput::RequireCheckedClose] Perl::Critic policy, this
   required addition of some code, which will throw relevant exceptions
   [InputOutput::RequireCheckedClose] was removed from the t/perlcriticrc, it
