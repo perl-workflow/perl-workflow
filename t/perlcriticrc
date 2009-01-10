@@ -25,9 +25,6 @@ keywords = Id
 #We are using Constants
 [-ValuesAndExpressions::ProhibitConstantPragma]
 
-#Our violation of this Policy is minimal
-[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
-
 #We currently utilize a package variable deliberately, should be addressed
 #again
 [-Variables::ProhibitPackageVars]
