@@ -32,6 +32,9 @@ keywords = Id
 #again
 [-Variables::ProhibitPackageVars]
 
+#For embedded SQL this is perfectly ok
+[-ValuesAndExpressions::ProhibitImplicitNewlines]
+
 [-BuiltinFunctions::ProhibitStringyEval]
 [-BuiltinFunctions::ProhibitUniversalIsa]
 [-CodeLayout::ProhibitParensWithBuiltins]
@@ -51,7 +54,6 @@ keywords = Id
 [-Subroutines::RequireFinalReturn]
 [-TestingAndDebugging::ProhibitNoStrict]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
-[-ValuesAndExpressions::ProhibitImplicitNewlines]
 [-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 [-ValuesAndExpressions::ProhibitMixedBooleanOperators]
 [-ValuesAndExpressions::ProhibitNoisyQuotes]

@@ -24,7 +24,7 @@ Revision history for Perl extension Workflow
   methods. Added explicit returns so we return a true value when run
 
 - Addressed [CodeLayout::RequireTrailingCommas] Perl::Critic policy, few
-  violoations nothing serious
+  violations nothing serious
 
 - Addressed [BuiltinFunctions::ProhibitStringySplit] Perl::Critic policy, single
   violation
