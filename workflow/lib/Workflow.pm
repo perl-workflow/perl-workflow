@@ -10,6 +10,7 @@ use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak carp);
+use English qw( -no_match_vars );
 
 my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -110,8 +111,8 @@ sub execute_action {
     # If there's an exception, reset the state to the original one and
     # rethrow
 
-    if ($@) {
-        my $error = $@;
+    if ($EVAL_ERROR) {
+        my $error = $EVAL_ERROR;
         $log->error(
             "Caught exception from action: $error; reset ",
             "workflow to old state '$old_state'"
@@ -313,16 +314,17 @@ sub _auto_execute_state {
     $log ||= get_logger();
     my $action_name;
     eval { $action_name = $wf_state->get_autorun_action_name($self); };
-    if ($@) {    # we found an error, possibly more than one or none action
-                 # are available in this state
+    if ($EVAL_ERROR)
+    {    # we found an error, possibly more than one or none action
+            # are available in this state
         if ( !$wf_state->may_stop() ) {
 
             # we are in autorun, but stopping is not allowed, so
             # rethrow
-            my $error = $@;
+            my $error = $EVAL_ERROR;
             $error->rethrow();
         }
-    } else {     # everything is fine, execute action
+    } else {    # everything is fine, execute action
         $log->is_debug
             && $log->debug(
             "Found action '$action_name' to execute in ",

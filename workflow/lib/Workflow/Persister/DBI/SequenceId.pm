@@ -8,6 +8,7 @@ use base qw( Class::Accessor );
 use DBI;
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( persist_error );
+use English qw( -no_match_vars );
 
 $Workflow::Persister::DBI::SequenceId::VERSION = '1.05';
 
@@ -29,8 +30,8 @@ sub pre_fetch_id {
         $row = $sth->fetchrow_arrayref;
         $sth->finish;
     };
-    if ($@) {
-        persist_error "Failed to retrieve sequence: $@";
+    if ($EVAL_ERROR) {
+        persist_error "Failed to retrieve sequence: $EVAL_ERROR";
     }
     return $row->[0];
 }

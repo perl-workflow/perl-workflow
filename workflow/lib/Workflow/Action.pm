@@ -190,7 +190,7 @@ Workflow::Action - Base class for Workflow actions
 
      if ( $@ ) {
          workflow_error
-             "Cannot create new user with name '", $context->param( 'username' ), "': $@";
+             "Cannot create new user with name '", $context->param( 'username' ), "': $EVAL_ERROR";
      }
 
      # Set the created user in the context for the application and/or

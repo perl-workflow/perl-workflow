@@ -8,6 +8,7 @@ use base qw( Workflow::Config );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
+use English qw( -no_match_vars );
 
 $Workflow::Config::XML::VERSION = '1.05';
 
@@ -61,7 +62,7 @@ sub parse {
 
         # If processing multiple config files, this makes it much easier
         # to find a problem.
-        croak "Processing $file_name: $@" if $@;
+        croak "Processing $file_name: $EVAL_ERROR" if $EVAL_ERROR;
         $log->is_info
             && $log->info("Parsed XML '$file_name' ok");
 
@@ -87,7 +88,7 @@ sub _translate_xml {
     my ( $self, $type, $config ) = @_;
     unless ($XML_REQUIRED) {
         eval { require XML::Simple };
-        if ($@) {
+        if ($EVAL_ERROR) {
             configuration_error "XML::Simple must be installed to parse ",
                 "configuration files/data in XML format";
         } else {

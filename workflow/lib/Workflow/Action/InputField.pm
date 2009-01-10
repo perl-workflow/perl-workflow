@@ -7,6 +7,7 @@ use strict;
 use base qw( Class::Accessor );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
+use English qw( -no_match_vars );
 
 $Workflow::Action::InputField::VERSION = '1.09';
 
@@ -53,7 +54,7 @@ sub new {
         $log->debug("Possible values for '$name' from '$source_class'");
         unless ( $INCLUDED{$source_class} ) {
             eval "require $source_class";
-            if ($@) {
+            if ($EVAL_ERROR) {
                 configuration_error "Failed to include source class ",
                     "'$source_class' used in field '$name'";
             }
