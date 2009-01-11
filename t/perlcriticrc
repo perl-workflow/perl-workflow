@@ -35,7 +35,6 @@ keywords = Id
 #Exchange for Module::Load?
 [-BuiltinFunctions::ProhibitStringyEval]
 
-[-BuiltinFunctions::ProhibitUniversalIsa]
 [-CodeLayout::ProhibitParensWithBuiltins]
 [-ControlStructures::ProhibitCStyleForLoops]
 [-ControlStructures::ProhibitCascadingIfElse]
