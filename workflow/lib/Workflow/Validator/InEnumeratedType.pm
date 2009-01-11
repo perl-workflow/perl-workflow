@@ -28,8 +28,8 @@ sub _init {
 sub validator {
     my ( $self, $wf, $value ) = @_;
     unless ( $self->is_enumerated_value($value) ) {
-        validation_error "Value '$value' must be one of: ",
-            join( ", ", $self->get_enumerated_values );
+        validation_error "Value '$value' must be one of: ", join ", ",
+            $self->get_enumerated_values;
     }
 }
 

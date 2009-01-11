@@ -10,7 +10,7 @@ $Workflow::Persister::UUID::VERSION = '1.03';
 
 sub new {
     my ( $class, $params ) = @_;
-    my $self = bless( { gen => Data::UUID->new() }, $class );
+    my $self = bless { gen => Data::UUID->new() }, $class;
     return $self;
 }
 

@@ -116,8 +116,8 @@ sub fetch_history {
     opendir( HISTORY, $history_dir )
         || persist_error "Cannot read history from '$history_dir': $!";
     my @history_files = grep { -f $_ }
-        map { catfile( $history_dir, $_ ) } readdir(HISTORY);
-    closedir(HISTORY);
+        map { catfile( $history_dir, $_ ) } readdir HISTORY;
+    closedir HISTORY;
     my @histories = ();
 
     foreach my $history_file (@history_files) {

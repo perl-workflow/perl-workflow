@@ -83,7 +83,7 @@ sub _initialize_instance {
             && $log->debug(
             "Creating empty instance of '$class' factory for ",
             "singleton use" );
-        $INSTANCES{$class} = bless( {} => $class );
+        $INSTANCES{$class} = bless {} => $class;
     }
     return $INSTANCES{$class};
 }
@@ -116,10 +116,8 @@ sub add_config_from_file {
 
     foreach my $type ( sort keys %params ) {
         $log->is_debug
-            && $log->debug(
-            "Using '$type' configuration file(s): ",
-            join( ', ', _flatten( $params{$type} ) )
-            );
+            && $log->debug( "Using '$type' configuration file(s): ",
+            join ', ', _flatten( $params{$type} ) );
     }
 
     $log->is_debug
@@ -308,17 +306,17 @@ sub _load_observers {
         }
     }
     $log->is_info
-        && $log->info( "Added observers to '$wf_type': ",
-        join( ', ', @observers ) );
+        && $log->info( "Added observers to '$wf_type': ", join ', ',
+        @observers );
     $self->{_workflow_observers}{$wf_type}
-        = ( scalar @observers ) ? \@observers : undef;
+        = scalar @observers ? \@observers : undef;
 }
 
 sub _load_class {
     my ( $self, $class_to_load, $msg ) = @_;
     eval "require $class_to_load";
     if ($EVAL_ERROR) {
-        my $full_msg = sprintf( $msg, $class_to_load, $EVAL_ERROR );
+        my $full_msg = sprintf $msg, $class_to_load, $EVAL_ERROR;
         $log->error($full_msg);
         workflow_error $full_msg;
     }

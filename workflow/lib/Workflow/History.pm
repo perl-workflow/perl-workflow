@@ -15,7 +15,7 @@ __PACKAGE__->mk_accessors(@FIELDS);
 
 sub new {
     my ( $class, $params ) = @_;
-    my $self = bless( { _saved => 0 }, $class );
+    my $self = bless { _saved => 0 }, $class;
     for (@FIELDS) {
         $self->$_( $params->{$_} ) if ( $params->{$_} );
     }

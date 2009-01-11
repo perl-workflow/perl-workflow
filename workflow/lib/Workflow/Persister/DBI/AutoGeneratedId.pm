@@ -17,7 +17,7 @@ sub new {
     my ( $class, $params ) = @_;
     my $log = get_logger();
 
-    my $self = bless( {}, $class );
+    my $self = bless {}, $class;
     for (@FIELDS) {
         $self->$_( $params->{$_} ) if ( $params->{$_} );
     }

@@ -25,10 +25,10 @@ sub init {
     }
     if ( scalar @not_found ) {
         $log->error( "Required configuration fields not found: ",
-            join( ', ', @not_found ) );
+            join ', ', @not_found );
         configuration_error
             "To fetch extra data with each workflow with this implementation ",
-            "you must specify: ", join( ', ', @not_found );
+            "you must specify: ", join ', ', @not_found;
     }
 
     $self->table( $params->{extra_table} );
@@ -46,7 +46,7 @@ sub init {
     }
     $log->is_info
         && $log->info( "Configured extra data fetch with: ",
-        join( '; ', $self->table, $data_field, $self->context_key ) );
+        join '; ', $self->table, $data_field, $self->context_key );
 }
 
 sub fetch_extra_workflow_data {
@@ -65,7 +65,7 @@ sub fetch_extra_workflow_data {
         ( ref $data_field )
         ? join( ', ', @{$data_field} )
         : $data_field;
-    $sql = sprintf( $sql, $select_data_fields, $self->table );
+    $sql = sprintf $sql, $select_data_fields, $self->table;
     $log->is_debug
         && $log->debug("Using SQL\n$sql");
     $log->is_debug
@@ -88,23 +88,16 @@ sub fetch_extra_workflow_data {
                 $wf->context->param( $data_field->[$i], $row->[$i] );
                 $log->is_info
                     && $log->info(
-                    sprintf(
-                        "Set data from %s.%s into context key %s ok",
-                        $self->table, $data_field->[$i],
-                        $data_field->[$i]
-                    )
-                    );
+                    sprintf "Set data from %s.%s into context key %s ok",
+                    $self->table, $data_field->[$i], $data_field->[$i] );
             }
         } else {
             my $value = $row->[0];
             $wf->context->param( $self->context_key, $value );
             $log->is_info
                 && $log->info(
-                sprintf(
-                    "Set data from %s.%s into context key %s ok",
-                    $self->table, $self->data_field, $self->context_key
-                )
-                );
+                sprintf "Set data from %s.%s into context key %s ok",
+                $self->table, $self->data_field, $self->context_key );
         }
     }
 }

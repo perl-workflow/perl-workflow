@@ -11,7 +11,7 @@ $Workflow::Base::VERSION = '1.08';
 
 sub new {
     my ( $class, @params ) = @_;
-    my $self = bless( { PARAMS => {} }, $class );
+    my $self = bless { PARAMS => {} }, $class;
 
     # always automatically pull out the name/value pairs from 'param'
 

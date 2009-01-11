@@ -251,9 +251,9 @@ sub init {
 
 sub set {
     my ( $self, $prop, $value ) = @_;
-    my $calling_pkg = ( caller(1) )[0];
+    my $calling_pkg = ( caller 1 )[0];
     unless ( $calling_pkg =~ /^Workflow/ ) {
-        carp "Tried to set from: ", join( ', ', caller(1) );
+        carp "Tried to set from: ", join ', ', caller 1;
         workflow_error
             "Don't try to use my private setters from '$calling_pkg'!";
     }

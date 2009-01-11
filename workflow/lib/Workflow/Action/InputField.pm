@@ -23,7 +23,7 @@ sub new {
     $log->debug("Instantiating new field '$params->{name}'")
         if $params->{name};
 
-    my $self = bless( {}, $class );
+    my $self = bless {}, $class;
 
     # Set all our parameters
     foreach my $field (@FIELDS) {
@@ -63,14 +63,14 @@ sub new {
         $params->{values} = [ $source_class->get_possible_values($self) ];
     } elsif ( $self->source_list ) {
         $log->debug("Possible values for '$name' specified in config");
-        $params->{values} = [ split( /\s*,\s*/, $self->source_list ) ];
+        $params->{values} = [ split /\s*,\s*/, $self->source_list ];
     }
 
     my $values = $params->{values} || $params->{possible_values};
     if ($values) {
         my @add_values = ( ref $values eq 'ARRAY' ) ? @{$values} : ($values);
         $log->debug( "Values to use as source for field '$name': ",
-            join( ', ', @add_values ) );
+            join ', ', @add_values );
         $self->add_possible_values(@add_values);
     }
 

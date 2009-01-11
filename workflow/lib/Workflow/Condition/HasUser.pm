@@ -22,7 +22,7 @@ sub evaluate {
     my ( $self, $wf ) = @_;
     my $log = get_logger();
     $log->is_debug
-        && $log->debug( "Trying to execute condition ", ref($self) );
+        && $log->debug( "Trying to execute condition ", ref $self );
     my $user_key     = $self->param('user_key');
     my $current_user = $wf->context->param($user_key);
     $log->debug( "Current user in the context is '$current_user' retrieved ",
