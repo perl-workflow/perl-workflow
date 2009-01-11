@@ -49,7 +49,7 @@ sub get_available_action_names {
 
     foreach my $action_name (@all_actions) {
         my $action_group = FACTORY->{_action_config}{$action_name}{'group'};
-        if ( defined $group && length($group) ) {
+        if ( defined $group && length $group ) {
             if ( $action_group ne $group ) {
                 next;
             }
@@ -226,7 +226,7 @@ sub get_autorun_action_name {
     my $pre_error = "State '$state' should be automatically executed but ";
     if ( scalar @actions > 1 ) {
         workflow_error "$pre_error there are multiple actions available ",
-            "for execution. Actions are: ", join( ', ', @actions );
+            "for execution. Actions are: ", join ', ', @actions;
     }
     if ( scalar @actions == 0 ) {
         workflow_error
@@ -270,7 +270,7 @@ sub init {
     $log ||= get_logger();
     my $name = $config->{name};
 
-    my $class = ref($self);
+    my $class = ref $self;
 
     $log->is_debug
         && $log->debug("Constructing '$class' object for state $name");
@@ -294,7 +294,7 @@ sub init {
     foreach my $state_action_config ( @{ $config->{action} } ) {
         my $action_name = $state_action_config->{name};
         my $resulting   = $state_action_config->{resulting_state};
-        if ( my $resulting_type = ref($resulting) ) {
+        if ( my $resulting_type = ref $resulting ) {
             if ( $resulting_type eq 'ARRAY' ) {
                 $state_action_config->{resulting_state}
                     = $self->_assign_resulting_state_from_array( $action_name,
@@ -325,7 +325,7 @@ sub _assign_resulting_state_from_array {
     }
     if ( scalar @errors ) {
         workflow_error "Errors found assigning 'resulting_state' to ",
-            "action '$action_name' in state '$name': ", join( '; ', @errors );
+            "action '$action_name' in state '$name': ", join '; ', @errors;
     }
     $log->is_debug
         && $log->debug( "Assigned multiple resulting states in '$name' and ",

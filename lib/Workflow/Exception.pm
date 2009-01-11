@@ -48,7 +48,7 @@ sub _mythrow {
     my ( $msg, %params ) = _massage(@items);
     my $log = get_logger();
     my ( $pkg, $line ) = (caller)[ 0, 2 ];
-    my ( $prev_pkg, $prev_line ) = ( caller(1) )[ 0, 2 ];
+    my ( $prev_pkg, $prev_line ) = ( caller 1 )[ 0, 2 ];
     $log->error( "$type exception thrown from [$pkg: $line; before: ",
         "$prev_pkg: $prev_line]: $msg" );
     goto &Exception::Class::Base::throw(
@@ -98,8 +98,8 @@ sub throw {
 sub _massage {
     my @items = @_;
 
-    my %params = ( ref $items[-1] eq 'HASH' ) ? %{ pop(@items) } : ();
-    my $msg = join( '', @items );
+    my %params = ( ref $items[-1] eq 'HASH' ) ? %{ pop @items } : ();
+    my $msg = join '', @items;
     return ( $msg, %params );
 }
 

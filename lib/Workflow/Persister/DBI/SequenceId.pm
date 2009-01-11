@@ -20,7 +20,7 @@ my ($log);
 sub pre_fetch_id {
     my ( $self, $dbh ) = @_;
     $log ||= get_logger();
-    my $full_select = sprintf( $self->sequence_select, $self->sequence_name );
+    my $full_select = sprintf $self->sequence_select, $self->sequence_name;
     $log->is_debug
         && $log->debug("SQL to fetch sequence: $full_select");
     my ($row);

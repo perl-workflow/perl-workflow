@@ -79,7 +79,7 @@ sub _check_config_type {
     unless ( $class->is_valid_config_type($type) ) {
         configuration_error "When parsing a configuration file the ",
             "configuration type (first argument) must be ", "one of: ",
-            join( ', ', $class->get_valid_config_types );
+            join ', ', $class->get_valid_config_types;
     }
 }
 

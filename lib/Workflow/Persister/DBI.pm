@@ -210,14 +210,14 @@ sub create_workflow {
             && $log->debug("Got ID from pre_fetch_id: $id");
     }
     my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
-    $sql = sprintf( $sql,
-        $self->workflow_table,
-        join( ', ', @fields ),
-        join( ', ', map {'?'} @values ) );
+
+    ## no critic (ProhibitParensWithBuiltins)
+    $sql = sprintf $sql, $self->workflow_table, join( ', ', @fields ),
+        join( ', ', map {'?'} @values );
 
     if ( $log->is_debug ) {
         $log->debug("Will use SQL\n$sql");
-        $log->debug( "Will use parameters\n", join( ', ', @values ) );
+        $log->debug( "Will use parameters\n", join ', ', @values );
     }
 
     my ($sth);
@@ -248,7 +248,7 @@ sub fetch_workflow {
           FROM %s 
          WHERE $WF_FIELDS[0] = ?
     };
-    $sql = sprintf( $sql, $self->workflow_table );
+    $sql = sprintf $sql, $self->workflow_table;
 
     if ( $log->is_debug ) {
         $log->debug("Will use SQL\n$sql");
@@ -283,14 +283,14 @@ sub update_workflow {
                $WF_FIELDS[3] = ?
          WHERE $WF_FIELDS[0] = ?
     };
-    $sql = sprintf( $sql, $self->workflow_table );
+    $sql = sprintf $sql, $self->workflow_table;
     my $update_date = DateTime->now( time_zone => $wf->time_zone() )
         ->strftime( $self->date_format() );
 
     if ( $log->is_debug ) {
         $log->debug("Will use SQL\n$sql");
         $log->debug( "Will use parameters\n",
-            join( ', ', $wf->state, $update_date, $wf->id ) );
+            join ', ', $wf->state, $update_date, $wf->id );
     }
 
     my ($sth);
@@ -323,13 +323,13 @@ sub create_history {
             push @values, $id;
         }
         my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
-        $sql = sprintf( $sql,
-            $self->history_table,
-            join( ', ', @fields ),
-            join( ', ', map {'?'} @values ) );
+
+        ## no critic (ProhibitParensWithBuiltins)
+        $sql = sprintf $sql, $self->history_table, join( ', ', @fields ),
+            join( ', ', map {'?'} @values );
         if ( $log->is_debug ) {
             $log->debug("Will use SQL\n$sql");
-            $log->debug( "Will use parameters\n", join( ', ', @values ) );
+            $log->debug( "Will use parameters\n", join ', ', @values );
         }
 
         my ($sth);
@@ -364,8 +364,8 @@ sub fetch_history {
          WHERE $HIST_FIELDS[1] = ?
       ORDER BY $HIST_FIELDS[6] DESC
     };
-    my $history_fields = join( ', ', @HIST_FIELDS );
-    $sql = sprintf( $sql, $history_fields, $self->history_table );
+    my $history_fields = join ', ', @HIST_FIELDS;
+    $sql = sprintf $sql, $history_fields, $self->history_table;
 
     if ( $log->is_debug ) {
         $log->debug("Will use SQL\n$sql");
