@@ -7,6 +7,8 @@ use strict;
 use base qw( Workflow::Validator );
 use DateTime::Format::Strptime;
 use Workflow::Exception qw( configuration_error validation_error );
+use English qw( -no_match_vars );
+use Carp qw(carp);
 
 $Workflow::Validator::MatchesDateFormat::VERSION = '1.06';
 
@@ -35,8 +37,12 @@ sub validate {
     return unless ($date_string);
 
     # already converted!
-    if ( ref($date_string) and UNIVERSAL::isa( $date_string, 'DateTime' ) ) {
+    if ( ref($date_string) and eval { $date_string->isa('DateTime'); } ) {
         return;
+    }
+
+    if ($EVAL_ERROR) {
+        carp 'Unable to assert DateTime or similar object';
     }
 
     my $fmt         = $self->formatter;

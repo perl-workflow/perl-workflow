@@ -160,13 +160,17 @@ sub add_history {
             $item->{time_zone}   = $self->time_zone();
             push @to_add, Workflow::History->new($item);
             $log->is_debug && $log->debug("Adding history from hashref");
-        } elsif ( UNIVERSAL::isa( $item, 'Workflow::History' ) ) {
+        } elsif ( ref $item and $item->isa('Workflow::History') ) {
             $item->workflow_id( $self->id );
             push @to_add, $item;
             $log->is_debug && $log->debug("Adding history object directly");
         } else {
             workflow_error "I don't know how to add a history of ", "type '",
                 ref($item), "'";
+        }
+
+        if ($EVAL_ERROR) {
+            workflow_error "Unable to assert history object";
         }
     }
     push @{ $self->{_histories} }, @to_add;

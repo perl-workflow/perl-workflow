@@ -23,6 +23,13 @@ Revision history for Perl extension Workflow
 - Added new test file t/workflow_history.t, the new tests of Workflow::History
   methods. Added explicit returns so we return a true value when run
 
+- Addressed [BuiltinFunctions::ProhibitUniversalIsa] Perl::Critic policy we
+  should now be compatible with perl 5.9.3's deprecation of UNIVERSAL::isa
+  functional call, we now use isa as a method where relevant
+
+- Addressed [ValuesAndExpressions::ProhibitCommaSeparatedStatements], disabled
+  locally in Workflow::Persister::DBI
+
 - Addressed [ValuesAndExpressions::ProhibitCommaSeparatedStatements], disabled
   locally in Workflow::Persister::DBI
 
