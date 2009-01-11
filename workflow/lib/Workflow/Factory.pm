@@ -16,6 +16,7 @@ $Workflow::Factory::VERSION = '1.18';
 my ($log);
 my (%INSTANCES);
 
+## no critic (Subroutines::RequireArgUnpacking)
 sub import {
     my $class = shift;
     $log ||= get_logger();

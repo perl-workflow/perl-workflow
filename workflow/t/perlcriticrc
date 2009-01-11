@@ -47,7 +47,6 @@ keywords = Id
 [-RegularExpressions::RequireLineBoundaryMatching]
 [-Subroutines::ProhibitExcessComplexity]
 [-Subroutines::ProtectPrivateSubs]
-[-Subroutines::RequireArgUnpacking]
 [-Subroutines::RequireFinalReturn]
 [-TestingAndDebugging::ProhibitNoStrict]
 [-ValuesAndExpressions::ProhibitEmptyQuotes]
