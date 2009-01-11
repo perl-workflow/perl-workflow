@@ -23,7 +23,10 @@ Revision history for Perl extension Workflow
 - Added new test file t/workflow_history.t, the new tests of Workflow::History
   methods. Added explicit returns so we return a true value when run
 
-- Addressed [Subroutines::RequireArgUnpacking]  Perl::Critic policy,
+- Addressed [ControlStructures::ProhibitCStyleForLoops] Perl::Critic policy,
+  disabled locally in Workflow::Persister::DBI::ExtraData
+  
+- Addressed [Subroutines::RequireArgUnpacking] Perl::Critic policy,
   disabled locally in Workflow::Exception and  Workflow::Factory for two
   violations that need to be revisited
 

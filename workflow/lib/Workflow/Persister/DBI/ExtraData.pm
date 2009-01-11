@@ -84,6 +84,7 @@ sub fetch_extra_workflow_data {
             && $log->debug("Prepared/executed extra data fetch ok");
         my $row = $sth->fetchrow_arrayref;
         if ( ref $data_field ) {
+            ## no critic (ProhibitCStyleForLoops)
             for ( my $i = 0; $i < scalar @{$data_field}; $i++ ) {
                 $wf->context->param( $data_field->[$i], $row->[$i] );
                 $log->is_info
