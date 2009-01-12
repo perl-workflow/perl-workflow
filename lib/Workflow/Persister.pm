@@ -134,6 +134,10 @@ __END__
 
 Workflow::Persister - Base class for workflow persistence
 
+=head1 VERSION
+
+This documentation describes version 1.09 of this package
+
 =head1 SYNOPSIS
 
  # Associate a workflow with a persister

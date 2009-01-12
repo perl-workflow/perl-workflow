@@ -24,6 +24,10 @@ __END__
 
 Workflow::Context - Data blackboard for Workflows, Actions, Conditions and Validators
 
+=head1 VERSION
+
+This documentation describes version 1.05 of this package
+
 =head1 SYNOPSIS
 
  # Create your own context and merge it with one that may already be

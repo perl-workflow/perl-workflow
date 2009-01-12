@@ -152,6 +152,10 @@ __END__
 
 Workflow::Action - Base class for Workflow actions
 
+=head1 VERSION
+
+This documentation describes version 1.09 of this package
+
 =head1 SYNOPSIS
 
  # Configure the Action...

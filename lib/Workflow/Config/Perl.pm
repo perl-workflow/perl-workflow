@@ -107,6 +107,10 @@ __END__
 
 Workflow::Config::Perl - Parse workflow configurations as Perl data structures
 
+=head1 VERSION
+
+This documentation describes version 1.03 of this package
+
 =head1 SYNOPSIS
 
  # either of these is acceptable

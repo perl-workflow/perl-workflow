@@ -41,6 +41,10 @@ __END__
 
 Workflow::Condition::HasUser - Condition to determine if a user is available
 
+=head1 VERSION
+
+This documentation describes version 1.05 of this package
+
 =head1 SYNOPSIS
 
  # First setup the condition

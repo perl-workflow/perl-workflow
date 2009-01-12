@@ -460,6 +460,10 @@ __END__
 
 Workflow::Persister::DBI - Persist workflow and history to DBI database
 
+=head1 VERSION
+
+This documentation describes version 1.19 of this package
+
 =head1 SYNOPSIS
 
  <persister name="MainDatabase"

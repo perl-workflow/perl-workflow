@@ -142,6 +142,10 @@ __END__
 
 Workflow::Persister::SPOPS - Persist workflows using SPOPS
 
+=head1 VERSION
+
+This documentation describes version 1.07 of this package
+
 =head1 SYNOPSIS
 
  <persister name="SPOPSPersister"

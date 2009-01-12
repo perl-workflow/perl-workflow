@@ -4,6 +4,9 @@ package Workflow::Exception;
 
 use warnings;
 use strict;
+use vars qw($VERSION);
+
+$VERSION = '1.08';
 
 # Declare some of our exceptions...
 
@@ -112,6 +115,10 @@ __END__
 =head1 NAME
 
 Workflow::Exception - Base class for workflow exceptions
+
+=head1 VERSION
+
+This documentation describes version 1.08 of this package
 
 =head1 SYNOPSIS
 

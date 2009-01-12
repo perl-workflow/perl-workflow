@@ -109,6 +109,10 @@ __END__
 
 Workflow::Config::XML - Parse workflow configurations from XML content
 
+=head1 VERSION
+
+This documentation describes version 1.05 of this package
+
 =head1 SYNOPSIS
 
  my $parser = Workflow::Config->new( 'xml' );

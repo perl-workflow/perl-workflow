@@ -99,6 +99,10 @@ __END__
 
 Workflow::Base - Base class with constructor
 
+=head1 VERSION
+
+This documentation describes version 1.08 of this package
+
 =head1 SYNOPSIS
 
  package My::App::Foo;

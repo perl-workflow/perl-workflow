@@ -40,6 +40,10 @@ __END__
 
 Workflow::Persister::RandomId - Persister to generate random ID
 
+=head1 VERSION
+
+This documentation describes version 1.03 of this package
+
 =head1 SYNOPSIS
 
  <persister
