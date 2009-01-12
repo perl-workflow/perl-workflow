@@ -5,7 +5,7 @@
 use strict;
 use lib 't';
 use TestUtil;
-use Test::More  tests => 10;
+use Test::More  tests => 18;
 
 require_ok( 'Workflow::History' );
 
@@ -30,3 +30,21 @@ ok( ! $p_history->id,
 my $dt_history = Workflow::History->new();
 ok( $dt_history->date->epoch + 10 > time,
     'Current datetime set with new history object' );
+
+my $history;
+
+ok($history = Workflow::History->new({}), 'Constructing history object');
+
+isa_ok($history, 'Workflow::History');
+
+ok(! $history->is_saved(), 'Checking saved state');
+
+ok($history->set_new_state('foo'), 'Setting state');
+
+ok($history->set_saved(), 'Setting saved state');
+
+ok($history->is_saved(), 'Checking saved state');
+
+ok(! $history->clear_saved(), 'Unsetting saved state');
+
+ok(! $history->is_saved(), 'Checking saved state');
