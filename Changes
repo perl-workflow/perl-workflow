@@ -2,7 +2,7 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-1.32
+0.32_8 Mon Jan 12 20:51:11 CET 2009 (update not required)
 
 - Bumped up version for Workflow::State to 1.14 considering patches from
   action_group and test_condition patches
