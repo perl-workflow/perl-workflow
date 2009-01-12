@@ -59,8 +59,6 @@ $Id$
 
 - Added POD sections on diagnostics to all classes.
 
-- Add VERSION section to all classes
-
 From TODO.txt:
 
 - Where to put the configuration for the built-in

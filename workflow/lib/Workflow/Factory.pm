@@ -726,9 +726,14 @@ sub get_validator {
 
 __END__
 
+
 =head1 NAME
 
 Workflow::Factory - Generates new workflow and supporting objects
+
+=head1 VERSION
+
+This documentation describes version 1.18 of this package
 
 =head1 SYNOPSIS
 

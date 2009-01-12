@@ -119,6 +119,10 @@ __END__
 
 Workflow::Action::InputField - Metadata about information required by an Action
 
+=head1 VERSION
+
+This documentation describes version 1.09 of this package
+
 =head1 SYNOPSIS
 
  # Declare the fields needed by your action in the configuration...

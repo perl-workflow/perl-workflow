@@ -29,6 +29,10 @@ __END__
 
 Workflow::Persister::UUID - Persister to generate Universally Unique Identifiers
 
+=head1 VERSION
+
+This documentation describes version 1.03 of this package
+
 =head1 SYNOPSIS
 
  <persister

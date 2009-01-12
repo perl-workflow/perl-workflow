@@ -110,6 +110,10 @@ __END__
 
 Workflow::Config - Parse configuration files for the workflow components
 
+=head1 VERSION
+
+This documentation describes version 1.12 of this package
+
 =head1 SYNOPSIS
 
  # Reference multiple files

@@ -46,6 +46,10 @@ __END__
 
 Workflow::Persister::DBI::SequenceId - Persister to fetch ID from a sequence
 
+=head1 VERSION
+
+This documentation describes version 1.05 of this package
+
 =head1 SYNOPSIS
 
  <persister

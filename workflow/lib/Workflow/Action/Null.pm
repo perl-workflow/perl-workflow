@@ -21,6 +21,10 @@ __END__
 
 Workflow::Action::Null - Workflow action for the terminally lazy
 
+=head1 VERSION
+
+This documentation describes version 1.03 of this package
+
 =head1 SYNOPSIS
 
  # in workflow.xml...

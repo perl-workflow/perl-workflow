@@ -38,6 +38,10 @@ __END__
 
 Workflow::Validator - Ensure data are valid
 
+=head1 VERSION
+
+This documentation describes version 1.05 of this package
+
 =head1 SYNOPSIS
 
  # First declare the validator...

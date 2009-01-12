@@ -111,6 +111,10 @@ __END__
 
 Workflow::Persister::DBI::ExtraData - Fetch extra data with each workflow and put it into the context
 
+=head1 VERSION
+
+This documentation describes version 1.05 of this package
+
 =head1 SYNOPSIS
 
  <persister name="MyPersister"

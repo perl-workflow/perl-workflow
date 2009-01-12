@@ -32,6 +32,10 @@ __END__
 
 Workflow::Validator::HasRequiredField - Validator to ensure certain data are in the context
 
+=head1 VERSION
+
+This documentation describes version 1.04 of this package
+
 =head1 SYNOPSIS
 
  # Validator is created automatically when you mark a field as

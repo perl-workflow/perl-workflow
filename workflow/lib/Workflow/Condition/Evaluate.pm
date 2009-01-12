@@ -72,6 +72,10 @@ __END__
 
 Workflow::Condition::Evaluate - Inline condition that evaluates perl code for truth
 
+=head1 VERSION
+
+This documentation describes version 1.02 of this package
+
 =head1 SYNOPSIS
 
  <state name="foo">

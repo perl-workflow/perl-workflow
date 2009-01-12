@@ -34,6 +34,10 @@ __END__
 
 Workflow::Condition - Evaluate a condition depending on the workflow state and environment
 
+=head1 VERSION
+
+This documentation describes version 1.07 of this package
+
 =head1 SYNOPSIS
 
  # First declare the condition in a 'workflow_condition.xml'...

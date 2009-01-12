@@ -64,6 +64,10 @@ __END__
 
 Workflow::History - Recorded work on a workflow action or workflow itself
 
+=head1 VERSION
+
+This documentation describes version 1.10 of this package
+
 =head1 SYNOPSIS
 
  # in your action

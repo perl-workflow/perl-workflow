@@ -57,6 +57,10 @@ __END__
 
 Workflow::Validator::InEnumeratedType - Ensure a value is one of a declared set of values
 
+=head1 VERSION
+
+This documentation describes version 1.04 of this package
+
 =head1 SYNOPSIS
 
  # Inline the enumeration...
@@ -84,11 +88,6 @@ Workflow::Validator::InEnumeratedType - Ensure a value is one of a declared set 
        <arg value="$play"/>
     </validator>
  </action>
-
-=head1 VERSION
-
-This documentation describes version 1.04 of
-L<Workflow::Validator::InEnumeratedType>
 
 =head1 DESCRIPTION
 

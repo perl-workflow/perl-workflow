@@ -422,6 +422,10 @@ __END__
 
 Workflow::State - Information about an individual state in a workflow
 
+=head1 VERSION
+
+This documentation describes version 1.14 of this package
+
 =head1 SYNOPSIS
 
  # This is an internal object...

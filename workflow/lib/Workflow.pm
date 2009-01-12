@@ -347,6 +347,10 @@ __END__
 
 Workflow - Simple, flexible system to implement workflows
 
+=head1 VERSION
+
+This documentation describes version 0.15 of Workflow
+
 =head1 SYNOPSIS
 
  use Workflow::Factory qw( FACTORY );
@@ -478,8 +482,6 @@ Workflow - Simple, flexible system to implement workflows
  print "Current state: ", $workflow->state, "\n";
 
 =head1 DESCRIPTION
-
-This documentation is for version '0.15' of the Workflow module.
 
 =head2 Overview
 

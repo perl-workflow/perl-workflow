@@ -21,6 +21,10 @@ __END__
 
 Workflow::Action::Mailer - a stub for a SMTP capable action
 
+=head1 VERSION
+
+This documentation describes version 1.01 of this package
+
 =head1 SYNOPSIS
 
 =head1 DESCRIPTION

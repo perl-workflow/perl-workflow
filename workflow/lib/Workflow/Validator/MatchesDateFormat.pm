@@ -62,6 +62,10 @@ __END__
 
 Workflow::Validator::MatchesDateFormat - Ensure a stringified date matches a given pattern
 
+=head1 VERSION
+
+This documentation describes version 1.06 of this package
+
 =head1 SYNOPSIS
 
  <action name="CreateNews">
