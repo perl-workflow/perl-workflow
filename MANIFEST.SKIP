@@ -27,6 +27,7 @@
 \.swp$
 \#$
 \.\#
+\.tar
 
 # Project files
 ^notes
