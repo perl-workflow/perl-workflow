@@ -79,6 +79,7 @@ struct/workflow_sqlite.sql
 t/00_load.t
 t/02_pod.t
 t/03_pod-coverage.t
+t/04_critic.t
 t/action.t
 t/action_field.t
 t/action_mailer.t
@@ -89,13 +90,13 @@ t/condition.t
 t/condition_evaluate.t
 t/config.t
 t/context.t
-t/db/workflow.db
 t/exception.t
 t/factory.t
 t/factory_subclass.t
 t/FactorySubclass.pm
 t/history.t
 t/log4perl.conf
+t/perlcriticrc
 t/persister.t
 t/persister_dbi.t
 t/persister_dbi_extra_data.t
