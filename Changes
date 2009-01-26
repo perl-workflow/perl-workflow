@@ -2,240 +2,43 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-0.32_8 Mon Jan 12 20:51:11 CET 2009 (update not required)
+1.32
 
 - Bumped up version for Workflow::State to 1.14 considering patches from
-  action_group and test_condition patches
-
-- Added POD, primarily focused on development, resources and test to the
-  Workflow POD - would love to eliminate the original README and merge in the
-  information from this file and let it be auto-generated in the future
-
-- Removed VERSION file, this has now been obsoleted
+  action_group and test_condition patches from Ivan Paponov implementing 
+  support for a group tag on actions
 
 - Addressing RT #40750
   http://rt.cpan.org/Ticket/Display.html?id=40750
+  
+  Removed VERSION file, this has now been obsoleted
 
   We are now resolving the version number for the distribution from Workflow.pm 
   the main module, this mean a jump from 0.32 to 1.32, but it does mean that 
   an installation can be traced back to a given distribution
 
-- Added new test file t/workflow_history.t, the new tests of Workflow::History
-  methods. Added explicit returns so we return a true value when run
-
-- Addressed [ControlStructures::ProhibitCStyleForLoops] Perl::Critic policy,
-  disabled locally in Workflow::Persister::DBI::ExtraData
-  
-- Addressed [Subroutines::RequireArgUnpacking] Perl::Critic policy,
-  disabled locally in Workflow::Exception and  Workflow::Factory for two
-  violations that need to be revisited
-
-- Addressed [CodeLayout::ProhibitParensWithBuiltins] Perl::Critic policy,
-  disabled locally in Workflow::Persister::DBI in two places
-
-- Addressed [BuiltinFunctions::ProhibitUniversalIsa] Perl::Critic policy we
-  should now be compatible with perl 5.9.3's deprecation of UNIVERSAL::isa
-  functional call, we now use isa as a method where relevant
-
-- Addressed [ValuesAndExpressions::ProhibitCommaSeparatedStatements], disabled
-  locally in Workflow::Persister::DBI
-
-- Addressed [ValuesAndExpressions::ProhibitCommaSeparatedStatements], disabled
-  locally in Workflow::Persister::DBI
-
-- Addressed [ValuesAndExpressions::RequireInterpolationOfMetachars], disabled
-  locally in Workflow::Condition::Evaluate
-
-- Addressed [CodeLayout::RequireTrailingCommas] Perl::Critic policy, few
-  violations nothing serious
-
-- Addressed [BuiltinFunctions::ProhibitStringySplit] Perl::Critic policy, single
-  violation
-
-- Addressed [InputOutput::RequireCheckedSyscalls] Perl::Critic policy, this
-  required addition of some code, which will throw relevant exception
-
-- Addressed [InputOutput::RequireCheckedClose] Perl::Critic policy, this
-  required addition of some code, which will throw relevant exceptions
-  [InputOutput::RequireCheckedClose] was removed from the t/perlcriticrc, it
-  is no longer violated so it's listing might have been a mistake
-  
-- Addressed [Variables::ProhibitPunctuationVars] Perl::Critic policy, we now
-  use English
-
-- All packages have been run through perltidy addressing the following
-  Perl::Critic policies:
-  
-  [CodeLayout::ProhibitHardTabs]
-  [CodeLayout::ProhibitTrailingWhitespace]
-  [CodeLayout::RequireTidyCode]
-
-- Perl::Critic policy [Subroutines::ProhibitExplicitReturnUndef] disabled
-  this would break APIs at does not seem like a good idea, a more thorough
-  analysis should however be completed at some point
-
-- Perl::Critic policy [NamingConventions::ProhibitAmbiguousNames] disabled
-  we have an overwrite of Class::Accessor, which happens to violate this policy
-
-- Added use of File::Slurp refactoring a potential problematic body of code
-  addressing Perl::Critic policy [InputOutput::ProhibitJoinedReadline]
-  File::Slurp added to Build.PL
-
-- Some hardcoded numbers have been made into constants, some of these are
-  candidates however for propagation to a central place. (See TODO file)
-  This addresses Perl::Critic policy
-  [ValuesAndExpressions::ProhibitMagicNumbers] We do however run with this
-  policy disabled since, it warns about some numbers, which it does not make
-  sense to refactor into constants. In addition
-  [ValuesAndExpressions::ProhibitConstantPragma] is deactivated since we
-  are using constants
-
-- Added use of warnings pragma, addressing Perl::Critic policy
-  [TestingAndDebugging::RequireUseWarnings], I am however not sure whether this
-  breaks backwards compatibility towards older perls. So this will have to be
-  investigated (added to TODO file)
-
-- Exchanged calls to die and warn to croak and carp addressing Perl::Critic
-  policy [ErrorHandling::RequireCarping], this is also considered a good module
-  practive so errors are perceived from the callers perspective. In addition
-  Carp was listed in relevant packages and Build.PL
-
-- Added Id keyword to Workflow::Validator::MatchesDateFormat addressing
-  Perl::Critic policy [Miscellanea::RequireRcsKeywords] 
-
-- Added t/critic.t and t/perlcriticrc getting started on improving code
-  quality based on Perl::Critic, the number of contributors are increasing and
-  Perl::Critic might prove a good tool in assisting in quality assurance for
-  Workflow in the future
-
-
-0.32_7 Wed Dec 17 15:00:56 CET 2008 (update not required)
-
-- Applied patches from Ivan Paponov. This implements support for a group tag on
-  actions.
-
-- Added t/db/workflow.db to MANIFEST.SKIP
-
-
-0.32_6 Mon Dec 15 21:27:25 CET 2008 (update not required)
-
 - Patch to implement proper dynamic names for conditions with a 'test' attribute
   Added RT: #38024
-
-
-0.32_5 Thu Nov 13 20:11:50 CET 2008 (update not required)
-
-- Fixed regular expression in t/TestDBUtil.pm, we see alot of failing tests
-  because the root directory did not necessarily match the expected. The
-  new regex is a bit more loose. The branch itself (t_vs_struct) demonstrates
-  the problem.
-  
-  See also failing tests at:
-  
-  http://www.cpantesters.org/show/Workflow.html#Workflow-0.32_4
-
-
-0.32_4 Tue Aug 19 23:14:37 CEST 2008 (update not required)
 
 - Added List::MoreUtils to requirements, we use this for test, I have moved the
   test related modules to the build_requires section in Build.PL, so
   List::MoreUtils is not mistaken for an application level requirement
 
-- Some of the new tests distributed with 0.32_3 fail. We are looking at actions
-  returned as an array, but since they originate from a hash, the order is not
-  given as assumed in the test.
-  
-  Updated the test and bumped up the version of t/TestUtil.pm to 0.02
-
   Refactored two tests, to use List::MoreUtils all method (asserting presence of
   numerous actions)
-
-
-0.32_3 Sat Aug 16 17:52:20 CEST 2008 (update not required)
-
-- Updated MANIFEST and MANIFEST.SKIP, some stuff was not included
 
 - Fixed minor bug in error message in: Workflow::State, reported
   by Robert Stockdale, RT #38023
 
+- We introduce a more fine grained control  of the auto commit feature, 
+  implemented by Jim Brandt
 
-0.32_2 Sun Apr 20 20:37:56 CEST 2008 (update not required)
-
-- This is yet another developer release introducing a more fine grained control 
-  of the auto commit feature, implemented by Jim Brandt, we are very interested 
-  in feedback on this release, so please consider joining the mailing list or send 
-  feedback to jonasbn@cpan.org directly.
-
-- The auto_commit feature is however still defaulting to enabled to 
-  respect backwards compatibility and the control is experimental, hence the
-  developer release
-
-  The example application in eg/ seemed to have some issues, these have been 
-  addressed also
- 
-	Updated:
-		eg/ticket/App/Condition/IsWorker.pm
-		eg/ticket/ticket.pl
-		lib/Workflow.pm
-		lib/Workflow/Persister/DBI.pm
-		lib/Workflow/Factory.pm
-		lib/Workflow/Persister.pm
-		  
-	Added:
-		t/persister_dbi_sqlite.t
-		t/TestDBUtil.pm
-
-
-0.32_1 Sun Apr  6 09:02:42 CEST 2008 (update not required)
-
-- This is a developer release introducing typed condition, implemented by 
-  Jim Brandt, we are very interested in feedback on this release, so please
-  consider joining the mailing list or send feedback to jonasbn@cpan.org 
-  directly.
-
-- Typed conditions makes it possible for different workflows to hold 
-  unique methods for workflow steps even with names colliding.
+- We introduce typed condition, implemented by Jim Brandt. Typed conditions 
+  makes it possible for different workflows to hold unique methods for workflow 
+  steps even with names colliding.
   
   Example workflow foo and bar can have a condition baz, but baz are two 
   different implementations in foo and bar respectively 
-
-	Updated:
-		t/cached_conditions.t
-		t/factory.t
-		t/state.t
-		t/TestUtil.t
-		t/condition.t
-		t/workflow_type.t
-		t/config.t
-		t/workflow.t
-
-		Workflow		
-		Workflow::Factory
-		Workflow::Config
-		Workflow::Config::XML
-		Workflow::Config::Perl
-		Workflow::Action
-		Workflow::State
-		Workflow::Condition
-		Workflow::Persister::DBI
-		Workflow::History
-		Workflow::Persister::SPOPS
-
-	Introduced
-		t/state_perl.t
-		t/TestApp/Action/TicketCreateType.pm
-		t/TestApp/Condition/HasUserType.pm
-		t/workflow_action_type.perl
-		t/workflow_action_type.xml
-		t/workflow_condition_type.perl
-		t/workflow_condition_type.xml
-		t/workflow_persister.perl
-		t/workflow_persister.xml
-		t/workflow_type.perl
-		t/workflow_type.xml
-		
-- This release also holds new tests of persister configurations, there is 
-  however always room for more
 
 - time_zone parameter can now be passer around for use by the Workflow 
   DateTime objects internally
