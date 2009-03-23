@@ -2,6 +2,15 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.33_1 Mon Mar 23 12:51:55 CET 2009 (update not required)
+
+- Applied patch from Andrew O'Brien RT #18265
+  http://rt.cpan.org/Public/Bug/Display.html?id=18265
+
+- Bumped up version for Workflow::Factory to 1.19, Dynamic loading of 
+  config files, feedback welcome
+
+
 1.32
 
 - Bumped up version for Workflow::State to 1.14 considering patches from
