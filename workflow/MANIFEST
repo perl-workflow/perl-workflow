@@ -92,6 +92,7 @@ t/config.t
 t/context.t
 t/exception.t
 t/factory.t
+t/factory_callback_config.t
 t/factory_subclass.t
 t/FactorySubclass.pm
 t/history.t
@@ -112,6 +113,7 @@ t/TestApp/Action/TicketComment.pm
 t/TestApp/Action/TicketCreate.pm
 t/TestApp/Action/TicketCreateType.pm
 t/TestApp/Action/TicketUpdate.pm
+t/TestApp/Condition/AlwaysTrue.pm
 t/TestApp/Condition/HasUser.pm
 t/TestApp/Condition/HasUserType.pm
 t/TestApp/Ticket.pm
@@ -129,14 +131,17 @@ t/workflow.t
 t/workflow.xml
 t/workflow_action.perl
 t/workflow_action.xml
+t/workflow_action_callback.xml
 t/workflow_action_type.perl
 t/workflow_action_type.xml
 t/workflow_autorun.xml
 t/workflow_cached_condition.xml
 t/workflow_cached_condition_action.xml
 t/workflow_cached_condition_condition.xml
+t/workflow_callback.xml
 t/workflow_condition.perl
 t/workflow_condition.xml
+t/workflow_condition_callback.xml
 t/workflow_condition_type.perl
 t/workflow_condition_type.xml
 t/workflow_errorprone.perl

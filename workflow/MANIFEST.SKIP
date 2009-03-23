@@ -6,6 +6,7 @@
 .cvsignore
 .diff
 .orig
+.rej
 
 # Avoid Makemaker generated and utility files.
 \bMakefile$
