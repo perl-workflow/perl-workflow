@@ -1,0 +1,8 @@
+<actions>
+  <type>CallbackTest</type>
+  <description>Actions for the CallbackTest workflow only</description>
+
+  <action name="CALLBACK_CLOSE" class="Workflow::Action::Null">
+    <description>Dummy close a callback test workflow</description>
+  </action>
+</actions>
