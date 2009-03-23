@@ -2,6 +2,11 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.33_2 Mon Mar 23 13:22:25 CET 2009 (update not required)
+
+- Forgot the new tests added to t/
+
+
 1.33_1 Mon Mar 23 12:51:55 CET 2009 (update not required)
 
 - Applied patch from Andrew O'Brien RT #18265
