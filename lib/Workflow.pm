@@ -15,7 +15,7 @@ use English qw( -no_match_vars );
 my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-$Workflow::VERSION = '1.32';
+$Workflow::VERSION = '1.33_3';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 

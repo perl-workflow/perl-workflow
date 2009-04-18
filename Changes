@@ -2,6 +2,15 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.33_3
+
+- Addressing a bug reported by Sergei Vyshenski, related to a possible API
+  breakage. Please refer to t/add_config_bug.t, which demonstrates the presence
+  of the bug in 1.32 and it's absence in 0.31
+  
+  Workflow::Factory bumped up to version: 1.19
+
+
 1.32
 
 - Bumped up version for Workflow::State to 1.14 considering patches from
