@@ -6,9 +6,9 @@ Revision history for Perl extension Workflow
 
 - Patches from Danny Sadinoff to following classes
 
-	Workflow::Config
-	Workflow::Persister
-	Workflow::Factory
+	Workflow::Config, bumped up to version 1.13
+	Workflow::Persister, bumped up to version 1.10
+	Workflow::Factory, bumped up to version 1.19
 	
 	- Adding ability to control initial state name via workflow config
 
