@@ -13,7 +13,7 @@ use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
 use English qw( -no_match_vars );
 
-$Workflow::Persister::File::VERSION = '1.10';
+$Workflow::Persister::File::VERSION = '1.11';
 
 my @FIELDS = qw( path );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -142,6 +142,8 @@ sub _serialize_workflow {
         state       => $wf->state,
         last_update => $wf->last_update,
         type        => $wf->type,
+        context     => $wf->context,
+
     );
     $self->serialize_object( $full_path, \%wf_info );
     $log->is_debug
