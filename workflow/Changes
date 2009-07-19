@@ -2,6 +2,36 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.33_4
+
+Added patch from Thomas Erskine
+
+Workflow::Factory
+
+- Added 3 new accessors:
+
+	- get_persister_for_workflow_type
+	- get_persisters
+	- get_validators
+
+- Added check for existing context so context is not overwritten if existing, 
+  fixing a bug
+
+    Version bumped up to 1.19
+
+Workflow::Persister::File
+
+- Added context parameters to serialization, fixing a bug
+
+  Version bumped up to 1.11
+
+Workflow::Action
+
+- Added return of empty list for accessor
+
+  Version bumped up to 1.10
+
+
 1.32
 
 - Bumped up version for Workflow::State to 1.14 considering patches from
