@@ -15,7 +15,7 @@ use English qw( -no_match_vars );
 my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-$Workflow::VERSION = '1.32';
+$Workflow::VERSION = '1.33_5';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -1323,6 +1323,9 @@ Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
+
+Danny Sadinoff, patches to give better control of initial state and history 
+records for workflow
 
 Ivan Paponov, for patch implementing action groups, See Changes file, 0.32_7
 

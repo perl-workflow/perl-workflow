@@ -296,9 +296,10 @@ workflow pieces:
 =head2 workflow
 
    workflow
-      type        $
-      description $
-      persister   $
+      type          $
+      description   $
+      persister     $
+      initial_state $
       observer    \@
           sub           $
           class         $
@@ -322,10 +323,16 @@ the 'type' and 'description' keys are at the top level
 the 'extra_data' key holds an array of zero or more hashrefs with
 'table', 'field', 'class' and 'context' keys
 
+
+=item *
+
+'initial_state' key holds a string declaring the name of the initial state.
+by default, this value is 'INIITAL'.
+
 =item *
 
 'state' key holds array of one or more 'state' declarations; one of
-them must be 'INITIAL'
+them must be 'INITIAL' (or the value of initial_state, if it's defined)
 
 =item *
 
