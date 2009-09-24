@@ -5,7 +5,7 @@
 use strict;
 use lib 't';
 use TestUtil;
-use Test::More  tests => 48;
+use Test::More  tests => 50;
 use Test::Exception;
 
 my ($parser);
@@ -58,7 +58,7 @@ my @config = $parser->parse( 'workflow' );
 is(scalar(@config), 0, 'forgotten file, asserting length of array returned'); 
 
 my %config_perl = (
-		   'workflow' => ['workflow.perl', 'workflow_type.perl'],
+		   'workflow' => ['workflow.perl', 'workflow_type.perl', 'workflow_type_alternate_initial.perl'],
 		   'action' => ['workflow_action.perl'],
 		   'condition' => ['workflow_condition.perl', 'workflow_condition_type.perl'],
 		   'validator' => ['workflow_validator.perl'],

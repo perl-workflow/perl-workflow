@@ -2,6 +2,18 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.33_04
+
+- Patches from Danny Sadinoff to following classes
+
+	Workflow::Config, bumped up to version 1.13
+	Workflow::Persister, bumped up to version 1.10
+	Workflow::Factory, bumped up to version 1.19
+	
+	- Adding ability to control initial state name via workflow config
+
+	- Adding ability to control initial history record details via Persister subclass code
+
 1.33_3
 
 - Addressing a bug reported by Sergei Vyshenski, related to a possible API
@@ -21,7 +33,7 @@ Revision history for Perl extension Workflow
 
 - Bumped up version for Workflow::Factory to 1.19, Dynamic loading of 
   config files, feedback welcome
-
+ 
 
 1.32
 

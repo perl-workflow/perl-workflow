@@ -54,9 +54,10 @@ require Workflow::Persister;
 require Workflow::State;
 require Workflow::Validator;
 
-my $INITIAL_STATE = 'INITIAL';
+my $DEFAULT_INITIAL_STATE = 'INITIAL';
 
 my @FIELDS = qw(config_callback);
+
 __PACKAGE__->mk_accessors(@FIELDS);
 
 sub new {
@@ -332,7 +333,8 @@ sub create_workflow {
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
     }
-    my $wf = Workflow->new( undef, $INITIAL_STATE, $wf_config,
+    
+    my $wf = Workflow->new( undef, $wf_config->{initial_state}|| $DEFAULT_INITIAL_STATE, $wf_config,
         $self->{_workflow_state}{$wf_type} );
     $wf->context( Workflow::Context->new );
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
@@ -348,9 +350,9 @@ sub create_workflow {
         $wf,
         Workflow::History->new(
             {   workflow_id => $id,
-                action      => 'Create workflow',
-                description => 'Create new workflow',
-                user        => 'n/a',
+                action      => $persister->get_create_action($wf),
+                description => $persister->get_create_description($wf),
+                user        => $persister->get_create_user($wf),
                 state       => $wf->state,
                 date        => DateTime->now( time_zone => $wf->time_zone() ),
                 time_zone   => $wf->time_zone(),
