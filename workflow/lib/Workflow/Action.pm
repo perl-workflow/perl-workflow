@@ -15,7 +15,7 @@ use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak);
 
-$Workflow::Action::VERSION = '1.09';
+$Workflow::Action::VERSION = '1.10';
 
 my @FIELDS = qw( name class description );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -63,6 +63,7 @@ sub add_validators {
 
 sub get_validators {
     my ($self) = @_;
+    return () if (not defined $self->{_validators});
     return @{ $self->{_validators} };
 }
 

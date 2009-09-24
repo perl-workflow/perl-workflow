@@ -389,7 +389,7 @@ sub fetch_workflow {
         );
     my $wf = Workflow->new( $wf_id, $wf_info->{state}, $wf_config,
         $self->{_workflow_state}{$wf_type} );
-    $wf->context( Workflow::Context->new );
+	$wf->context( Workflow::Context->new ) if (not $wf->context());
     $wf->last_update( $wf_info->{last_update} );
 
     $persister->fetch_extra_workflow_data($wf);
@@ -617,6 +617,26 @@ sub get_persister {
     return $persister;
 }
 
+sub get_persisters {
+    my $self = shift;
+    my @persisters = sort keys %{$self->{_persister}};
+
+    return @persisters;
+}
+
+sub get_persister_for_workflow_type {
+    my $self = shift;
+
+    my ($type) = @_;
+    my $wf_config = $self->_get_workflow_config($type);
+    if (not $wf_config) {
+        workflow_error "no workflow of type '$type' available";
+    }
+    my $persister = $self->get_persister( $wf_config->{'persister'} );
+
+    return $persister;
+}
+
 ########################################
 # CONDITIONS
 
@@ -756,6 +776,12 @@ sub get_validator {
     return $self->{_validators}{$name};
 }
 
+sub get_validators {
+    my $self = shift;
+    my @validators = sort keys %{$self->{_validators}};
+    return @validators;
+}
+
 1;
 
 __END__
@@ -889,7 +915,19 @@ Returns: nothing; if we encounter an error trying to create the
 objects referenced in a configuration we throw a
 L<Workflow::Exception>.
 
+=head3 get_persister_for_workflow_type
+
+=head3 get_persisters
+
+#TODO
+
+=head3 get_validators
+
+#TODO
+
 =head2 Internal Methods
+
+#TODO
 
 =head3 save_workflow( $workflow )
 
