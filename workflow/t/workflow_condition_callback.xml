@@ -1,0 +1,4 @@
+<conditions>
+  <type>CallbackTest</type>
+  <condition name="CallbackAlwaysTrue" class="TestApp::Condition::AlwaysTrue"/>
+</conditions>
