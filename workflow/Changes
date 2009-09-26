@@ -4,7 +4,7 @@ Revision history for Perl extension Workflow
 
 1.33_6
 
-Patches from Alejandrop Imass
+Patches from Alejandro Imass
 
 - Changed @FIELDS to @PROPS in Action.pm and InputField.pm for
   mk_accesors as FIELDS was very confusing with regard to action input
