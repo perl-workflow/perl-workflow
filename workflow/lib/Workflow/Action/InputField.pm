@@ -298,7 +298,7 @@ B<class> (optional)
 
 You may specify a custom InputField class. It should C<use base qw(
 Workflow::Action );> and probably override the new() method which
-should call SUPER::new($params). See L</"new( \%params )" above for an
+should call SUPER::new($params). See L</"new( \%params )"> above for an
 example.
 
 =head1 SEE ALSO

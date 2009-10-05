@@ -263,7 +263,7 @@ an Action object, for example, methods such as $wf->_get_action will
 call this method.
 
 B<Your action classes usually subclass directly from Workflow::Action
-and they U<don't> need to override this method at all>. However, under
+and they I<don't> need to override this method at all>. However, under
 some circumstances, you may find the need to extend your action
 classes.
 
@@ -350,6 +350,14 @@ current $wf_state. Your milage may vary.
 
   1;
 
+
+=head2 Private Methods
+ 
+=head3 init( $workflow, \%params )
+ 
+init is called in conjuction with the overall workflow initialization.
+ 
+It sets up the necessary validators based on the on configured actions, input fields and required fields.
 
 =head3 add_field( @fields )
 
