@@ -67,7 +67,7 @@ lib/Workflow/Validator/HasRequiredField.pm
 lib/Workflow/Validator/InEnumeratedType.pm
 lib/Workflow/Validator/MatchesDateFormat.pm
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 META.yml
 README
 struct/README
@@ -84,6 +84,7 @@ t/action.t
 t/action_field.t
 t/action_mailer.t
 t/action_null.t
+t/add_config_bug.t
 t/base.t
 t/cached_conditions.t
 t/condition.t
