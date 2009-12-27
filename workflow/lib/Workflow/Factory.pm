@@ -556,7 +556,7 @@ sub get_action {
 
     # Check for a default if no type is available.
     $config = $self->{_action_config}{default}{$action_name}
-        if not defined $config;
+        if not keys %{$config};
 
     unless ($config) {
         workflow_error "No action with name '$action_name' available";
