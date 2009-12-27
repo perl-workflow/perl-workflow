@@ -8,6 +8,30 @@ Revision history for Perl extension Workflow
 
   Bumping up version of Workflow::Factory to 1.19 and Workflow::State to 1.15
 
+1.33_6
+
+Patches from Alejandro Imass
+
+- Changed @FIELDS to @PROPS in Action.pm and InputField.pm for
+  mk_accesors as FIELDS was very confusing with regard to action input
+  fields.
+
+- Formalized Workflow::Acction::new() as a public method with
+  corresponding pod example.
+
+- Optional class property for Workflow::Action::InputField.
+  Previously, public method new() made little sense if InputField
+  always instantiates from Workflow::Action::InputField. Now fields
+  can derive from custom class.
+
+- Updated pod to reflect the new formal abillity to add extra
+  properties for actions and input fields.
+
+- With the ability to derive custom properties for classes and fields
+  there is little need IMHO to define InputField "type" any further
+  but leave it implementation dependent. The rationale is that
+  validators intrinsically define this. Updating pod accordingly.
+
 1.33_5
 
 Added patch from Thomas Erskine

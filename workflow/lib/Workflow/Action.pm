@@ -17,8 +17,9 @@ use Carp qw(croak);
 
 $Workflow::Action::VERSION = '1.10';
 
-my @FIELDS = qw( name class description );
-__PACKAGE__->mk_accessors(@FIELDS);
+my @PROPS = qw( name class description );
+__PACKAGE__->mk_accessors(@PROPS);
+
 
 ####################
 # INPUT FIELDS
@@ -101,6 +102,8 @@ sub execute {
 sub init {
     my ( $self, $wf, $params ) = @_;
 
+    my $log = get_logger();
+
     # So we don't destroy the original...
     my %copy_params = %{$params};
 
@@ -111,7 +114,14 @@ sub init {
     ## init normal fields
     my @fields = $self->normalize_array( $copy_params{field} );
     foreach my $field_info (@fields) {
+      if(my $field_class = $field_info->{class}){
+        $log->debug("Using custom field class $field_class");
+        $self->add_fields( $field_class->new($field_info) );
+      }
+      else{
+        $log->debug("Using standard field class");
         $self->add_fields( Workflow::Action::InputField->new($field_info) );
+      }
     }
 
     ## establish validator for fields with is_required="yes"
@@ -245,6 +255,110 @@ be called.
 
 =head2 Public Methods
 
+=head3 new()
+
+Subclasses may override this method, but it's not very common. It is
+called when you invoke a method in your Workflow object that returns
+an Action object, for example, methods such as $wf->_get_action will
+call this method.
+
+B<Your action classes usually subclass directly from Workflow::Action
+and they I<don't> need to override this method at all>. However, under
+some circumstances, you may find the need to extend your action
+classes.
+
+Suppose you want to define some extra properties to actions but you
+also want for some of these properties to depend on a particular
+state. For example, the action "icon" will almost allways be the same,
+but the action "index" will depend on state, so you can display your
+actions in a certain order according to that particular state. Here is
+an example on how you easily do this by overriding new():
+
+1) Set the less changing properties in your action definition:
+
+  <actions>
+    <type>foo</type>
+    <action name="Browse"
+      type="menu_button" icon="list_icon"
+      class="actual::action::class">
+    </action>
+
+2) Set the state dependant properties in the state definition:
+
+ <state name="INITIAL">
+   <description>
+     Manage Manufaturers
+   </description>
+   <action index="0" name="Browse" resulting_state="BROWSE">
+     <condition name="roleis_oem_mgmt"/>
+   </action>
+   <action index="1" name="Create" resulting_state="CREATE">
+     <condition name="roleis_oem_mgmt"/>
+   </action>
+   <action index="2" name="Back" resulting_state="CLOSED"/>
+ </state>
+
+3) Craft a custom action base class
+
+  package your::action::base::class;
+
+  use warnings;
+  use strict;
+
+  use base qw( Workflow::Action );
+  use Workflow::Exception qw( workflow_error );
+
+  # extra action class properties
+  my @EXTRA_PROPS = qw( index icon type data );
+  __PACKAGE__->mk_accessors(@EXTRA_PROPS);
+
+  sub new {
+    my ($class, $wf, $params) = @_;
+    my $self = $class->SUPER::new($wf, $params);
+    # set only our extra properties from action class def
+    foreach my $prop (@EXTRA_PROPS) {
+      next if ( $self->$prop );
+      $self->$prop( $params->{$prop} );
+    }
+    # override specific extra action properties according to state
+    my $wf_state = $wf->_get_workflow_state;
+    my $action = $wf_state->{_actions}->{$self->name};
+    $self->index($action->{index});
+    return $self;
+  }
+
+
+  1;
+
+B<Note>: this hack takes advantage of the fact that the XML parser
+picks up the extra parameters and add them to the action hash of the
+current $wf_state. Your milage may vary.
+
+4) Use your custom action base class instead of the default
+
+  package actual::action::class;
+
+  use warnings;
+  use strict;
+
+  use base qw( your::base::action::class );
+  use Workflow::Exception qw( workflow_error );
+
+  sub execute {
+    ...
+  }
+
+  1;
+
+
+=head2 Private Methods
+ 
+=head3 init( $workflow, \%params )
+ 
+init is called in conjuction with the overall workflow initialization.
+ 
+It sets up the necessary validators based on the on configured actions, input fields and required fields.
+
 =head3 add_field( @fields )
 
 Add one or more L<Workflow::Action::InputField>s to the action.
@@ -294,13 +408,6 @@ states you should return a simple scalar for a return value.
 Method to add fields to the workflow. The method takes an array of
 fields.
 
-=head2 Private Methods
-
-=head3 init( $workflow, \%params )
-
-init is called in conjuction with the overall workflow initialization.
-
-It sets up the necessary validators based on the on configured actions, input fields and required fields.
 
 =head1 SEE ALSO
 

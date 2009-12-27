@@ -11,9 +11,9 @@ use English qw( -no_match_vars );
 
 $Workflow::Action::InputField::VERSION = '1.09';
 
-my @FIELDS
-    = qw( name label description type requirement source_class source_list );
-__PACKAGE__->mk_accessors(@FIELDS);
+my @PROPS = qw( name label description type requirement
+                source_class source_list class );
+__PACKAGE__->mk_accessors(@PROPS);
 
 my %INCLUDED = ();
 
@@ -26,9 +26,9 @@ sub new {
     my $self = bless {}, $class;
 
     # Set all our parameters
-    foreach my $field (@FIELDS) {
-        next unless ( $params->{$field} );
-        $self->$field( $params->{$field} );
+    foreach my $prop (@PROPS) {
+        next unless ( $params->{$prop} );
+        $self->$prop( $params->{$prop} );
     }
 
     # ...ensure our name is defined
@@ -180,6 +180,54 @@ Typical constructor; will throw exception if 'name' is not defined or
 if the property 'source_class' is defined but the class it specifies
 is not available.
 
+You will usually not need to use or override this method unless you
+derive your own input field class (see I<class> in L</"Properties">
+below). For example, suppose you need to add extra properties to all
+your fields like "index", "disabled", etc.
+
+In your actions definition XML file, you can just add them and the
+parser will pick them up. Pay close attention the custom InputField
+"class" property.
+
+  <actions>
+    <type>foo</type>
+    <action name="Bar"
+      class="your::action::class">
+      <field index="0" name="id" type="integer" disabled="yes"
+        is_required="yes" class="your::custom::inputfieldclass"/>
+    </action>
+
+But you need to give them life by creating the accessors for these
+extra properties. Just derive your custom fields class like so:
+
+  package your::custom::inputfieldclass;
+
+  use warnings;
+  use strict;
+
+  use base qw( Workflow::Action::InputField );
+  use Workflow::Exception qw( workflow_error );
+
+  # extra action class properties
+  my @EXTRA_PROPS = qw( index disabled );
+  __PACKAGE__->mk_accessors(@EXTRA_PROPS);
+
+  sub new {
+    my ( $class, $params ) = @_;
+    my $self = $class->SUPER::new($params);
+    # set only our extra properties
+    foreach my $prop (@EXTRA_PROPS) {
+      next if ( $self->$prop );
+      $self->$prop( $params->{$prop} );
+    }
+    warn "INDEX IS NOW WORKING:".$self->index;
+    warn "AND SO IS DISABLED:".$self->disabled;
+    return $self;
+  }
+
+  1;
+
+
 =head3 is_required()
 
 Returns 'yes' if field is required, 'no' if optional.
@@ -223,8 +271,11 @@ you the information without much fuss.
 
 B<type> (optional)
 
-TODO: Datatype of field (still under construction...). By default it
-is set to 'basic'.
+Field types are implementation dependant are they should be
+intrinsically implemented by validators. In other words, you can use
+any mnemonic value for your convinience like "integer", "text",
+etc. but it won't affect anything unless you use a validator to
+validate your action data. By default it is set to 'basic'.
 
 B<requirement> ('required'|'optional')
 
@@ -242,6 +293,13 @@ If set the field will use the specified comma-separated values as the
 possible values for the field. The resulting list returned from
 C<get_possible_values()> will have the same value for both the 'label'
 and 'value' keys.
+
+B<class> (optional)
+
+You may specify a custom InputField class. It should C<use base qw(
+Workflow::Action );> and probably override the new() method which
+should call SUPER::new($params). See L</"new( \%params )"> above for an
+example.
 
 =head1 SEE ALSO
 
