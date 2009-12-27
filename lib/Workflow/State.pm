@@ -48,7 +48,11 @@ sub get_available_action_names {
     $self->clear_condition_cache();
 
     foreach my $action_name (@all_actions) {
-        my $action_group = FACTORY->{_action_config}{$action_name}{'group'};
+        #my $action_group = FACTORY->{_action_config}{$action_name}{'group'};
+
+		#From Ivan Paponov
+		my $action_group = FACTORY->{_action_config}{$self->type()}{$action_name}{'group'};
+		
         if ( defined $group && length $group ) {
             if ( $action_group ne $group ) {
                 next;
