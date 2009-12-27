@@ -2,6 +2,13 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.33_7
+
+- Patch from Ivan Paponov, bug in relation too action groups and use of default.
+
+  Bumping up version of Workflow::Factory to 1.19 and Workflow::State to 1.15
+
+
 1.32
 
 - Bumped up version for Workflow::State to 1.14 considering patches from
