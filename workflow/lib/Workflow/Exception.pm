@@ -23,6 +23,7 @@ use Exception::Class (
     'Workflow::Exception::Validation' => {
         isa         => 'Workflow::Exception',
         description => 'Validation errors',
+        fields      => 'invalid_fields',
     },
 );
 
