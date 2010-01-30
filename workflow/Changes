@@ -2,66 +2,47 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-1.33_7
+1.33 Sat Jan 30 11:51:18 CET 2010 (update recommended)
 
-- Patch from Ivan Paponov, bug in relation too action groups and use of default.
-
+- Patch from Ivan Paponov, bug in relation to action groups and use of default.
   Bumping up version of Workflow::Factory to 1.19 and Workflow::State to 1.15
 
-1.33_6
+- Patches from Alejandro Imass
 
-Patches from Alejandro Imass
+   - Changed @FIELDS to @PROPS in Action.pm and InputField.pm for mk_accesors as
+     FIELDS was very confusing with regard to action input fields.
 
-- Changed @FIELDS to @PROPS in Action.pm and InputField.pm for
-  mk_accesors as FIELDS was very confusing with regard to action input
-  fields.
+   - Formalized Workflow::Action::new() as a public method with corresponding
+     pod example.
 
-- Formalized Workflow::Acction::new() as a public method with
-  corresponding pod example.
+   - Optional class property for Workflow::Action::InputField. Previously, public
+     method new() made little sense if InputField always instantiates from
+     Workflow::Action::InputField. Now fields can derive from custom class.
 
-- Optional class property for Workflow::Action::InputField.
-  Previously, public method new() made little sense if InputField
-  always instantiates from Workflow::Action::InputField. Now fields
-  can derive from custom class.
+   - Updated pod to reflect the new formal abillity to add extra properties for
+     actions and input fields.
 
-- Updated pod to reflect the new formal abillity to add extra
-  properties for actions and input fields.
+   - With the ability to derive custom properties for classes and fields
+     there is little need IMHO to define InputField "type" any further, but
+     leave it implementation dependent. The rationale is that validators
+     intrinsically define this. Updating pod accordingly.
 
-- With the ability to derive custom properties for classes and fields
-  there is little need IMHO to define InputField "type" any further
-  but leave it implementation dependent. The rationale is that
-  validators intrinsically define this. Updating pod accordingly.
+- Patches from Thomas Erskine
 
-1.33_5
-
-Added patch from Thomas Erskine
-
-Workflow::Factory
-
-- Added 3 new accessors:
+   - Added 3 new accessors to Workflow::Factory:
 
 	- get_persister_for_workflow_type
 	- get_persisters
 	- get_validators
 
-- Added check for existing context so context is not overwritten if existing, 
-  fixing a bug
+   - Added check for existing context so context is not overwritten if existing, 
+     fixing a bug. Version bumped up to 1.19
 
-    Version bumped up to 1.19
+   - Fixing bug in Workflow::Persister::File, adding context parameters to
+     serialization. Version bumped up to 1.11
 
-Workflow::Persister::File
-
-- Added context parameters to serialization, fixing a bug
-
-  Version bumped up to 1.11
-
-Workflow::Action
-
-- Added return of empty list for accessor
-
-  Version bumped up to 1.10
-
-1.33_04
+   - Added return of empty list for accessor, in Workflow::Action .Version bumped
+     up to 1.10
 
 - Patches from Danny Sadinoff to following classes
 
@@ -71,30 +52,19 @@ Workflow::Action
 	
 	- Adding ability to control initial state name via workflow config
 
-	- Adding ability to control initial history record details via Persister subclass code
-
-1.33_3
+	- Adding ability to control initial history record details via Persister
+      subclass code
 
 - Addressing a bug reported by Sergei Vyshenski, related to a possible API
   breakage. Please refer to t/add_config_bug.t, which demonstrates the presence
-  of the bug in 1.32 and it's absence in 0.31
-  
-  Workflow::Factory bumped up to version: 1.19
+  of the bug in 1.32 and it's absence in 0.31 .Workflow::Factory bumped up to
+  version: 1.19
 
-1.33_2 Mon Mar 23 13:22:25 CET 2009 (update not required)
-
-- Forgot the new tests added to t/
-
-1.33_1 Mon Mar 23 12:51:55 CET 2009 (update not required)
-
-- Applied patch from Andrew O'Brien RT #18265
-  http://rt.cpan.org/Public/Bug/Display.html?id=18265
-
-- Bumped up version for Workflow::Factory to 1.19, Dynamic loading of 
-  config files, feedback welcome
+- Applied patch from Andrew O'Brien implementing dynamic loading of 
+  config files RT #18265 http://rt.cpan.org/Public/Bug/Display.html?id=18265.
+  Bumped up version for Workflow::Factory to 1.19
  
-
-1.32
+1.32 Mon 26 Jan 2009 (Update not necessary)
 
 - Bumped up version for Workflow::State to 1.14 considering patches from
   action_group and test_condition patches from Ivan Paponov implementing 
