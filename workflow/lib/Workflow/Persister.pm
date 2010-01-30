@@ -123,12 +123,12 @@ sub get_create_user{
     return 'n/a';
 }
 
-sub get_create_description(){
+sub get_create_description {
     my($self, $wf ) = @_;
     return 'Create new workflow';
 }
 
-sub get_create_action{
+sub get_create_action {
     my($self, $wf ) = @_;
     return 'Create workflow';
 }
