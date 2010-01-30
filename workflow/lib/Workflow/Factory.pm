@@ -413,7 +413,7 @@ sub _initialize_workflow_config {
     $log ||= get_logger();
     if ( ref($self->config_callback) eq 'CODE' ) {
         my $args = &{ $self->config_callback }( $wf_type );
-        $self->add_config_from_file( %$args ) if $args && %$args;
+        $self->add_config_from_file( %{$args} ) if $args && %{$args};
     }
 }
 
