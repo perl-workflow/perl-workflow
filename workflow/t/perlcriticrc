@@ -36,6 +36,7 @@ keywords = Id
 [-BuiltinFunctions::ProhibitStringyEval]
 
 #TODO
+[-Variables::ProhibitPunctuationVars] #use English
 [-ControlStructures::ProhibitCascadingIfElse]
 [-ControlStructures::ProhibitPostfixControls]
 [-ControlStructures::ProhibitUnlessBlocks]
