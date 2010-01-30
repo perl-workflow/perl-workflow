@@ -326,7 +326,7 @@ sub _load_class {
 }
 
 sub create_workflow {
-    my ( $self, $wf_type ) = @_;
+    my ( $self, $wf_type, $context ) = @_;
     $log ||= get_logger();
 
     my $wf_config = $self->_get_workflow_config($wf_type);
@@ -338,7 +338,7 @@ sub create_workflow {
         = Workflow->new( undef,
         $wf_config->{initial_state} || $DEFAULT_INITIAL_STATE,
         $wf_config, $self->{_workflow_state}{$wf_type} );
-    $wf->context( Workflow::Context->new );
+    $wf->context( $context || Workflow::Context->new );
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
     $log->is_info
         && $log->info("Instantiated workflow object properly, persisting...");
@@ -372,7 +372,7 @@ sub create_workflow {
 }
 
 sub fetch_workflow {
-    my ( $self, $wf_type, $wf_id ) = @_;
+    my ( $self, $wf_type, $wf_id, $context ) = @_;
     $log ||= get_logger();
 
     my $wf_config = $self->_get_workflow_config($wf_type);
@@ -391,7 +391,8 @@ sub fetch_workflow {
         );
     my $wf = Workflow->new( $wf_id, $wf_info->{state}, $wf_config,
         $self->{_workflow_state}{$wf_type} );
-    $wf->context( Workflow::Context->new ) if ( not $wf->context() );
+    $wf->context( $context || Workflow::Context->new )
+        if ( not $wf->context() );
     $wf->last_update( $wf_info->{last_update} );
 
     $persister->fetch_extra_workflow_data($wf);
