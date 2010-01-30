@@ -92,7 +92,7 @@ sub _initialize_instance {
 
 sub _delete_instance {
     my ($class) = @_;
-    my $log ||= get_logger();
+    $log ||= get_logger();
 
     if ( $INSTANCES{$class} ) {
         $log->is_debug
