@@ -513,14 +513,14 @@ sub _add_action_config {
         # process?
         my $type = exists $actions->{type} ? $actions->{type} : 'default';
 
-        my $a;
+        my $action;
         if ( exists $actions->{action} ) {
-            $a = $actions->{action};
+            $action = $actions->{action};
         } else {
-            push @{$a}, $actions;
+            push @{$action}, $actions;
         }
 
-        foreach my $action_config ( @{$a} ) {
+        foreach my $action_config ( @{$action} ) {
             my $name = $action_config->{name};
             $log->is_debug
                 && $log->debug(
