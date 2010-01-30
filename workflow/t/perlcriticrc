@@ -1,7 +1,7 @@
 
 # $Id$
 
-severity = 1
+severity = 2
 verbose  = 8
 
 #------------------------------------------------------------------------------
@@ -45,6 +45,7 @@ keywords = Id
 [-RegularExpressions::ProhibitFixedStringMatches]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
+[-RegularExpressions::RequireDotMatchAnything]
 [-Subroutines::ProhibitExcessComplexity]
 [-Subroutines::ProtectPrivateSubs]
 [-Subroutines::RequireFinalReturn]
