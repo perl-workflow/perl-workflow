@@ -28,7 +28,7 @@ sub is_valid_config_type {
 
 sub get_valid_config_types {
     my @keys = sort keys %VALID_TYPES;
-    
+
     return @keys;
 }
 

@@ -117,19 +117,18 @@ sub fetch_history {
         "'fetch_history()'";
 }
 
-
-sub get_create_user{
-    my($self, $wf ) = @_;
+sub get_create_user {
+    my ( $self, $wf ) = @_;
     return 'n/a';
 }
 
 sub get_create_description {
-    my($self, $wf ) = @_;
+    my ( $self, $wf ) = @_;
     return 'Create new workflow';
 }
 
 sub get_create_action {
-    my($self, $wf ) = @_;
+    my ( $self, $wf ) = @_;
     return 'Create workflow';
 }
 

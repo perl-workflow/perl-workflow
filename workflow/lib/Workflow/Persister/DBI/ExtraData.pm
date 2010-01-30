@@ -61,8 +61,8 @@ sub fetch_extra_workflow_data {
         WHERE workflow_id = ?
     };
     my $data_field = $self->data_field;
-    my $select_data_fields =
-        ( ref $data_field )
+    my $select_data_fields
+        = ( ref $data_field )
         ? join( ', ', @{$data_field} )
         : $data_field;
     $sql = sprintf $sql, $select_data_fields, $self->table;

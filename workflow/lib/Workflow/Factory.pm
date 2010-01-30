@@ -333,9 +333,11 @@ sub create_workflow {
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
     }
-    
-    my $wf = Workflow->new( undef, $wf_config->{initial_state}|| $DEFAULT_INITIAL_STATE, $wf_config,
-        $self->{_workflow_state}{$wf_type} );
+
+    my $wf
+        = Workflow->new( undef,
+        $wf_config->{initial_state} || $DEFAULT_INITIAL_STATE,
+        $wf_config, $self->{_workflow_state}{$wf_type} );
     $wf->context( Workflow::Context->new );
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
     $log->is_info
@@ -389,7 +391,7 @@ sub fetch_workflow {
         );
     my $wf = Workflow->new( $wf_id, $wf_info->{state}, $wf_config,
         $self->{_workflow_state}{$wf_type} );
-	$wf->context( Workflow::Context->new ) if (not $wf->context());
+    $wf->context( Workflow::Context->new ) if ( not $wf->context() );
     $wf->last_update( $wf_info->{last_update} );
 
     $persister->fetch_extra_workflow_data($wf);
@@ -408,18 +410,19 @@ sub associate_observers_with_workflow {
 }
 
 sub _initialize_workflow_config {
-    my $self = shift;
+    my $self    = shift;
     my $wf_type = shift;
     $log ||= get_logger();
-    if ( ref($self->config_callback) eq 'CODE' ) {
-        my $args = &{ $self->config_callback }( $wf_type );
+    if ( ref( $self->config_callback ) eq 'CODE' ) {
+        my $args = &{ $self->config_callback }($wf_type);
         $self->add_config_from_file( %{$args} ) if $args && %{$args};
     }
 }
 
 sub _get_workflow_config {
     my ( $self, $wf_type ) = @_;
-    $self->_initialize_workflow_config( $wf_type ) unless $self->{_workflow_config}{ $wf_type };
+    $self->_initialize_workflow_config($wf_type)
+        unless $self->{_workflow_config}{$wf_type};
     return $self->{_workflow_config}{$wf_type};
 }
 
@@ -618,8 +621,8 @@ sub get_persister {
 }
 
 sub get_persisters {
-    my $self = shift;
-    my @persisters = sort keys %{$self->{_persister}};
+    my $self       = shift;
+    my @persisters = sort keys %{ $self->{_persister} };
 
     return @persisters;
 }
@@ -629,7 +632,7 @@ sub get_persister_for_workflow_type {
 
     my ($type) = @_;
     my $wf_config = $self->_get_workflow_config($type);
-    if (not $wf_config) {
+    if ( not $wf_config ) {
         workflow_error "no workflow of type '$type' available";
     }
     my $persister = $self->get_persister( $wf_config->{'persister'} );
@@ -777,8 +780,8 @@ sub get_validator {
 }
 
 sub get_validators {
-    my $self = shift;
-    my @validators = sort keys %{$self->{_validators}};
+    my $self       = shift;
+    my @validators = sort keys %{ $self->{_validators} };
     return @validators;
 }
 

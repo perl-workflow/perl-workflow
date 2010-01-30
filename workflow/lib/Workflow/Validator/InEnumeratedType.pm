@@ -18,8 +18,8 @@ sub _init {
             "initialized with the values you wish to ",
             "validate against using the parameter 'value'.";
     }
-    my @values =
-        ( ref $params->{value} eq 'ARRAY' )
+    my @values
+        = ( ref $params->{value} eq 'ARRAY' )
         ? @{ $params->{value} }
         : ( $params->{value} );
     $self->add_enumerated_values(@values);
