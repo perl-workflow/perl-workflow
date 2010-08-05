@@ -76,7 +76,7 @@ Revision history for Perl extension Workflow
   Removed VERSION file, this has now been obsoleted
 
   We are now resolving the version number for the distribution from Workflow.pm 
-  the main module, this mean a jump from 0.32 to 1.32, but it does mean that 
+  the main module, this mean a jump from 0.31 to 1.32, but it does mean that 
   an installation can be traced back to a given distribution
 
 - Patch to implement proper dynamic names for conditions with a 'test' attribute
