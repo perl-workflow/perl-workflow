@@ -2,6 +2,11 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+HEAD
+
+- Fixed example application, it was relying on a test module, in a broken way
+
+
 1.33 Sat Jan 30 11:51:18 CET 2010 (update recommended)
 
 - Patch from Ivan Paponov, bug in relation to action groups and use of default.
