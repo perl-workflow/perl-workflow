@@ -2,9 +2,28 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-HEAD
+1.34 Fri Aug  6 08:24:54 CEST 2010 (update not required)
 
-- Fixed example application, it was relying on a test module, in a broken way
+- Implemented work-around for RT #53909
+  https://rt.cpan.org/Ticket/Display.html?id=53909
+  
+  The issue demonstrated here, which can be observed in perl versions newer
+  than 5.10.0 seems to be related to a issue mentioned here:
+  
+  http://rt.perl.org/rt3/Public/Bug/Display.html?id=70171
+  
+  RT #53909 is based on blead perl, in which also a fix has now been
+  implemented, but we still have issues with a lot of perl releases currently
+  out there, see:
+  
+  http://matrix.cpantesters.org/?dist=Workflow+1.33
+
+  So this work-around seems to fix the issue, since I can no longer replicate
+  the error. The problem seem to be the clearing of a package scoped variable,
+  the array @observations in t/SomeObserver.pm
+
+- Fixed example application, it was relying on a test module in a broken way, a
+  path processed using a regex was not reliable
 
 
 1.33 Sat Jan 30 11:51:18 CET 2010 (update recommended)
