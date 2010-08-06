@@ -15,7 +15,7 @@ use English qw( -no_match_vars );
 my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-$Workflow::VERSION = '1.33_8';
+$Workflow::VERSION = '1.34';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -1311,7 +1311,7 @@ pgh.pm: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 =head1 COPYRIGHT
 
 Copyright (c) 2003 Chris Winters and Arvato Direct;
-Copyright (c) 2004-2008 Chris Winters. All rights reserved.
+Copyright (c) 2004-2010 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -1324,13 +1324,20 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
 
-Danny Sadinoff, patches to give better control of initial state and history records for workflow
+Andrew O'Brien, patch implementing dynamic reloaded of flows, see Changes file:
+1.33
 
-Thomas Erskine, for patch adding new accessors and fixing several bugs
+Sergei Vyshenski, bug reports - addressed and included in 1.33 
 
-Ivan Paponov, for patch implementing action groups, See Changes file, 0.32_7
+Alejandro Imass, improvements and clarifications, see Changes file: 1.33
 
-Robert Stockdale, for patch implementing dynamic names for conditions, See Changes file, 0.32_6
+Danny Sadinoff, patches to give better control of initial state and history records for workflow, see Changes file: 1.33
+
+Thomas Erskine, for patch adding new accessors and fixing several bugs see Changes file 1.33
+
+Ivan Paponov, for patch implementing action groups, see Changes file, 1.33
+
+Robert Stockdale, for patch implementing dynamic names for conditions, see Changes file, 1.32
 
 Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27 and 0.30
 

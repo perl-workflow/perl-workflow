@@ -65,9 +65,14 @@ my @result_data   = ( 'INITIAL', $date );
 }
 
 {
+    SomeObserver->clear_observations;
+
+    #The order of these statements are important, see RT #53909
+    #https://rt.cpan.org/Ticket/Display.html?id=53909
+    #So this is a temp work around since, the actual perl issue highlighted here
+    #seem to be fixed in blead (See: Changes file)
     $handle->{mock_add_resultset} = [ \@result_fields, \@result_data ];
 
-    SomeObserver->clear_observations;
     my $wf = $factory->fetch_workflow( 'ObservedTicket', 1 );
     my @observations = SomeObserver->get_observations;
 

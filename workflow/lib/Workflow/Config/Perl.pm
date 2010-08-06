@@ -12,11 +12,9 @@ use English qw( -no_match_vars );
 
 $Workflow::Config::Perl::VERSION = '1.03';
 
-my ($log);
-
 sub parse {
     my ( $self, $type, @items ) = @_;
-    $log ||= get_logger();
+    my $log ||= get_logger();
 
     $self->_check_config_type($type);
 

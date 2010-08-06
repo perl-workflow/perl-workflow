@@ -12,7 +12,7 @@ use English qw( -no_match_vars );
 $Workflow::Action::InputField::VERSION = '1.09';
 
 my @PROPS = qw( name label description type requirement
-                source_class source_list class );
+    source_class source_list class );
 __PACKAGE__->mk_accessors(@PROPS);
 
 my %INCLUDED = ();
@@ -102,8 +102,8 @@ sub get_possible_values {
 sub add_possible_values {
     my ( $self, @values ) = @_;
     foreach my $value (@values) {
-        my $this_value =
-            ( ref $value eq 'HASH' )
+        my $this_value
+            = ( ref $value eq 'HASH' )
             ? $value
             : { label => $value, value => $value };
         push @{ $self->{_enumerated} }, $this_value;

@@ -39,9 +39,12 @@ Workflow_patch_caching.diff
 Workflow_patch_autorun_maystop.diff
 t/workflow_tests.log
 t/db/workflow.db
+eg/ticket/db/ticket.db
+eg/ticket/workflow.log
 
 # Komodo
 \.kpf
+\.komodoproject
 
 # Avoid dist files
 \.gz$

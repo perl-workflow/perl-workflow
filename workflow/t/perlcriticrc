@@ -36,6 +36,7 @@ keywords = Id
 [-BuiltinFunctions::ProhibitStringyEval]
 
 #TODO
+[-Variables::ProhibitPunctuationVars]
 [-ControlStructures::ProhibitCascadingIfElse]
 [-ControlStructures::ProhibitPostfixControls]
 [-ControlStructures::ProhibitUnlessBlocks]
@@ -45,6 +46,7 @@ keywords = Id
 [-RegularExpressions::ProhibitFixedStringMatches]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
+[-RegularExpressions::RequireDotMatchAnything]
 [-Subroutines::ProhibitExcessComplexity]
 [-Subroutines::ProtectPrivateSubs]
 [-Subroutines::RequireFinalReturn]
