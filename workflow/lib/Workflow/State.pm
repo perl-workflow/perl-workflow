@@ -49,8 +49,6 @@ sub get_available_action_names {
 
     foreach my $action_name (@all_actions) {
 
-        #my $action_group = FACTORY->{_action_config}{$action_name}{'group'};
-
         #From Ivan Paponov
         my $action_group
             = FACTORY->{_action_config}{ $self->type() }{$action_name}

@@ -1,0 +1,8 @@
+INSTALL file for Workflow
+
+$Id$
+
+perl Makefile.PL  or   perl Build.PL
+make                   ./Build
+make test              ./Build test
+make install           ./Build install

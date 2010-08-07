@@ -1,5 +1,7 @@
 use Module::Build;
 
+# $Id$
+
 Module::Build->new(
     dist_author       => 'Jonas B. NIelsen <jonasbn@cpan.org>',
     dist_abstract     => 'Simple, flexible system to implement workflows',
@@ -33,6 +35,7 @@ Module::Build->new(
         directory => [ 'eg', 't' ],
     },
     create_makefile_pl => 'traditional',
+	create_readme => 1,
 )->create_build_script();
 
 exit 0;

@@ -481,6 +481,44 @@ This documentation describes version 0.15 of Workflow
  my $workflow = FACTORY->fetch_workflow( 'myworkflow', $id );
  print "Current state: ", $workflow->state, "\n";
 
+=head1 QUICK START
+
+The F<eg/ticket/> directory contains a configured workflow system. 
+You can access the same data and logic in two ways:
+
+=over
+
+=item * a command-line application (ticket.pl)
+
+=item * a CGI script               (ticket.cgi)
+
+=item * a web application          (ticket_web.pl)
+
+=back
+
+To initialize:
+
+	perl ticket.pl --db
+
+To run the command-line application:
+
+	perl ticket.pl
+
+To access the database and data from CGI, add the relevant
+configuration for your web server and call ticket.cgi:
+
+	http://www.mysite.com/workflow/ticket.cgi
+
+To start up the standalone web server:
+
+	perl ticket_web.pl
+
+(Barring changes to HTTP::Daemon and forking the standalone server
+won't work on Win32; use CGI instead, although patches are always
+welcome.)
+
+For more info, see F<eg/ticket/README>
+
 =head1 DESCRIPTION
 
 =head2 Overview
@@ -1097,6 +1135,33 @@ to L<Workflow::Config>, for implementation details.
 
 =back
 
+=head2 DEPENDENCIES FOR THE EXAMPLE APPLICATION
+
+=over
+
+=item L<CGI>
+
+=item L<CGI::Cookie>
+
+=item L<DBD::SQLite>
+
+=item L<HTTP::Daemon>
+
+=item L<HTTP::Request>
+
+=item L<HTTP::Response>
+
+=item L<HTTP::Status>
+
+=item L<Template> (Template Toolkit)
+
+=back
+
+For Win32 systems you can get the Template Toolkit and DBD::SQLite
+PPDs from TheoryX:
+
+	L<http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58>
+
 =head1 INCOMPATIBILITIES
 
 No special incompatibilies exist, CPAN testers reports however do demonstrate
@@ -1269,7 +1334,7 @@ development. The list is low-traffic.
 
 =over
 
-=item L<http://sourceforge.net/mail/?group_id=177533>
+=item L<http://sourceforge.net/mail/?group_id=177533> (including archive)
 
 =back
 
@@ -1281,7 +1346,8 @@ development. The list is low-traffic.
 
 =item Ohloh news L<https://www.ohloh.net/p/perl-Workflow/messages.rss>
 
-=item CPAN testers reports L<http://cpantesters.perl.org/show/Workflow.rss>
+=item CPAN testers reports L<http://cpantesters.perl.org/show/Workflow.rss> in matrix:
+
 
 =back
 
@@ -1305,8 +1371,15 @@ L<http://search.cpan.org/dist/Workflow>
 
 =head1 SEE ALSO
 
-October 2004 talk 'Workflows in Perl' given to
-pgh.pm: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
+=over
+
+* August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn 
+L<http://www.slideshare.net/jonasbn/workflow-yapceu2010>
+
+* October 2004 talk 'Workflows in Perl' given to
+pgh.pm by Chris Winters: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
+
+=back
 
 =head1 COPYRIGHT
 

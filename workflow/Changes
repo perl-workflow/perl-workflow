@@ -2,6 +2,13 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+HEAD
+
+- Eliminated README and migrated information into the main POD and introduced 
+  INSTALL file for the installation relevant information. README is now generated 
+  from the main POD by Build.PL
+
+
 1.34 Fri Aug  6 08:24:54 CEST 2010 (update not required)
 
 - Implemented work-around for RT #53909
