@@ -35,6 +35,9 @@ keywords = Id
 #Exchange for Module::Load?
 [-BuiltinFunctions::ProhibitStringyEval]
 
+#We utilize TODO comments
+[-Bangs::ProhibitFlagComments]
+
 #TODO
 [-Variables::ProhibitPunctuationVars]
 [-ControlStructures::ProhibitCascadingIfElse]
@@ -55,3 +58,5 @@ keywords = Id
 [-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 [-ValuesAndExpressions::ProhibitMixedBooleanOperators]
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
+[-Bangs::ProhibitVagueNames]
+[-Bangs::ProhibitRefProtoOrProto]
