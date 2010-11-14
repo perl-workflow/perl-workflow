@@ -11,7 +11,7 @@ use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Factory::VERSION = '1.19';
+$Workflow::Factory::VERSION = '1.20';
 
 my ($log);
 my (%INSTANCES);
