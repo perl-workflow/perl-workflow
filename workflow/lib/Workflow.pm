@@ -15,7 +15,7 @@ use English qw( -no_match_vars );
 my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-$Workflow::VERSION = '1.34';
+$Workflow::VERSION = '1.34_1';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -1373,6 +1373,10 @@ L<http://search.cpan.org/dist/Workflow>
 
 =over
 
+* November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
+Iceland by jonasbn 
+L<http://www.slideshare.net/jonasbn/workflow-npw2010>
+
 * August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn 
 L<http://www.slideshare.net/jonasbn/workflow-yapceu2010>
 
@@ -1396,6 +1400,9 @@ Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
+
+Steven van der Vegt, patch for autorun in initial state and improved exception
+handling for validators, see Changes file: 1.34_1
 
 Andrew O'Brien, patch implementing dynamic reloaded of flows, see Changes file:
 1.33
@@ -1444,3 +1451,5 @@ to subclass L<Workflow::Factory>) and good ideas.
 
 Martin Winkler E<lt>mw@arsnavigandi.deE<gt> - Pointed out a bug and a
 few other items.
+
+=cut

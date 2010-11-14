@@ -103,7 +103,7 @@ L<Workflow::Exception>'s are thrown in case of missing fields.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2010 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -112,6 +112,6 @@ it under the same terms as Perl itself.
 
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 =cut
