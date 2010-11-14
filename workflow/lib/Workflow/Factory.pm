@@ -11,7 +11,7 @@ use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Factory::VERSION = '1.19';
+$Workflow::Factory::VERSION = '1.20';
 
 my ($log);
 my (%INSTANCES);
@@ -365,14 +365,12 @@ sub create_workflow {
 
     $self->_commit_transaction($wf);
 
-	my $state = $wf->_get_workflow_state();
-	if ($state->autorun) {
-		$log->is_info && $log->info(
-				"State '$state' marked to be run ",
-				"automatically; executing that state/action..."
-			);
-		$wf->_auto_execute_state($state);
-	}
+    my $state = $wf->_get_workflow_state();
+    if ( $state->autorun ) {
+        $log->is_info && $log->info( "State '$state' marked to be run ",
+            "automatically; executing that state/action..." );
+        $wf->_auto_execute_state($state);
+    }
 
     $self->associate_observers_with_workflow($wf);
     $wf->notify_observers('create');
@@ -1174,7 +1172,7 @@ L<Workflow::Validator>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2010 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -1183,6 +1181,6 @@ it under the same terms as Perl itself.
 
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
 
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Chris Winters E <lt> chris @cwinters . comE <gt>, original author .
 
 =cut

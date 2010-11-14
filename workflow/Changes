@@ -2,7 +2,17 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-HEAD
+1.34_1
+
+- Added patch from Steven van der Vegt RT #52841 implementing autorun for
+  the INITIAL state
+  
+  https://rt.cpan.org/Ticket/Display.html?id=52841
+
+- Added patch from Steven van der Vegt RT #52862 improving the reporting on
+  validation exceptions
+  
+  https://rt.cpan.org/Ticket/Display.html?id=52862
 
 - Eliminated README and migrated information into the main POD and introduced 
   INSTALL file for the installation relevant information. README is now generated 

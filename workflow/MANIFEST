@@ -36,6 +36,7 @@ eg/ticket/workflow_action.xml
 eg/ticket/workflow_condition.xml
 eg/ticket/workflow_persister.xml
 eg/ticket/workflow_validator.xml
+INSTALL
 lib/Workflow.pm
 lib/Workflow/Action.pm
 lib/Workflow/Action/InputField.pm
