@@ -44,8 +44,11 @@ lib/Workflow/Action/Mailer.pm
 lib/Workflow/Action/Null.pm
 lib/Workflow/Base.pm
 lib/Workflow/Condition.pm
+lib/Workflow/Condition/CheckReturn.pm
 lib/Workflow/Condition/Evaluate.pm
+lib/Workflow/Condition/GreedyOR.pm
 lib/Workflow/Condition/HasUser.pm
+lib/Workflow/Condition/Nested.pm
 lib/Workflow/Config.pm
 lib/Workflow/Config/Perl.pm
 lib/Workflow/Config/XML.pm
@@ -69,6 +72,7 @@ lib/Workflow/Validator/InEnumeratedType.pm
 lib/Workflow/Validator/MatchesDateFormat.pm
 Makefile.PL
 MANIFEST			This list of files
+META.json
 META.yml
 README
 struct/README
@@ -81,6 +85,11 @@ t/00_load.t
 t/02_pod.t
 t/03_pod-coverage.t
 t/04_critic.t
+t/05_condition_nested.d/workflow_activity_wfnest.xml
+t/05_condition_nested.d/workflow_condition_wfnest.xml
+t/05_condition_nested.d/workflow_def_wfnest.xml
+t/05_condition_nested.d/workflow_validator_wfnest.xml
+t/05_condition_nested.t
 t/action.t
 t/action_field.t
 t/action_mailer.t

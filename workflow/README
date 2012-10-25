@@ -137,9 +137,11 @@ QUICK START
     The eg/ticket/ directory contains a configured workflow system. You can
     access the same data and logic in two ways:
 
-    * a command-line application (ticket.pl)
-    * a CGI script (ticket.cgi)
-    * a web application (ticket_web.pl)
+    *   a command-line application (ticket.pl)
+
+    *   a CGI script (ticket.cgi)
+
+    *   a web application (ticket_web.pl)
 
     To initialize:
 
@@ -398,20 +400,20 @@ WORKFLOWS ARE OBSERVABLE
     *   execute - Issued after a workflow is successfully executed and
         saved.
 
-        Adds the parameters `$old_state', `$action_name' and `$autorun'.
-        `$old_state' includes the state of the workflow before the action
-        was executed, `$action_name' is the action name that was executed
-        and `$autorun' is set to 1 if the action just executed was started
-        using autorun.
+        Adds the parameters $old_state, $action_name and $autorun.
+        $old_state includes the state of the workflow before the action was
+        executed, $action_name is the action name that was executed and
+        $autorun is set to 1 if the action just executed was started using
+        autorun.
 
     *   state change - Issued after a workflow is successfully executed,
         saved and results in a state change. The event will not be fired if
         you executed an action that did not result in a state change.
 
-        Adds the parameters `$old_state', `$action' and `$autorun'.
-        `$old_state' includes the state of the workflow before the action
-        was executed, `$action' is the action name that was executed and
-        `$autorun' is set to 1 if the action just executed was autorun.
+        Adds the parameters $old_state, $action and $autorun. $old_state
+        includes the state of the workflow before the action was executed,
+        $action is the action name that was executed and $autorun is set to
+        1 if the action just executed was autorun.
 
     *   add history - Issued after one or more history objects added to a
         workflow object.
@@ -439,7 +441,7 @@ WORKFLOWS ARE OBSERVABLE
        <observer sub="SomeOtherObserver::Functions::other_sub" />
 
     In the first declaration we specify the class ('SomeObserver') that will
-    catch observations using its `update()' method. In the second we're
+    catch observations using its "update()" method. In the second we're
     naming exactly the subroutine ('other_sub()' in the class
     'SomeOtherObserver::Functions') that will catch observations.
 
@@ -451,12 +453,12 @@ WORKFLOW METHODS
     than the entire system.
 
   Object Methods
-    execute_action( $action_name, $autorun )
-    Execute the action `$action_name'. Typically this changes the state of
-    the workflow. If `$action_name' is not in the current state, fails one
-    of the conditions on the action, or fails one of the validators on the
-    action an exception is thrown. $autorun is used internally and is set to
-    1 if the action was executed using autorun.
+   execute_action( $action_name, $autorun )
+    Execute the action $action_name. Typically this changes the state of the
+    workflow. If $action_name is not in the current state, fails one of the
+    conditions on the action, or fails one of the validators on the action
+    an exception is thrown. $autorun is used internally and is set to 1 if
+    the action was executed using autorun.
 
     After the action has been successfully executed and the workflow saved
     we issue a 'execute' observation with the old state, action name and an
@@ -470,16 +472,16 @@ WORKFLOW METHODS
      }
 
     We also issue a 'change state' observation if the executed action
-    resulted in a new state. See WORKFLOWS ARE OBSERVABLE above for how we
+    resulted in a new state. See "WORKFLOWS ARE OBSERVABLE" above for how we
     use and register observers and Class::Observable for more general
     information about observers as well as implementation details.
 
     Returns: new state of workflow
 
-    get_current_actions( $group )
+   get_current_actions( $group )
     Returns a list of action names available from the current state for the
-    given environment. So if you keep your `context()' the same if you call
-    `execute_action()' with one of the action names you should not trigger
+    given environment. So if you keep your "context()" the same if you call
+    "execute_action()" with one of the action names you should not trigger
     any condition error since the action has already been screened for
     conditions. If you want to divide actions in groups (for example state
     change group, approval group, which have to be shown at different places
@@ -497,39 +499,39 @@ WORKFLOW METHODS
 
     Returns: list of strings representing available actions
 
-    get_action_fields( $action_name )
+   get_action_fields( $action_name )
     Return a list of Workflow::Action::InputField objects for the given
-    `$action_name'. If `$action_name' not in the current state or not
-    accessible by the environment an exception is thrown.
+    $action_name. If $action_name not in the current state or not accessible
+    by the environment an exception is thrown.
 
     Returns: list of Workflow::Action::InputField objects
 
-    add_history( @( \%params | $wf_history_object ) )
+   add_history( @( \%params | $wf_history_object ) )
     Adds any number of histories to the workflow, typically done by an
-    action in `execute_action()' or one of the observers of that action.
-    This history will not be saved until `execute_action()' is complete.
+    action in "execute_action()" or one of the observers of that action.
+    This history will not be saved until "execute_action()" is complete.
 
     You can add a list of either hashrefs with history information in them
     or full Workflow::History objects. Trying to add anything else will
     result in an exception and none of the items being added.
 
     Successfully adding the history objects results in a 'add history'
-    observation being thrown. See WORKFLOWS ARE OBSERVABLE above for more.
+    observation being thrown. See "WORKFLOWS ARE OBSERVABLE" above for more.
 
     Returns: nothing
 
-    get_history()
+   get_history()
     Returns list of history objects for this workflow. Note that some may be
-    unsaved if you call this during the `execute_action()' process.
+    unsaved if you call this during the "execute_action()" process.
 
-    get_unsaved_history()
+   get_unsaved_history()
     Returns list of all unsaved history objects for this workflow.
 
-    clear_history()
+   clear_history()
     Clears all transient history objects from the workflow object, not from
     the long-term storage.
 
-    set( $property, $value )
+   set( $property, $value )
     Method used to overwrite Class::Accessor so only certain callers can set
     properties caller has to be a Workflow namespace package.
 
@@ -538,7 +540,7 @@ WORKFLOW METHODS
   Properties
     Unless otherwise noted, properties are read-only.
 
-    Configuration Properties
+   Configuration Properties
     Some properties are set in the configuration file for each workflow.
     These remain static once the workflow is instantiated.
 
@@ -559,7 +561,7 @@ WORKFLOW METHODS
     DateTime new method for all cases where Workflow needs to create a date
     object. See the DateTime module for acceptable values.
 
-    Dynamic Properties
+   Dynamic Properties
     You can get the following properties from any workflow object.
 
     id
@@ -576,7 +578,7 @@ WORKFLOW METHODS
 
     Date of the workflow's last update.
 
-    context (read-write, see below)
+   context (read-write, see below)
     A Workflow::Context object associated with this workflow. This should
     never be undefined as the Workflow::Factory sets an empty context into
     the workflow when it is instantiated.
@@ -596,41 +598,39 @@ WORKFLOW METHODS
      Current drinks: beer, wine
 
   Internal Methods
-    init( $id, $current_state, \%workflow_config, \@wf_states )
+   init( $id, $current_state, \%workflow_config, \@wf_states )
     THIS SHOULD ONLY BE CALLED BY THE Workflow::Factory. Do not call this or
-    the `new()' method yourself -- you will only get an exception. Your only
+    the "new()" method yourself -- you will only get an exception. Your only
     interface for creating and fetching workflows is through the factory.
 
-    This is called by the inherited constructor and sets the
-    `$current_state' value to the property `state' and uses the other
-    non-state values from `\%config' to set parameters via the inherited
-    `param()'.
+    This is called by the inherited constructor and sets the $current_state
+    value to the property "state" and uses the other non-state values from
+    "\%config" to set parameters via the inherited "param()".
 
-    _get_action( $action_name )
-    Retrieves the action object associated with `$action_name' in the
-    current workflow state. This will throw an exception if:
+   _get_action( $action_name )
+    Retrieves the action object associated with $action_name in the current
+    workflow state. This will throw an exception if:
 
     *   No workflow state exists with a name of the current state. (This is
         usually some sort of configuration error and should be caught at
         initialization time, so it should not happen.)
 
-    *   No action `$action_name' exists in the current state.
+    *   No action $action_name exists in the current state.
 
-    *   No action `$action_name' exists in the workflow universe.
+    *   No action $action_name exists in the workflow universe.
 
     *   One of the conditions for the action in this state is not met.
 
-    _get_workflow_state( [ $state ] )
-    Return the Workflow::State object corresponding to `$state', which
+   _get_workflow_state( [ $state ] )
+    Return the Workflow::State object corresponding to $state, which
     defaults to the current state.
 
-    _set_workflow_state( $wf_state )
-    Assign the Workflow::State object `$wf_state' to the workflow.
+   _set_workflow_state( $wf_state )
+    Assign the Workflow::State object $wf_state to the workflow.
 
-    _get_next_state( $action_name )
-    Returns the name of the next state given the action `$action_name'.
-    Throws an exception if `$action_name' not contained in the current
-    state.
+   _get_next_state( $action_name )
+    Returns the name of the next state given the action $action_name. Throws
+    an exception if $action_name not contained in the current state.
 
 CONFIGURATION AND ENVIRONMENT
     The configuration of Workflow is done using the format of your choice,
@@ -695,16 +695,16 @@ BUGS AND LIMITATIONS
 BUG REPORTING
     Bug reporting should be done either via Request Tracker (RT)
 
-    http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow>
 
     Or via email
 
-    `bug-test-timer at rt.cpan.org'
+    "bug-test-timer at rt.cpan.org"
 
     A list of currently known issues can be seen via examining the RT queue
     for Workflow.
 
-    http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow
+    <http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow>
 
 TEST
     The test suite can be run using, Module::Build
@@ -761,7 +761,7 @@ QUALITY ASSURANCE
     pitfalls and programming mistakes.
 
     The static analysis performed by Perl::Critic is integrated into the
-    TEST tool chain and is performed either by running the test suite.
+    "TEST" tool chain and is performed either by running the test suite.
 
             % ./Build test
 
@@ -769,7 +769,7 @@ QUALITY ASSURANCE
     explicitly.
 
             % ./Build test --verbose 1 --test_files t/04_critic.t
-        
+
     Or
 
             % perl t/critic.t
@@ -780,10 +780,13 @@ QUALITY ASSURANCE
 
     The following policies are disabled
 
-    * Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers
-    * Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef
-    * Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames
-    * Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma
+    *   Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers
+
+    *   Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef
+
+    *   Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames
+
+    *   Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma
 
     The complete policy configuration can be found in t/perlcriticrc.
 
@@ -802,48 +805,52 @@ PROJECT
     The Workflow project is currently hosted with SourceForge.net and is
     listed on Ohloh.
 
-    SF.net: http://perl-workflow.sf.net
-    Ohloh: https://www.ohloh.net/p/perl-Workflow
+    SF.net: <http://perl-workflow.sf.net>
+    Ohloh: <https://www.ohloh.net/p/perl-Workflow>
 
   REPOSITORY
     The code is kept under revision control using Subversion:
 
-    https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow
+    <https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow>
 
   MAILING LIST
     The Workflow project has a mailing list for discussion of issues and
     development. The list is low-traffic.
 
-    http://sourceforge.net/mail/?group_id=177533 (including archive)
+    <http://sourceforge.net/mail/?group_id=177533> (including archive)
 
   RSS FEEDS
     Commit log
-    http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.work
-    flow.scm
-    Ohloh news https://www.ohloh.net/p/perl-Workflow/messages.rss
-    CPAN testers reports http://cpantesters.perl.org/show/Workflow.rss in
+    <http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.wor
+    kflow.scm>
+    Ohloh news <https://www.ohloh.net/p/perl-Workflow/messages.rss>
+    CPAN testers reports <http://cpantesters.perl.org/show/Workflow.rss> in
     matrix:
+
   OTHER RESOURCES
-    * AnnoCPAN: Annotated CPAN documentation
-        http://annocpan.org/dist/Workflow
+    *   AnnoCPAN: Annotated CPAN documentation
 
-    * CPAN Ratings
-        http://cpanratings.perl.org/d/Workflow
+        <http://annocpan.org/dist/Workflow>
 
-    * Search CPAN
-        http://search.cpan.org/dist/Workflow
+    *   CPAN Ratings
+
+        <http://cpanratings.perl.org/d/Workflow>
+
+    *   Search CPAN
+
+        <http://search.cpan.org/dist/Workflow>
 
 SEE ALSO
         * November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010
         in Reykjavik, Iceland by jonasbn
-        http://www.slideshare.net/jonasbn/workflow-npw2010
+        <http://www.slideshare.net/jonasbn/workflow-npw2010>
 
         * August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa,
         Italy by jonasbn
-        http://www.slideshare.net/jonasbn/workflow-yapceu2010
+        <http://www.slideshare.net/jonasbn/workflow-yapceu2010>
 
         * October 2004 talk 'Workflows in Perl' given to pgh.pm by Chris
-        Winters: http://www.cwinters.com/pdf/workflow_pgh_pm.pdf
+        Winters: <http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 
 COPYRIGHT
     Copyright (c) 2003 Chris Winters and Arvato Direct; Copyright (c)
@@ -905,7 +912,7 @@ AUTHORS
 
     Michael Roberts <michael@vivtek.com> graciously released the 'Workflow'
     namespace on CPAN; check out his Workflow toolkit at
-    http://www.vivtek.com/wftk.html.
+    <http://www.vivtek.com/wftk.html>.
 
     Michael Schwern <schwern@pobox.org> barked via RT about a dependency
     problem and CPAN naming issue.
