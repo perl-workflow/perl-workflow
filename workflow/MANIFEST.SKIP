@@ -58,3 +58,4 @@ eg/ticket/workflow.log
 #   Mac OSX SMB mount metadata files
 \B\._
 ^MYMETA.yml$
+^MYMETA\.json$

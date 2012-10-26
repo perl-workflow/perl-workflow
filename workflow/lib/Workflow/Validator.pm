@@ -14,6 +14,9 @@ __PACKAGE__->mk_accessors(@FIELDS);
 
 sub init {
     my ( $self, $params ) = @_;
+    
+    $params->{class} = ref $self unless($params->{class});
+        
     if ( $params->{name} ) {
         $self->name( $params->{name} );
     } else {
