@@ -17,7 +17,7 @@ my $cfgbase = $0;
 $cfgbase =~ s/\.t$/.d/;
 
 my $LOG_FILE  = 'workflow_tests.log';
-my $CONF_FILE = 'log4perl.conf';
+my $CONF_FILE = $cfgbase . '/log4perl.conf';
 
 require Log::Log4perl;
 if ($debug) {
@@ -27,7 +27,7 @@ if ($debug) {
     Log::Log4perl::init($CONF_FILE);
 }
 
-plan tests => 8;
+plan tests => 21;
 
 my $workflow_conf  = $cfgbase . '/workflow_def_wfnest.xml';
 my $action_conf    = $cfgbase . '/workflow_activity_wfnest.xml';
@@ -66,27 +66,66 @@ $workflow->execute_action('initialize');
 is( $workflow->state, 'INITIALIZED', 'initialized state' );
 
 ##################################################
-# RUN TESTS ON 'Greedy_OR'
+# RUN TESTS FOR 'Workflow::Condition::GreedyOR'
 ##################################################
 
 #diag( "Available actions: " . join(', ', $workflow->get_current_actions));
 $workflow->execute_action('test_greedy_or');
-is( $workflow->state, 'TEST_GREEDY_OR',
-    'wfcond state after test_greedy_or' );
+is( $workflow->state, 'TEST_GREEDY_OR', 'wfcond state after test_greedy_or' );
 $workflow->execute_action('greedy_or_1');
-is( $workflow->state, 'INITIALIZED',
-    'wfcond state after greedy_or_1' );
+is( $workflow->state, 'INITIALIZED', 'wfcond state after greedy_or_1' )
+    or $workflow->execute_action('ack_subtest_fail');
 
 $workflow->execute_action('test_greedy_or');
-is( $workflow->state, 'TEST_GREEDY_OR',
-    'wfcond state after test_greedy_or' );
+is( $workflow->state, 'TEST_GREEDY_OR', 'wfcond state after test_greedy_or' );
 $workflow->execute_action('greedy_or_2');
-is( $workflow->state, 'SUBTEST_FAIL',
-    'wfcond state after test_greedy_or' );
-
+is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after test_greedy_or' );
 $workflow->execute_action('ack_subtest_fail');
-is( $workflow->state, 'INITIALIZED',
-    'wfcond state after ack_subtest_fail' );
+is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
+
+##################################################
+# RUN TESTS FOR 'Workflow::Condition::LazyAND'
+##################################################
+
+$workflow->execute_action('test_lazy_and');
+is( $workflow->state, 'TEST_LAZY_AND', 'wfcond state after test_lazy_and' );
+$workflow->execute_action('lazy_and_1');
+is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after lazy_and_1' );
+$workflow->execute_action('ack_subtest_fail');
+is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
+
+$workflow->execute_action('test_lazy_and');
+is( $workflow->state, 'TEST_LAZY_AND', 'wfcond state after test_lazy_and' );
+$workflow->execute_action('lazy_and_2');
+is( $workflow->state, 'INITIALIZED', 'wfcond state after lazy_and_2' )
+    or $workflow->execute_action('ack_subtest_fail');
+
+##################################################
+# RUN TESTS FOR 'Workflow::Condition::CheckReturn'
+##################################################
+
+$workflow->execute_action('test_check_return');
+is( $workflow->state, 'TEST_CHECK_RETURN',
+    'wfcond state after test_check_return' );
+$workflow->execute_action('check_return_1');
+is( $workflow->state, 'INITIALIZED', 'wfcond state after check_return_1' )
+    or $workflow->execute_action('ack_subtest_fail');
+
+$workflow->execute_action('test_check_return');
+is( $workflow->state, 'TEST_CHECK_RETURN',
+    'wfcond state after test_check_return' );
+$workflow->execute_action('check_return_2');
+is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after check_return_2' );
+$workflow->execute_action('ack_subtest_fail');
+is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
+
+$workflow->execute_action('test_check_return');
+is( $workflow->state, 'TEST_CHECK_RETURN',
+    'wfcond state after test_check_return' );
+$workflow->execute_action('check_return_3');
+is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after check_return_3' );
+$workflow->execute_action('ack_subtest_fail');
+is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
 
 ##################################################
 # DONE WITH ALL TESTS
@@ -94,43 +133,4 @@ is( $workflow->state, 'INITIALIZED',
 
 $workflow->execute_action('tests_done');
 is( $workflow->state, 'SUCCESS', 'end workflow state SUCCESS' );
-
-# Get our condition
-#my $cond = $workflow->get_condition('greedy_or_1');
-#is( $cond, 'greedy_or', 'get greedy_or_1 condition');
-
-# Get the data needed for action 'upload file' (assumed to be
-# available in the current state) and display the fieldname and
-# description
-
-#print "Action 'upload file' requires the following fields:\n";
-#foreach my $field ( $workflow->get_action_fields( 'FOO' ) ) {
-#    print $field->name, ": ", $field->description,
-#          "(Required? ", $field->is_required, ")\n";
-#}
-
-# Add data to the workflow context for the validators, conditions and
-# actions to work with
-
-my $context      = $workflow->context;
-my $user         = 'test user';
-my @sections     = qw( section1 section2 section3 );
-my $path_to_file = '/dev/null';
-$context->param( current_user => $user );
-$context->param( sections     => \@sections );
-$context->param( path         => $path_to_file );
-
-# Execute one of them
-#$workflow->execute_action( 'upload file' );
-
-# Later.... fetch an existing workflow
-#my $id = get_workflow_id_from_user( ... );
-#my $workflow = $factory->fetch_workflow( 'myworkflow', $id );
-#print "Current state: ", $workflow->state, "\n";
-
-#is( evaluate($test_eq),             1,  "cond test_eq" );
-#is( evaluate($test_eq_fail),        '', "cond test_eq_fail" );
-#is( evaluate($test_lazyor_2),       1,  "cond test_lazyor_2" );
-#is( evaluate($test_greedyor_2),     2,  "cond test_greedyor_2" );
-#is( evaluate($test_greedyor_2_ref), 2,  "cond test_greedyor_2_ref" );
 

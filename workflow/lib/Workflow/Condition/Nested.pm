@@ -152,7 +152,7 @@ consider it to be the value returned.
         }
         else {
             $log->is_debug
-                && $log->debug("Opposite and condition failed");
+                && $log->debug("Condition '$condition_name' failed, but result is negated");
             return 1;
         }
     }
@@ -161,12 +161,12 @@ consider it to be the value returned.
             || 1;
         if ($opposite) {
             $log->is_debug
-                && $log->debug("Condition '$orig_condition' did NOT fail");
+                && $log->debug("Condition '$condition_name' OK, but result is negated");
             return 0;
         }
         else {
             $log->is_debug
-                && $log->debug(" Opposite false and condition OK");
+                && $log->debug(" Condition '$condition_name' OK and not negated");
 
             # If the condition returned nothing, bump it to 1
             return $result || 1;
