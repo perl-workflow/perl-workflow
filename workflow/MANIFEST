@@ -48,6 +48,8 @@ lib/Workflow/Condition/CheckReturn.pm
 lib/Workflow/Condition/Evaluate.pm
 lib/Workflow/Condition/GreedyOR.pm
 lib/Workflow/Condition/HasUser.pm
+lib/Workflow/Condition/LazyAND.pm
+lib/Workflow/Condition/LazyOR.pm
 lib/Workflow/Condition/Nested.pm
 lib/Workflow/Config.pm
 lib/Workflow/Config/Perl.pm
@@ -165,3 +167,4 @@ t/workflow_type.xml
 t/workflow_type_alternate_initial.perl
 t/workflow_validator.perl
 t/workflow_validator.xml
+TODO
