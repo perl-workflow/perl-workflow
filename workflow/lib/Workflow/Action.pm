@@ -18,8 +18,7 @@ use Carp qw(croak);
 $Workflow::Action::VERSION = '1.10';
 
 my @PROPS = qw( name class description );
-my @INTERNAL = qw( _factory );
-__PACKAGE__->mk_accessors(@PROPS, @INTERNAL);
+__PACKAGE__->mk_accessors(@PROPS);
 
 ####################
 # INPUT FIELDS
@@ -51,7 +50,7 @@ sub add_validators {
     my ( $self, @validator_info ) = @_;
     my @validators = ();
     foreach my $conf (@validator_info) {
-        my $validator = $self->_factory()->get_validator( $conf->{name} );
+        my $validator = FACTORY->get_validator( $conf->{name} );
         my @args      = $self->normalize_array( $conf->{arg} );
         push @validators,
             {
@@ -107,7 +106,6 @@ sub init {
     # So we don't destroy the original...
     my %copy_params = %{$params};
 
-    $self->_factory( $wf->_factory() );
     $self->class( $copy_params{class} );
     $self->name( $copy_params{name} );
     $self->description( $copy_params{description} );
