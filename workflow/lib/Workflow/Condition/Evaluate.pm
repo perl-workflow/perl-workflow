@@ -56,7 +56,7 @@ sub evaluate {
             "Condition expressed in code threw exception: $EVAL_ERROR";
     }
 
-    $log->is_debug && $log->debug("Safe eval ran ok, returned: '$rv'");
+    $log->is_debug && $log->debug("Safe eval ran ok, returned: '" . (defined $rv ? $rv : '<undef>') . "'");
     unless ($rv) {
         condition_error "Condition expressed by test '$to_eval' did not ",
             "return a true value.";
