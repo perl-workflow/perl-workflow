@@ -2,21 +2,19 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-1.34_3
+1.35 Thu Nov  8 22:47:46 CET 2012 (update not required)
+
+- Applied patches from Scott Hardin implementing lazy evaluation of conditions
 
 - Applied patch from Oliver Welter implementing support for multiple factories
+
+  https://rt.cpan.org/Public/Bug/Display.html?id=18159
 
 - Added patch from Oliver Welter implementing the feature of creating custom 
   workflow classes, in addition a patch to silence some warning emitted during test
   from Workflow::Validator
 
-
-1.34_2
-
 - Added patch from Scott Hardin implementing nested conditions
-
-
-1.34_1
 
 - Added patch from Steven van der Vegt RT #52841 implementing autorun for
   the INITIAL state
