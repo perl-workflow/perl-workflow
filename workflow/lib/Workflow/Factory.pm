@@ -10,7 +10,6 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
-
 $Workflow::Factory::VERSION = '1.20';
 
 my ($log);
@@ -252,11 +251,10 @@ sub _add_workflow_config {
         # When we instantiate a new workflow we pass these objects
 
         foreach my $state_conf ( @{ $workflow_config->{state} } ) {
-
             # Add the workflow type to the state conf.
-            $state_conf->{type} = $wf_type;
-
-            my $wf_state = Workflow::State->new($state_conf);
+            $state_conf->{type} = $wf_type;                        
+            my $wf_state = Workflow::State->new($state_conf, $self);
+            
             push @{ $self->{_workflow_state}{$wf_type} }, $wf_state;
         }
 
@@ -339,7 +337,7 @@ sub create_workflow {
     my $wf
         = $wf_class->new( undef,
         $wf_config->{initial_state} || $DEFAULT_INITIAL_STATE,
-        $wf_config, $self->{_workflow_state}{$wf_type} );
+        $wf_config, $self->{_workflow_state}{$wf_type}, $self );
     $wf->context( $context || Workflow::Context->new );
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
     $log->is_info
@@ -401,7 +399,8 @@ sub fetch_workflow {
         "[Last update: $wf_info->{last_update}]"
         );
     my $wf = Workflow->new( $wf_id, $wf_info->{state}, $wf_config,
-        $self->{_workflow_state}{$wf_type} );
+        $self->{_workflow_state}{$wf_type}, $self );
+     
     $wf->context( $context || Workflow::Context->new )
         if ( not $wf->context() );
     $wf->last_update( $wf_info->{last_update} );
