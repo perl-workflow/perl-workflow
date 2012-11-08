@@ -2,6 +2,11 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.34_2
+
+- Added patch from Scott Hardin implementing nested conditions
+
+
 1.34_1
 
 - Added patch from Steven van der Vegt RT #52841 implementing autorun for
