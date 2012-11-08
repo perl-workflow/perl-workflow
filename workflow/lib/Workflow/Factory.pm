@@ -326,16 +326,18 @@ sub _load_class {
 }
 
 sub create_workflow {
-    my ( $self, $wf_type, $context ) = @_;
+    my ( $self, $wf_type, $context, $wf_class ) = @_;
     $log ||= get_logger();
 
+    $wf_class = 'Workflow' unless($wf_class);
+    
     my $wf_config = $self->_get_workflow_config($wf_type);
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
     }
 
     my $wf
-        = Workflow->new( undef,
+        = $wf_class->new( undef,
         $wf_config->{initial_state} || $DEFAULT_INITIAL_STATE,
         $wf_config, $self->{_workflow_state}{$wf_type} );
     $wf->context( $context || Workflow::Context->new );
@@ -379,9 +381,11 @@ sub create_workflow {
 }
 
 sub fetch_workflow {
-    my ( $self, $wf_type, $wf_id, $context ) = @_;
+    my ( $self, $wf_type, $wf_id, $context, $wf_class ) = @_;
     $log ||= get_logger();
 
+    $wf_class = 'Workflow' unless($wf_class);
+    
     my $wf_config = $self->_get_workflow_config($wf_type);
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
@@ -850,11 +854,18 @@ The factory is a singleton, this is how you get access to the
 instance. You can also just import the 'FACTORY' constant as in the
 L</SYNOPSIS>.
 
-=head3 create_workflow( $workflow_type )
+=head3 create_workflow( $workflow_type, $context, $wf_class )
 
 Create a new workflow of type C<$workflow_type>. This will create a
 new record in whatever persistence mechanism you have associated with
 C<$workflow_type> and set the workflow to its initial state.
+
+The C<$context> argument is optional, you can pass an exisiting instance 
+of Workflow::Context to be reused. Otherwise a new instance is created.
+
+The C<$wf_class> argument is optional. Pass it the name of a class to be
+used for the workflow to be created. By default, all workflows are of the 
+I<Workflow> class.
 
 Any observers you've associated with this workflow type will be
 attached to the returned workflow object.
@@ -864,12 +875,19 @@ C<WORKFLOWS ARE OBSERVABLE> in L<Workflow> for more.
 
 Returns: newly created workflow object.
 
-=head3 fetch_workflow( $workflow_type, $workflow_id )
+=head3 fetch_workflow( $workflow_type, $workflow_id, $context, $wf_class )
 
 Retrieve a workflow object of type C<$workflow_type> and ID
 C<$workflow_id>. (The C<$workflow_type> is necessary so we can fetch
 the workflow using the correct persister.) If a workflow with ID
 C<$workflow_id> is not found C<undef> is returned.
+
+The C<$context> argument is optional, you can pass an exisiting instance 
+of Workflow::Context to be reused. Otherwise a new instance is created.
+
+The C<$wf_class> argument is optional. Pass it the name of a class to be
+used for the workflow to be created. By default, all workflows are of the 
+I<Workflow> class.
 
 Any observers you've associated with this workflow type will be
 attached to the returned workflow object.
