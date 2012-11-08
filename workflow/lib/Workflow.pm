@@ -15,13 +15,12 @@ use English qw( -no_match_vars );
 my @FIELDS = qw( id type description state last_update time_zone );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-$Workflow::VERSION = '1.34_2';
+$Workflow::VERSION = '1.34_4';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
 my ($log);
 
-########################################
 # PUBLIC METHODS
 
 # this is our only read-write property...

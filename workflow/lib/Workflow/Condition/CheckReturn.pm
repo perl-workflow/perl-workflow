@@ -121,11 +121,11 @@ sub _init {
 
 sub evaluate {
     my ( $self, $wf ) = @_;
-    my $cond = $self->argument;
+    my $cond = $self->condition;
     my $op   = $self->operator;
     my $arg  = $self->argument;
 
-    warn "DEBUG: evaluating operator '$op'";
+#    warn "DEBUG: evaluating operator '$op'";
 
     my $numop = $supported_ops{$op};
     if ( not $numop ) {
