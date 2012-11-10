@@ -251,10 +251,11 @@ sub _add_workflow_config {
         # When we instantiate a new workflow we pass these objects
 
         foreach my $state_conf ( @{ $workflow_config->{state} } ) {
+
             # Add the workflow type to the state conf.
-            $state_conf->{type} = $wf_type;                        
-            my $wf_state = Workflow::State->new($state_conf, $self);
-            
+            $state_conf->{type} = $wf_type;
+            my $wf_state = Workflow::State->new( $state_conf, $self );
+
             push @{ $self->{_workflow_state}{$wf_type} }, $wf_state;
         }
 
@@ -327,8 +328,8 @@ sub create_workflow {
     my ( $self, $wf_type, $context, $wf_class ) = @_;
     $log ||= get_logger();
 
-    $wf_class = 'Workflow' unless($wf_class);
-    
+    $wf_class = 'Workflow' unless ($wf_class);
+
     my $wf_config = $self->_get_workflow_config($wf_type);
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
@@ -382,8 +383,8 @@ sub fetch_workflow {
     my ( $self, $wf_type, $wf_id, $context, $wf_class ) = @_;
     $log ||= get_logger();
 
-    $wf_class = 'Workflow' unless($wf_class);
-    
+    $wf_class = 'Workflow' unless ($wf_class);
+
     my $wf_config = $self->_get_workflow_config($wf_type);
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
@@ -400,7 +401,7 @@ sub fetch_workflow {
         );
     my $wf = Workflow->new( $wf_id, $wf_info->{state}, $wf_config,
         $self->{_workflow_state}{$wf_type}, $self );
-     
+
     $wf->context( $context || Workflow::Context->new )
         if ( not $wf->context() );
     $wf->last_update( $wf_info->{last_update} );

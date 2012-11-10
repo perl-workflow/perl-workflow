@@ -13,12 +13,12 @@ sub new {
     my $self = bless { PARAMS => {} }, $class;
 
     if ( ref $params[0] eq 'HASH' && ref $params[0]->{param} eq 'ARRAY' ) {
-        foreach my $declared ( @{ $params[0]->{param} } ) {            
+        foreach my $declared ( @{ $params[0]->{param} } ) {
             $params[0]->{ $declared->{name} } = $declared->{value};
         }
         delete $params[0]->{param};
-    }    
-    $self->init(@params);    
+    }
+    $self->init(@params);
     return $self;
 }
 

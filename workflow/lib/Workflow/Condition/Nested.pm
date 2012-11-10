@@ -21,8 +21,7 @@ sub evaluate_condition {
     my $factory;
     if ( $wf->can('_factory') ) {
         $factory = $wf->_factory();
-    }
-    else {
+    } else {
         $factory = FACTORY;
     }
 
@@ -58,24 +57,24 @@ sub evaluate_condition {
             $log->is_debug
                 && $log->debug("Condition '$condition_name' failed");
             return 0;
-        }
-        else {
+        } else {
             $log->is_debug
-                && $log->debug("Condition '$condition_name' failed, but result is negated");
+                && $log->debug(
+                "Condition '$condition_name' failed, but result is negated");
             return 1;
         }
-    }
-    else {
+    } else {
         $factory->{'_condition_result_cache'}->{$orig_condition} = $result
             || 1;
         if ($opposite) {
             $log->is_debug
-                && $log->debug("Condition '$condition_name' OK, but result is negated");
+                && $log->debug(
+                "Condition '$condition_name' OK, but result is negated");
             return 0;
-        }
-        else {
+        } else {
             $log->is_debug
-                && $log->debug(" Condition '$condition_name' OK and not negated");
+                && $log->debug(
+                " Condition '$condition_name' OK and not negated");
 
             # If the condition returned nothing, bump it to 1
             return $result || 1;

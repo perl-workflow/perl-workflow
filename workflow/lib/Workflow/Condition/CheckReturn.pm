@@ -33,15 +33,13 @@ sub _init {
     $self->condition( $params->{condition} );
 
     unless ( defined $params->{operator} ) {
-        configuration_error
-            "You must define the value for 'operator' in ",
+        configuration_error "You must define the value for 'operator' in ",
             "declaration of condition ", $self->name;
     }
     $self->operator( $params->{operator} );
 
     unless ( defined $params->{argument} ) {
-        configuration_error
-            "You must define the value for 'argument' in ",
+        configuration_error "You must define the value for 'argument' in ",
             "declaration of condition ", $self->name;
     }
     $self->argument( $params->{argument} );
@@ -53,7 +51,7 @@ sub evaluate {
     my $op   = $self->operator;
     my $arg  = $self->argument;
 
-#    warn "DEBUG: evaluating operator '$op'";
+    #    warn "DEBUG: evaluating operator '$op'";
 
     my $numop = $supported_ops{$op};
     if ( not $numop ) {
@@ -64,11 +62,9 @@ sub evaluate {
     my $argval;
     if ( $arg =~ /^[-]?\d+$/ ) {    # numeric
         $argval = $arg;
-    }
-    elsif ( $arg =~ /^[a-zA-Z0-9_]+$/ ) {    # alpha-numeric, plus '_'
+    } elsif ( $arg =~ /^[a-zA-Z0-9_]+$/ ) {    # alpha-numeric, plus '_'
         $argval = $wf->context->param($arg);
-    }
-    else {
+    } else {
         $argval = eval $arg;
     }
 
@@ -76,8 +72,7 @@ sub evaluate {
 
     if ( eval "\$condval $op \$argval" ) {
         return 1;
-    }
-    else {
+    } else {
         condition_error "Condition failed: '$condval' $op '$argval'";
     }
 

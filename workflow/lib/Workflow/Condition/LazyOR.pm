@@ -39,11 +39,11 @@ sub evaluate {
 
     foreach my $cond ( @{$conditions} ) {
         my $result = $self->evaluate_condition( $wf, $cond );
-        if ( $result ) {
+        if ($result) {
             return $result;
         }
     }
-    condition_error( "All nested conditions returned 'false'" );
+    condition_error("All nested conditions returned 'false'");
 }
 
 1;

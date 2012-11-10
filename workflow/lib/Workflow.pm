@@ -12,7 +12,7 @@ use Workflow::Factory qw( FACTORY );
 use Carp qw(croak carp);
 use English qw( -no_match_vars );
 
-my @FIELDS = qw( id type description state last_update time_zone );
+my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
@@ -183,8 +183,10 @@ sub get_history {
     $self->{_histories} ||= [];
     my @uniq_history = ();
     my %seen_ids     = ();
-    my @all_history
-        = ( $self->_factory()->get_workflow_history($self), @{ $self->{_histories} } );
+    my @all_history  = (
+        $self->_factory()->get_workflow_history($self),
+        @{ $self->{_histories} }
+    );
     foreach my $history (@all_history) {
         my $id = $history->id;
         if ($id) {
@@ -213,9 +215,10 @@ sub clear_history {
 # PRIVATE METHODS
 
 sub init {
-    my ( $self, $id, $current_state, $config, $wf_state_objects, $factory ) = @_;
-    $id  ||= '';
-    $log ||= get_logger();
+    my ( $self, $id, $current_state, $config, $wf_state_objects, $factory )
+        = @_;
+    $id      ||= '';
+    $log     ||= get_logger();
     $factory ||= FACTORY;
     $log->info(
         "Instantiating workflow of with ID '$id' and type ",
@@ -223,8 +226,8 @@ sub init {
     );
 
     $self->id($id) if ($id);
-    $self->_factory( $factory );    
-    
+    $self->_factory($factory);
+
     $self->state($current_state);
     $self->type( $config->{type} );
     $self->description( $config->{description} );

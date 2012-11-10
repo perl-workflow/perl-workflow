@@ -17,9 +17,9 @@ use Carp qw(croak);
 
 $Workflow::Action::VERSION = '1.10';
 
-my @PROPS = qw( name class description );
+my @PROPS    = qw( name class description );
 my @INTERNAL = qw( _factory );
-__PACKAGE__->mk_accessors(@PROPS, @INTERNAL);
+__PACKAGE__->mk_accessors( @PROPS, @INTERNAL );
 
 ####################
 # INPUT FIELDS

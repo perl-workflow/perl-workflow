@@ -40,12 +40,13 @@ sub evaluate {
     foreach my $cond ( @{$conditions} ) {
         my $result = $self->evaluate_condition( $wf, $cond );
         if ( not $result ) {
-            condition_error( "Condition '$cond' returned 'false'" );
+            condition_error("Condition '$cond' returned 'false'");
         }
         $total += $result;
     }
 
-    return $total || condition_error( "No condition seems to have been run in LazyAND" );
+    return $total
+        || condition_error("No condition seems to have been run in LazyAND");
 }
 
 1;
