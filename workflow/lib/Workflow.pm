@@ -1163,7 +1163,11 @@ to L<Workflow::Config>, for implementation details.
 For Win32 systems you can get the Template Toolkit and DBD::SQLite
 PPDs from TheoryX:
 
-	L<http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58>
+=over
+
+=item * L<http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58>
+
+=back
 
 =head1 INCOMPATIBILITIES
 
@@ -1376,14 +1380,14 @@ L<http://search.cpan.org/dist/Workflow>
 
 =over
 
-* November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
+=item * November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
 Iceland by jonasbn 
 L<http://www.slideshare.net/jonasbn/workflow-npw2010>
 
-* August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn 
+=item * August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn 
 L<http://www.slideshare.net/jonasbn/workflow-yapceu2010>
 
-* October 2004 talk 'Workflows in Perl' given to
+=item * October 2004 talk 'Workflows in Perl' given to
 pgh.pm by Chris Winters: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 
 =back
