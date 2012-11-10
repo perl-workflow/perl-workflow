@@ -51,7 +51,6 @@ keywords = Id
 [-ControlStructures::ProhibitPostfixControls]
 [-ControlStructures::ProhibitUnlessBlocks]
 [-Documentation::RequirePodLinksIncludeText]
-[-Editor::RequireEmacsFileVariables]
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
 [-ErrorHandling::RequireUseOfExceptions]
 [-InputOutput::ProhibitBarewordFileHandles]
