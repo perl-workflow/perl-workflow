@@ -45,7 +45,7 @@ sub evaluate {
         return $result;
     } else {
         condition_error( "All of the conditions returned 'false': ",
-            join( ', ', @{$conditions} ) );
+            join ', ', @{$conditions} );
     }
 }
 
