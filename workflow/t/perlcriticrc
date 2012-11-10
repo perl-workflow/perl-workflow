@@ -39,6 +39,7 @@ keywords = Id
 [-Bangs::ProhibitFlagComments]
 
 #We do not require Emacs
+#https://metacpan.org/module/Perl::Critic::Policy::Editor::RequireEmacsFileVariables
 [-Editor::RequireEmacsFileVariables]
 
 #TODO
