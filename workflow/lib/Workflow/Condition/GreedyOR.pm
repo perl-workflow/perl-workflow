@@ -1,5 +1,61 @@
 package Workflow::Condition::GreedyOR;
 
+# $Id$
+
+use strict;
+use warnings;
+
+our $VERSION = '1.0';
+
+use base qw( Workflow::Condition::Nested );
+use Workflow::Exception qw( condition_error configuration_error );
+use English qw( -no_match_vars );
+
+__PACKAGE__->mk_accessors('conditions');
+
+my ($log);
+
+sub _init {
+    my ( $self, $params ) = @_;
+
+    # This is a tricky one. The admin may have configured this by repeating
+    # the param name "condition" or by using unique names (e.g.: "condition1",
+    # "condition2", etc.). We'll need to string these back together as
+    # an array.
+    # Yes, I know. The regex doesn't require the suffix to be numeric.
+    my @conditions = ();
+    foreach my $key ( sort grep {m/^condition/} keys %{$params} ) {
+        push @conditions, $self->normalize_array( $params->{$key} );
+    }
+    $self->conditions( [@conditions] );
+
+}
+
+sub evaluate {
+    my ( $self, $wf ) = @_;
+    my $conditions = $self->conditions;
+
+    my $result = 0;
+
+    foreach my $cond ( @{$conditions} ) {
+        $result += $self->evaluate_condition( $wf, $cond );
+    }
+
+    if ($result) {
+        return $result;
+    }
+    else {
+        condition_error( "All of the conditions returned 'false': ",
+            join( ', ', @{$conditions} ) );
+    }
+}
+
+1;
+
+__END__
+
+=pod
+
 =head1 NAME
 
 Workflow::Condition::GreedyOR
@@ -62,52 +118,13 @@ E<or>
     <param name="condition1" value="first_condition_to_test" />
     <param name="condition2" value="second_condition_to_test" />
 
+=head1 AUTHORS
+
+See L<Workflow>
+
+=head1 COPYRIGHT
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
 =cut
-
-use strict;
-use warnings;
-
-use base qw( Workflow::Condition::Nested );
-use Workflow::Exception qw( condition_error configuration_error );
-use English qw( -no_match_vars );
-
-__PACKAGE__->mk_accessors('conditions');
-
-my ($log);
-
-sub _init {
-    my ( $self, $params ) = @_;
-
-    # This is a tricky one. The admin may have configured this by repeating
-    # the param name "condition" or by using unique names (e.g.: "condition1",
-    # "condition2", etc.). We'll need to string these back together as
-    # an array.
-    # Yes, I know. The regex doesn't require the suffix to be numeric.
-    my @conditions = ();
-    foreach my $key ( sort grep {m/^condition/} keys %{$params} ) {
-        push @conditions, $self->normalize_array( $params->{$key} );
-    }
-    $self->conditions( [@conditions] );
-
-}
-
-sub evaluate {
-    my ( $self, $wf ) = @_;
-    my $conditions = $self->conditions;
-
-    my $result = 0;
-
-    foreach my $cond ( @{$conditions} ) {
-        $result += $self->evaluate_condition( $wf, $cond );
-    }
-
-    if ($result) {
-        return $result;
-    }
-    else {
-        condition_error( "All of the conditions returned 'false': ",
-            join( ', ', @{$conditions} ) );
-    }
-}
-
-1;

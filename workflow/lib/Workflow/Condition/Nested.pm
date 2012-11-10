@@ -1,5 +1,94 @@
 package Workflow::Condition::Nested;
 
+# $Id$
+
+use strict;
+use warnings;
+
+our $VERSION = '1.0';
+
+use base qw( Workflow::Condition );
+use Workflow::Factory qw( FACTORY );
+use English qw( -no_match_vars );
+use Log::Log4perl qw( get_logger );
+
+my ($log);
+
+sub evaluate_condition {
+    my ( $self, $wf, $condition_name ) = @_;
+    $log ||= get_logger();
+
+    my $factory;
+    if ( $wf->can('_factory') ) {
+        $factory = $wf->_factory();
+    }
+    else {
+        $factory = FACTORY;
+    }
+
+    my $condition;
+
+    my $orig_condition = $condition_name;
+    my $opposite       = 0;
+
+    $log->is_debug
+        && $log->debug("Checking condition $condition_name");
+
+    if ( $condition_name =~ m{ \A ! }xms ) {
+
+        $orig_condition =~ s{ \A ! }{}xms;
+        $opposite = 1;
+        $log->is_debug
+            && $log->debug("Condition starts with a !: '$condition_name'");
+    }
+
+    # NOTE: CACHING IS NOT IMPLEMENTED/TESTED YET
+
+    $condition = $factory->get_condition( $orig_condition, $wf->type() );
+
+    my $result;
+    $log->is_debug
+        && $log->debug( q{Evaluating condition '}, $condition->name, q{'} );
+    eval { $result = $condition->evaluate($wf) };
+    if ($EVAL_ERROR) {
+
+        # TODO: We may just want to pass the error up without wrapping it...
+        $factory->{'_condition_result_cache'}->{$orig_condition} = 0;
+        if ( !$opposite ) {
+            $log->is_debug
+                && $log->debug("Condition '$condition_name' failed");
+            return 0;
+        }
+        else {
+            $log->is_debug
+                && $log->debug("Condition '$condition_name' failed, but result is negated");
+            return 1;
+        }
+    }
+    else {
+        $factory->{'_condition_result_cache'}->{$orig_condition} = $result
+            || 1;
+        if ($opposite) {
+            $log->is_debug
+                && $log->debug("Condition '$condition_name' OK, but result is negated");
+            return 0;
+        }
+        else {
+            $log->is_debug
+                && $log->debug(" Condition '$condition_name' OK and not negated");
+
+            # If the condition returned nothing, bump it to 1
+            return $result || 1;
+        }
+    }
+}
+
+1;
+
+__END__
+
+=pod
+
 =head1 NAME
 
 Workflow::Condition::Nested - Evaluate nested workflow conditions
@@ -62,16 +151,6 @@ In workflow.xml:
 
 =cut
 
-use strict;
-use warnings;
-
-use base qw( Workflow::Condition );
-use Workflow::Factory qw( FACTORY );
-use English qw( -no_match_vars );
-use Log::Log4perl qw( get_logger );
-
-my ($log);
-
 =head1 IMPLEMENTATION DETAILS
 
 This wicked hack runs the condition half-outside of the Workflow framework.
@@ -82,50 +161,10 @@ If the Workflow internals change, this may break.
 The child object class that subclasses this object calls
 this method to evaluate a nested condition.
 
-=cut
-
-sub evaluate_condition {
-    my ( $self, $wf, $condition_name ) = @_;
-    $log ||= get_logger();
-
-    my $factory;
-    if ( $wf->can('_factory') ) {
-        $factory = $wf->_factory();
-    }
-    else {
-        $factory = FACTORY;
-    }
-
-    my $condition;
-
-    my $orig_condition = $condition_name;
-    my $opposite       = 0;
-
-    $log->is_debug
-        && $log->debug("Checking condition $condition_name");
-
-=pod
-
 If the condition name starts with an '!', the result of the condition
 is negated. Note that a side-effect of this is that the return
 value of the nested condition is ignored. Only the negated boolean-ness
 is preserved.
-
-=cut
-
-    if ( $condition_name =~ m{ \A ! }xms ) {
-
-        $orig_condition =~ s{ \A ! }{}xms;
-        $opposite = 1;
-        $log->is_debug
-            && $log->debug("Condition starts with a !: '$condition_name'");
-    }
-
-    # NOTE: CACHING IS NOT IMPLEMENTED/TESTED YET
-
-    $condition = $factory->get_condition( $orig_condition, $wf->type() );
-
-=pod
 
 This does implement a trick that is not a convention in the underlying
 Workflow library. By default, workflow conditions throw an error when
@@ -135,43 +174,13 @@ value here. If a condition returns zero or an undefined value, but
 did not throw an exception, we consider it to be '1'. Otherwise, we
 consider it to be the value returned.
 
+=head1 AUTHORS
+
+See L<Workflow>
+
+=head1 COPYRIGHT
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
 =cut
-
-    my $result;
-    $log->is_debug
-        && $log->debug( q{Evaluating condition '}, $condition->name, q{'} );
-    eval { $result = $condition->evaluate($wf) };
-    if ($EVAL_ERROR) {
-
-        # TODO: We may just want to pass the error up without wrapping it...
-        $factory->{'_condition_result_cache'}->{$orig_condition} = 0;
-        if ( !$opposite ) {
-            $log->is_debug
-                && $log->debug("Condition '$condition_name' failed");
-            return 0;
-        }
-        else {
-            $log->is_debug
-                && $log->debug("Condition '$condition_name' failed, but result is negated");
-            return 1;
-        }
-    }
-    else {
-        $factory->{'_condition_result_cache'}->{$orig_condition} = $result
-            || 1;
-        if ($opposite) {
-            $log->is_debug
-                && $log->debug("Condition '$condition_name' OK, but result is negated");
-            return 0;
-        }
-        else {
-            $log->is_debug
-                && $log->debug(" Condition '$condition_name' OK and not negated");
-
-            # If the condition returned nothing, bump it to 1
-            return $result || 1;
-        }
-    }
-}
-
-1;
