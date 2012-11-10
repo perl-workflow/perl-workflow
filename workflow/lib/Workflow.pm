@@ -12,10 +12,11 @@ use Workflow::Factory qw( FACTORY );
 use Carp qw(croak carp);
 use English qw( -no_match_vars );
 
-my @FIELDS = qw( id type description state last_update time_zone );
-__PACKAGE__->mk_accessors(@FIELDS);
+my @FIELDS   = qw( id type description state last_update time_zone );
+my @INTERNAL = qw( _factory );
+__PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.34_1';
+$Workflow::VERSION = '1.35';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -99,10 +100,10 @@ sub execute_action {
         # Jim Brandt 4/16/2008: Implemented transactions for DBI persisters.
         # Implementation still depends on each persister.
 
-        FACTORY->save_workflow($self);
+        $self->_factory()->save_workflow($self);
 
         # If using a DBI persister with no autocommit, commit here.
-        FACTORY->_commit_transaction($self);
+        $self->_factory()->_commit_transaction($self);
 
         $log->is_info
             && $log->info("Saved workflow with possible new state ok");
@@ -119,7 +120,7 @@ sub execute_action {
         );
         $self->state($old_state);
 
-        FACTORY->_rollback_transaction($self);
+        $self->_factory()->_rollback_transaction($self);
 
         # Don't use 'workflow_error' here since $error should already
         # be a Workflow::Exception object or subclass
@@ -182,8 +183,10 @@ sub get_history {
     $self->{_histories} ||= [];
     my @uniq_history = ();
     my %seen_ids     = ();
-    my @all_history
-        = ( FACTORY->get_workflow_history($self), @{ $self->{_histories} } );
+    my @all_history  = (
+        $self->_factory()->get_workflow_history($self),
+        @{ $self->{_histories} }
+    );
     foreach my $history (@all_history) {
         my $id = $history->id;
         if ($id) {
@@ -212,15 +215,18 @@ sub clear_history {
 # PRIVATE METHODS
 
 sub init {
-    my ( $self, $id, $current_state, $config, $wf_state_objects ) = @_;
-    $id  ||= '';
-    $log ||= get_logger();
+    my ( $self, $id, $current_state, $config, $wf_state_objects, $factory )
+        = @_;
+    $id      ||= '';
+    $log     ||= get_logger();
+    $factory ||= FACTORY;
     $log->info(
         "Instantiating workflow of with ID '$id' and type ",
         "'$config->{type}' with current state '$current_state'"
     );
 
     $self->id($id) if ($id);
+    $self->_factory($factory);
 
     $self->state($current_state);
     $self->type( $config->{type} );
@@ -277,7 +283,7 @@ sub _get_action {
     $log->is_debug
         && $log->debug("Action '$action_name' exists in state '$state'");
 
-    my $action = FACTORY->get_action( $self, $action_name );
+    my $action = $self->_factory()->get_action( $self, $action_name );
 
     # This will throw an exception which we want to bubble up
 
@@ -438,7 +444,7 @@ This documentation describes version 0.15 of Workflow
 
  # Stock the factory with the configurations; we can add more later if
  # we want
- FACTORY->add_config_from_file(
+ $self->_factory()->add_config_from_file(
      workflow   => $workflow_conf,
      action     => $action_conf,
      condition  => $condition_conf,
@@ -446,7 +452,7 @@ This documentation describes version 0.15 of Workflow
  );
  
  # Instantiate a new workflow...
- my $workflow = FACTORY->create_workflow( 'myworkflow' );
+ my $workflow = $self->_factory()->create_workflow( 'myworkflow' );
  print "Workflow ", $workflow->id, " ",
        "currently at state ", $workflow->state, "\n";
  
@@ -478,7 +484,7 @@ This documentation describes version 0.15 of Workflow
  
  # Later.... fetch an existing workflow
  my $id = get_workflow_id_from_user( ... );
- my $workflow = FACTORY->fetch_workflow( 'myworkflow', $id );
+ my $workflow = $self->_factory()->fetch_workflow( 'myworkflow', $id );
  print "Current state: ", $workflow->state, "\n";
 
 =head1 QUICK START
@@ -656,7 +662,7 @@ so you can ask it what you can do next as well as what is required to
 move on. So to use our ticket example we can do this, creating the
 workflow and asking it what actions we can execute right now:
 
- my $wf = Workflow::Factory->create_workflow( 'Ticket' );
+ my $wf = Workflow::$self->_factory()->create_workflow( 'Ticket' );
  my @actions = $wf->get_current_actions;
 
 We can also interrogate the workflow about what fields are necessary
@@ -1160,7 +1166,11 @@ to L<Workflow::Config>, for implementation details.
 For Win32 systems you can get the Template Toolkit and DBD::SQLite
 PPDs from TheoryX:
 
-	L<http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58>
+=over
+
+=item * L<http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58>
+
+=back
 
 =head1 INCOMPATIBILITIES
 
@@ -1373,14 +1383,14 @@ L<http://search.cpan.org/dist/Workflow>
 
 =over
 
-* November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
+=item * November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
 Iceland by jonasbn 
 L<http://www.slideshare.net/jonasbn/workflow-npw2010>
 
-* August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn 
+=item * August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn 
 L<http://www.slideshare.net/jonasbn/workflow-yapceu2010>
 
-* October 2004 talk 'Workflows in Perl' given to
+=item * October 2004 talk 'Workflows in Perl' given to
 pgh.pm by Chris Winters: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 
 =back
@@ -1400,6 +1410,14 @@ Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out:
+
+Scott Harding, for lazy evaluation of conditions, see Changes file: 1.35
+
+Oliver Welter, patch implementing custom workflows, see Changes file: 1.35
+
+Oliver Welter, patch implementing factory subclassing, see Changes file: 1.35
+
+Scott Harding, for nested conditions, see Changes file: 1.35
 
 Steven van der Vegt, patch for autorun in initial state and improved exception
 handling for validators, see Changes file: 1.34_1

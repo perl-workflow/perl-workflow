@@ -14,7 +14,7 @@ use English qw( -no_match_vars );
 $Workflow::State::VERSION = '1.15';
 
 my @FIELDS   = qw( state description type );
-my @INTERNAL = qw( _test_condition_count );
+my @INTERNAL = qw( _test_condition_count _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
 my ($log);
@@ -50,9 +50,8 @@ sub get_available_action_names {
     foreach my $action_name (@all_actions) {
 
         #From Ivan Paponov
-        my $action_group
-            = FACTORY->{_action_config}{ $self->type() }{$action_name}
-            {'group'};
+        my $action_group = $self->_factory()
+            ->{_action_config}{ $self->type() }{$action_name}{'group'};
 
         if ( defined $group && length $group ) {
             if ( $action_group ne $group ) {
@@ -164,8 +163,8 @@ sub evaluate_action {
                 # name. As the result has not been cached, we have
                 # to get the real condition with the original
                 # condition name and evaluate that
-                $condition = FACTORY->get_condition( $orig_condition,
-                    $self->type() );
+                $condition = $self->_factory()
+                    ->get_condition( $orig_condition, $self->type() );
             }
             $log->is_debug
                 && $log->debug( q{Evaluating condition '},
@@ -271,7 +270,10 @@ sub may_stop {
 # INTERNAL
 
 sub init {
-    my ( $self, $config ) = @_;
+    my ( $self, $config, $factory ) = @_;
+
+    # Fallback for old style
+    $factory ||= FACTORY;
     $log ||= get_logger();
     my $name = $config->{name};
 
@@ -281,6 +283,7 @@ sub init {
         && $log->debug("Constructing '$class' object for state $name");
 
     $self->state($name);
+    $self->_factory($factory);
 
     # Note this is the workflow type.
     $self->type( $config->{type} );
@@ -391,8 +394,8 @@ sub _create_condition_objects {
                     && $log->info(
                     "Fetching condition '$condition_info->{name}'");
                 push @condition_objects,
-                    FACTORY->get_condition( $condition_info->{name},
-                    $self->type() );
+                    $self->_factory()
+                    ->get_condition( $condition_info->{name}, $self->type() );
             }
         }
     }

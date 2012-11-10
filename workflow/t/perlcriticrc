@@ -38,19 +38,33 @@ keywords = Id
 #We utilize TODO comments
 [-Bangs::ProhibitFlagComments]
 
+#We do not require Emacs
+#https://metacpan.org/module/Perl::Critic::Policy::Editor::RequireEmacsFileVariables
+[-Editor::RequireEmacsFileVariables]
+
 #TODO
-[-Variables::ProhibitPunctuationVars]
+[-Bangs::ProhibitDebuggingModules]
+[-Bangs::ProhibitRefProtoOrProto]
+[-Bangs::ProhibitVagueNames]
 [-ControlStructures::ProhibitCascadingIfElse]
 [-ControlStructures::ProhibitPostfixControls]
 [-ControlStructures::ProhibitUnlessBlocks]
+[-Documentation::RequirePodLinksIncludeText]
 [-ErrorHandling::RequireCheckingReturnValueOfEval]
+[-ErrorHandling::RequireUseOfExceptions]
 [-InputOutput::ProhibitBarewordFileHandles]
 [-InputOutput::RequireBracedFileHandleWithPrint]
+[-InputOutput::RequireBriefOpen] 
+[-Modules::RequirePerlVersion]
+[-RegularExpressions::ProhibitEnumeratedClasses]
+[-RegularExpressions::ProhibitEscapedMetacharacters]
 [-RegularExpressions::ProhibitFixedStringMatches]
+[-RegularExpressions::RequireDotMatchAnything]
 [-RegularExpressions::RequireExtendedFormatting]
 [-RegularExpressions::RequireLineBoundaryMatching]
-[-RegularExpressions::RequireDotMatchAnything]
 [-Subroutines::ProhibitExcessComplexity]
+[-Subroutines::ProhibitManyArgs] 
+[-Subroutines::ProhibitUnusedPrivateSubroutines]
 [-Subroutines::ProtectPrivateSubs]
 [-Subroutines::RequireFinalReturn]
 [-TestingAndDebugging::ProhibitNoStrict]
@@ -58,5 +72,8 @@ keywords = Id
 [-ValuesAndExpressions::ProhibitInterpolationOfLiterals]
 [-ValuesAndExpressions::ProhibitMixedBooleanOperators]
 [-ValuesAndExpressions::ProhibitNoisyQuotes]
-[-Bangs::ProhibitVagueNames]
-[-Bangs::ProhibitRefProtoOrProto]
+[-ValuesAndExpressions::RestrictLongStrings]
+[-Variables::ProhibitAugmentedAssignmentInDeclaration]
+[-Variables::ProhibitPunctuationVars]
+[-Variables::ProhibitUnusedVariables]
+

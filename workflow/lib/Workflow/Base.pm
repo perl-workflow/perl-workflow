@@ -6,14 +6,11 @@ use warnings;
 use strict;
 use base qw( Class::Accessor );
 use Log::Log4perl;
-
 $Workflow::Base::VERSION = '1.08';
 
 sub new {
     my ( $class, @params ) = @_;
     my $self = bless { PARAMS => {} }, $class;
-
-    # always automatically pull out the name/value pairs from 'param'
 
     if ( ref $params[0] eq 'HASH' && ref $params[0]->{param} eq 'ARRAY' ) {
         foreach my $declared ( @{ $params[0]->{param} } ) {
