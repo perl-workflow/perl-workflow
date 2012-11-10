@@ -38,6 +38,9 @@ keywords = Id
 #We utilize TODO comments
 [-Bangs::ProhibitFlagComments]
 
+#We do not require Emacs
+[-Editor::RequireEmacsFileVariables]
+
 #TODO
 [-Bangs::ProhibitDebuggingModules]
 [-Bangs::ProhibitRefProtoOrProto]
