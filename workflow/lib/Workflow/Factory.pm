@@ -10,7 +10,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
-$Workflow::Factory::VERSION = '1.20';
+$Workflow::Factory::VERSION = '1.21';
 
 my ($log);
 my (%INSTANCES);

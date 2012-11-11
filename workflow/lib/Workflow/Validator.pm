@@ -7,7 +7,7 @@ use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);
 
-$Workflow::Validator::VERSION = '1.05';
+$Workflow::Validator::VERSION = '1.06';
 
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
