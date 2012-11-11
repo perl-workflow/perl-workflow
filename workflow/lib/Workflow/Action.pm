@@ -15,7 +15,7 @@ use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak);
 
-$Workflow::Action::VERSION = '1.10';
+$Workflow::Action::VERSION = '1.11';
 
 my @PROPS    = qw( name class description );
 my @INTERNAL = qw( _factory );

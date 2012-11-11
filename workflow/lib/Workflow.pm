@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.35';
+$Workflow::VERSION = '1.35_1';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
