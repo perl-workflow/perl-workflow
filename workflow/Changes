@@ -2,7 +2,13 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-1.35 Thu Nov  8 22:47:46 CET 2012 (update not required)
+1.36 Tue Jul 2 08:53:24 CEST 2013 (update recommended if you use 1.35)
+
+- Applied minor patch from Oliver Welter following up on the custom workflow patch in 
+  release 1.35
+
+
+1.35 Thu Nov  8 22:47:46 CEST 2012 (update not required)
 
 - Applied patches from Scott Hardin implementing lazy evaluation of conditions
 
