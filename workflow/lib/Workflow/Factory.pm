@@ -10,7 +10,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
-$Workflow::Factory::VERSION = '1.21';
+$Workflow::Factory::VERSION = '1.22';
 
 my ($log);
 my (%INSTANCES);
@@ -399,7 +399,7 @@ sub fetch_workflow {
         "[State: $wf_info->{state}] ",
         "[Last update: $wf_info->{last_update}]"
         );
-    my $wf = Workflow->new( $wf_id, $wf_info->{state}, $wf_config,
+    my $wf = $wf_class->new( $wf_id, $wf_info->{state}, $wf_config,
         $self->{_workflow_state}{$wf_type}, $self );
 
     $wf->context( $context || Workflow::Context->new )
