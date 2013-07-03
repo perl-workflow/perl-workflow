@@ -2,7 +2,7 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-1.37
+1.37 Wed 3 Jul 11:57:59 CEST 2013 (update recommended)
 
 - Added patch from Heiko Schlittermann fixing an issue with serialization of 
   contextm (was evaluated as release 1.35_1)
