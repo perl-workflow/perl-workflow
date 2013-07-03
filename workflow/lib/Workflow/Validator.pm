@@ -7,7 +7,7 @@ use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);
 
-$Workflow::Validator::VERSION = '1.06';
+$Workflow::Validator::VERSION = '1.07';
 
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -20,7 +20,7 @@ sub init {
     if ( $params->{name} ) {
         $self->name( $params->{name} );
     } else {
-        $self->name("$params->{class} (init in Action)");
+        $self->name((ref $self ? ref $self : $self) . " (init in Action)");
     }
     $self->class( $params->{class} );
     $self->_init($params);
