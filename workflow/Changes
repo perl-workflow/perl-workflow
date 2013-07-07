@@ -5,14 +5,21 @@ Revision history for Perl extension Workflow
 1.38 candidate 2013-07-07 17:07:16 (update recommended)
 
 - Patch to minor bug where Worflow history did not set proper timezone
-  in Workflow::Persister::DBI
+  in Workflow::Persister::DBI 
   https://rt.cpan.org/Ticket/Display.html?id=85380 [RT:85380]
+
+- Added information on issue with Perl 5.8.8 in the 
+  INCOMPATIBILITIES section
+
+- Updated ACKNOWLEDGEMENTS section
+
+- Corrected some minor POD issues
 
 
 1.37 Wed 3 Jul 11:57:59 CEST 2013 (update recommended)
 
 - Added patch from Heiko Schlittermann fixing an issue with serialization of 
-  contextm (was evaluated as release 1.35_1)
+  context (was evaluated as release 1.35_1)
 
   https://rt.cpan.org/Public/Bug/Display.html?id=64940
 

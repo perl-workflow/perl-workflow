@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.37';
+$Workflow::VERSION = '1.38';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -1174,8 +1174,10 @@ PPDs from TheoryX:
 
 =head1 INCOMPATIBILITIES
 
-No special incompatibilies exist, CPAN testers reports however do demonstrate
-a problem with one of the dependencies of Workflow, namely L<XML::Simple>.
+=head2 XML::Simple
+
+CPAN testers reports however do demonstrate a problem with one of the 
+dependencies of Workflow, namely L<XML::Simple>.
 
 The L<XML::Simple> makes use of L<Lib::XML::SAX> or L<XML::Parser>, the default.
 
@@ -1193,9 +1195,31 @@ Your L<XML::SAX> configuration is located in the file:
 
 	XML/SAX/ParserDetails.ini
 
+=head2 Perl 5.8.x
+
+CPAN testers reports indicate an issue with observers for Perl 5.8.8
+
+    #   Failed test 'One observation sent on workflow fetch to two observers'
+    #   at t/workflow.t line 79.
+    #          got: '4'
+    #     expected: '2'
+    # Looks like you failed 1 test of 35.
+    t/workflow.t ....................... 
+    Dubious, test returned 1 (wstat 256, 0x100)
+    Failed 1/35 subtests 
+
+The issue is being investigated further, so this information is to be regarded 
+as a warning before you dig too much into the issue.
+
+See also:
+
+L<http://www.cpantesters.org/cpan/report/fc85ca1c-e46e-11e2-891c-ff8a40f4ab3d>
+
 =head1 BUGS AND LIMITATIONS
 
-There are no known bugs and limitations at this time.
+Known bugs and limitations can be seen in RT:
+
+L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow>
 
 =head1 BUG REPORTING
 
@@ -1398,7 +1422,7 @@ pgh.pm by Chris Winters: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 =head1 COPYRIGHT
 
 Copyright (c) 2003 Chris Winters and Arvato Direct;
-Copyright (c) 2004-2010 Chris Winters. All rights reserved.
+Copyright (c) 2004-2013 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -1409,15 +1433,18 @@ Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
-The following folks have also helped out:
+The following folks have also helped out (listed here in no particular order):
 
-Scott Harding, for lazy evaluation of conditions, see Changes file: 1.35
+Sérgio Alves, patch to timezone handling for workflow history deserialized using
+DBI persister resulting in 1.38
 
-Oliver Welter, patch implementing custom workflows, see Changes file: 1.35
+Heiko Schlittermann for context serialization patch resulting in 1.36
 
-Oliver Welter, patch implementing factory subclassing, see Changes file: 1.35
+Scott Harding, for lazy evaluation of conditions and for nested conditions, see 
+Changes file: 1.35
 
-Scott Harding, for nested conditions, see Changes file: 1.35
+Oliver Welter, patch implementing custom workflows, see Changes file: 1.35 and 
+patch related to this in 1.37 and factory subclassing also in 1.35
 
 Steven van der Vegt, patch for autorun in initial state and improved exception
 handling for validators, see Changes file: 1.34_1
@@ -1425,17 +1452,21 @@ handling for validators, see Changes file: 1.34_1
 Andrew O'Brien, patch implementing dynamic reloaded of flows, see Changes file:
 1.33
 
-Sergei Vyshenski, bug reports - addressed and included in 1.33 
+Sergei Vyshenski, bug reports - addressed and included in 1.33, Sergei also
+maintains the FreeBSD port 
 
 Alejandro Imass, improvements and clarifications, see Changes file: 1.33
 
-Danny Sadinoff, patches to give better control of initial state and history records for workflow, see Changes file: 1.33
+Danny Sadinoff, patches to give better control of initial state and history 
+records for workflow, see Changes file: 1.33
 
-Thomas Erskine, for patch adding new accessors and fixing several bugs see Changes file 1.33
+Thomas Erskine, for patch adding new accessors and fixing several bugs see 
+Changes file 1.33
 
 Ivan Paponov, for patch implementing action groups, see Changes file, 1.33
 
-Robert Stockdale, for patch implementing dynamic names for conditions, see Changes file, 1.32
+Robert Stockdale, for patch implementing dynamic names for conditions, see 
+Changes file, 1.32
 
 Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27 and 0.30
 
