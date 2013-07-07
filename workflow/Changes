@@ -2,6 +2,13 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+1.38 candidate 2013-07-07 17:07:16 (update recommended)
+
+- Patch to minor bug where Worflow history did not set proper timezone
+  in Workflow::Persister::DBI
+  https://rt.cpan.org/Ticket/Display.html?id=85380 [RT:85380]
+
+
 1.37 Wed 3 Jul 11:57:59 CEST 2013 (update recommended)
 
 - Added patch from Heiko Schlittermann fixing an issue with serialization of 

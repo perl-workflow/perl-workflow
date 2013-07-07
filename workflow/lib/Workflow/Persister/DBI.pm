@@ -17,7 +17,7 @@ use Workflow::Persister::DBI::SequenceId;
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::VERSION = '1.19';
+$Workflow::Persister::DBI::VERSION = '1.20';
 
 my @FIELDS = qw( handle dsn user password driver
     workflow_table history_table date_format parser autocommit);
@@ -356,6 +356,10 @@ sub create_history {
 sub fetch_history {
     my ( $self, $wf ) = @_;
     $self->_init_fields();
+
+    #Setting timezone (See: RT:85380)
+    $self->parser()->time_zone($wf->time_zone);
+
     $log ||= get_logger();
     my $sql = qq{
         SELECT %s
