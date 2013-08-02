@@ -2,7 +2,18 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
-1.38 candidate 2013-07-07 17:07:16 (update recommended)
+1.39 2013-08-02
+
+- Fixed up Changes file as part of my Questhub quest adhering to the standard
+  described in: CPAN::Changes::Spec
+
+  Quest: http://questhub.io/realm/perl/quest/51f0fd8e18ba7dcf4b000040
+  Spec: https://metacpan.org/module/CPAN::Changes::Spec
+  
+
+1.38 2013-07-07
+
+- Update recommended
 
 - Patch to minor bug where Worflow history did not set proper timezone
   in Workflow::Persister::DBI 
@@ -16,7 +27,9 @@ Revision history for Perl extension Workflow
 - Corrected some minor POD issues
 
 
-1.37 Wed 3 Jul 11:57:59 CEST 2013 (update recommended)
+1.37 2013-07-03
+
+- Update recommended
 
 - Added patch from Heiko Schlittermann fixing an issue with serialization of 
   context (was evaluated as release 1.35_1)
@@ -24,58 +37,49 @@ Revision history for Perl extension Workflow
   https://rt.cpan.org/Public/Bug/Display.html?id=64940
 
 
-1.36 Tue Jul 2 08:53:24 CEST 2013 (update recommended if you use 1.35)
+1.36 2013-07-02
+
+- Update recommended if you use release 1.35
 
 - Applied minor patch from Oliver Welter following up on the custom workflow patch in 
   release 1.35
 
 
-1.35 Thu Nov  8 22:47:46 CEST 2012 (update not required)
+1.35 2012-11-08
 
-- Applied patches from Scott Hardin implementing lazy evaluation of conditions
+- Update not required
 
-- Applied patch from Oliver Welter implementing support for multiple factories
+- Applied patches from Scott Hardin implementing lazy evaluation of 
+  conditions
 
-  https://rt.cpan.org/Public/Bug/Display.html?id=18159
-
-- Added patch from Oliver Welter implementing the feature of creating custom 
-  workflow classes, in addition a patch to silence some warning emitted during test
-  from Workflow::Validator
-
-- Added patch from Scott Hardin implementing nested conditions
-
-
-1.35 Thu Nov  8 22:47:46 CEST 2012 (update not required)
-
-- Applied patches from Scott Hardin implementing lazy evaluation of conditions
-
-- Applied patch from Oliver Welter implementing support for multiple factories
+- Applied patch from Oliver Welter implementing support for multiple 
+  factories
 
   https://rt.cpan.org/Public/Bug/Display.html?id=18159
 
-- Added patch from Oliver Welter implementing the feature of creating custom 
-  workflow classes, in addition a patch to silence some warning emitted during test
-  from Workflow::Validator
+- Added patch from Oliver Welter implementing the feature of creating
+  custom workflow classes, in addition a patch to silence some 
+  warning emitted during test from Workflow::Validator
 
 - Added patch from Scott Hardin implementing nested conditions
 
->>>>>>> .merge-right.r597
-- Added patch from Steven van der Vegt RT #52841 implementing autorun for
-  the INITIAL state
+- Added patch from Steven van der Vegt RT #52841 implementing 
+  autorun for the INITIAL state
   
   https://rt.cpan.org/Ticket/Display.html?id=52841
 
-- Added patch from Steven van der Vegt RT #52862 improving the reporting on
-  validation exceptions
+- Added patch from Steven van der Vegt RT #52862 improving the 
+  reporting on validation exceptions
   
   https://rt.cpan.org/Ticket/Display.html?id=52862
 
-- Eliminated README and migrated information into the main POD and introduced 
-  INSTALL file for the installation relevant information. README is now generated 
-  from the main POD by Build.PL
+- Eliminated README and migrated information into the main POD and 
+  introduced INSTALL file for the installation relevant information. README is now generated from the main POD by Build.PL
 
 
-1.34 Fri Aug  6 08:24:54 CEST 2010 (update not required)
+1.34 2010-08-06
+
+- Update not required
 
 - Implemented work-around for RT #53909
   https://rt.cpan.org/Ticket/Display.html?id=53909
@@ -95,51 +99,56 @@ Revision history for Perl extension Workflow
   the error. The problem seem to be the clearing of a package scoped variable,
   the array @observations in t/SomeObserver.pm
 
-- Fixed example application, it was relying on a test module in a broken way, a
-  path processed using a regex was not reliable
+- Fixed example application, it was relying on a test module in a 
+  broken way, a path processed using a regex was not reliable
 
 
-1.33 Sat Jan 30 11:51:18 CET 2010 (update recommended)
+1.33 2010-01-30
 
-- Patch from Ivan Paponov, bug in relation to action groups and use of default.
-  Bumping up version of Workflow::Factory to 1.19 and Workflow::State to 1.15
+- Update recommended
+
+- Patch from Ivan Paponov, bug in relation to action groups and use 
+  of default. Bumping up version of Workflow::Factory to 1.19 and Workflow::State to 1.15
 
 - Patches from Alejandro Imass
+  
+  - Changed @FIELDS to @PROPS in Action.pm and InputField.pm for 
+    mk_accesors as FIELDS was very confusing with regard to action 
+    input fields.
 
-   - Changed @FIELDS to @PROPS in Action.pm and InputField.pm for mk_accesors as
-     FIELDS was very confusing with regard to action input fields.
+   - Formalized Workflow::Action::new() as a public method with
+     corresponding pod example.
 
-   - Formalized Workflow::Action::new() as a public method with corresponding
-     pod example.
+   - Optional class property for Workflow::Action::InputField. 
+     Previously, public method new() made little sense if InputField 
+     always instantiates from Workflow::Action::InputField. Now 
+     fields can derive from custom class.
 
-   - Optional class property for Workflow::Action::InputField. Previously, public
-     method new() made little sense if InputField always instantiates from
-     Workflow::Action::InputField. Now fields can derive from custom class.
+   - Updated pod to reflect the new formal abillity to add extra 
+     properties for actions and input fields.
 
-   - Updated pod to reflect the new formal abillity to add extra properties for
-     actions and input fields.
-
-   - With the ability to derive custom properties for classes and fields
-     there is little need IMHO to define InputField "type" any further, but
-     leave it implementation dependent. The rationale is that validators
-     intrinsically define this. Updating pod accordingly.
+   - With the ability to derive custom properties for classes and 
+     fields there is little need IMHO to define InputField "type" any
+     further, but leave it implementation dependent. The rationale is 
+     that validators intrinsically define this. Updating pod 
+     accordingly.
 
 - Patches from Thomas Erskine
 
    - Added 3 new accessors to Workflow::Factory:
 
-	- get_persister_for_workflow_type
-	- get_persisters
-	- get_validators
+	 - get_persister_for_workflow_type
+	 - get_persisters
+	 - get_validators
 
-   - Added check for existing context so context is not overwritten if existing, 
-     fixing a bug. Version bumped up to 1.19
+   - Added check for existing context so context is not overwritten 
+     if existing, fixing a bug. Version bumped up to 1.19
 
-   - Fixing bug in Workflow::Persister::File, adding context parameters to
-     serialization. Version bumped up to 1.11
+   - Fixing bug in Workflow::Persister::File, adding context   
+     parameters to serialization. Version bumped up to 1.11
 
-   - Added return of empty list for accessor, in Workflow::Action .Version bumped
-     up to 1.10
+   - Added return of empty list for accessor, in Workflow::Action .
+     Version bumped up to 1.10
 
 - Patches from Danny Sadinoff to following classes
 
@@ -149,66 +158,66 @@ Revision history for Perl extension Workflow
 	
 	- Adding ability to control initial state name via workflow config
 
-	- Adding ability to control initial history record details via Persister
-      subclass code
+	- Adding ability to control initial history record details via 
+    Persister subclass code
 
-- Addressing a bug reported by Sergei Vyshenski, related to a possible API
-  breakage. Please refer to t/add_config_bug.t, which demonstrates the presence
-  of the bug in 1.32 and it's absence in 0.31 .Workflow::Factory bumped up to
-  version: 1.19
+- Addressing a bug reported by Sergei Vyshenski, related to a
+  possible API breakage. Please refer to t/add_config_bug.t, which demonstrates the presence of the bug in 1.32 and it's absence in 
+  0.31. Workflow::Factory bumped up to version: 1.19
 
 - Applied patch from Andrew O'Brien implementing dynamic loading of 
   config files RT #18265 http://rt.cpan.org/Public/Bug/Display.html?id=18265.
   Bumped up version for Workflow::Factory to 1.19
  
-1.32 Mon 26 Jan 2009 (Update not necessary)
+1.32 2009-01-26
 
-- Bumped up version for Workflow::State to 1.14 considering patches from
-  action_group and test_condition patches from Ivan Paponov implementing 
-  support for a group tag on actions
+- Update not necessary
+
+- Bumped up version for Workflow::State to 1.14 considering patches 
+  from action_group and test_condition patches from Ivan Paponov 
+  implementing support for a group tag on actions
 
 - Addressing RT #40750
   http://rt.cpan.org/Ticket/Display.html?id=40750
   
   Removed VERSION file, this has now been obsoleted
 
-  We are now resolving the version number for the distribution from Workflow.pm 
-  the main module, this mean a jump from 0.31 to 1.32, but it does mean that 
-  an installation can be traced back to a given distribution
+  We are now resolving the version number for the distribution from Workflow.pm the main module, this mean a jump from 0.31 to 1.32, but it does mean that an installation can be traced back to a given distribution
 
-- Patch to implement proper dynamic names for conditions with a 'test' attribute
-  Added RT: #38024
+- Patch to implement proper dynamic names for conditions with a 
+  'test' attribute. Added RT: #38024
 
-- Added List::MoreUtils to requirements, we use this for test, I have moved the
-  test related modules to the build_requires section in Build.PL, so
-  List::MoreUtils is not mistaken for an application level requirement
+- Added List::MoreUtils to requirements, we use this for test, I have 
+  moved the test related modules to the build_requires section in 
+  Build.PL, so List::MoreUtils is not mistaken for an application 
+  level requirement
 
-  Refactored two tests, to use List::MoreUtils all method (asserting presence of
-  numerous actions)
+  Refactored two tests, to use List::MoreUtils all method (asserting 
+  presence of numerous actions)
 
 - Fixed minor bug in error message in: Workflow::State, reported
   by Robert Stockdale, RT #38023
 
-- We introduce a more fine grained control  of the auto commit feature, 
-  implemented by Jim Brandt
+- We introduce a more fine grained control  of the auto commit 
+  feature, implemented by Jim Brandt
 
-- We introduce typed condition, implemented by Jim Brandt. Typed conditions 
-  makes it possible for different workflows to hold unique methods for workflow 
-  steps even with names colliding.
+- We introduce typed condition, implemented by Jim Brandt. Typed 
+  conditions makes it possible for different workflows to hold unique methods for workflow steps even with names colliding.
   
-  Example workflow foo and bar can have a condition baz, but baz are two 
-  different implementations in foo and bar respectively 
+  Example workflow foo and bar can have a condition baz, but baz are two different implementations in foo and bar respectively 
 
-- time_zone parameter can now be passer around for use by the Workflow 
-  DateTime objects internally
+- time_zone parameter can now be passer around for use by the 
+  Workflow DateTime objects internally
 
 
-0.31 Wed Sep 26 20:26:49 CEST 2007 (update not required)
+0.31 2007-09-26
 
-- Fixed failing tests in t/persister_dbi.t, this has only observed twice
-  and does not seem to be consistent. This is related to execution time
-  for the test suite and the use of now, using the debugger would demonstrate
-  this.
+- Update not required
+
+- Fixed failing tests in t/persister_dbi.t, this has only observed 
+  twice and does not seem to be consistent. This is related to 
+  execution time for the test suite and the use of now, using the 
+  debugger would demonstrate this.
 
   Resolves: RT #29037 - https://rt.cpan.org/Public/Bug/Display.html?id=29037
 
@@ -217,10 +226,12 @@ Revision history for Perl extension Workflow
 - Added Data::Dumper requirement to Build.PL
 
 
-0.30 Tue Sep 25 12:28:12 CEST 2007 (update not required)
+0.30 2007-09-25
 
-- Added patch from Jim Brandt improving handling of date formats for real, the 
-  merge into 0.29 (see below) was not completed
+- Update not required
+
+- Added patch from Jim Brandt improving handling of date formats for 
+  real, the merge into 0.29 (see below) was not completed
   
   The patch also addresses RT #29037
   
@@ -231,7 +242,9 @@ Revision history for Perl extension Workflow
   http://www.nntp.perl.org/group/perl.cpan.testers/2007/08/msg582727.html
   
 
-0.29 Mon Sep 24 23:09:12 CEST 2007 (update not required)
+0.29 2007-09-24
+
+- Update not required
 
 - Added new test file: t/persister.t for Workflow::Persister
 
@@ -241,8 +254,8 @@ Revision history for Perl extension Workflow
 
 - Updated t/validator.t for better coverage
 
-- Updated Workflow::Action::Mailer (stub now can be tested, this might however
-  prove to be a bad idea)
+- Updated Workflow::Action::Mailer (stub now can be tested, this 
+  might however prove to be a bad idea)
 
 - Added new test file: t/action_mailer.t for Workflow::Action::Mailer
 
@@ -251,17 +264,19 @@ Revision history for Perl extension Workflow
 - Added some more tests t/Config.t
 
 
-0.28 Fri Jul  6 16:42:30 CEST 2007 (update not required)
+0.28 2007-07-06
 
-- Removed TODO.txt, the files contents have long gone been merged into the TODO
-  file
+- Update not required
+
+- Removed TODO.txt, the files contents have long gone been merged 
+  into the TODO file
 
 - Added a new file to the doc/ directory named developing.txt
-  This is a collection of documentation notes on maintaining and developing
-  the Worksflow distribution
+  This is a collection of documentation notes on maintaining and 
+  developing the Worksflow distribution
 
-- Renamed Action::Mailer to Workflow::Action::Mailer, this however still looks
-  like a stub that was never finished
+- Renamed Action::Mailer to Workflow::Action::Mailer, this however 
+  still looks like a stub that was never finished
 
 - Added more POD to:
     Workflow
@@ -283,35 +298,35 @@ Revision history for Perl extension Workflow
     Workflow::State
     Workflow::Validator::HasRequiredField
     
-    We now have a POD coverage of 100%, this does however not say anything about
-    the quality of the spelling or POD. All POD will however be revisited at
-    some point.
+    We now have a POD coverage of 100%, this does however not say 
+    anything about the quality of the spelling or POD. All POD will 
+    however be revisited at some point.
     
     Please remember to document changes and additions.
 
-- Implemented conditional tests in t/00_load.t for SPOPS and UUID. These are
-  conditional in their own tests, so this should of course be reflected in
-  t/00_load.t
+- Implemented conditional tests in t/00_load.t for SPOPS and UUID.
+  These are conditional in their own tests, so this should of course 
+  be reflected in t/00_load.t
   
   This should address the failing test, ref:
   http://www.nntp.perl.org/group/perl.cpan.testers/2007/07/msg527994.html
 
-- Added missing version number to Workflow::Persister (1.09), the PAUSE
-  indexer complained over degrading version number, investigating consequences
+- Added missing version number to Workflow::Persister (1.09), the 
+  PAUSE indexer complained over degrading version number, 
+  investigating consequences
 
   No apparent consequences
 
 
-0.27 Tue Jul  3 16:50:15 CEST 2007 
-(update not required unless you are using 0.26 or 0.25)
+0.27 2007-07-03
 
-- Fixed bug in cached condition handling (0.26 reintroduced the original
-  race condition that was solved using the condition cache in 0.25).
-  Condition cache is now cleared on state change and when calling
-  get_available_action_names()
+- Update not required unless you are using 0.26 or 0.25
 
-- Updated some tests, nothing serious we are just on the way to better test
-  coverage and documentation
+- Fixed bug in cached condition handling (0.26 reintroduced the 
+  original race condition that was solved using the condition cache in 0.25). Condition cache is now cleared on state change and when calling get_available_action_names()
+
+- Updated some tests, nothing serious we are just on the way to 
+  better test coverage and documentation
 
 - Added more POD to:
     Workflow::Action
@@ -327,30 +342,32 @@ Revision history for Perl extension Workflow
 - Added more tests of Workflow::Validator::InEnumeratedType to
   t/validator_in_enumerated_type.t
 
-- Small fix to a test on an empty array. Empty arrays evaluate to false
-  t/config.t, cleaned some code in Workflow::Config and Workflow::Config::Perl
-  nothing significant
+- Small fix to a test on an empty array. Empty arrays evaluate to 
+  false t/config.t, cleaned some code in Workflow::Config and 
+  Workflow::Config::Perl nothing significant
 
-- Hard coded version numbers to all modules in t/
-  Subversion uses different scheme so we no longer use automatically updated
-  version numbers, added version 0.01 where no version was present
+- Hard coded version numbers to all modules in t/ Subversion uses 
+  different scheme so we no longer use automatically updated version 
+  numbers, added version 0.01 where no version was present
 
 - Hard coded version numbers to all modules in eg/
-  Subversion uses different scheme so we no longer use automatically updated
-  version numbers, added version 0.01 where no version was present
+  Subversion uses different scheme so we no longer use automatically 
+  updated version numbers, added version 0.01 where no version was 
+  present
   
-- Eliminated warning in Workflow::Factory, in check for FACTORY parameter
+- Eliminated warning in Workflow::Factory, in check for FACTORY 
+  parameter
 
 - Added t/00_load.t, de facto usage syntax test catches compilation
   errors etc.
 
-- Applied patch from Jim Brandt to Workflow::Config::XML, the patch helps to
-  catch bad XML
+- Applied patch from Jim Brandt to Workflow::Config::XML, the patch 
+  helps to catch bad XML
 
   Updated version to 1.05
 
-- Hard coded latest versions from CPAN to all modules, Subversion uses different
-  scheme so we no longer use automatically updated version number.
+- Hard coded latest versions from CPAN to all modules, Subversion 
+  uses different scheme so we no longer use automatically updated version number.
   
     Action::Mailer 1.01
     Workflow 1.32
@@ -383,10 +400,10 @@ Revision history for Perl extension Workflow
     Workflow::Validator::InEnumeratedType 1.04
     Workflow::Validator::MatchesDateFormat 1.06
 
-- Fixed a problem in t/workflow.t which rely on DBI. DBI is not necessarily 
-  present, since this is not a requirement (DBD::Mock is), so I have made
-  the test conditional as to whether DBI is installed as for some of the
-  other tests.
+- Fixed a problem in t/workflow.t which rely on DBI. DBI is not 
+  necessarily present, since this is not a requirement 
+  (DBD::Mock is), so I have made the test conditional as to whether 
+  DBI is installed as for some of the other tests.
   
   This should address the 'N/A' status, ref:
   http://www.nntp.perl.org/group/perl.cpan.testers/2007/05/msg492425.html
@@ -402,7 +419,9 @@ Revision history for Perl extension Workflow
   variable TEST_POD to enable the test
   
 
-0.26 Wed Mar  7 09:25:06 CET 2007 (update not required unless you are using 0.25)
+0.26 2007-03-07
+
+- Update not required unless you are using 0.25
 
 - Fixed bug in cached condition handling. The condition cache is now
   cleared before checking conditions so that the condition results are
@@ -413,23 +432,29 @@ Revision history for Perl extension Workflow
   these actions correctly)
 
 
-0.25 Thu Dec 14 09:11:57 CET 2006 (update not required)
+0.25 2006-12-14
+
+- Update not required
 
 - Applied patch from Alexander Klink via rt.cpan.org (#23736)
   Introduces caching of the result of a condition's evaluate()
 
 
-0.24 Thu Dec 14 08:55:05 CET 2006 (update not required)
+0.24 2006-12-14
+
+- Update not required
 
 - Applied patch from Alexander Klink via rt.cpan.org (#23925)
   Introduces may_stop property for autorunning workflow
   
-  This is why this patch introduces the "may_stop" property for a state,
-  which means that Workflow won't complain if the state is autorun and
-  no or too many activities are present.
+  This is why this patch introduces the "may_stop" property for a 
+  state, which means that Workflow won't complain if the state is 
+  autorun and no or too many activities are present.
 
 
-0.23 Tue Sep 12 16:54:25 CEST 2006 (update not required)
+0.23 2006-09-12
+
+- Update not required
 
 - Applied patch from Michael Bell via rt.cpan.org (#21100)
   Fixes problem with handling of 0 and empty strings as parameters
@@ -444,49 +469,58 @@ Revision history for Perl extension Workflow
   The patch implement more powerful observers
 
 
-0.22 Fri Aug 18 23:26:55 CEST 2006 (update not required)
+0.22 2006-08-18
 
-- Applied patch from Michael Bell via rt.cpan.org (#20871), this patch also 
-  contains the patch mentioned below.
+- Update not required
+
+- Applied patch from Michael Bell via rt.cpan.org (#20871), this 
+  patch also contains the patch mentioned below.
 
 - Applied patch to Workflow::Action from Michael Bell, fixing two bugs
 
 - Changed POD format to accomodate for Pod::Coverage, where B<> is not
   recognised, but =head<1..3> and =item is
   
-  So subs are now marked with head3 instead of B<>, I am of the opinion
-  that titles should be marked as titles and B<> (bold) should be used to
-  emphasize important information in the POD.
+  So subs are now marked with head3 instead of B<>, I am of the opinion that titles should be marked as titles and B<> (bold) should be used to emphasize important information in the POD.
 
 
-0.21 Fri Jul  7 23:25:35 CEST 2006 (update not required)
+0.21 2006-07-07
+
+- Update not required
 
 - Fixed bug reported by Martin Bartosch, Workflow::Context's
   merge method did not work properly, applied patch from Martin
 
-- Updated t/context.t to test the above fix, this got the coverage from
-  53.3 percent to 93.3 
+- Updated t/context.t to test the above fix, this got the coverage 
+  from 53.3 percent to 93.3 
 
 
-0.20 Fri Jul  7 22:29:19 CEST 2006 (update not required)
+0.20 2006-07-07
+
+- Update not required
 
 - Fixed bug reported by Martin Bartosch, Workflow::Factory's
   add_config_from_file now takes an array ref as stated in the POD.
 
-- Updated t/factory.t to test the above fix, just using the scenarios from the
-  SYNOPSIS. This fix did however not contribute to the coverage of
-  Workflow::Factory, we lost 0.3 percent along the way going from 88.7 to 88.4 
+- Updated t/factory.t to test the above fix, just using the scenarios 
+  from the SYNOPSIS. This fix did however not contribute to the 
+  coverage of Workflow::Factory, we lost 0.3 percent along the way 
+  going from 88.7 to 88.4 
 
 - Fixed two POD errors in Workflow::Config
 
 
-0.19 Fri Jul  7 20:40:33 CEST 2006 (update not required)
+0.19 2006-07-07
 
-- The 0.18 release contained a broken Makefile.PL, thanks to Randal Schwartz
-  for sending me the feedback to get this addressed immediately.
+- Update not required
+
+- The 0.18 release contained a broken Makefile.PL, thanks to Randal 
+  Schwartz for sending me the feedback to get this addressed immediately.
 
 
-0.18 Fri Jul  7 14:47:00 CEST 2006 (update not required)
+0.18 2006-07-07
+
+- Update not required
 
 - New maintainer, JONASBN has taken over maintenance of Workflow
 
@@ -494,11 +528,12 @@ Revision history for Perl extension Workflow
 
 - Added new TODO file
 
-- Added a handful of tests to t/config.t and added dependency on Test::Exception
+- Added a handful of tests to t/config.t and added dependency on 
+  Test::Exception
 
-- Somewhat applied patch from Chris Brown, the use of Perl as configuration was
-  broken, in my attempt to implement tests prior to applying Chris Browns patch
-  I accidently fixed the same problems it addressed.
+- Somewhat applied patch from Chris Brown, the use of Perl as 
+  configuration was broken, in my attempt to implement tests prior to 
+  applying Chris Browns patch I accidently fixed the same problems it addressed.
   
   coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
 
@@ -516,7 +551,7 @@ Revision history for Perl extension Workflow
 - Added CVS id keywords and author information to .txt files in doc
 
 
-0.17  Wed Nov 30 21:51:31 EST 2005
+0.17 2005-11-30
 
   lib/Workflow/Persister/DBI.pm:
 
@@ -525,7 +560,7 @@ Revision history for Perl extension Workflow
   Graham for pointing it out
 
 
-0.16  Tue Nov 29 22:12:25 EST 2005
+0.16 2005-11-29
 
   META.yml:
 
@@ -573,7 +608,7 @@ Revision history for Perl extension Workflow
      - Throw proper exception if we cannot execute the sequence SQL.
 
 
-0.15  Sun Oct 17 11:17:44 EDT 2004
+0.15 2004-10-17
 
   CPAN/Install notes:
 
@@ -623,7 +658,7 @@ Revision history for Perl extension Workflow
      available in Workflow.pm.
 
 
-0.10  Tue Oct 12 01:02:11 EDT 2004
+0.10 2004-10-12
 
   Workflow
 
@@ -698,7 +733,7 @@ Revision history for Perl extension Workflow
      'resulting_state') is unchanged.
 
 
-0.05  Thu Sep 30 23:11:01 EDT 2004
+0.05 2004-09-30
 
   Workflow::Persister::DBI
 
@@ -709,7 +744,7 @@ Revision history for Perl extension Workflow
       pointing the problem out.
 
 
-0.04  Sun Sep 12 22:17:48 EDT 2004
+0.04 2004-09-12
 
   eg (example application):
 
@@ -749,7 +784,7 @@ Revision history for Perl extension Workflow
       - Fix typo bug spotted by Martin Winkler (winkler-martin@web.de)
 
 
-0.03  Mon May 24 19:16:40 EDT 2004
+0.03 2004-05-24
 
       * Applied modified patches from Jim Smith (jgsmith@tamu.edu) to
         do the following:
@@ -766,12 +801,12 @@ Revision history for Perl extension Workflow
         least the factory subclassing feature.
 
 
-0.02  Sat May 22 00:34:43 EDT 2004
+0.02 2004-05-22
 
       Updates to test scripts and files they require from CPAN tester
       report -- thanks Barbie!
 
 
-0.01  Thu May 13 22:08:29 EDT 2004
+0.01 2004-05-13
 
       First CPAN release -- everything is new!
