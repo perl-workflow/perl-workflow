@@ -35,7 +35,14 @@ Module::Build->new(
         directory => [ 'eg', 't' ],
     },
     create_makefile_pl => 'traditional',
-	create_readme => 1,
+    create_readme => 1,
+    meta_merge => {
+        resources => {
+            homepage   => 'https://github.com/jonasbn/perl-workflow',
+            bugtracker => 'http://rt.cpan.org/NoAuth/Bugs.html?Dist=Workflow',
+            repository => 'https://github.com/jonasbn/perl-workflow',
+        }
+    },
 )->create_build_script();
 
 exit 0;
