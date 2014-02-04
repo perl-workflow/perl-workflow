@@ -20,3 +20,5 @@ MANIFEST
 Makefile.PL
 *.tar
 *.gz
+t/db/
+t/workflow_tests.log
