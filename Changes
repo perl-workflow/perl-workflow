@@ -2,10 +2,18 @@ Revision history for Perl extension Workflow
 
 # $Id$
 
+HEAD
+
+- Update not required
+
+- Cleaned up the Build.PL file
+
 - Repository migrated from SourceForge, Subversion to Github, Git
 
 
 1.39 2013-08-02
+
+- Update not required
 
 - Fixed up Changes file as part of my Questhub quest adhering to the standard
   described in: CPAN::Changes::Spec
@@ -19,7 +27,8 @@ Revision history for Perl extension Workflow
 - Update recommended
 
 - Patch to minor bug where Worflow history did not set proper timezone
-  in Workflow::Persister::DBI 
+  in Workflow::Persister::DBI
+   
   https://rt.cpan.org/Ticket/Display.html?id=85380 [RT:85380]
 
 - Added information on issue with Perl 5.8.8 in the 
