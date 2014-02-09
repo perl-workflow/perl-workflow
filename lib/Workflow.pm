@@ -4,6 +4,7 @@ package Workflow;
 
 use warnings;
 use strict;
+use 5.006; # warnings
 use base qw( Workflow::Base Class::Observable );
 use Log::Log4perl qw( get_logger );
 use Workflow::Context;

@@ -37,6 +37,7 @@ Module::Build->new(
       'Data::Dumper'               => '0',
       'Carp'                       => '0',
       'File::Slurp'                => '0',
+      'perl'                       => '5.6.0',
     },
     recommends => {
         'SPOPS'      => '0',
