@@ -61,3 +61,6 @@ eg/ticket/workflow.log
 \B\._
 ^MYMETA.yml$
 ^MYMETA\.json$
+
+# Github - Travis integration
+\.travis\.yml
