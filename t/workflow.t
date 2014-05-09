@@ -6,12 +6,13 @@ use strict;
 use lib 't';
 use TestUtil;
 use Test::More;
+use Test::Exception;
 
 eval "require DBI";
 if ( $@ ) {
     plan skip_all => 'DBI not installed';
 } else {
-	plan tests => 35;
+        plan tests => 36;
 }
 
 require_ok( 'Workflow' );
@@ -153,3 +154,19 @@ my @result_data   = ( 'INITIAL', $date );
     is( $observations[5]->[3], 'INITIAL',
         'Subroutine observer sent the correct old state for state change' );
 }
+
+TODO: {
+    local $TODO = "observer subs' existence is not checked correctly";
+    throws_ok {
+        $factory->add_config(
+            workflow => {
+                type    => 'MyType',
+                observer    => [
+                    {
+                        'sub'   => 'SomeObserver::i_dont_exist'
+                    },
+                ],
+            },
+        )
+    } 'Workflow::Exception', "subroutine i_dont_exist causes exception";
+};
