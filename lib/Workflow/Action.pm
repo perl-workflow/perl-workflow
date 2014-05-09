@@ -252,6 +252,37 @@ to all types. For example:
 The type must match an existing workflow type or the action will never
 be called.
 
+=head1 ADDITIONAL ATTRIBUTES
+
+You can validate additional attributes in of your action by doing two things:
+
+=over
+
+=item *
+
+Set C<$Workflow::Factory::VALIDATE_ACTION_CONFIG> to 1.
+
+=item *
+
+Provide function validate_config() in your action class.
+
+=back
+
+Then, this function will be called with all the acton attributes when
+it is parsed.  For exmaple, if your action XML looks like this:
+
+  <action name="BEGIN" class="My::Class" when="NOW">
+
+You can validate it like this:
+
+  sub My::Class::validate_config {
+    my $config = shift;
+    unless ('NOW' ne $config->{when}) {
+      configuration_error "`$$config{when}' is not a valid value " .
+		          "for `when'";
+    }
+  }
+
 =head1 OBJECT METHODS
 
 =head2 Public Methods
