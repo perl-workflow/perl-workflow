@@ -291,18 +291,16 @@ sub _load_observers {
             $self->_load_class( $observer_class,
                 "Cannot require observer '%s' with sub '$observer_sub' to "
                     . "watch observer of type '$wf_type': %s" );
-            my ($o_sub);
-            eval {
+            my $o_sub_name = $observer_class . '::' . $observer_sub;
+            if (exists &$o_sub_name) {
                 no strict 'refs';
-                $o_sub = \&{ $observer_class . '::' . $observer_sub };
-            };
-            if ( $EVAL_ERROR or ref($o_sub) ne 'CODE' ) {
-                my $error = $EVAL_ERROR || 'subroutine not found';
+                push @observers, \&{ $o_sub_name };
+            } else {
+                my $error = 'subroutine not found';
                 $log->error( "Error loading subroutine '$observer_sub' in ",
                     "class '$observer_class': $error" );
                 workflow_error $error;
             }
-            push @observers, $o_sub;
         } else {
             workflow_error "Cannot add observer to '$wf_type': you must ",
                 "have either 'class' or 'sub' defined. (See ",
