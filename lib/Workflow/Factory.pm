@@ -561,21 +561,13 @@ sub _add_action_config {
                 && $log->debug(
                 "Included action '$name' class '$action_class' ok");
 	    if ($self->_validate_action_config) {
-		my ($validate_sub);
-		eval {
+		my $validate_name = $action_class . '::validate_config';
+		if (exists &$validate_name) {
 		    no strict 'refs';
-		    $validate_sub = \&{ $action_class . '::validate_config' };
-		};
-		if ( $EVAL_ERROR or ref($validate_sub) ne 'CODE' ) {
-		    my $error = $EVAL_ERROR || 'subroutine not found';
-		    $log->error( "Error loading subroutine 'validate_config' in ",
-			"class '$action_class': $error" );
-		    workflow_error $error;
-		} else {
 		    $log->is_debug
 			&& $log->debug(
 			"Validating configuration for action '$name'");
-		    $validate_sub->($action_config);
+		    $validate_name->($action_config);
 		}
 	    }
         }    # End action for.

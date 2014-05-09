@@ -7,14 +7,14 @@ use warnings;
 use lib 't';
 use TestUtil;
 use Test::Exception;
-use Test::More tests => 12;
+use Test::More tests => 13;
 
 my $config_invalid;         # Drives behavior of validation function
 my $validation_called;
 my @config_args;
 
 {
-    package My::Action;
+    package My::Action::Validate;
     use base qw(Workflow::Action);
     use Workflow::Exception qw(configuration_error);
     sub execute {
@@ -28,7 +28,16 @@ my @config_args;
             configuration_error "$config_invalid";
         }
     }
-    $INC{'My/Action.pm'} = 1;
+    $INC{'My/Action/Validate.pm'} = 1;
+}
+
+{
+    package My::Action::Simple;
+    use base qw(Workflow::Action);
+    sub execute {
+        1;
+    }
+    $INC{'My/Action/NoValidate.pm'} = 1;
 }
 
 my $factory = TestUtil->init_factory();
@@ -60,7 +69,7 @@ my %config = (
         action => [
             {
                 name    => 'begin',
-                class   => 'My::Action',
+                class   => 'My::Action::Validate',
                 param   => 123,       # Extra configuration parameter
             },
         ],
@@ -114,3 +123,13 @@ lives_ok {
     $factory->add_config( %config );
 } 'action config is valid';
 ok(not(defined($validation_called)), 'validation routine not called');
+
+$Workflow::Factory::VALIDATE_ACTION_CONFIG = 1;
+
+# Config loaded when VALIDATE_ACTION_CONFIG and validate_config() does
+# not exist.
+#
+$config{action}{action}[0]{class} = 'My::Action::NoValidate';
+lives_ok {
+    $factory->add_config( %config );
+} 'action config is valid';
