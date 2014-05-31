@@ -12,6 +12,9 @@ use Carp qw(croak);
 use English qw( -no_match_vars );
 $Workflow::Factory::VERSION = '1.22';
 
+# Extra action attribute validation is off by default for compatibility.
+our $VALIDATE_ACTION_CONFIG = 0;
+
 my ($log);
 my (%INSTANCES);
 
@@ -288,18 +291,16 @@ sub _load_observers {
             $self->_load_class( $observer_class,
                 "Cannot require observer '%s' with sub '$observer_sub' to "
                     . "watch observer of type '$wf_type': %s" );
-            my ($o_sub);
-            eval {
+            my $o_sub_name = $observer_class . '::' . $observer_sub;
+            if (exists &$o_sub_name) {
                 no strict 'refs';
-                $o_sub = \&{ $observer_class . '::' . $observer_sub };
-            };
-            if ( $EVAL_ERROR or ref($o_sub) ne 'CODE' ) {
-                my $error = $EVAL_ERROR || 'subroutine not found';
+                push @observers, \&{ $o_sub_name };
+            } else {
+                my $error = 'subroutine not found';
                 $log->error( "Error loading subroutine '$observer_sub' in ",
                     "class '$observer_class': $error" );
                 workflow_error $error;
             }
-            push @observers, $o_sub;
         } else {
             workflow_error "Cannot add observer to '$wf_type': you must ",
                 "have either 'class' or 'sub' defined. (See ",
@@ -557,6 +558,16 @@ sub _add_action_config {
             $log->is_debug
                 && $log->debug(
                 "Included action '$name' class '$action_class' ok");
+	    if ($self->_validate_action_config) {
+		my $validate_name = $action_class . '::validate_config';
+		if (exists &$validate_name) {
+		    no strict 'refs';
+		    $log->is_debug
+			&& $log->debug(
+			"Validating configuration for action '$name'");
+		    $validate_name->($action_config);
+		}
+	    }
         }    # End action for.
     }
 }
@@ -797,6 +808,10 @@ sub get_validators {
 }
 
 1;
+
+sub _validate_action_config {
+    return $VALIDATE_ACTION_CONFIG;
+}
 
 __END__
 
@@ -1172,6 +1187,12 @@ Or you can call C<instance()> directly:
  use My::Cool::Factory;
  
  my $factory = My::Cool::Factory->instance();
+
+=head1 GLOBAL RUN-TIME OPTIONS
+
+Setting package variable B<$VALIDATE_ACTION_CONFIG> to a true value (it
+is undef by default) turns on optional validation of extra attributes
+of L<Workflow::Action> configs.  See L<Workflow::Action> for details.
 
 =head1 SEE ALSO
 
