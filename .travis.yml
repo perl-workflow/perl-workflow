@@ -1,5 +1,6 @@
 language: perl
-script: "perl Build.PL; ./Build installdeps --cpan_client 'cpanm'; ./Build test"
+before_install:
+    - cpanm DBD::Mock #required for testing
 perl:
   - "5.18"
   - "5.16"
