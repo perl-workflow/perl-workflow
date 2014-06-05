@@ -1430,6 +1430,8 @@ it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
+=encoding utf8
+
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
