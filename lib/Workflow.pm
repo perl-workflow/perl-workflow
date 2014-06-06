@@ -17,7 +17,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.39';
+$Workflow::VERSION = '1.40';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -1430,11 +1430,15 @@ it under the same terms as Perl itself.
 
 =head1 AUTHORS
 
+=encoding utf8
+
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
+
+Feature and bug fix by dtikhonov resulting in 1.40 (first pull request on Github)
 
 Sérgio Alves, patch to timezone handling for workflow history deserialized using
 DBI persister resulting in 1.38

@@ -1,4 +1,6 @@
 language: perl
+before_install:
+    - cpanm DBD::Mock #required for testing
 perl:
   - "5.18"
   - "5.16"
