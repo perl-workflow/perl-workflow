@@ -277,7 +277,7 @@ You can validate it like this:
 
   sub My::Class::validate_config {
     my $config = shift;
-    unless ('NOW' ne $config->{when}) {
+    unless ('NOW' eq $config->{when}) {
       configuration_error "`$$config{when}' is not a valid value " .
 		          "for `when'";
     }
