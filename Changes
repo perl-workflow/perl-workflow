@@ -3,9 +3,9 @@ Revision history for Perl extension Workflow
 
 - Fixed POD issue with encoding, so we now support UTF-8 for authors names
 
-- Minor POD fix by dtikhonov introduced in 1.40
+- Minor POD fix by dtikhonov to POD introduced in 1.40
 
-- Adjusted permissions on some file, which were executable for no reason
+- Adjusted permissions on some files, which were executable for no apparent reason
 
 
 1.40 2014-06-01
