@@ -962,11 +962,3 @@ AUTHORS
     Martin Winkler <mw@arsnavigandi.de> - Pointed out a bug and a few other
     items.
 
-POD ERRORS
-    Hey! The above document had some coding errors, which are explained
-    below:
-
-    Around line 1441:
-        Non-ASCII character seen before =encoding in 'Sérgio'. Assuming
-        UTF-8
-
