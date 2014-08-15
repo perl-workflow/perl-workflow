@@ -1,7 +1,5 @@
 package Workflow;
 
-# $Id$
-
 use warnings;
 use strict;
 use 5.006; # warnings
