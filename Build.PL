@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use Module::Build;
 
-# $Id$
-
 Module::Build->new(
     dist_author       => 'Jonas B. NIelsen <jonasbn@cpan.org>',
     dist_abstract     => 'Simple, flexible system to implement workflows',
