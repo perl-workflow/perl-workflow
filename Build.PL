@@ -5,7 +5,7 @@ use warnings;
 use Module::Build;
 
 Module::Build->new(
-    dist_author       => 'Jonas B. NIelsen <jonasbn@cpan.org>',
+    dist_author       => 'Jonas B. Nielsen <jonasbn@cpan.org>',
     dist_abstract     => 'Simple, flexible system to implement workflows',
     dist_name         => 'Workflow',
     dist_version_from => 'lib/Workflow.pm',
