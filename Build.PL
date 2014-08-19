@@ -7,9 +7,7 @@ use Module::Build;
 Module::Build->new(
     dist_author       => 'Jonas B. Nielsen <jonasbn@cpan.org>',
     dist_abstract     => 'Simple, flexible system to implement workflows',
-    dist_name         => 'Workflow',
-    dist_version_from => 'lib/Workflow.pm',
-    distribution_type => 'module',
+    module_name       => "Workflow",
     license           => 'perl',
     configure_requires => {
         'Module::Build' => '0.40',
@@ -50,9 +48,6 @@ Module::Build->new(
       t/db 
       t/workflow_tests.log
     )],
-    no_index => {
-        directory => [ 'eg', 't' ],
-    },
     create_makefile_pl => 'traditional',
     create_readme => 1,
     meta_merge => {

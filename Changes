@@ -1,21 +1,36 @@
 Revision history for Perl extension Workflow
 
+HEAD
+
+- Minor fixes to the Build.PL now the provides in META.yml is
+  generated (apparently the no_index screws with this)
+
+- Boiled a few parameters down to a single one
+
+    dist_name
+    dist_version_from -> module_name
+
+- Removed distribution type and no_index as described above
+
+
 1.41 2014-08-15, maintenance release, update not necessary
 
-- Fixed POD issue with encoding, so we now support UTF-8 for authors names
+- Fixed POD issue with encoding, so we now support UTF-8 for authors 
+  names
 
 - Minor POD fix by dtikhonov to POD introduced in 1.40
 
-- Adjusted permissions on some files, which were executable for no apparent reason
+- Adjusted permissions on some files, which were executable for no 
+  apparent reason
 
 
 1.40 2014-06-01
 
 - Update recommended due to bug fix by dtikhonov in observer handling
 
-- Merged pull request from dtikhonov holding a bug fix in observer handling
-  and a feature enabling attribute validation for actions, see the POD added
-  to Workflow::Action
+- Merged pull request from dtikhonov holding a bug fix in observer 
+  handling and a feature enabling attribute validation for actions, see 
+  the POD added to Workflow::Action
 
 - Cleaned up the Build.PL file
 
