@@ -22,3 +22,5 @@ Makefile.PL
 *.gz
 t/db/
 t/workflow_tests.log
+*.sublime-project
+*.sublime-workspace
