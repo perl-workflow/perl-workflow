@@ -15,12 +15,12 @@ HEAD
 
 1.41 2014-08-15, maintenance release, update not necessary
 
-- Fixed POD issue with encoding, so we now support UTF-8 for authors 
+- Fixed POD issue with encoding, so we now support UTF-8 for authors
   names
 
 - Minor POD fix by dtikhonov to POD introduced in 1.40
 
-- Adjusted permissions on some files, which were executable for no 
+- Adjusted permissions on some files, which were executable for no
   apparent reason
 
 
@@ -28,8 +28,8 @@ HEAD
 
 - Update recommended due to bug fix by dtikhonov in observer handling
 
-- Merged pull request from dtikhonov holding a bug fix in observer 
-  handling and a feature enabling attribute validation for actions, see 
+- Merged pull request from dtikhonov holding a bug fix in observer
+  handling and a feature enabling attribute validation for actions, see
   the POD added to Workflow::Action
 
 - Cleaned up the Build.PL file
