@@ -348,6 +348,16 @@ sub _auto_execute_state {
 
 __END__
 
+=pod
+
+=begin markdown
+
+[![CPAN version](https://badge.fury.io/pl/Workflow.svg)](http://badge.fury.io/pl/Workflow)
+[![Build Status](https://travis-ci.org/jonasbn/perl-workflow.svg?branch=master)](https://travis-ci.org/jonasbn/perl-workflow)
+[![Coverage Status](https://coveralls.io/repos/jonasbn/perl-workflow/badge.png)](https://coveralls.io/r/jonasbn/perl-workflow)
+
+=end markdown
+
 =head1 NAME
 
 Workflow - Simple, flexible system to implement workflows
