@@ -1,3 +1,4 @@
+sudo: false
 language: perl
 before_install:
     - cpanm DBD::Mock #required for testing
