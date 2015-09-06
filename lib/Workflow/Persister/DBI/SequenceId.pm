@@ -10,7 +10,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::SequenceId::VERSION = '1.05';
+$Workflow::Persister::DBI::SequenceId::VERSION = '1.42';
 
 my @FIELDS = qw( sequence_name sequence_select );
 __PACKAGE__->mk_accessors(@FIELDS);

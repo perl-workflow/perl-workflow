@@ -6,7 +6,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 
-$Workflow::Context::VERSION = '1.05';
+$Workflow::Context::VERSION = '1.42';
 
 sub merge {
     my ( $self, $other ) = @_;

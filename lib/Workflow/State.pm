@@ -11,7 +11,7 @@ use Workflow::Exception qw( workflow_error );
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
 
-$Workflow::State::VERSION = '1.16';
+$Workflow::State::VERSION = '1.42';
 
 my @FIELDS   = qw( state description type );
 my @INTERNAL = qw( _test_condition_count _factory );

@@ -7,7 +7,7 @@ use strict;
 use base qw( Class::Accessor );
 use DateTime;
 
-$Workflow::History::VERSION = '1.10';
+$Workflow::History::VERSION = '1.42';
 
 my @FIELDS
     = qw( id workflow_id action description date user state time_zone );

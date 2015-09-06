@@ -4,6 +4,10 @@ Revision history for Perl extension Workflow
 
 - Release migrated from Module::Build to Dist::Zilla
 
+- All version numbers aligned, so traceability to distribution is more  
+  transparent, this is a best practice and since we hold a lot of modules
+  it makes sense to do this
+
 
 1.41 2014-08-15 Maintenance release, update not required
 
