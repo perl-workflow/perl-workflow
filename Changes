@@ -1,16 +1,8 @@
 Revision history for Perl extension Workflow
 
-HEAD
+1.42 2015-09-06 Maintenance release, update not required
 
-- Minor fixes to the Build.PL now the provides in META.yml is
-  generated (apparently the no_index screws with this)
-
-- Boiled a few parameters down to a single one
-
-    dist_name
-    dist_version_from -> module_name
-
-- Removed distribution type and no_index as described above
+- Release migrated from Module::Build to Dist::Zilla
 
 
 1.41 2014-08-15 Maintenance release, update not required
