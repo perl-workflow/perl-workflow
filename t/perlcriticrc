@@ -10,9 +10,6 @@ verbose  = 8
 lib_sections    = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 
-[Miscellanea::RequireRcsKeywords]
-keywords = Id
-
 #Needs to be readdressed at some point
 [-ValuesAndExpressions::ProhibitMagicNumbers]
 
@@ -34,9 +31,6 @@ keywords = Id
 
 #Exchange for Module::Load?
 [-BuiltinFunctions::ProhibitStringyEval]
-
-#We utilize TODO comments
-[-Bangs::ProhibitFlagComments]
 
 #------------------------------------------------------------------------------
 
