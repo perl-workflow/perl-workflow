@@ -1431,7 +1431,7 @@ pgh.pm by Chris Winters: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 =head1 COPYRIGHT
 
 Copyright (c) 2003 Chris Winters and Arvato Direct;
-Copyright (c) 2004-2013 Chris Winters. All rights reserved.
+Copyright (c) 2004-2015 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
