@@ -55,4 +55,3 @@ script:
 after_success:
 
     - dzil cover -outputdir cover_db -report coveralls
-    - bash <(curl -s https://codecov.io/bash)
