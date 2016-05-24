@@ -30,6 +30,10 @@ install:
 
    - cpanm --quiet --notest Devel::Cover::Report::Coveralls
 
+   # Getting codecov report
+
+   - cpanm --quiet --notest --skip-satisfied Devel::Cover Devel::Cover::Report::Codecov
+
    # Getting cover command for Dist::Zilla
 
    - cpanm --quiet --notest Dist::Zilla::App::Command::cover
@@ -55,3 +59,4 @@ script:
 after_success:
 
     - dzil cover -outputdir cover_db -report coveralls
+    - dzil cover -report codecov
