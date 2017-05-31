@@ -187,15 +187,19 @@ sub evaluate_action {
                     # without wrapping it...
                     $self->{'_condition_result_cache'}->{$orig_condition} = 0;
                     if ( !$opposite ) {
+                        $log->is_debug
+                            && $log->debug("No access to action '$action_name', condition " .
+                             "'$orig_condition' failed because ' . $EVAL_ERROR");
+
                         workflow_error "No access to action '$action_name' in ",
                             "state '$state' because: $EVAL_ERROR";
                     } else {
                         $log->is_debug
-                            && $log->debug("Opposite and condition failed with $EVAL_ERROR)");
+                            && $log->debug("opposite condition '$orig_condition' failed because ' . $EVAL_ERROR");
                     }
                 } else {
                     $log->is_debug
-                            && $log->debug("Got uncatchable exception in condition $condition_name ");
+                        && $log->debug("Got uncatchable exception in condition $condition_name ");
 
                     # if EVAL_ERROR is an execption object rethrow it
                     $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne'');
@@ -210,13 +214,23 @@ sub evaluate_action {
             } else {
                 $self->{'_condition_result_cache'}->{$orig_condition} = 1;
                 if ($opposite) {
+
+                    $log->is_debug
+                        && $log->debug(
+                            "No access to action '$action_name', condition '$orig_condition' ".
+                            "did NOT failed but opposite requested");
+
                     workflow_error "No access to action '$action_name' in ",
                         "state '$state' because condition ",
                         "$orig_condition did NOT fail and we ",
                         "are checking $condition_name.";
                 } else {
-                    $log->is_debug
-                        && $log->debug(" Opposite false and condition OK");
+
+                    $log->is_debug &&
+                        $log->debug(
+                            "condition '$orig_condition' failed, because '$EVAL_ERROR', " .
+                            "but opposite requested");
+
                 }
             }
         }

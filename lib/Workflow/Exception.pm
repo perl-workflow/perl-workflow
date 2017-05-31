@@ -50,8 +50,13 @@ sub _mythrow {
     my $log = get_logger();
     my ( $pkg, $line ) = (caller)[ 0, 2 ];
     my ( $prev_pkg, $prev_line ) = ( caller 1 )[ 0, 2 ];
-    $log->error( "$type exception thrown from [$pkg: $line; before: ",
-        "$prev_pkg: $prev_line]: $msg" );
+
+    # Do not log condition errors
+    if ($type ne 'condition_exception') {
+        $log->error( "$type exception thrown from [$pkg: $line; before: ",
+            "$prev_pkg: $prev_line]: $msg" );
+    }
+
     goto &Exception::Class::Base::throw(
         $TYPE_CLASSES{$type},
         message => $msg,
