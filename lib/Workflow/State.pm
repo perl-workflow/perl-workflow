@@ -77,7 +77,9 @@ sub is_action_available {
     # We got an exception, check if it is a Workflow::Exception
     return 0 if (Exception::Class->caught('Workflow::Exception'));
 
-    $EVAL_ERROR->rethrow();
+    $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR);
+
+    croak $EVAL_ERROR;
 
 }
 
