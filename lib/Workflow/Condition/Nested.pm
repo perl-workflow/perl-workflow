@@ -11,6 +11,7 @@ use base qw( Workflow::Condition );
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
 use Log::Log4perl qw( get_logger );
+use Exception::Class;
 
 my ($log);
 
@@ -50,6 +51,12 @@ sub evaluate_condition {
         && $log->debug( q{Evaluating condition '}, $condition->name, q{'} );
     eval { $result = $condition->evaluate($wf) };
     if ($EVAL_ERROR) {
+
+        # Only stop on workflow_condition errors and bubble up anything else
+        if (!Exception::Class->caught('Workflow::Exception::Condition')) {
+            # We can use die here as it will be caught by the outer condition
+            (ref $EVAL_ERROR ne '') ? $EVAL_ERROR->rethrow() : die $EVAL_ERROR;
+        }
 
         # TODO: We may just want to pass the error up without wrapping it...
         $factory->{'_condition_result_cache'}->{$orig_condition} = 0;

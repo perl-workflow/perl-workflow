@@ -8,6 +8,7 @@ use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Condition::Evaluate;
 use Workflow::Exception qw( workflow_error );
+use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
 
@@ -69,7 +70,15 @@ sub get_available_action_names {
 sub is_action_available {
     my ( $self, $wf, $action_name ) = @_;
     eval { $self->evaluate_action( $wf, $action_name ) };
-    return ( !$EVAL_ERROR );
+
+    # Everything is fine
+    return 1 unless( $EVAL_ERROR );
+
+    # We got an exception, check if it is a Workflow::Exception
+    return 0 if (Exception::Class->caught('Workflow::Exception'));
+
+    $EVAL_ERROR->rethrow();
+
 }
 
 sub clear_condition_cache {
@@ -172,15 +181,31 @@ sub evaluate_action {
             eval { $condition->evaluate($wf) };
             if ($EVAL_ERROR) {
 
-                # TODO: We may just want to pass the error up
-                # without wrapping it...
-                $self->{'_condition_result_cache'}->{$orig_condition} = 0;
-                if ( !$opposite ) {
-                    workflow_error "No access to action '$action_name' in ",
-                        "state '$state' because: $EVAL_ERROR";
+                # Check if this is a Workflow::Exception::Condition
+                if (Exception::Class->caught('Workflow::Exception::Condition')) {
+                    # TODO: We may just want to pass the error up
+                    # without wrapping it...
+                    $self->{'_condition_result_cache'}->{$orig_condition} = 0;
+                    if ( !$opposite ) {
+                        workflow_error "No access to action '$action_name' in ",
+                            "state '$state' because: $EVAL_ERROR";
+                    } else {
+                        $log->is_debug
+                            && $log->debug("Opposite and condition failed with $EVAL_ERROR)");
+                    }
                 } else {
                     $log->is_debug
-                        && $log->debug("Opposite and condition failed");
+                            && $log->debug("Got uncatchable exception in condition $condition_name ");
+
+                    # if EVAL_ERROR is an execption object rethrow it
+                    $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne'');
+
+                    # if it is a string (bubbled up from die/croak), make an Exception Object
+                    # For briefness, we just send back the first line of EVAL
+                    my @t = split /\n/, $EVAL_ERROR;
+                    my $ee = shift @t;
+                    Exception::Class::Base->throw( error
+                        => "Got unknown exception while handling condition '$condition_name' / " . $ee );
                 }
             } else {
                 $self->{'_condition_result_cache'}->{$orig_condition} = 1;
