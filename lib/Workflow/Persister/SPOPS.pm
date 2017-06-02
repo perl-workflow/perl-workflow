@@ -10,7 +10,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::SPOPS::VERSION = '1.42';
+$Workflow::Persister::SPOPS::VERSION = '1.43';
 
 my @FIELDS = qw( workflow_class history_class );
 __PACKAGE__->mk_accessors(@FIELDS);

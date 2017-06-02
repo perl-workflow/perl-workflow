@@ -5,7 +5,7 @@ package Workflow::Condition::GreedyOR;
 use strict;
 use warnings;
 
-our $VERSION = '1.42';
+our $VERSION = '1.43';
 
 use base qw( Workflow::Condition::Nested );
 use Workflow::Exception qw( condition_error configuration_error );

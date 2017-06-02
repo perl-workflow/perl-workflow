@@ -9,7 +9,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Action::InputField::VERSION = '1.42';
+$Workflow::Action::InputField::VERSION = '1.43';
 
 my @PROPS = qw( name label description type requirement
     source_class source_list class );
