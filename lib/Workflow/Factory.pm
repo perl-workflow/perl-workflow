@@ -1,7 +1,5 @@
 package Workflow::Factory;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Base );
@@ -828,17 +826,17 @@ This documentation describes version 1.18 of this package
 
  # Import the singleton for easy access
  use Workflow::Factory qw( FACTORY );
- 
+
  # Add XML configurations to the factory
  FACTORY->add_config_from_file( workflow  => 'workflow.xml',
                                 action    => [ 'myactions.xml', 'otheractions.xml' ],
                                 validator => [ 'validator.xml', 'myvalidators.xml' ],
                                 condition => 'condition.xml',
                                 persister => 'persister.xml' );
- 
+
  # Create a new workflow of type 'MyWorkflow'
  my $wf = FACTORY->create_workflow( 'MyWorkflow' );
- 
+
  # Fetch an existing workflow with ID '25'
  my $wf = FACTORY->fetch_workflow( 'MyWorkflow', 25 );
 
@@ -874,11 +872,11 @@ Create a new workflow of type C<$workflow_type>. This will create a
 new record in whatever persistence mechanism you have associated with
 C<$workflow_type> and set the workflow to its initial state.
 
-The C<$context> argument is optional, you can pass an exisiting instance 
+The C<$context> argument is optional, you can pass an exisiting instance
 of Workflow::Context to be reused. Otherwise a new instance is created.
 
 The C<$wf_class> argument is optional. Pass it the name of a class to be
-used for the workflow to be created. By default, all workflows are of the 
+used for the workflow to be created. By default, all workflows are of the
 I<Workflow> class.
 
 Any observers you've associated with this workflow type will be
@@ -896,11 +894,11 @@ C<$workflow_id>. (The C<$workflow_type> is necessary so we can fetch
 the workflow using the correct persister.) If a workflow with ID
 C<$workflow_id> is not found C<undef> is returned.
 
-The C<$context> argument is optional, you can pass an exisiting instance 
+The C<$context> argument is optional, you can pass an exisiting instance
 of Workflow::Context to be reused. Otherwise a new instance is created.
 
 The C<$wf_class> argument is optional. Pass it the name of a class to be
-used for the workflow to be created. By default, all workflows are of the 
+used for the workflow to be created. By default, all workflows are of the
 I<Workflow> class.
 
 Any observers you've associated with this workflow type will be
@@ -1163,10 +1161,10 @@ use the useful facade of the C<FACTORY> constant. For instance, the
 implementation is typical Perl subclassing:
 
  package My::Cool::Factory;
- 
+
  use strict;
  use base qw( Workflow::Factory );
- 
+
  sub some_cool_method {
      my ( $self ) = @_;
      ...
@@ -1175,17 +1173,17 @@ implementation is typical Perl subclassing:
 To use your factory you can just do the typical import:
 
  #!/usr/bin/perl
- 
+
  use strict;
  use My::Cool::Factory qw( FACTORY );
 
 Or you can call C<instance()> directly:
 
  #!/usr/bin/perl
- 
+
  use strict;
  use My::Cool::Factory;
- 
+
  my $factory = My::Cool::Factory->instance();
 
 =head1 GLOBAL RUN-TIME OPTIONS

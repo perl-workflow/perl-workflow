@@ -1,7 +1,5 @@
 package Workflow::Action;
 
-# $Id$
-
 # Note: we may implement a separate event mechanism so that actions
 # can trigger other code (use 'Class::Observable'? read observations
 # from database?)
@@ -384,11 +382,11 @@ current $wf_state. Your milage may vary.
 
 
 =head2 Private Methods
- 
+
 =head3 init( $workflow, \%params )
- 
+
 init is called in conjuction with the overall workflow initialization.
- 
+
 It sets up the necessary validators based on the on configured actions, input fields and required fields.
 
 =head3 add_field( @fields )

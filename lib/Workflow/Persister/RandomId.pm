@@ -1,7 +1,5 @@
 package Workflow::Persister::RandomId;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Class::Accessor );

@@ -1,7 +1,5 @@
 package Workflow::Condition::Nested;
 
-# $Id$
-
 use strict;
 use warnings;
 

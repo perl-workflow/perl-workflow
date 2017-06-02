@@ -1,7 +1,5 @@
 package Workflow::Persister::DBI;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Persister );
@@ -245,7 +243,7 @@ sub fetch_workflow {
     $log ||= get_logger();
     my $sql = qq{
         SELECT $WF_FIELDS[2], $WF_FIELDS[3]
-          FROM %s 
+          FROM %s
          WHERE $WF_FIELDS[0] = ?
     };
     $sql = sprintf $sql, $self->workflow_table;
@@ -505,28 +503,28 @@ life we would just use SPOPS for this, but it is still a good
 example.)
 
  package Workflow::Persister::DBI::OpenInteractHandle;
- 
+
  use strict;
  use base qw( Workflow::Persister::DBI );
  use OpenInteract2::Context qw( CTX );
- 
+
  my @FIELDS = qw( datasource_name );
  __PACKAGE__->mk_accessors( @FIELDS );
- 
+
  # override parent method, assuming that we set the 'datasource'
  # parameter in the persister declaration
- 
+
  sub init {
     my ( $self, $params ) = @_;
     $self->datasource_name( $params->{datasource} );
     my $ds_config = CTX->lookup_datasource_config( $self->datasource_name );
 
     # delegate the other assignment tasks to the parent class
- 
+
     $self->assign_generators( $ds_config->{driver_name}, $params );
     $self->assign_tables( $params );
  }
- 
+
  sub handle {
      my ( $self ) = @_;
      return CTX->datasource( $self->datasource_name );
@@ -759,13 +757,13 @@ Returns an array of workflow history objects upon success
 
 Commit the transaction for a workflow if autocommit is not enabled.
 
-Returns nothing 
+Returns nothing
 
 =head3 rollback_transaction
 
 Rollsback the transaction for a workflow if autocommit is not enabled.
 
-Returns nothing 
+Returns nothing
 
 
 =head1 SEE ALSO

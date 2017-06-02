@@ -1,7 +1,5 @@
 package Workflow::Condition::HasUser;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Condition );
@@ -48,7 +46,7 @@ This documentation describes version 1.05 of this package
 =head1 SYNOPSIS
 
  # First setup the condition
- 
+
  <conditions>
    <condition name="HasUser"
               class="Workflow::Condition::HasUser">
@@ -57,7 +55,7 @@ This documentation describes version 1.05 of this package
    ...
 
  # Next, attach it to an action
- 
+
  <state name="INITIAL">
    <action name="create issue"
            resulting_state="CREATED">

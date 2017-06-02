@@ -1,7 +1,5 @@
 package Workflow::Validator::HasRequiredField;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Validator );
@@ -40,7 +38,7 @@ This documentation describes version 1.04 of this package
 
  # Validator is created automatically when you mark a field as
  # 'is_required=yes' in the action, such as:
- 
+
  <action name="CreateUser">
     <field name="username"
            is_required="yes"

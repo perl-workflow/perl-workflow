@@ -1,7 +1,5 @@
 package Workflow::Condition::GreedyOR;
 
-# $Id$
-
 use strict;
 use warnings;
 

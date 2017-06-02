@@ -1,7 +1,5 @@
 package Workflow::Context;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Base );
@@ -32,22 +30,22 @@ This documentation describes version 1.05 of this package
 
  # Create your own context and merge it with one that may already be
  # in a workflow
- 
+
  my $context = Workflow::Context->new();
  $context->param( foo => 'bar' );
  $context->param( current_user => User->fetch( 'foo@bar.com' ) );
  $wf->context( $context );
- 
+
  # In a Condition get the 'current_user' back out of the workflow's context
- 
+
  sub evaluate {
      my ( $self, $wf ) = @_;
      my $current_user = $wf->context->param( 'current_user' );
      ...
  }
- 
+
  # Set values directly into a workflow's context
- 
+
  $wf->context->param( foo => 'bar' );
  $wf->context->param( news => My::News->fetch_where( 'date = ?', DateTime->now ) );
 

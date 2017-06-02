@@ -1,7 +1,5 @@
 package Workflow::Validator;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Base );
@@ -52,35 +50,35 @@ This documentation describes version 1.05 of this package
             class="MyApp::Validator::Date">
    <param name="date_format" value="%Y-%m-%d %h:%m"/>
  </validator>
- 
+
  # Then associate the validator with runtime data from the context...
  <action name="MyAction">
     <validator name="DateValidator">
        <arg>$due_date</arg>
     </validator>
  </action>
- 
+
  # TODO: You can also inintialize and instantiate in one step if you
  # don't need to centralize or reuse (does this work?)
- 
+
  <action name="MyAction">
     <validator class="MyApp::Validator::Date">
        <param name="date_format" value="%Y-%m-%d %h:%m"/>
        <arg>$due_date</arg>
     </validator>
  </action>
- 
+
  # Then implement the logic
- 
+
  package MyApp::Validator::Date;
- 
+
  use strict;
  use base qw( Workflow::Validator );
  use DateTime::Format::Strptime;
  use Workflow::Exception qw( configuration_error );
- 
+
  __PACKAGE__->mk_accessors( 'formatter' );
- 
+
  sub _init {
      my ( $self, $params ) = @_;
      unless ( $params->{date_format} ) {
@@ -98,7 +96,7 @@ This documentation describes version 1.05 of this package
                               on_error => 'undef' );
      $self->formatter( $formatter );
  }
- 
+
  sub validate {
      my ( $self, $wf, $date_string ) = @_;
      my $fmt = $self->formatter;

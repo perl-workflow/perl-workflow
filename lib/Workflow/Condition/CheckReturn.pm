@@ -1,7 +1,5 @@
 package Workflow::Condition::CheckReturn;
 
-# $Id$
-
 use strict;
 use warnings;
 

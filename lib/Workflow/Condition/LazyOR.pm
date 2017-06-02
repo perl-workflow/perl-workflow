@@ -1,7 +1,5 @@
 package Workflow::Condition::LazyOR;
 
-# $Id$
-
 use strict;
 use warnings;
 

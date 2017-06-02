@@ -5,6 +5,15 @@ Revision history for Perl extension Workflow
 - PR from Oliver Welter providing improvements to logging in relation to
   condition validation
 
+- Exchanged CJM´s:
+  https://metacpan.org/pod/Dist::Zilla::Plugin::VersionFromModule
+
+  For Dave Rolskys:
+  https://metacpan.org/pod/Dist::Zilla::Plugin::VersionFromMainModule
+
+  There are some deprecation notices from Dist::Zilla making tests fail
+  see XDG's PR: https://github.com/madsen/dist-zilla-plugins-cjm/pull/5
+
 
 1.42 2015-09-06 Maintenance release, update not required
 

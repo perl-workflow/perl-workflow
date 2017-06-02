@@ -1,7 +1,5 @@
 package Workflow::Condition;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Base );
@@ -41,7 +39,7 @@ This documentation describes version 1.07 of this package
 =head1 SYNOPSIS
 
  # First declare the condition in a 'workflow_condition.xml'...
- 
+
  <conditions>
    <condition
       name="IsAdminUser"
@@ -50,13 +48,13 @@ This documentation describes version 1.07 of this package
          <param name="admin_group_id" value="6" />
    </condition>
  ...
- 
+
  # Reference the condition in an action of the state/workflow definition...
  <workflow>
    <state>
      ...
      <action name="SomeAdminAction">
-       ... 
+       ...
        <condition name="IsAdminUser" />
      </action>
      <action name="AnotherAdminAction">
@@ -70,17 +68,17 @@ This documentation describes version 1.07 of this package
    </state>
    ...
  </workflow>
-  
+
  # Then implement the condition
- 
+
  package MyApp::Condition::IsAdminUser;
- 
+
  use strict;
  use base qw( Workflow::Condition );
  use Workflow::Exception qw( condition_error configuration_error );
- 
+
  __PACKAGE__->mk_accessors( 'admin_group_id' );
- 
+
  sub _init {
      my ( $self, $params ) = @_;
      unless ( $params->{admin_group_id} ) {
@@ -91,7 +89,7 @@ This documentation describes version 1.07 of this package
      my @admin_ids = $self->_normalize_array( $params->{admin_group_id} );
      $self->admin_group_id( { map { $_ => 1 } @admin_ids } );
  }
- 
+
  sub evaluate {
      my ( $self, $wf ) = @_;
      my $admin_ids = $self->admin_group_id;

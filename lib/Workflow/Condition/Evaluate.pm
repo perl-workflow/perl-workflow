@@ -1,7 +1,5 @@
 package Workflow::Condition::Evaluate;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Condition );

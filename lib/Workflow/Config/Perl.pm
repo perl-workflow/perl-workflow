@@ -1,7 +1,5 @@
 package Workflow::Config::Perl;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Config );
@@ -114,7 +112,7 @@ This documentation describes version 1.03 of this package
  # either of these is acceptable
  my $parser = Workflow::Config->new( 'perl' );
  my $parser = Workflow::Config->new( 'pl' );
- 
+
  my $conf = $parser->parse( 'condition',
                             'my_conditions.pl', 'your_conditions.perl' );
 

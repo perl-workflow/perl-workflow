@@ -1,7 +1,5 @@
 package Workflow::Config;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Class::Factory );
@@ -119,12 +117,12 @@ This documentation describes version 1.12 of this package
 =head1 SYNOPSIS
 
  # Reference multiple files
- 
+
  my $parser = Workflow::Config->new( 'xml' );
  my @config = $parser->parse(
      'action', 'workflow_action.xml', 'other_actions.xml'
  );
- 
+
  # Read in one of the file contents from somewhere else
  my $xml_contents = read_contents_from_db( 'other_actions.xml' );
  my @config = $parser->parse(
@@ -132,7 +130,7 @@ This documentation describes version 1.12 of this package
  );
 _
  # Reference multiple files of mixed types
- 
+
  my @action_config = Workflow::Config->parse_all_files(
      'action', 'my_actions.xml', 'your_actions.perl'
  );
@@ -178,12 +176,12 @@ would do something like:
 
  # just a convention, you can use any namespace you want
  package Workflow::Config::YAML;
- 
+
  use strict;
 
  # Requirement 1: Subclass Workflow::Config
  use base qw( Workflow::Config );
- 
+
  # Requirement 2: Implement required methods
  sub parse { ... }
 
@@ -214,7 +212,7 @@ invocation script:
  use strict;
  use Workflow::Factory qw( FACTORY );
  use Workflow::Config;
- 
+
  # Option 2: explicitly register your configuration parser
  Workflow::Config->register_factory_type( yaml => 'Workflow::Config::YAML' );
 
@@ -238,7 +236,7 @@ for how this is implemented:
 
  # Parser of type 'Workflow::Config::XML'
  my $xml_parser  = Workflow::Config->new( 'xml' );
- 
+
  # Parser of type 'Workflow::Config::Perl
  my $perl_parser = Workflow::Config->new( 'perl' );
 
@@ -351,7 +349,7 @@ may hold a 'condition' key with one or more named conditions
 =head2 condition
 
  conditions:
- 
+
      condition \@
         name  $
         class $
@@ -370,7 +368,7 @@ array of one or more hashrefs with 'name' and 'class' keys
 =head2 validator
 
  validators:
- 
+
      validator \@
         name  $
         class $
@@ -391,7 +389,7 @@ keys
 =head2 action
 
  actions:
- 
+
     action \@
        name  $
        field \@
@@ -435,7 +433,7 @@ each 'action' may have any number of 'validator' hashrefs, each with a
 =head2 persister
 
  persister:
- 
+
    extra_table   $
    extra_field   $
    extra_class   $

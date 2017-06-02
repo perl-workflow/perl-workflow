@@ -1,7 +1,5 @@
 package Workflow::Config::XML;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Config );

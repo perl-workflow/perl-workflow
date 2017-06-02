@@ -1,7 +1,5 @@
 package Workflow::State;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Base );
@@ -558,7 +556,7 @@ state, but if it is not, you are fine to come back and try again later
 if the action is available. This behaviour can be achived by setting the
 'may_stop' property to yes, which will cause Workflow to just quietly
 stop automatic execution if it does not have a single action to execute.
- 
+
 =head1 PUBLIC METHODS
 
 =head3 get_conditions( $action_name )
@@ -593,7 +591,7 @@ Returns list of all action names available in this state.
 Returns all actions names that are available given the data in
 C<$workflow>. Each action name returned will return true from
 B<is_action_available()>.
-$group is optional parameter. If it is set, additional check for group 
+$group is optional parameter. If it is set, additional check for group
 membership will be performed.
 
 =head3 get_next_state( $action_name, [ $action_return ] )

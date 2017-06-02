@@ -1,7 +1,5 @@
 package Workflow::Base;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Class::Accessor );

@@ -1,7 +1,5 @@
 package Workflow::Persister::UUID;
 
-# $Id$
-
 use warnings;
 use strict;
 use Data::UUID;
@@ -72,7 +70,7 @@ This method is unimplemented at this time, please see the TODO.
 
 =item * Implement L</post_fetch_id>
 
-=back 
+=back
 
 =head1 SEE ALSO
 

@@ -1,7 +1,5 @@
 package Workflow::Exception;
 
-# $Id$
-
 use warnings;
 use strict;
 
@@ -127,23 +125,23 @@ This documentation describes version 1.08 of this package
 
  # Standard usage
  use Workflow::Exception qw( workflow_error );
- 
+
  my $user = $wf->context->param( 'current_user' );
  unless ( $user->check_password( $entered_password ) ) {
    workflow_error "User exists but password check failed";
  }
- 
+
  # Pass a list of strings to form the message
- 
+
  unless ( $user->check_password( $entered_password ) ) {
    workflow_error 'Bad login: ', $object->login_attempted;
  }
- 
+
  # Using other exported shortcuts
- 
+
  use Workflow::Exception qw( configuration_error );
  configuration_error "Field 'foo' must be a set to 'bar'";
- 
+
  use Workflow::Exception qw( validation_error );
  validation_error "Validation for field 'foo' failed: $error";
 

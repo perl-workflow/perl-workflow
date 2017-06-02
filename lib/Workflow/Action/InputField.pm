@@ -1,7 +1,5 @@
 package Workflow::Action::InputField;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Class::Accessor );
@@ -126,7 +124,7 @@ This documentation describes version 1.09 of this package
 =head1 SYNOPSIS
 
  # Declare the fields needed by your action in the configuration...
- 
+
  <action name="CreateUser">
     <field name="username"
            is_required="yes"

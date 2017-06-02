@@ -1,7 +1,5 @@
 package Workflow::Validator::InEnumeratedType;
 
-# $Id$
-
 use warnings;
 use strict;
 use base qw( Workflow::Validator );
@@ -64,7 +62,7 @@ This documentation describes version 1.04 of this package
 =head1 SYNOPSIS
 
  # Inline the enumeration...
- 
+
  <action name="PlayGame">
    <validator name="InEnumeratedType">
       <value>Rock</value>
@@ -73,7 +71,7 @@ This documentation describes version 1.04 of this package
       <arg value="$play"/>
    </validator>
  </action>
- 
+
  # Or declare it in the validator to be more readable...
  <validator name="RSP"
             class="Validator::InEnumeratedType">
@@ -81,7 +79,7 @@ This documentation describes version 1.04 of this package
       <value>Scissors</value>
       <value>Paper</value>
  </validator>
- 
+
  # ...and use it in your action
  <action name="PlayGame">
     <validator name="RSP">
@@ -150,7 +148,7 @@ checks that same field to ensure a correct choice was submitted.
 The implementation for the validator might look like:
 
  package MyApp::Validator::WorkerEnumeration;
- 
+
  sub validate {
      my ( $self, $wf, $worker_id ) = @_;
      my $ticket = $context->param( 'ticket' );
