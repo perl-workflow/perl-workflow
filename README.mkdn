@@ -13,12 +13,12 @@ This documentation describes version 0.15 of Workflow
 # SYNOPSIS
 
     use Workflow::Factory qw( FACTORY );
-    
+
     # Defines a workflow of type 'myworkflow'
     my $workflow_conf  = 'workflow.xml';
-    
+
     # contents of 'workflow.xml'
-    
+
     <workflow>
         <type>myworkflow</type>
         <time_zone>local</time_zone>
@@ -51,12 +51,12 @@ This documentation describes version 0.15 of Workflow
         </state>
         <state name="finished" />
     </workflow>
-    
+
     # Defines actions available to the workflow
     my $action_conf    = 'action.xml';
-    
+
     # contents of 'action.xml'
-    
+
     <actions>
         <action name="upload file" class="MyApp::Action::Upload">
             <field name="path" label="File Path"
@@ -73,12 +73,12 @@ This documentation describes version 0.15 of Workflow
 
         <action name="null"        class="Workflow::Action::Null" />
     </actions>
-    
+
     # Defines conditions available to the workflow
     my $condition_conf = 'condition.xml';
-    
+
     # contents of 'condition.xml'
-    
+
     <conditions>
         <condition name="can_annotate"
                    class="MyApp::Condition::CanAnnotate" />
@@ -86,9 +86,9 @@ This documentation describes version 0.15 of Workflow
 
     # Defines validators available to the actions
     my $validator_conf = 'validator.xml';
-    
+
     # contents of 'validator.xml'
-    
+
     <validators>
         <validator name="filesize_cap" class="MyApp::Validator::FileSizeCap">
             <param name="max_size" value="20M" />
@@ -103,38 +103,38 @@ This documentation describes version 0.15 of Workflow
         condition  => $condition_conf,
         validator  => $validator_conf
     );
-    
+
     # Instantiate a new workflow...
     my $workflow = $self->_factory()->create_workflow( 'myworkflow' );
     print "Workflow ", $workflow->id, " ",
           "currently at state ", $workflow->state, "\n";
-    
+
     # Display available actions...
     print "Available actions: ", $workflow->get_current_actions, "\n";
-    
+
     # Get the data needed for action 'upload file' (assumed to be
     # available in the current state) and display the fieldname and
     # description
-     
+
     print "Action 'upload file' requires the following fields:\n";
     foreach my $field ( $workflow->get_action_fields( 'FOO' ) ) {
         print $field->name, ": ", $field->description,
               "(Required? ", $field->is_required, ")\n";
     }
-     
+
     # Add data to the workflow context for the validators, conditions and
     # actions to work with
-    
+
     my $context = $workflow->context;
     $context->param( current_user => $user );
     $context->param( sections => \@sections );
     $context->param( path => $path_to_file );
-    
+
     # Execute one of them
     $workflow->execute_action( 'upload file' );
-    
+
     print "New state: ", $workflow->state, "\n";
-    
+
     # Later.... fetch an existing workflow
     my $id = get_workflow_id_from_user( ... );
     my $workflow = $self->_factory()->fetch_workflow( 'myworkflow', $id );
@@ -142,7 +142,7 @@ This documentation describes version 0.15 of Workflow
 
 # QUICK START
 
-The `eg/ticket/` directory contains a configured workflow system. 
+The `eg/ticket/` directory contains a configured workflow system.
 You can access the same data and logic in two ways:
 
 - a command-line application (ticket.pl)
@@ -325,12 +325,12 @@ a workflow for its context and just get/set parameters on it:
 
     # Get the username from the Apache object
     my $username = $r->connection->user;
-    
+
     # ...set it in the context
     $wf->context->param( user => $username );
-    
+
     # somewhere else you'll need the username:
-    
+
     $news_object->{created_by} = $wf->context->param( 'user' );
 
 ## Controlling What Gets Executed
@@ -366,7 +366,7 @@ your long-lost sister named 'Sinead'. You'd create an observer class
 like:
 
     package FindSinead;
-    
+
     sub update {
         my ( $class, $wf, $event, $new_state ) = @_;
         return unless ( $event eq 'state change' );
@@ -478,7 +478,7 @@ is set to 1 if the action was executed using autorun.
 
 After the action has been successfully executed and the workflow saved
 we issue a 'execute' observation with the old state, action name and
-an autorun flag as additional parameters. 
+an autorun flag as additional parameters.
 So if you wanted to write an observer you could create a
 method with the signature:
 
@@ -501,13 +501,13 @@ Returns a list of action names available from the current state for
 the given environment. So if you keep your `context()` the same if
 you call `execute_action()` with one of the action names you should
 not trigger any condition error since the action has already been
-screened for conditions. 
-If you want to divide actions in groups (for example state change group, 
-approval group, which have to be shown at different places on the page) add group property 
+screened for conditions.
+If you want to divide actions in groups (for example state change group,
+approval group, which have to be shown at different places on the page) add group property
 to your action
 
-<action name="terminate request"  group="state change"  class="MyApp::Action::Terminate" />
-<action name="approve request"  group="approval"  class="MyApp::Action::Approve" />
+&lt;action name="terminate request"  group="state change"  class="MyApp::Action::Terminate" />
+&lt;action name="approve request"  group="approval"  class="MyApp::Action::Approve" />
 
 my @actions = $wf->get\_current\_actions("approval");
 
@@ -712,7 +712,7 @@ PPDs from TheoryX:
 
 ## XML::Simple
 
-CPAN testers reports however do demonstrate a problem with one of the 
+CPAN testers reports however do demonstrate a problem with one of the
 dependencies of Workflow, namely [XML::Simple](https://metacpan.org/pod/XML::Simple).
 
 The [XML::Simple](https://metacpan.org/pod/XML::Simple) makes use of [Lib::XML::SAX](https://metacpan.org/pod/Lib::XML::SAX) or [XML::Parser](https://metacpan.org/pod/XML::Parser), the default.
@@ -740,11 +740,11 @@ CPAN testers reports indicate an issue with observers for Perl 5.8.8
     #          got: '4'
     #     expected: '2'
     # Looks like you failed 1 test of 35.
-    t/workflow.t ....................... 
+    t/workflow.t .......................
     Dubious, test returned 1 (wstat 256, 0x100)
-    Failed 1/35 subtests 
+    Failed 1/35 subtests
 
-The issue is being investigated further, so this information is to be regarded 
+The issue is being investigated further, so this information is to be regarded
 as a warning before you dig too much into the issue.
 
 See also:
@@ -837,7 +837,6 @@ tool chain and is performed either by running the test suite.
 Or by running the test file containing the [Perl::Critic](https://metacpan.org/pod/Perl::Critic) tests explicitly.
 
         % ./Build test --verbose 1 --test_files t/04_critic.t
-        
 
 Or
 
@@ -912,9 +911,9 @@ development. The list is low-traffic.
 # SEE ALSO
 
 - November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
-Iceland by jonasbn 
+Iceland by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-npw2010](http://www.slideshare.net/jonasbn/workflow-npw2010)
-- August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn 
+- August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-yapceu2010](http://www.slideshare.net/jonasbn/workflow-yapceu2010)
 - October 2004 talk 'Workflows in Perl' given to
 pgh.pm by Chris Winters: [http://www.cwinters.com/pdf/workflow\_pgh\_pm.pdf](http://www.cwinters.com/pdf/workflow_pgh_pm.pdf)
@@ -922,7 +921,7 @@ pgh.pm by Chris Winters: [http://www.cwinters.com/pdf/workflow\_pgh\_pm.pdf](htt
 # COPYRIGHT
 
 Copyright (c) 2003 Chris Winters and Arvato Direct;
-Copyright (c) 2004-2015 Chris Winters. All rights reserved.
+Copyright (c) 2004-2017 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -942,11 +941,12 @@ DBI persister resulting in 1.38
 
 Heiko Schlittermann for context serialization patch resulting in 1.36
 
-Scott Harding, for lazy evaluation of conditions and for nested conditions, see 
+Scott Harding, for lazy evaluation of conditions and for nested conditions, see
 Changes file: 1.35
 
-Oliver Welter, patch implementing custom workflows, see Changes file: 1.35 and 
-patch related to this in 1.37 and factory subclassing also in 1.35
+Oliver Welter, patch implementing custom workflows, see Changes file: 1.35 and
+patch related to this in 1.37 and factory subclassing also in 1.35. Improvements
+in logging for condition validation in 1.43
 
 Steven van der Vegt, patch for autorun in initial state and improved exception
 handling for validators, see Changes file: 1.34\_1
@@ -955,19 +955,19 @@ Andrew O'Brien, patch implementing dynamic reloaded of flows, see Changes file:
 1.33
 
 Sergei Vyshenski, bug reports - addressed and included in 1.33, Sergei also
-maintains the FreeBSD port 
+maintains the FreeBSD port
 
 Alejandro Imass, improvements and clarifications, see Changes file: 1.33
 
-Danny Sadinoff, patches to give better control of initial state and history 
+Danny Sadinoff, patches to give better control of initial state and history
 records for workflow, see Changes file: 1.33
 
-Thomas Erskine, for patch adding new accessors and fixing several bugs see 
+Thomas Erskine, for patch adding new accessors and fixing several bugs see
 Changes file 1.33
 
 Ivan Paponov, for patch implementing action groups, see Changes file, 1.33
 
-Robert Stockdale, for patch implementing dynamic names for conditions, see 
+Robert Stockdale, for patch implementing dynamic names for conditions, see
 Changes file, 1.32
 
 Jim Brandt, for patch to Workflow::Config::XML. See Changes file, 0.27 and 0.30
