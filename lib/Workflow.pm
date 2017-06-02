@@ -7,6 +7,7 @@ use base qw( Workflow::Base Class::Observable );
 use Log::Log4perl qw( get_logger );
 use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
+use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak carp);
 use English qw( -no_match_vars );
@@ -120,6 +121,12 @@ sub execute_action {
         $self->state($old_state);
 
         $self->_factory()->_rollback_transaction($self);
+
+        # If it is a validation error we rethrow it so it can be evaluated
+        # by the caller to provide better feedback to the user
+        if (Exception::Class->caught('Workflow::Exception::Validation')) {
+            $EVAL_ERROR->rethrow();
+        }
 
         # Don't use 'workflow_error' here since $error should already
         # be a Workflow::Exception object or subclass
