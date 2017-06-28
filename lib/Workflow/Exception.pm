@@ -50,7 +50,7 @@ sub _mythrow {
     my ( $prev_pkg, $prev_line ) = ( caller 1 )[ 0, 2 ];
 
     # Do not log condition errors
-    if ($type ne 'condition_exception') {
+    if ($type ne 'condition_error') {
         $log->error( "$type exception thrown from [$pkg: $line; before: ",
             "$prev_pkg: $prev_line]: $msg" );
     }
