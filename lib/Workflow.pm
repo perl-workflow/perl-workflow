@@ -1466,7 +1466,7 @@ Changes file: 1.35
 
 Oliver Welter, patch implementing custom workflows, see Changes file: 1.35 and
 patch related to this in 1.37 and factory subclassing also in 1.35. Improvements
-in logging for condition validation in 1.43
+in logging for condition validation in 1.43 and 1.44
 
 Steven van der Vegt, patch for autorun in initial state and improved exception
 handling for validators, see Changes file: 1.34_1
