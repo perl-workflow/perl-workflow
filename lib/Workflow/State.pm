@@ -5,7 +5,7 @@ use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Condition::Evaluate;
-use Workflow::Exception qw( workflow_error );
+use Workflow::Exception qw( workflow_error condition_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
@@ -141,7 +141,7 @@ sub evaluate_action {
                 {
                     $log->is_debug
                         && $log->debug("Cached condition result is false.");
-                    workflow_error "No access to action '$action_name' in ",
+                    condition_error "No access to action '$action_name' in ",
                         "state '$state' because cached ",
                         "condition '$orig_condition' already ",
                         "failed before.";
@@ -155,7 +155,7 @@ sub evaluate_action {
                 if ( $self->{'_condition_result_cache'}->{$orig_condition} ) {
                     $log->is_debug
                         && $log->debug("Cached condition is true.");
-                    workflow_error "No access to action '$action_name' in ",
+                    condition_error "No access to action '$action_name' in ",
                         "state '$state' because cached ",
                         "condition '$orig_condition' did NOT ",
                         "fail before and we are being asked ",
@@ -191,7 +191,7 @@ sub evaluate_action {
                             && $log->debug("No access to action '$action_name', condition " .
                              "'$orig_condition' failed because ' . $EVAL_ERROR");
 
-                        workflow_error "No access to action '$action_name' in ",
+                        condition_error "No access to action '$action_name' in ",
                             "state '$state' because: $EVAL_ERROR";
                     } else {
                         $log->is_debug
@@ -220,7 +220,7 @@ sub evaluate_action {
                             "No access to action '$action_name', condition '$orig_condition' ".
                             "did NOT failed but opposite requested");
 
-                    workflow_error "No access to action '$action_name' in ",
+                    condition_error "No access to action '$action_name' in ",
                         "state '$state' because condition ",
                         "$orig_condition did NOT fail and we ",
                         "are checking $condition_name.";
