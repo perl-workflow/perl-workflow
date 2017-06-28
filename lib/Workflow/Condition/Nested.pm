@@ -3,7 +3,7 @@ package Workflow::Condition::Nested;
 use strict;
 use warnings;
 
-our $VERSION = '1.43';
+our $VERSION = '1.44';
 
 use base qw( Workflow::Condition );
 use Workflow::Factory qw( FACTORY );

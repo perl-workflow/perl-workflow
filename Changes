@@ -1,5 +1,11 @@
 Revision history for Perl extension Workflow
 
+1.44 2017-06-28 Maintenance release, update recommended
+
+- Yet another PR from Oliver Welter providing improvements to exception
+  handling in relation to condition validation
+
+
 1.43 2017-06-02 Maintenance release, update recommended
 
 - PR from Oliver Welter providing improvements to logging in relation to
