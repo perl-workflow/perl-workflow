@@ -1,5 +1,11 @@
 Revision history for Perl extension Workflow
 
+1.45 2017-06-29 Maintenance release, update not required
+
+- Addressing issue #13, moved Data::UUID from recommendatiions to
+  prerequisites/requirements section
+
+
 1.44 2017-06-28 Maintenance release, update recommended
 
 - Yet another PR from Oliver Welter providing improvements to exception
