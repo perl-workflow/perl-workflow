@@ -5,6 +5,11 @@ Revision history for Perl extension Workflow
 - Yet another PR from Oliver Welter providing improvements to exception
   handling in relation to condition validation
 
+- Exchanged use of: Dist::Zilla::Plugin::GitHub::Meta for Dist::Zilla::Plugin::GithubMeta
+  to specify a proper homepage attribute
+
+  Ref: https://metacpan.org/pod/Dist::Zilla::Plugin::GithubMeta
+
 
 1.43 2017-06-02 Maintenance release, update recommended
 
