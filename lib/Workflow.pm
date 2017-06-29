@@ -1454,6 +1454,8 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
 
+Bug report from Slaven Rezić resulting in maintenance release 1.45
+
 Feature and bug fix by dtikhonov resulting in 1.40 (first pull request on Github)
 
 Sérgio Alves, patch to timezone handling for workflow history deserialized using
