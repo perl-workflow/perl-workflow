@@ -8,7 +8,7 @@ use Workflow::Exception qw( persist_error );
 
 use constant DEFAULT_ID_LENGTH => 8;
 
-$Workflow::Persister::VERSION = '1.44';
+$Workflow::Persister::VERSION = '1.45';
 
 my @FIELDS = qw( name class
     use_random use_uuid

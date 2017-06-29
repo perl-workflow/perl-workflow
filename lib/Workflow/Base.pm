@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Class::Accessor );
 use Log::Log4perl;
-$Workflow::Base::VERSION = '1.44';
+$Workflow::Base::VERSION = '1.45';
 
 sub new {
     my ( $class, @params ) = @_;

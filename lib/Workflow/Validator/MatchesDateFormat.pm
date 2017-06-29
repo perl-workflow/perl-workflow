@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error validation_error );
 use English qw( -no_match_vars );
 use Carp qw(carp);
 
-$Workflow::Validator::MatchesDateFormat::VERSION = '1.44';
+$Workflow::Validator::MatchesDateFormat::VERSION = '1.45';
 
 __PACKAGE__->mk_accessors('formatter');
 
