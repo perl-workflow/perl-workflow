@@ -1,64 +1,27 @@
-sudo: false # Migrating from legacy to container-based infrastructure for Travis
-            # Ref: http://docs.travis-ci.com/user/migrating-from-legacy/
+sudo: false
 language: perl
 perl:
-  - "5.26"
-  - "5.24"
-  - "5.22"
-  - "5.20"
-  - "5.18"
-  - "5.16"
-  - "5.14"
-  - "5.12"
-  - "5.10"
-
+- '5.26'
+- '5.20'
+- '5.10'
 before_install:
-
-   # Prevent "Please tell me who you are" errors for certain DZIL configs
-
-   - git config --global user.name "TravisCI"
-
+- git config --global user.name "TravisCI"
 install:
-
-   # Deal with all of the DZIL dependencies, quickly and quietly
-
-   - cpanm --quiet --notest --skip-satisfied Dist::Zilla
-
-   # Hack to getting the latest Test::Kwalitee
-
-   - cpanm --quiet --notest Test::Kwalitee
-
-   # Getting coveralls report
-
-   - cpanm --quiet --notest Devel::Cover::Report::Coveralls
-
-   # Getting codecov report
-
-   - cpanm --quiet --notest --skip-satisfied Devel::Cover Devel::Cover::Report::Codecov
-
-   # Getting cover command for Dist::Zilla
-
-   - cpanm --quiet --notest Dist::Zilla::App::Command::cover
-
-   # Getting all the plugins used by Dist::Zilla in this particular setup
-
-   - dzil authordeps | grep -vP '[^\w:]' | xargs -n 5 -P 10 cpanm --quiet --notest --skip-satisfied
-
-   # Getting all the dependencies requested by author
-
-   - dzil listdeps --author | cpanm --quiet --notest --skip-satisfied
-
-   - export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=j10:c HARNESS_TIMER=1
-
-   # Getting all the dependencies requested by distribution
-
-   - dzil listdeps | grep -vP '[^\w:]' | cpanm --quiet --notest --skip-satisfied
-
+- cpanm --quiet --notest --skip-satisfied Dist::Zilla
+- cpanm --quiet --notest Test::Kwalitee
+- cpanm --quiet --notest Devel::Cover::Report::Coveralls
+- cpanm --quiet --notest --skip-satisfied Devel::Cover Devel::Cover::Report::Codecov
+- cpanm --quiet --notest Dist::Zilla::App::Command::cover
+- dzil authordeps | grep -vP '[^\w:]' | xargs -n 5 -P 10 cpanm --quiet --notest --skip-satisfied
+- dzil listdeps --author | cpanm --quiet --notest --skip-satisfied
+- export RELEASE_TESTING=1 AUTOMATED_TESTING=1 AUTHOR_TESTING=1 HARNESS_OPTIONS=j10:c
+  HARNESS_TIMER=1
+- dzil listdeps | grep -vP '[^\w:]' | cpanm --quiet --notest --skip-satisfied
 script:
-
-   - dzil smoke --release --author
-
+- dzil smoke --release --author
 after_success:
-
-    - dzil cover -outputdir cover_db -report coveralls
-    - dzil cover -report codecov
+- dzil cover -outputdir cover_db -report coveralls
+- dzil cover -report codecov
+notifications:
+  slack:
+    secure: 3QTn/fXE6iR60yLkIbgAHc9cgzY0z4cR4t0tESM+o4joSZ4ZhWXFK7Yhwy5Te/21TpYPOurngW8a2PIg7oRDhmAlV3oOV6ERvxXxacsN5udnDCrRvAgTA89y3zK2DcjYCofN3sCf0K4y9L8lKgBxpdpY/ItOXvTtV/8pXjoH/UI=
