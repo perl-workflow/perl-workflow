@@ -87,6 +87,9 @@
 
 # Github files
 \.travis\.yml
+.github
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
 
 # Komodo files
 \.komodoproject
