@@ -75,6 +75,9 @@ sub validate {
     foreach my $validator_info (@validators) {
         my $validator    = $validator_info->{validator};
         my $args         = $validator_info->{args};
+
+        # TODO: Revisit this statement it does not look right
+        # runtime_args becomes the WF object??
         my @runtime_args = ($wf);
         foreach my $arg ( @{$args} ) {
             if ( $arg =~ /^\$(.*)$/ ) {
