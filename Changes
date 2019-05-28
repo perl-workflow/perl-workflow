@@ -1,5 +1,10 @@
 Revision history for Perl extension Workflow
 
+1.46 2019-05-28 Bug fix release, update not required
+
+- Patch from Oliver Welter, addressing issue with greedy join handling error message
+
+
 1.45 2017-06-29 Maintenance release, update not required
 
 - Addressing issue #13, moved Data::UUID from recommendatiions to

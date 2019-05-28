@@ -6,7 +6,7 @@ use base qw( Workflow::Condition );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( condition_error );
 
-$Workflow::Condition::HasUser::VERSION = '1.45';
+$Workflow::Condition::HasUser::VERSION = '1.46';
 
 my $DEFAULT_USER_KEY = 'current_user';
 

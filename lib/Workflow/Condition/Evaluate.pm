@@ -8,7 +8,7 @@ use Safe;
 use Workflow::Exception qw( condition_error configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Condition::Evaluate::VERSION = '1.45';
+$Workflow::Condition::Evaluate::VERSION = '1.46';
 
 my @FIELDS = qw( test );
 __PACKAGE__->mk_accessors(@FIELDS);
