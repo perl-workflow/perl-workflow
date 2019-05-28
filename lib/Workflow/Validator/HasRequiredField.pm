@@ -17,8 +17,8 @@ sub validate {
         }
     }
     if ( scalar @no_value ) {
-        validation_error "The following fields require a value: ", join ', ',
-            @no_value, { invalid_fields => \@no_value };
+        validation_error "The following fields require a value: ",
+            join(', ',@no_value), { invalid_fields => \@no_value };
     }
 }
 
