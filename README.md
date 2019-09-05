@@ -935,6 +935,8 @@ Chris Winters <chris@cwinters.com>, original author.
 
 The following folks have also helped out (listed here in no particular order):
 
+Bug report from Petr Pisar resulted in release 1.48
+
 Bug report from Tina Müller (tinita) resulted in release 1.47
 
 Patch from Oliver Welter resulting in release 1.46
