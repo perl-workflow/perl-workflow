@@ -10,7 +10,7 @@ use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
 
-$Workflow::State::VERSION = '1.47';
+$Workflow::State::VERSION = '1.48';
 
 my @FIELDS   = qw( state description type );
 my @INTERNAL = qw( _test_condition_count _factory );

@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Config::XML::VERSION = '1.47';
+$Workflow::Config::XML::VERSION = '1.48';
 
 my ($log);
 

@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Action );
 
-$Workflow::Action::Null::VERSION = '1.47';
+$Workflow::Action::Null::VERSION = '1.48';
 
 sub execute {
     my ($self) = @_;

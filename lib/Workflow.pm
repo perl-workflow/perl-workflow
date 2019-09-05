@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.47';
+$Workflow::VERSION = '1.48';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -1453,6 +1453,8 @@ Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
+
+Bug report from Petr Pisar resulted in release 1.48
 
 Bug report from Tina Müller (tinita) resulted in release 1.47
 

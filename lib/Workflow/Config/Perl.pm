@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );
 
-$Workflow::Config::Perl::VERSION = '1.47';
+$Workflow::Config::Perl::VERSION = '1.48';
 
 sub parse {
     my ( $self, $type, @items ) = @_;

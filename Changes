@@ -1,5 +1,10 @@
 Revision history for Perl extension Workflow
 
+1.48 2019-09-05 Bug fix release, update not required
+
+- Eliminated warning emitted from test run. Bug reported by Petr Pisar
+
+
 1.47 2019-09-05 Bug fix release, update not required
 
 - Accidently included cartons local directory in the distribution tar-ball. Bug reported by Tina Müller (tinita)
