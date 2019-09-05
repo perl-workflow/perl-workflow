@@ -11,7 +11,7 @@ use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
 use English qw( -no_match_vars );
 
-$Workflow::Persister::File::VERSION = '1.46';
+$Workflow::Persister::File::VERSION = '1.47';
 
 my @FIELDS = qw( path );
 __PACKAGE__->mk_accessors(@FIELDS);
