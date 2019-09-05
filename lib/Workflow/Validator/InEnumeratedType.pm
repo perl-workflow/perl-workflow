@@ -5,7 +5,7 @@ use strict;
 use base qw( Workflow::Validator );
 use Workflow::Exception qw( configuration_error validation_error );
 
-$Workflow::Validator::InEnumeratedType::VERSION = '1.46';
+$Workflow::Validator::InEnumeratedType::VERSION = '1.47';
 
 sub _init {
     my ( $self, $params ) = @_;

@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Data::UUID;
 
-$Workflow::Persister::UUID::VERSION = '1.46';
+$Workflow::Persister::UUID::VERSION = '1.47';
 
 sub new {
     my ( $class, $params ) = @_;
