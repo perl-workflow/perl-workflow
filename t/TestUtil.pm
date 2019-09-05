@@ -110,6 +110,7 @@ sub init_mock_persister {
         name  => 'TestPersister',
         class => 'Workflow::Persister::DBI',
         dsn   => 'DBI:Mock:',
+        date_format => '%Y-%m-%dT%H:%M:%S',
 	user => 'DBTester',
     );
     $factory->add_config( persister => [ \%persister ] );
