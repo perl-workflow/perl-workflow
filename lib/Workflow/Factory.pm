@@ -1037,7 +1037,8 @@ instantiated.
 
 We also require any necessary observer classes and throw an exception
 if we cannot. If successful the observers are kept around and attached
-to a workflow in L</create_workflow()> and L</fetch_workflow()>.
+to a workflow in L<create_workflow()|/create_workflow> and
+L<fetch_workflow()|/fetch_workflow>.
 
 Returns: nothing
 
