@@ -1156,6 +1156,8 @@ to L<Workflow::Config>, for implementation details.
 
 =item L<File::Slurp>
 
+=item L<Data::UUID>
+
 =back
 
 =head2 DEPENDENCIES FOR THE EXAMPLE APPLICATION
@@ -1234,24 +1236,17 @@ L<http://www.cpantesters.org/cpan/report/fc85ca1c-e46e-11e2-891c-ff8a40f4ab3d>
 
 =head1 BUGS AND LIMITATIONS
 
-Known bugs and limitations can be seen in RT:
+Known bugs and limitations can be seen in the Github issue tracker:
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow>
+L<https://github.com/jonasbn/perl-workflow/issues>
 
 =head1 BUG REPORTING
 
-Bug reporting should be done either via Request Tracker (RT)
+Bug reporting should be done either via Github issues
 
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow>
+L<https://github.com/jonasbn/perl-workflow/issues>
 
-Or via email
-
-C<bug-test-timer at rt.cpan.org>
-
-A list of currently known issues can be seen via examining the RT queue for
-Workflow.
-
-L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow>
+A list of currently known issues can be seen via the same URL.
 
 =head1 TEST
 
@@ -1357,12 +1352,12 @@ downloaded from the central repository.
 
 =head1 PROJECT
 
-The Workflow project is currently hosted with SourceForge.net and is listed on
+The Workflow project is currently hosted on GitHub and is listed on
 Ohloh.
 
 =over
 
-=item SF.net: L<http://perl-workflow.sf.net>
+=item SF.net: L<htts://github.com/jonasbn/perl-workflow>
 
 =item Ohloh: L<https://www.ohloh.net/p/perl-Workflow>
 
@@ -1370,11 +1365,11 @@ Ohloh.
 
 =head2 REPOSITORY
 
-The code is kept under revision control using Subversion:
+The code is kept under revision control using Git:
 
 =over
 
-=item L<https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow>
+=item L<https://github.com/jonasbn/perl-workflow/tree/master/>
 
 =back
 
@@ -1406,17 +1401,13 @@ development. The list is low-traffic.
 
 =over
 
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Workflow>
-
 =item * CPAN Ratings
 
 L<http://cpanratings.perl.org/d/Workflow>
 
-=item * Search CPAN
+=item * Search MetaCPAN
 
-L<http://search.cpan.org/dist/Workflow>
+L<https://metacpan.org/release/Workflow>
 
 =back
 
@@ -1430,9 +1421,6 @@ L<http://www.slideshare.net/jonasbn/workflow-npw2010>
 
 =item * August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn
 L<http://www.slideshare.net/jonasbn/workflow-yapceu2010>
-
-=item * October 2004 talk 'Workflows in Perl' given to
-pgh.pm by Chris Winters: L<http://www.cwinters.com/pdf/workflow_pgh_pm.pdf>
 
 =back
 
