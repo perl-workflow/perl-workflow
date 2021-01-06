@@ -91,7 +91,7 @@ Revision history for Perl extension Workflow
 
 1.38 2013-07-07 Bug fix release, update recommended
 
-- Patch to minor bug where Worflow history did not set proper timezone
+- Patch to minor bug where Workflow history did not set proper timezone
   in Workflow::Persister::DBI
 
   https://rt.cpan.org/Ticket/Display.html?id=85380 [RT:85380]

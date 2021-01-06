@@ -372,7 +372,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 0.15 of Workflow
+This documentation describes version 1.48 of Workflow
 
 =head1 SYNOPSIS
 
@@ -1392,10 +1392,6 @@ development. The list is low-traffic.
 =head2 RSS FEEDS
 
 =over
-
-=item Commit log L<http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.workflow.scm>
-
-=item Ohloh news L<https://www.ohloh.net/p/perl-Workflow/messages.rss>
 
 =item CPAN testers reports L<http://cpantesters.perl.org/show/Workflow.rss> in matrix:
 
