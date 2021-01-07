@@ -1,4 +1,4 @@
 <conditions>
-   <condition name="EvenSeconds"
-              class="TestCachedApp::Condition::EvenSeconds"/>
+   <condition name="EvenCounts"
+              class="TestCachedApp::Condition::EvenCounts"/>
 </conditions>

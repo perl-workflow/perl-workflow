@@ -1,4 +1,4 @@
-package TestCachedApp::Condition::EvenSeconds;
+package TestCachedApp::Condition::EvenCounts;
 
 # $Id$
 
@@ -6,11 +6,12 @@ use strict;
 use base qw( Workflow::Condition );
 use Workflow::Exception qw( condition_error );
 
+my $count = 0;
+
 sub evaluate {
     my ( $self, $wf ) = @_;
-    sleep 1;
-    if (time() % 2 == 1) {
-        condition_error "Current seconds are not divisible by 2";
+    if ($count++ % 2 == 1) {
+        condition_error "Current count is not divisible by 2";
     }
 }
 
