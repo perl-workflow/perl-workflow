@@ -9,42 +9,11 @@ This document is a collection of notes and are currently far from complete.
 Feedback additions, corrections and suggestions are more than welcome.
 
 
-VERSION NUMBERS
-
-The main version number for Workflow is isolated in the file VERSION in the root
-of the distribution directory, this file is increased accodingly when a new
-release is prepared. See RELEASING below.
-
-All modules and scripts carry a version number, that is maintained manually. We
-update this when functionality changes. Whitespace changes, POD additions does
-not necessarily require an version update, but this is left to the developers
-descretion, but please update the version of bugs are fixed, functionality is
-changed or added since the version can be used to identify differing behaviour
-at load time.
-
-SCM
-
-	HTTP: http://perl-workflow.svn.sourceforge.net/viewvc/perl-workflow/
-
-	Checking out:
-	
-	% svn co https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow perl-workflow
-
-TAGGING
-
-	Example:
-	
-	%  svn cp https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow/trunk/workflow \
-	https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow/tags/Release_0_28
-
-	see also VERSION NUMBERS
-
 PATCHES
 
-Patches are more than welcome, patches should adhere to the strategy described
-in VERSION NUMBERS.
+Patches and PRs are more than welcome.
 
-Patches are preferred accompanied by documentation and tests. If this is not the
+Changes are preferred accompanied by documentation and tests. If this is not the
 case, please make an appropriate entry in the Changes file, which in-depth
 describes the purpose/motivation of the patch and what it influences.
 
@@ -52,9 +21,9 @@ To create a patch using the diff command, use the following format:
 
     % diff -u file.new file.org > file.patch
     
-    Using subversion to generate a patch
+    Using git to generate a patch
     
-    % svn diff -u file.new > file.patch
+    % git diff file.new > file.patch
     
 
 RELEASES
@@ -75,35 +44,21 @@ which supports both CPAN and SourceForge.
     
     Insert date in Changes file
     
-    Update VERSION file
-
 2. Clean the directory and prepare the for the build
 
-    % ./Build realclean
-    
-    % perl Build.PL
+    % dzil clean
 
 3. Make sure all tests pass
 
-    % export TEST_POD=1
+    % dzil test
 
-    % ./Build test
+4. Make dist
 
-4. Update MANIFEST file
+    % dzil release
 
-    % ./Build manifest
-    
-5. Make dist
+5. Upload to appropriate distribution channels like PAUSE/CPAN and Sourceforge
 
-    % ./Build dist
-
-6. Make distcheck
-
-    % ./Build distcheck
-
-7. Upload to appropriate distribution channels like PAUSE/CPAN and Sourceforge
-
-8. Make a tag in the SCM, see TAGGING above
+6. Make a tag in the SCM, see TAGGING above
 
 TESTS
 
@@ -119,14 +74,10 @@ Subversion
 
 Developer mailing list
 
-	perl-workflow-devel@lists.sourceforge.net
+        perl-workflow-devel@lists.sourceforge.net
 
 Commit mailing list and RSS feed
 
-	perl-workflow-svn@lists.sourceforge.net
-
-RSS: http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.workflow.scm 
-HTTP: http://dir.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
-NNTP: nntp://news.gmane.org/gmane.comp.lang.perl.modules.workflow.scm
+        perl-workflow-svn@lists.sourceforge.net
 
 Jonas B. Nielsen (jonasbn) <jonasbn@cpan.org>, current maintainer.
