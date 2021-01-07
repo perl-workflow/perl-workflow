@@ -5,6 +5,7 @@ use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);
 
+$Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '1.48';
 
 my @FIELDS = qw( name class );
@@ -202,6 +203,11 @@ feature - if you have both C<<condition name="some_condition">> and
 C<<condition name="!some_condition">> in your workflow state definition,
 exactly one of them will succeed and one will fail - which is particularly
 useful if you use "autorun" a lot.
+
+Caching can be disabled by changing C<$Workflow::Condition::CACHE_RESULTS>
+to zero (0):
+
+    $Workflow::Condition::CACHE_RESULTS = 0;
 
 =head1 COPYRIGHT
 

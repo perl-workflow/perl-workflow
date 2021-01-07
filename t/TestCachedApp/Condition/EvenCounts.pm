@@ -6,7 +6,7 @@ use strict;
 use base qw( Workflow::Condition );
 use Workflow::Exception qw( condition_error );
 
-my $count = 0;
+our $count = 0;
 
 sub evaluate {
     my ( $self, $wf ) = @_;
