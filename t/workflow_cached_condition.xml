@@ -4,10 +4,10 @@
  <persister>TestPersister</persister>
  <state name="INITIAL">
      <action name="TEST" resulting_state="INITIAL">
-         <condition name="EvenSeconds"/>
+         <condition name="EvenCounts"/>
      </action>
      <action name="TEST2" resulting_state="INITIAL">
-         <condition name="!EvenSeconds"/>
+         <condition name="!EvenCounts"/>
      </action>
      <action name="FORWARD" resulting_state="SECOND"/>
  </state>
