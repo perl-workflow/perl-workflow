@@ -188,7 +188,7 @@ included separately as libraries to allow for maximum reusibility.
 As a user you only see two components, plus a third which is really
 embedded into another:
 
-- [Workflow::Factory](https://metacpan.org/pod/Workflow::Factory) - The factory is your interface for creating new
+- [Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory) - The factory is your interface for creating new
 workflows and fetching existing ones. You also feed all the necessary
 configuration files and/or data structures to the factory to
 initialize it.
@@ -197,7 +197,7 @@ factory you can only use it in a few ways -- asking for the current
 state, actions available for the state, data required for a particular
 action, and most importantly, executing a particular action. Executing
 an action is how you change from one state to another.
-- [Workflow::Context](https://metacpan.org/pod/Workflow::Context) - This is a blackboard for data from your
+- [Workflow::Context](https://metacpan.org/pod/Workflow%3A%3AContext) - This is a blackboard for data from your
 application to the workflow system and back again. Each instantiation
 of a [Workflow](https://metacpan.org/pod/Workflow) has its own context, and actions executed by the
 workflow can read data from and deposit data into the context.
@@ -217,7 +217,7 @@ conditions you can change states.
 action is triggered by moving from one state to another and has access
 to the workflow and more importantly its context.
 
-    The base class for actions is the [Workflow::Action](https://metacpan.org/pod/Workflow::Action) class.
+    The base class for actions is the [Workflow::Action](https://metacpan.org/pod/Workflow%3A%3AAction) class.
 
 - **condition** - Within the workflow you can attach one or more
 conditions to an action. These ensure that actions only get executed
@@ -228,7 +228,7 @@ times of the day, or from certain IP addresses, and so forth. Each
 condition is created once at startup then passed a context to check
 every time an action is checked to see if it can be executed.
 
-    The base class for conditions is the [Workflow::Condition](https://metacpan.org/pod/Workflow::Condition) class.
+    The base class for conditions is the [Workflow::Condition](https://metacpan.org/pod/Workflow%3A%3ACondition) class.
 
 - **validator** - An action can specify one or more validators to ensure
 that the data available to the action is correct. The data to check
@@ -236,7 +236,7 @@ can be as simple or complicated as you like. Each validator is created
 once then passed a context and data to check every time an action is
 executed.
 
-    The base class for validators is the [Workflow::Validator](https://metacpan.org/pod/Workflow::Validator) class.
+    The base class for validators is the [Workflow::Validator](https://metacpan.org/pod/Workflow%3A%3AValidator) class.
 
 # WORKFLOW BASICS
 
@@ -305,8 +305,8 @@ To allow the workflow to run into multiple environments we must have a
 common way to move data between your application, the workflow and the
 code that moves it from one state to another.
 
-Whenever the [Workflow::Factory](https://metacpan.org/pod/Workflow::Factory) creates a new workflow it associates
-the workflow with a [Workflow::Context](https://metacpan.org/pod/Workflow::Context) object. The context is what
+Whenever the [Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory) creates a new workflow it associates
+the workflow with a [Workflow::Context](https://metacpan.org/pod/Workflow%3A%3AContext) object. The context is what
 moves the data from your application to the workflow and the workflow
 actions.
 
@@ -321,7 +321,7 @@ is too closely tied to an interface (like the web) then you have to
 create some potentially ugly hacks to create a more convenient avenue
 for input to your system (such as an e-mail approving a document).
 
-The [Workflow::Context](https://metacpan.org/pod/Workflow::Context) object is extremely simple to use -- you ask
+The [Workflow::Context](https://metacpan.org/pod/Workflow%3A%3AContext) object is extremely simple to use -- you ask
 a workflow for its context and just get/set parameters on it:
 
     # Get the username from the Apache object
@@ -347,9 +347,9 @@ When you execute the action a number of checks occur. The action needs
 to ensure:
 
 - The data presented to it are valid -- date formats, etc. This is done
-with a validator, more at [Workflow::Validator](https://metacpan.org/pod/Workflow::Validator)
+with a validator, more at [Workflow::Validator](https://metacpan.org/pod/Workflow%3A%3AValidator)
 - The environment meets certain conditions -- user is an administrator,
-etc. This is done with a condition, more at [Workflow::Condition](https://metacpan.org/pod/Workflow::Condition)
+etc. This is done with a condition, more at [Workflow::Condition](https://metacpan.org/pod/Workflow%3A%3ACondition)
 
 Once the action passes these checks and successfully executes we
 update the permanent workflow storage with the new state, as long as
@@ -431,7 +431,7 @@ you executed an action that did not result in a state change.
 - **add history** - Issued after one or more history objects added to a
 workflow object.
 
-    The additional argument is an arrayref of all [Workflow::History](https://metacpan.org/pod/Workflow::History)
+    The additional argument is an arrayref of all [Workflow::History](https://metacpan.org/pod/Workflow%3A%3AHistory)
     objects added to the workflow. (Note that these will not be persisted
     until the workflow is persisted.)
 
@@ -491,7 +491,7 @@ method with the signature:
 
 We also issue a 'change state' observation if the executed action
 resulted in a new state. See ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable) above for how
-we use and register observers and [Class::Observable](https://metacpan.org/pod/Class::Observable) for more
+we use and register observers and [Class::Observable](https://metacpan.org/pod/Class%3A%3AObservable) for more
 general information about observers as well as implementation details.
 
 Returns: new state of workflow
@@ -520,11 +520,11 @@ Returns: list of strings representing available actions
 
 ### get\_action\_fields( $action\_name )
 
-Return a list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow::Action::InputField) objects for the given
+Return a list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow%3A%3AAction%3A%3AInputField) objects for the given
 `$action_name`. If `$action_name` not in the current state or not
 accessible by the environment an exception is thrown.
 
-Returns: list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow::Action::InputField) objects
+Returns: list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow%3A%3AAction%3A%3AInputField) objects
 
 ### add\_history( @( \\%params | $wf\_history\_object ) )
 
@@ -534,7 +534,7 @@ action. This history will not be saved until `execute_action()` is
 complete.
 
 You can add a list of either hashrefs with history information in them
-or full [Workflow::History](https://metacpan.org/pod/Workflow::History) objects. Trying to add anything else will
+or full [Workflow::History](https://metacpan.org/pod/Workflow%3A%3AHistory) objects. Trying to add anything else will
 result in an exception and **none** of the items being added.
 
 Successfully adding the history objects results in a 'add history'
@@ -559,10 +559,10 @@ from the long-term storage.
 
 ### set( $property, $value )
 
-Method used to overwrite [Class::Accessor](https://metacpan.org/pod/Class::Accessor) so only certain callers can set
+Method used to overwrite [Class::Accessor](https://metacpan.org/pod/Class%3A%3AAccessor) so only certain callers can set
 properties caller has to be a [Workflow](https://metacpan.org/pod/Workflow) namespace package.
 
-Sets property to value or throws [Workflow::Exception](https://metacpan.org/pod/Workflow::Exception)
+Sets property to value or throws [Workflow::Exception](https://metacpan.org/pod/Workflow%3A%3AException)
 
 ## Properties
 
@@ -598,7 +598,7 @@ You can get the following properties from any workflow object.
 **id**
 
 ID of this workflow. This will **always** be defined, since when the
-[Workflow::Factory](https://metacpan.org/pod/Workflow::Factory) creates a new workflow it first saves it to
+[Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory) creates a new workflow it first saves it to
 long-term storage.
 
 **state**
@@ -611,8 +611,8 @@ Date of the workflow's last update.
 
 ### context (read-write, see below)
 
-A [Workflow::Context](https://metacpan.org/pod/Workflow::Context) object associated with this workflow. This
-should never be undefined as the [Workflow::Factory](https://metacpan.org/pod/Workflow::Factory) sets an empty
+A [Workflow::Context](https://metacpan.org/pod/Workflow%3A%3AContext) object associated with this workflow. This
+should never be undefined as the [Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory) sets an empty
 context into the workflow when it is instantiated.
 
 If you add a context to a workflow and one already exists, the values
@@ -633,7 +633,7 @@ You will see:
 
 ### init( $id, $current\_state, \\%workflow\_config, \\@wf\_states )
 
-**THIS SHOULD ONLY BE CALLED BY THE** [Workflow::Factory](https://metacpan.org/pod/Workflow::Factory). Do not call
+**THIS SHOULD ONLY BE CALLED BY THE** [Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory). Do not call
 this or the `new()` method yourself -- you will only get an
 exception. Your only interface for creating and fetching workflows is
 through the factory.
@@ -657,12 +657,12 @@ initialization time, so it should not happen.)
 
 ### \_get\_workflow\_state( \[ $state \] )
 
-Return the [Workflow::State](https://metacpan.org/pod/Workflow::State) object corresponding to `$state`, which
+Return the [Workflow::State](https://metacpan.org/pod/Workflow%3A%3AState) object corresponding to `$state`, which
 defaults to the current state.
 
 ### \_set\_workflow\_state( $wf\_state )
 
-Assign the [Workflow::State](https://metacpan.org/pod/Workflow::State) object `$wf_state` to the workflow.
+Assign the [Workflow::State](https://metacpan.org/pod/Workflow%3A%3AState) object `$wf_state` to the workflow.
 
 ### \_get\_next\_state( $action\_name )
 
@@ -674,34 +674,35 @@ in the current state.
 
 The configuration of Workflow is done using the format of your choice, currently
 XML and Perl is implemented, but additional formats can be added, please refer
-to [Workflow::Config](https://metacpan.org/pod/Workflow::Config), for implementation details.
+to [Workflow::Config](https://metacpan.org/pod/Workflow%3A%3AConfig), for implementation details.
 
 # DEPENDENCIES
 
-- [Class::Accessor](https://metacpan.org/pod/Class::Accessor)
-- [Class::Factory](https://metacpan.org/pod/Class::Factory)
-- [Class::Observable](https://metacpan.org/pod/Class::Observable)
+- [Class::Accessor](https://metacpan.org/pod/Class%3A%3AAccessor)
+- [Class::Factory](https://metacpan.org/pod/Class%3A%3AFactory)
+- [Class::Observable](https://metacpan.org/pod/Class%3A%3AObservable)
 - [DateTime](https://metacpan.org/pod/DateTime)
-- [DateTime::Format::Strptime](https://metacpan.org/pod/DateTime::Format::Strptime)
-- [Exception::Class](https://metacpan.org/pod/Exception::Class)
-- [Log::Dispatch](https://metacpan.org/pod/Log::Dispatch)
-- [Log::Log4perl](https://metacpan.org/pod/Log::Log4perl)
+- [DateTime::Format::Strptime](https://metacpan.org/pod/DateTime%3A%3AFormat%3A%3AStrptime)
+- [Exception::Class](https://metacpan.org/pod/Exception%3A%3AClass)
+- [Log::Dispatch](https://metacpan.org/pod/Log%3A%3ADispatch)
+- [Log::Log4perl](https://metacpan.org/pod/Log%3A%3ALog4perl)
 - [Safe](https://metacpan.org/pod/Safe)
-- [XML::Simple](https://metacpan.org/pod/XML::Simple)
+- [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple)
 - [DBI](https://metacpan.org/pod/DBI)
-- [Data::Dumper](https://metacpan.org/pod/Data::Dumper)
+- [Data::Dumper](https://metacpan.org/pod/Data%3A%3ADumper)
 - [Carp](https://metacpan.org/pod/Carp)
-- [File::Slurp](https://metacpan.org/pod/File::Slurp)
+- [File::Slurp](https://metacpan.org/pod/File%3A%3ASlurp)
+- [Data::UUID](https://metacpan.org/pod/Data%3A%3AUUID)
 
 ## DEPENDENCIES FOR THE EXAMPLE APPLICATION
 
 - [CGI](https://metacpan.org/pod/CGI)
-- [CGI::Cookie](https://metacpan.org/pod/CGI::Cookie)
-- [DBD::SQLite](https://metacpan.org/pod/DBD::SQLite)
-- [HTTP::Daemon](https://metacpan.org/pod/HTTP::Daemon)
-- [HTTP::Request](https://metacpan.org/pod/HTTP::Request)
-- [HTTP::Response](https://metacpan.org/pod/HTTP::Response)
-- [HTTP::Status](https://metacpan.org/pod/HTTP::Status)
+- [CGI::Cookie](https://metacpan.org/pod/CGI%3A%3ACookie)
+- [DBD::SQLite](https://metacpan.org/pod/DBD%3A%3ASQLite)
+- [HTTP::Daemon](https://metacpan.org/pod/HTTP%3A%3ADaemon)
+- [HTTP::Request](https://metacpan.org/pod/HTTP%3A%3ARequest)
+- [HTTP::Response](https://metacpan.org/pod/HTTP%3A%3AResponse)
+- [HTTP::Status](https://metacpan.org/pod/HTTP%3A%3AStatus)
 - [Template](https://metacpan.org/pod/Template) (Template Toolkit)
 
 For Win32 systems you can get the Template Toolkit and DBD::SQLite
@@ -714,13 +715,13 @@ PPDs from TheoryX:
 ## XML::Simple
 
 CPAN testers reports however do demonstrate a problem with one of the
-dependencies of Workflow, namely [XML::Simple](https://metacpan.org/pod/XML::Simple).
+dependencies of Workflow, namely [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple).
 
-The [XML::Simple](https://metacpan.org/pod/XML::Simple) makes use of [Lib::XML::SAX](https://metacpan.org/pod/Lib::XML::SAX) or [XML::Parser](https://metacpan.org/pod/XML::Parser), the default.
+The [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple) makes use of [Lib::XML::SAX](https://metacpan.org/pod/Lib%3A%3AXML%3A%3ASAX) or [XML::Parser](https://metacpan.org/pod/XML%3A%3AParser), the default.
 
-In addition an [XML::Parser](https://metacpan.org/pod/XML::Parser) can makes use of plugin parser and some of these
+In addition an [XML::Parser](https://metacpan.org/pod/XML%3A%3AParser) can makes use of plugin parser and some of these
 might not be able to parse the XML utilized in Workflow. The problem have been
-observed with [XML::SAX::RTF](https://metacpan.org/pod/XML::SAX::RTF).
+observed with [XML::SAX::RTF](https://metacpan.org/pod/XML%3A%3ASAX%3A%3ARTF).
 
 The following diagnostic points to the problem:
 
@@ -728,7 +729,7 @@ The following diagnostic points to the problem:
         set the Parent property. If you call the parse() method, make sure to set a
         Source. You may want to call parse_uri, parse_string or parse_file instead.)
 
-Your [XML::SAX](https://metacpan.org/pod/XML::SAX) configuration is located in the file:
+Your [XML::SAX](https://metacpan.org/pod/XML%3A%3ASAX) configuration is located in the file:
 
         XML/SAX/ParserDetails.ini
 
@@ -754,28 +755,21 @@ See also:
 
 # BUGS AND LIMITATIONS
 
-Known bugs and limitations can be seen in RT:
+Known bugs and limitations can be seen in the Github issue tracker:
 
-[http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow)
+[https://github.com/jonasbn/perl-workflow/issues](https://github.com/jonasbn/perl-workflow/issues)
 
 # BUG REPORTING
 
-Bug reporting should be done either via Request Tracker (RT)
+Bug reporting should be done either via Github issues
 
-[http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow)
+[https://github.com/jonasbn/perl-workflow/issues](https://github.com/jonasbn/perl-workflow/issues)
 
-Or via email
-
-`bug-test-timer at rt.cpan.org`
-
-A list of currently known issues can be seen via examining the RT queue for
-Workflow.
-
-[http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow](http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Workflow)
+A list of currently known issues can be seen via the same URL.
 
 # TEST
 
-The test suite can be run using, [Module::Build](https://metacpan.org/pod/Module::Build)
+The test suite can be run using, [Module::Build](https://metacpan.org/pod/Module%3A%3ABuild)
 
         % ./Build test
 
@@ -827,15 +821,15 @@ Activities to get improved coverage are ongoing.
 
 # QUALITY ASSURANCE
 
-The Workflow project utilizes [Perl::Critic](https://metacpan.org/pod/Perl::Critic) in an attempt to avoid common
+The Workflow project utilizes [Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) in an attempt to avoid common
 pitfalls and programming mistakes.
 
-The static analysis performed by [Perl::Critic](https://metacpan.org/pod/Perl::Critic) is integrated into the ["TEST"](#test)
+The static analysis performed by [Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) is integrated into the ["TEST"](#test)
 tool chain and is performed either by running the test suite.
 
         % ./Build test
 
-Or by running the test file containing the [Perl::Critic](https://metacpan.org/pod/Perl::Critic) tests explicitly.
+Or by running the test file containing the [Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) tests explicitly.
 
         % ./Build test --verbose 1 --test_files t/04_critic.t
 
@@ -849,38 +843,38 @@ users and CPAN testers with this.
 
 The following policies are disabled
 
-- [Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers](https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers)
-- [Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef](https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef)
-- [Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames](https://metacpan.org/pod/Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames)
-- [Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma](https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma)
+- [Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3AValuesAndExpressions%3A%3AProhibitMagicNumbers)
+- [Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3ASubroutines%3A%3AProhibitExplicitReturnUndef)
+- [Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3ANamingConventions%3A%3AProhibitAmbiguousNames)
+- [Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3AValuesAndExpressions%3A%3AProhibitConstantPragma)
 
 The complete policy configuration can be found in t/perlcriticrc.
 
 Currently a large number other policies are disabled, but these are being
 addressed as ongoing work and they will either be listed here or changes will
 be applied, which will address the Workflow code's problematic areas from
-[Perl::Critic](https://metacpan.org/pod/Perl::Critic) perspective.
+[Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) perspective.
 
 # CODING STYLE
 
-Currently the code is formatted using [Perl::Tidy](https://metacpan.org/pod/Perl::Tidy). The resource file can be
+Currently the code is formatted using [Perl::Tidy](https://metacpan.org/pod/Perl%3A%3ATidy). The resource file can be
 downloaded from the central repository.
 
         notes/perltidyrc
 
 # PROJECT
 
-The Workflow project is currently hosted with SourceForge.net and is listed on
+The Workflow project is currently hosted on GitHub and is listed on
 Ohloh.
 
-- SF.net: [http://perl-workflow.sf.net](http://perl-workflow.sf.net)
+- SF.net: [htts://github.com/jonasbn/perl-workflow](htts://github.com/jonasbn/perl-workflow)
 - Ohloh: [https://www.ohloh.net/p/perl-Workflow](https://www.ohloh.net/p/perl-Workflow)
 
 ## REPOSITORY
 
-The code is kept under revision control using Subversion:
+The code is kept under revision control using Git:
 
-- [https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow](https://perl-workflow.svn.sourceforge.net/svnroot/perl-workflow)
+- [https://github.com/jonasbn/perl-workflow/tree/master/](https://github.com/jonasbn/perl-workflow/tree/master/)
 
 ## MAILING LIST
 
@@ -891,23 +885,17 @@ development. The list is low-traffic.
 
 ## RSS FEEDS
 
-- Commit log [http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.workflow.scm](http://rss.gmane.org/messages/excerpts/gmane.comp.lang.perl.modules.workflow.scm)
-- Ohloh news [https://www.ohloh.net/p/perl-Workflow/messages.rss](https://www.ohloh.net/p/perl-Workflow/messages.rss)
 - CPAN testers reports [http://cpantesters.perl.org/show/Workflow.rss](http://cpantesters.perl.org/show/Workflow.rss) in matrix:
 
 ## OTHER RESOURCES
-
-- AnnoCPAN: Annotated CPAN documentation
-
-    [http://annocpan.org/dist/Workflow](http://annocpan.org/dist/Workflow)
 
 - CPAN Ratings
 
     [http://cpanratings.perl.org/d/Workflow](http://cpanratings.perl.org/d/Workflow)
 
-- Search CPAN
+- Search MetaCPAN
 
-    [http://search.cpan.org/dist/Workflow](http://search.cpan.org/dist/Workflow)
+    [https://metacpan.org/release/Workflow](https://metacpan.org/release/Workflow)
 
 # SEE ALSO
 
@@ -916,8 +904,6 @@ Iceland by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-npw2010](http://www.slideshare.net/jonasbn/workflow-npw2010)
 - August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-yapceu2010](http://www.slideshare.net/jonasbn/workflow-yapceu2010)
-- October 2004 talk 'Workflows in Perl' given to
-pgh.pm by Chris Winters: [http://www.cwinters.com/pdf/workflow\_pgh\_pm.pdf](http://www.cwinters.com/pdf/workflow_pgh_pm.pdf)
 
 # COPYRIGHT
 
@@ -990,7 +976,7 @@ patch (0.19 to 0.20) and a patch resulting in 0.21
 
 Randal Schwartz, for testing 0.18 and swiftly giving feedback (0.18 to 0.19)
 
-Chris Brown, for a patch to [Workflow::Config::Perl](https://metacpan.org/pod/Workflow::Config::Perl) (0.17 to 0.18)
+Chris Brown, for a patch to [Workflow::Config::Perl](https://metacpan.org/pod/Workflow%3A%3AConfig%3A%3APerl) (0.17 to 0.18)
 
 Dietmar Hanisch <Dietmar.Hanisch@Bertelsmann.de> - Provided
 most of the good ideas for the module and an excellent example of
@@ -1007,7 +993,7 @@ Michael Schwern <schwern@pobox.org> barked via RT about a
 dependency problem and CPAN naming issue.
 
 Jim Smith <jgsmith@tamu.edu> - Contributed patches (being able
-to subclass [Workflow::Factory](https://metacpan.org/pod/Workflow::Factory)) and good ideas.
+to subclass [Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory)) and good ideas.
 
 Martin Winkler <mw@arsnavigandi.de> - Pointed out a bug and a
 few other items.
