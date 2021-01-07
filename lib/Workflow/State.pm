@@ -4,6 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
+use Workflow::Condition;
 use Workflow::Condition::Evaluate;
 use Workflow::Exception qw( workflow_error condition_error );
 use Exception::Class;
@@ -125,7 +126,8 @@ sub evaluate_action {
                 "Condition starts with a !: '$condition_name'");
         }
 
-        if ( exists $self->{'_condition_result_cache'}->{$orig_condition} ) {
+        if ( $Workflow::Condition::CACHE_RESULTS
+             && exists $self->{'_condition_result_cache'}->{$orig_condition} ) {
 
             # The condition has already been evaluated and the result
             # has been cached
