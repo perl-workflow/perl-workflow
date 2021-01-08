@@ -3,6 +3,8 @@
            class="Workflow::Action::Null"/>
    <action name="FORWARD"
            class="Workflow::Action::Null"/>
+   <action name="FORWARD-ALT"
+           class="Workflow::Action::Null"/>
    <action name="BACK"
            class="Workflow::Action::Null"/>
 </actions>

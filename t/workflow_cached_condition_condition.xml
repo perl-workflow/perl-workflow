@@ -1,4 +1,7 @@
 <conditions>
    <condition name="EvenCounts"
               class="TestCachedApp::Condition::EvenCounts"/>
+   <condition name="Alternative"
+              class="Workflow::Condition::Evaluate"
+              test="$context->{alternative}"/>
 </conditions>
