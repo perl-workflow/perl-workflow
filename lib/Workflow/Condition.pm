@@ -209,6 +209,10 @@ to zero (0):
 
     $Workflow::Condition::CACHE_RESULTS = 0;
 
+All versions before 1.49 used a mechanism that effectively caused global
+state. To address the problems that resulted (see GitHub issues #9 and #7),
+1.49 switched to a new mechanism with a cache per workflow instance.
+
 =head1 COPYRIGHT
 
 Copyright (c) 2003-2007 Chris Winters. All rights reserved.

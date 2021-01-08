@@ -611,7 +611,9 @@ Returns name of action to be used for autorunning the state.
 
 =head3 clear_condition_cache ( )
 
-Empties the condition result cache for a given state.
+Deprecated, kept for 1.49 compatibility.
+
+Used to empties the condition result cache for a given state.
 
 =head1 PROPERTIES
 
