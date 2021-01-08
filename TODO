@@ -31,11 +31,6 @@ $Id$
 
 - Write more tests (we need better coverage)
 
-- Deal with whatever is in the RT queue
-
-    - Enabling of dynamic loading of config, patch from Andrew (RT #18265)
-      http://rt.cpan.org/Ticket/Display.html?id=18265
-
 - Investigate whether use warnings pragma, breaks too much backwards
   compatibility [TestingAndDebugging::RequireUseWarnings]
 
