@@ -1,7 +1,5 @@
 TODO file for Workflow
 
-$Id$
-
 - Address the sections marked with ## no critic scattered throughout the code
   base, this might be valid, but another perspective and suggestions for
   refactorings might be a good idea (patches?)
