@@ -33,9 +33,6 @@ $Id$
 
 - Deal with whatever is in the RT queue
 
-    - Workflow::Factory sub-classing reported by Andrew (RT #18159)
-      http://rt.cpan.org/Ticket/Display.html?id=18159
-
     - Enabling of dynamic loading of config, patch from Andrew (RT #18265)
       http://rt.cpan.org/Ticket/Display.html?id=18265
 
