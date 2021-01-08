@@ -9,7 +9,12 @@
      <action name="TEST2" resulting_state="INITIAL">
          <condition name="!EvenCounts"/>
      </action>
-     <action name="FORWARD" resulting_state="SECOND"/>
+     <action name="FORWARD" resulting_state="SECOND">
+       <condition name="!Alternative"/>
+     </action>
+     <action name="FORWARD-ALT" resulting_state="SECOND">
+       <condition name="Alternative"/>
+     </action>
  </state>
  <state name="SECOND">
      <action name="BACK" resulting_state="INITIAL"/>
