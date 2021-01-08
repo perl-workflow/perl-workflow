@@ -142,7 +142,7 @@ sub execute_action {
             $autorun );
 
         # clear condition cache on state change
-        $new_state_obj->clear_condition_cache();
+        delete $self->{'_condition_result_cache'};
     }
 
     if ( $new_state_obj->autorun ) {
