@@ -16,7 +16,8 @@ CREATE TABLE workflow_history (
   state             varchar(30) not null,
   workflow_user     varchar(50) null,
   history_date      timestamp default current_timestamp,
-  primary key( workflow_hist_id )
+  primary key( workflow_hist_id ),
+  foreign key( workflow_id ) references workflow( workflow_id )
 );
 
 CREATE SEQUENCE workflow_history_seq;

@@ -12,6 +12,7 @@ CREATE TABLE workflow_history (
   description       varchar(255) null,
   state             varchar(30) not null,
   workflow_user     varchar(50) null,
-  history_date      timestamp
+  history_date      timestamp,
+  foreign key (workflow_id) references workflow(workflow_id)
 );
 
