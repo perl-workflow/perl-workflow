@@ -140,9 +140,6 @@ sub execute_action {
     if ( $old_state ne $new_state ) {
         $self->notify_observers( 'state change', $old_state, $action_name,
             $autorun );
-
-        # clear condition cache on state change
-        $new_state_obj->clear_condition_cache();
     }
 
     if ( $new_state_obj->autorun ) {
