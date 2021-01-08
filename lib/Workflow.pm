@@ -1432,11 +1432,13 @@ it under the same terms as Perl itself.
 
 =encoding utf8
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+Jonas B. (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
+
+Several PRs (5 to be exact) from Erik Huelsmann resulted in release 1.49
 
 Bug report from Petr Pisar resulted in release 1.48
 

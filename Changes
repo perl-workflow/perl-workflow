@@ -1,5 +1,23 @@
 Revision history for Perl extension Workflow
 
+1.49 2021-01-08 Maintenance and minor feature release, update not required
+
+- Additions to test suite, WIP on better scoped condition caching, PR #26 from Erik Huelsmann
+
+- Minor feature addition addressing issue #5 with condition caching PR #25 from Erik Huelsmann
+  Condition caching can be disabled by setting: 
+
+    $Workflow::Condition::CACHE_RESULTS = 0; # false
+
+  The default is 1, indicating true,
+
+- Improvements to test suite, moved from time to counter, speeding up the test, PR #24 from Erik Huelsmann
+
+- Documentation updates, PR #23 from Erik Huelsmann
+
+- Addressing issue #21 fixing broken URLs, PR #22 from Erik Huelsmann
+
+
 1.48 2019-09-05 Bug fix release, update not required
 
 - Eliminated warning emitted from test run. Bug reported by Petr Pisar
