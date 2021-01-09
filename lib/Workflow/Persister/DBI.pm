@@ -210,7 +210,9 @@ sub create_workflow {
     my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
 
     ## no critic (ProhibitParensWithBuiltins)
-    $sql = sprintf $sql, $self->workflow_table, join( ', ', @fields ),
+    $sql = sprintf $sql,
+        $self->handle->quote_identifier( $self->workflow_table ),
+        join( ', ', @fields ),
         join( ', ', map {'?'} @values );
 
     if ( $log->is_debug ) {
@@ -246,7 +248,8 @@ sub fetch_workflow {
           FROM %s
          WHERE $WF_FIELDS[0] = ?
     };
-    $sql = sprintf $sql, $self->workflow_table;
+    $sql = sprintf $sql,
+        $self->handle->quote_identifier( $self->workflow_table );
 
     if ( $log->is_debug ) {
         $log->debug("Will use SQL\n$sql");
@@ -322,8 +325,8 @@ sub create_history {
         my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
 
         ## no critic (ProhibitParensWithBuiltins)
-        $sql = sprintf $sql, $self->history_table, join( ', ', @fields ),
-            join( ', ', map {'?'} @values );
+        $sql = sprintf $sql, $dbh->quote_identifier( $self->history_table ),
+            join( ', ', @fields ), join( ', ', map {'?'} @values );
         if ( $log->is_debug ) {
             $log->debug("Will use SQL\n$sql");
             $log->debug( "Will use parameters\n", join ', ', @values );
@@ -436,10 +439,14 @@ sub rollback_transaction {
 sub _init_fields {
     my ($self) = @_;
     unless ( scalar @WF_FIELDS ) {
-        @WF_FIELDS = $self->get_workflow_fields();
+        @WF_FIELDS = map {
+            $self->handle->quote_identifier($_)
+        } $self->get_workflow_fields();
     }
     unless ( scalar @HIST_FIELDS ) {
-        @HIST_FIELDS = $self->get_history_fields();
+        @HIST_FIELDS = map {
+            $self->handle->quote_identifier($_)
+        } $self->get_history_fields();
     }
 }
 

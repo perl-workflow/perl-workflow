@@ -48,7 +48,7 @@ sub check_workflow_history {
     my ( $class, $tracker, $values ) = @_;
     $class->check_tracker(
         $tracker, 'create workflow history',
-        qr/^INSERT INTO workflow_history \( workflow_id, action, description, state, workflow_user, history_date, workflow_hist_id \)/,
+        qr/^INSERT INTO "workflow_history" \( "workflow_id", "action", "description", "state", "workflow_user", "history_date", "workflow_hist_id" \)/,
         [ 'workflow ID', 'action', 'description',
           'state', 'user', 'current date',
           'random ID of correct length' ],
@@ -111,7 +111,7 @@ sub init_mock_persister {
         class => 'Workflow::Persister::DBI',
         dsn   => 'DBI:Mock:',
         date_format => '%Y-%m-%dT%H:%M:%S',
-	user => 'DBTester',
+        user => 'DBTester',
     );
     $factory->add_config( persister => [ \%persister ] );
 }
