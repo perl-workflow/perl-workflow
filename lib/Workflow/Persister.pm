@@ -3,6 +3,7 @@ package Workflow::Persister;
 use warnings;
 use strict;
 use base qw( Workflow::Base );
+use English qw( -no_match_vars );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( persist_error );
 
@@ -55,7 +56,10 @@ sub assign_generators {
 
 sub init_random_generators {
     my ( $self, $params ) = @_;
+    my $log = get_logger();
     my $length = $params->{id_length} || DEFAULT_ID_LENGTH;
+    eval { require Workflow::Persister::RandomId };
+    $log->error($EVAL_ERROR) if $EVAL_ERROR;
     my $generator
         = Workflow::Persister::RandomId->new( { id_length => $length } );
     return ( $generator, $generator );
@@ -63,6 +67,9 @@ sub init_random_generators {
 
 sub init_uuid_generators {
     my ( $self, $params ) = @_;
+    my $log = get_logger();
+    eval { require Workflow::Persister::UUID };
+    $log->error($EVAL_ERROR) if $EVAL_ERROR;
     my $generator = Workflow::Persister::UUID->new();
     return ( $generator, $generator );
 }
