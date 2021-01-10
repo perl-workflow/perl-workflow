@@ -47,8 +47,8 @@ sub fetch {
 
     my $persister = FACTORY->get_persister( 'TestPersister' );
     if ( $persister->isa( 'Workflow::Persister::DBI' ) ) {
-        my $ticket_fields = 'type, subject, description, creator, status, due_date, last_update';
-        my $sql = 'SELECT %s FROM ticket WHERE ticket_id = ?';
+        my $ticket_fields = '"type", "subject", "description", "creator", "status", "due_date", "last_update"';
+        my $sql = 'SELECT %s FROM "ticket" WHERE ticket_id = ?';
         $sql = sprintf( $sql, $ticket_fields );
         $log->debug( "Will use SQL\n$sql" );
         $log->debug( "Will use parameters: $id" );
@@ -117,8 +117,8 @@ sub create {
                          creator status due_date last_update );
         my @values = ( $id, $self->type, $self->subject, $self->description,
                        $self->creator, $self->status, $due_date, $update_date );
-        my $sql = 'INSERT INTO ticket ( %s ) VALUES ( %s )';
-        $sql = sprintf( $sql, join( ', ', @fields ),
+        my $sql = 'INSERT INTO "ticket" ( %s ) VALUES ( %s )';
+        $sql = sprintf( $sql, join( ', ', map { qq{"$_"} } @fields ),
                         join( ', ', map { '?' } @values ) );
         $log->debug( "Will use SQL\n$sql" );
         $log->debug( "Will use parameters: ", join( ', ', @values ) );
