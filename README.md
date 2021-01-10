@@ -1,7 +1,6 @@
 [![CPAN version](https://badge.fury.io/pl/Workflow.svg)](http://badge.fury.io/pl/Workflow)
 [![Build Status](https://travis-ci.org/jonasbn/perl-workflow.svg?branch=master)](https://travis-ci.org/jonasbn/perl-workflow)
 [![Coverage Status](https://coveralls.io/repos/github/jonasbn/perl-workflow/badge.svg?branch=master)](https://coveralls.io/github/jonasbn/perl-workflow?branch=master)
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/perl-workflow)
 
 # NAME
 
@@ -864,11 +863,9 @@ downloaded from the central repository.
 
 # PROJECT
 
-The Workflow project is currently hosted on GitHub and is listed on
-Ohloh.
+The Workflow project is currently hosted on GitHub
 
-- SF.net: [htts://github.com/jonasbn/perl-workflow](htts://github.com/jonasbn/perl-workflow)
-- Ohloh: [https://www.ohloh.net/p/perl-Workflow](https://www.ohloh.net/p/perl-Workflow)
+- GitHub: [htts://github.com/jonasbn/perl-workflow](htts://github.com/jonasbn/perl-workflow)
 
 ## REPOSITORY
 
@@ -876,24 +873,13 @@ The code is kept under revision control using Git:
 
 - [https://github.com/jonasbn/perl-workflow/tree/master/](https://github.com/jonasbn/perl-workflow/tree/master/)
 
-## MAILING LIST
-
-The Workflow project has a mailing list for discussion of issues and
-development. The list is low-traffic.
-
-- [http://sourceforge.net/mail/?group\_id=177533](http://sourceforge.net/mail/?group_id=177533) (including archive)
-
-## RSS FEEDS
-
-- CPAN testers reports [http://cpantesters.perl.org/show/Workflow.rss](http://cpantesters.perl.org/show/Workflow.rss) in matrix:
-
 ## OTHER RESOURCES
 
 - CPAN Ratings
 
     [http://cpanratings.perl.org/d/Workflow](http://cpanratings.perl.org/d/Workflow)
 
-- Search MetaCPAN
+- MetaCPAN
 
     [https://metacpan.org/release/Workflow](https://metacpan.org/release/Workflow)
 
@@ -915,11 +901,13 @@ it under the same terms as Perl itself.
 
 # AUTHORS
 
-Jonas B. Nielsen (jonasbn) <jonasbn@cpan.org>, current maintainer.
+Jonas B. (jonasbn) <jonasbn@cpan.org>, current maintainer.
 
 Chris Winters <chris@cwinters.com>, original author.
 
 The following folks have also helped out (listed here in no particular order):
+
+Several PRs (8 to be exact) from Erik Huelsmann resulted in release 1.49
 
 Bug report from Petr Pisar resulted in release 1.48
 

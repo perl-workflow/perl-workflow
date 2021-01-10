@@ -362,7 +362,6 @@ __END__
 [![CPAN version](https://badge.fury.io/pl/Workflow.svg)](http://badge.fury.io/pl/Workflow)
 [![Build Status](https://travis-ci.org/jonasbn/perl-workflow.svg?branch=master)](https://travis-ci.org/jonasbn/perl-workflow)
 [![Coverage Status](https://coveralls.io/repos/github/jonasbn/perl-workflow/badge.svg?branch=master)](https://coveralls.io/github/jonasbn/perl-workflow?branch=master)
-[![Gitter chat](https://badges.gitter.im/gitterHQ/gitter.svg)](https://gitter.im/perl-workflow)
 
 =end markdown
 
@@ -1352,14 +1351,11 @@ downloaded from the central repository.
 
 =head1 PROJECT
 
-The Workflow project is currently hosted on GitHub and is listed on
-Ohloh.
+The Workflow project is currently hosted on GitHub
 
 =over
 
-=item SF.net: L<htts://github.com/jonasbn/perl-workflow>
-
-=item Ohloh: L<https://www.ohloh.net/p/perl-Workflow>
+=item GitHub: L<htts://github.com/jonasbn/perl-workflow>
 
 =back
 
@@ -1373,26 +1369,6 @@ The code is kept under revision control using Git:
 
 =back
 
-=head2 MAILING LIST
-
-The Workflow project has a mailing list for discussion of issues and
-development. The list is low-traffic.
-
-=over
-
-=item L<http://sourceforge.net/mail/?group_id=177533> (including archive)
-
-=back
-
-=head2 RSS FEEDS
-
-=over
-
-=item CPAN testers reports L<http://cpantesters.perl.org/show/Workflow.rss> in matrix:
-
-
-=back
-
 =head2 OTHER RESOURCES
 
 =over
@@ -1401,7 +1377,7 @@ development. The list is low-traffic.
 
 L<http://cpanratings.perl.org/d/Workflow>
 
-=item * Search MetaCPAN
+=item * MetaCPAN
 
 L<https://metacpan.org/release/Workflow>
 

@@ -2,9 +2,15 @@ Revision history for Perl extension Workflow
 
 1.49 2021-01-08 Maintenance and minor feature release, update not required
 
+- Improved the SQL used for database creation by adding referentiel integrity, PR #29 from Erik Huelsmann
+
+- Addressed a bug in initialization and improved the ability to handle a database handle, PR #32 from Erik Huelsmann
+
+- Improved loading of external of a few dependencies, improving error handling, PR #31 from Erik Huelsmann
+
 - Additions to test suite, WIP on better scoped condition caching, PR #26 from Erik Huelsmann
 
-- Minor feature addition addressing issue #5 with condition caching PR #25 from Erik Huelsmann
+- Minor feature addition addressing issue #5 with condition caching, PR #25 from Erik Huelsmann
   Condition caching can be disabled by setting: 
 
     $Workflow::Condition::CACHE_RESULTS = 0; # false
