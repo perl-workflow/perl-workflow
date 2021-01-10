@@ -23,7 +23,7 @@ sub _init {
     $self->add_enumerated_values(@values);
 }
 
-sub validator {
+sub validate {
     my ( $self, $wf, $value ) = @_;
     unless ( $self->is_enumerated_value($value) ) {
         validation_error "Value '$value' must be one of: ", join ", ",
@@ -173,9 +173,9 @@ It uses L</add_enumerated_values> to add the set of values for enumeration.
 The primary parameter is value, which should be used to specify the
 either a single value or a reference to array of values to be added.
 
-=head3 validator
+=head3 validate
 
-The validator method is the public API. It encapulates L</is_enumerated:value>
+The validate method is the public API. It encapulates L</is_enumerated:value>
 and works with L<Workflow>.
 
 =head3 add_enumerated_values( @values )
