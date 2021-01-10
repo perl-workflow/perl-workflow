@@ -65,11 +65,15 @@ sub init {
     for (qw( dsn user password date_format autocommit )) {
         $self->$_( $params->{$_} ) if ( defined $params->{$_} );
     }
+    $self->handle($self->create_handle);
 
     my $parser
         = DateTime::Format::Strptime->new( pattern => $self->date_format );
     $self->parser($parser);
+}
 
+sub create_handle {
+    my ($self) = @_;
     my $dbh = eval {
                DBI->connect( $self->dsn, $self->user, $self->password )
             || croak "Cannot connect to database: $DBI::errstr";
@@ -81,10 +85,11 @@ sub init {
     $dbh->{PrintError} = 0;
     $dbh->{ChopBlanks} = 1;
     $dbh->{AutoCommit} = $self->autocommit();
-    $self->handle($dbh);
     $log->is_debug
         && $log->debug( "Connected to database '",
         $self->dsn, "' and ", "assigned to persister ok" );
+
+    return $dbh;
 }
 
 sub assign_generators {
@@ -525,6 +530,9 @@ example.)
     $self->assign_tables( $params );
  }
 
+ # suppress the parent from trying to connect to the database
+ sub create_handle { return undef; }
+
  sub handle {
      my ( $self ) = @_;
      return CTX->datasource( $self->datasource_name );
@@ -567,9 +575,10 @@ All public methods are inherited from L<Workflow::Persister>.
 
 =head3 init( \%params )
 
-Create a database handle from the given parameters. You are only
-required to provide 'dsn', which is the full DBI DSN you normally use
-as the first argument to C<connect()>.
+Initializes the the instance by setting the connection parameters
+and calling C<create_handle>. You are only required to provide 'dsn',
+which is the full DBI DSN you normally use as the first argument
+to C<connect()>.
 
 You can set these parameters in your persister configuration file and
 they will be passed to init.
@@ -701,6 +710,19 @@ Length of character sequence to generate. Default: 8.
 
 Create ID generators for the workflow and history tables using
 the Oracle sequences. No parameters are necessary.
+
+=head3 create_handle
+
+Creates a database connection using DBI's C<connect> method and returns
+the resulting database handle. Override this method if you want to set
+different options than the hard-coded ones, or when you want to use a
+handle from elsewhere.
+
+The default implementation hard-codes these database handle settings:
+
+    $dbh->{RaiseError} = 1;
+    $dbh->{PrintError} = 0;
+    $dbh->{ChopBlanks} = 1;
 
 =head3 create_workflow
 
