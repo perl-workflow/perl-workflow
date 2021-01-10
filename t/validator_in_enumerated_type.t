@@ -44,6 +44,6 @@ ok(@enumerated_values = $validator->get_enumerated_values());
 
 is(scalar @enumerated_values, 3);
 
-ok($validator->validator(undef, 'foo'));
+ok($validator->validate(undef, 'foo'));
 
-dies_ok { $validator->validator(undef, 'bad'); };
+dies_ok { $validator->validate(undef, 'bad'); };
