@@ -2,6 +2,8 @@ Revision history for Perl extension Workflow
 
 1.49 2021-01-08 Maintenance and minor feature release, update not required
 
+- Updated Dist::Zilla configuration and added LICENSE file to repository based on generated from Dist::Zilla build, this should be automated like the README generation at some point
+
 - Improved internal handling for quoting in internal SQL statements, PR #30 from Erik Huelsmann
 
 - Improved the SQL used for database creation by adding referentiel integrity, PR #29 from Erik Huelsmann
