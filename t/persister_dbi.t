@@ -28,7 +28,7 @@ my @persisters = ({
     user => 'DBTester',
     date_format => $DATE_FORMAT,
 });
-
+my $i = 0;
 my $factory = Workflow::Factory->instance;
 $factory->add_config( persister => \@persisters );
 TestUtil->init_factory();
@@ -53,7 +53,7 @@ my ( $wf );
     my $wf_history  = $history->[0];
     TestUtil->check_tracker(
         $wf_history, 'create workflow',
-        qr/^INSERT INTO workflow \( type, state, last_update, workflow_id \)/,
+        qr/^INSERT INTO "workflow" \( "type", "state", "last_update", "workflow_id" \)/,
         [ 'type', 'state', 'current date',
           'random ID of correct length' ],
         [ 'Ticket', 'INITIAL', $wf_history->{bound_params}->[2],
@@ -89,7 +89,7 @@ my ( $wf );
     my %ticket_info = TestUtil->get_new_ticket_info();
     TestUtil->check_tracker(
         $tix_create, 'create ticket',
-        qr/^INSERT INTO ticket \( ticket_id, type, subject, description, creator, status, due_date, last_update \)/,
+        qr/^INSERT INTO "ticket" \( "ticket_id", "type", "subject", "description", "creator", "status", "due_date", "last_update" \)/,
         [ 'ticket ID', 'type', 'subject',
           'description', 'creator', 'status',
           'due date', 'last update' ],
