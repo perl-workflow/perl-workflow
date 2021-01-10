@@ -40,7 +40,7 @@ sub evaluate {
         if ( not $result ) {
             condition_error("Condition '$cond' returned 'false'");
         }
-        $total += $result;
+        $total++;
     }
 
     return $total
