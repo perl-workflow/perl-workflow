@@ -2,6 +2,8 @@ Revision history for Perl extension Workflow
 
 1.49 2021-01-08 Maintenance and minor feature release, update not required
 
+- Improved internal handling for quoting in internal SQL statements, PR #30 from Erik Huelsmann
+
 - Improved the SQL used for database creation by adding referentiel integrity, PR #29 from Erik Huelsmann
 
 - Addressed a bug in initialization and improved the ability to handle a database handle, PR #32 from Erik Huelsmann

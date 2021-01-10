@@ -1414,7 +1414,7 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
 
-Several PRs (8 to be exact) from Erik Huelsmann resulted in release 1.49
+Several PRs (9 to be exact) from Erik Huelsmann resulted in release 1.49
 
 Bug report from Petr Pisar resulted in release 1.48
 
