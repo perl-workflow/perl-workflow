@@ -16,19 +16,10 @@ TODO file for Workflow
 - Document general workflow initialization phase and the call to the
   Workflow classes init method in a more general way
 
-- Document relation between actions and validators
-
-- Add support for string based configuration instead of file based (copying
-  behavior from XML::Simple) ?
-
 - Write more POD, including a tutorial
-
-- Write more tests (we need better coverage)
 
 - Investigate whether use warnings pragma, breaks too much backwards
   compatibility [TestingAndDebugging::RequireUseWarnings]
-
-- Move some constant candidates to central place
 
 - Investigate violations of Perl::Critic policy
   [Subroutines::ProhibitExplicitReturnUndef]
@@ -43,9 +34,6 @@ TODO file for Workflow
   WorkflowFactory initialization process, maybe just keep the built-ins
   configured in a class that's distributed with the module? (We don't
   want to force people to reference a separate file every time...
-
-- Make the action/description of initial history created configurable
-  (optional?)
 
 - Investigate possible integration with standardized XML format
   see interesting module by MARKOV
