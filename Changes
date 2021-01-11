@@ -2,6 +2,8 @@ Revision history for Perl extension Workflow
 
 1.49 2021-01-08 Maintenance and minor feature release, update not required
 
+- Fixed a bug in condition caching described in issue #9, PR #27 from Erik Huelsmann
+
 - Fixed a bug in Workflow::Condition::LazyAND with wrongful return values, PR #40 from Erik Huelsmann
 
 - Fixed a bug in Workflow::Validator::InEnumeratedType with wrongful naming, PR #33 from Erik Huelsmann
