@@ -134,15 +134,14 @@ sub execute_action {
         croak $error;
     }
 
+    # clear condition cache on state change
+    delete $self->{'_condition_result_cache'};
     $self->notify_observers( 'execute', $old_state, $action_name, $autorun );
 
     my $new_state_obj = $self->_get_workflow_state;
     if ( $old_state ne $new_state ) {
         $self->notify_observers( 'state change', $old_state, $action_name,
             $autorun );
-
-        # clear condition cache on state change
-        $new_state_obj->clear_condition_cache();
     }
 
     if ( $new_state_obj->autorun ) {

@@ -45,7 +45,7 @@ sub get_available_action_names {
 
     # assuming that the user wants the _fresh_ list of available actions,
     # we clear the condition cache before checking which ones are available
-    $self->clear_condition_cache();
+    delete $wf->{'_condition_result_cache'};
 
     foreach my $action_name (@all_actions) {
 
@@ -84,11 +84,7 @@ sub is_action_available {
 
 sub clear_condition_cache {
     my ($self) = @_;
-    foreach my $condition ( keys %{ $self->{'_condition_result_cache'} } ) {
-        delete $self->{'_condition_result_cache'}->{$condition};
-        $log->is_debug
-            && $log->debug("Deleted cached condition result for $condition");
-    }
+    return; # left for backward compatibility with 1.49
 }
 
 sub evaluate_action {
@@ -127,19 +123,19 @@ sub evaluate_action {
         }
 
         if ( $Workflow::Condition::CACHE_RESULTS
-             && exists $self->{'_condition_result_cache'}->{$orig_condition} ) {
+             && exists $wf->{'_condition_result_cache'}->{$orig_condition} ) {
 
             # The condition has already been evaluated and the result
             # has been cached
             $log->is_debug
                 && $log->debug(
                 "Condition has been cached: '$orig_condition', cached result: ",
-                $self->{'_condition_result_cache'}->{$orig_condition}
+                $wf->{'_condition_result_cache'}->{$orig_condition}
                 );
             if ( !$opposite ) {
                 $log->is_debug
                     && $log->debug("Opposite is false.");
-                if ( !$self->{'_condition_result_cache'}->{$orig_condition} )
+                if ( !$wf->{'_condition_result_cache'}->{$orig_condition} )
                 {
                     $log->is_debug
                         && $log->debug("Cached condition result is false.");
@@ -154,7 +150,7 @@ sub evaluate_action {
                 # condition did NOT fail
                 $log->is_debug
                     && $log->debug("Opposite is true.");
-                if ( $self->{'_condition_result_cache'}->{$orig_condition} ) {
+                if ( $wf->{'_condition_result_cache'}->{$orig_condition} ) {
                     $log->is_debug
                         && $log->debug("Cached condition is true.");
                     condition_error "No access to action '$action_name' in ",
@@ -187,7 +183,7 @@ sub evaluate_action {
                 if (Exception::Class->caught('Workflow::Exception::Condition')) {
                     # TODO: We may just want to pass the error up
                     # without wrapping it...
-                    $self->{'_condition_result_cache'}->{$orig_condition} = 0;
+                    $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
                     if ( !$opposite ) {
                         $log->is_debug
                             && $log->debug("No access to action '$action_name', condition " .
@@ -214,7 +210,7 @@ sub evaluate_action {
                         => "Got unknown exception while handling condition '$condition_name' / " . $ee );
                 }
             } else {
-                $self->{'_condition_result_cache'}->{$orig_condition} = 1;
+                $wf->{'_condition_result_cache'}->{$orig_condition} = 1;
                 if ($opposite) {
 
                     $log->is_debug
@@ -615,7 +611,9 @@ Returns name of action to be used for autorunning the state.
 
 =head3 clear_condition_cache ( )
 
-Empties the condition result cache for a given state.
+Deprecated, kept for 1.49 compatibility.
+
+Used to empties the condition result cache for a given state.
 
 =head1 PROPERTIES
 

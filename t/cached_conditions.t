@@ -72,36 +72,33 @@ ok( ( $actions =~ m/FORWARD-ALT,/ ) ,
 $wf->context->param( alternative => '' );
 
 
-TODO: {
-     # With one workflow in-flight, results of the other should
-     # not be influenced. So we create a second workflow which
-     # does *not* have FORWARD in its list of current actions and
-     # then we ask the original workflow (which *does* have it)
-     # for the fields in the action
+# With one workflow in-flight, results of the other should
+# not be influenced. So we create a second workflow which
+# does *not* have FORWARD in its list of current actions and
+# then we ask the original workflow (which *does* have it)
+# for the fields in the action
 
-     # The result should be an (empty) list, but it is currently
-     # an exception saying that the action isn't in the state's
-     # list of actions.
+# The result should be an (empty) list, but it is currently
+# an exception saying that the action isn't in the state's
+# list of actions.
 
-     my $actions = join( ', ', $wf->get_current_actions(), '' );
-     ok( ( $actions =~ m/FORWARD,/ ),
-         'FORWARD action is available in the original workflow' );
-     my $wfa = $factory->create_workflow('CachedCondition');
-     $wfa->context->param(alternative => 'yes');
-     $actions = join( ', ', $wfa->get_current_actions(), '' );
-     ok( ( $actions =~ m/FORWARD-ALT,/ ),
-         'FORWARD-ALT action is available in the secondary workflow' );
+$actions = join( ', ', $wf->get_current_actions(), '' );
+ok( ( $actions =~ m/FORWARD,/ ),
+    'FORWARD action is available in the original workflow' );
+my $wfa = $factory->create_workflow('CachedCondition');
+$wfa->context->param(alternative => 'yes');
+$actions = join( ', ', $wfa->get_current_actions(), '' );
+ok( ( $actions =~ m/FORWARD-ALT,/ ),
+    'FORWARD-ALT action is available in the secondary workflow' );
 
-     local $TODO = 'This is a test for unresolved bug #9';
-     lives_ok( sub { $wf->get_action_fields('FORWARD') },
-               'Getting the fields on a valid action should' );
-     lives_ok( sub { $wf->execute_action('FORWARD') },
-               'Executing the available forward state succeeds' );
+lives_ok( sub { $wf->get_action_fields('FORWARD') },
+          'Getting the fields on a valid action should' );
+lives_ok( sub { $wf->execute_action('FORWARD') },
+          'Executing the available forward state succeeds' );
 
-     is( $wf->state, 'SECOND',
-         'The original workflow changed state successfully');
-     is( $wfa->state, 'INITIAL',
-         'The secondary workflow is unaffected by changes to original');
+is( $wf->state, 'SECOND',
+    'The original workflow changed state successfully');
+is( $wfa->state, 'INITIAL',
+    'The secondary workflow is unaffected by changes to original');
 
-}
 
