@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.48';
+$Workflow::VERSION = '1.49';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -370,7 +370,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 1.48 of Workflow
+This documentation describes version 1.49 of Workflow
 
 =head1 SYNOPSIS
 
@@ -1415,7 +1415,7 @@ The following folks have also helped out (listed here in no particular order):
 
 Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49
 
-Bug report from Petr Pisar resulted in release 1.48
+Bug report from Petr Pisar resulted in release 1.49
 
 Bug report from Tina Müller (tinita) resulted in release 1.47
 
