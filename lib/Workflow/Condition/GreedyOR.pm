@@ -36,7 +36,7 @@ sub evaluate {
     my $result = 0;
 
     foreach my $cond ( @{$conditions} ) {
-        $result += $self->evaluate_condition( $wf, $cond );
+        $result += $self->evaluate_condition( $wf, $cond ) ? 1 : 0;
     }
 
     if ($result) {
