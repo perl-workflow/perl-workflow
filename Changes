@@ -1,6 +1,6 @@
 Revision history for Perl extension Workflow
 
-1.49 2021-01-08 Maintenance and minor feature release, update not required
+1.49 2021-01-12 Maintenance and minor feature release, update not required
 
 - Addressed an issue with return values from Workflow::Condition::GreedyOR's `evaluate_condition`, PR #50 from Erik Huelsmann
 
