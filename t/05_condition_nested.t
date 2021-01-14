@@ -4,6 +4,7 @@
 
 use strict;
 use warnings;
+use lib qw(../lib lib ../t t);
 
 use Test::More;
 

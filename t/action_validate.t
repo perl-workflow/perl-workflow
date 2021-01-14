@@ -4,7 +4,7 @@
 
 use strict;
 use warnings;
-use lib 't';
+use lib qw(../lib lib ../t t);
 use TestUtil;
 use Test::Exception;
 use Test::More tests => 13;

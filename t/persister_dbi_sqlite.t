@@ -2,7 +2,7 @@
 
 
 use strict;
-use lib 't';
+use lib qw(../lib lib ../t t);
 use TestUtil;
 use constant NUM_TESTS => 15;
 use Test::More;

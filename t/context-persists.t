@@ -8,7 +8,7 @@ use if $ENV{DEBUG} => "Smart::Comments";
 use File::Temp;               # don't leave any traces :)
 use Env qw($TEST_VERBOSE);
 
-use lib 't';
+use lib qw(../lib lib ../t t);
 use TestUtil;
 
 #use Log::Log4perl ":easy";    # makes workflow happy

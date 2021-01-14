@@ -3,7 +3,7 @@
 # $Id$
 
 use strict;
-use lib 't';
+use lib qw(../lib lib ../t t);
 use TestUtil;
 use Test::More tests => 7;
 use Test::Exception;

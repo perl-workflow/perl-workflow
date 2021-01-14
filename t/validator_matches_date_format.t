@@ -3,7 +3,7 @@
 # $Id$
 
 use strict;
-use lib 't';
+use lib qw(../lib lib ../t t);
 use TestUtil;
 use Test::Exception;
 use DateTime;
@@ -33,6 +33,6 @@ my $dt = DateTime->new( year   => 1964,
                      nanosecond => 500000000,
                      time_zone => 'Asia/Taipei',
                    );
-         
+
 lives_ok { $validator->validate($wf, $dt) };
 
