@@ -5,8 +5,9 @@
 use strict;
 use lib 't';
 use TestUtil;
-use constant NUM_TESTS => 43;
+use constant NUM_TESTS => 46;
 use Test::More;
+use Test::Exception;
 
 eval "require DBI";
 if ( $@ ) {
@@ -20,22 +21,33 @@ my $TICKET_CLASS = 'TestApp::Ticket';
 my $DATE_FORMAT = '%Y-%m-%d %H:%M';
 
 require_ok( 'Workflow::Persister::DBI' );
+require_ok( 'TestPersisterElsewhere' );
 
 my @persisters = ({
     name  => 'TestPersister',
     class => 'Workflow::Persister::DBI',
     dsn   => 'DBI:Mock:',
-    user => 'DBTester',
+    user  => 'DBTester',
     date_format => $DATE_FORMAT,
+},
+{
+    name  => 'DBIFromElsewhere',
+    class => 'TestPersisterElsewhere',
+    driver=> 'Pg',
 });
 my $i = 0;
 my $factory = Workflow::Factory->instance;
-$factory->add_config( persister => \@persisters );
+lives_ok { $factory->add_config( persister => \@persisters ) }
+   'Successful persister creation' ;
 TestUtil->init_factory();
+
+my $persister = $factory->get_persister( 'DBIFromElsewhere' );
+is ($persister->driver, 'Pg', 'DBI from elsewhere: driver is Pg');
+
 
 my ( $wf_id, $create_date );
 
-my $persister = $factory->get_persister( 'TestPersister' );
+$persister = $factory->get_persister( 'TestPersister' );
 my $handle = $persister->handle;
 
 is ($persister->dsn(), 'DBI:Mock:', 'Got back dsn from config.');
