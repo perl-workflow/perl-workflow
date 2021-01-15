@@ -3,7 +3,7 @@
 # $Id$
 
 use strict;
-use lib 't';
+use lib qw(../lib lib ../t t);
 use TestUtil;
 use Test::More  tests => 50;
 use Test::Exception;
@@ -55,7 +55,7 @@ dies_ok { $parser->parse( '123_NOSUCHTYPE', 'workflow_errorprone.perl' ) };
 dies_ok { Workflow::Config->parse() };
 
 my @config = $parser->parse( 'workflow' );
-is(scalar(@config), 0, 'forgotten file, asserting length of array returned'); 
+is(scalar(@config), 0, 'forgotten file, asserting length of array returned');
 
 my %config_perl = (
 		   'workflow' => ['workflow.perl', 'workflow_type.perl', 'workflow_type_alternate_initial.perl'],

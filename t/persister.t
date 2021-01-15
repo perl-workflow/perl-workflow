@@ -3,7 +3,7 @@
 # $Id: Persister.t 304 2007-07-03 14:56:43Z jonasbn $
 
 use strict;
-use lib 't';
+use lib qw(../lib lib ../t t);
 use TestUtil;
 use Test::Exception;
 use Test::More  tests => 6;
