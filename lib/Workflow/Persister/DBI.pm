@@ -214,7 +214,6 @@ sub create_workflow {
     }
     my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
 
-    ## no critic (ProhibitParensWithBuiltins)
     $sql = sprintf $sql,
         $self->handle->quote_identifier( $self->workflow_table ),
         join( ', ', @fields ),
@@ -329,7 +328,6 @@ sub create_history {
         }
         my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
 
-        ## no critic (ProhibitParensWithBuiltins)
         $sql = sprintf $sql, $dbh->quote_identifier( $self->history_table ),
             join( ', ', @fields ), join( ', ', map {'?'} @values );
         if ( $log->is_debug ) {

@@ -64,8 +64,6 @@ sub _mythrow {
 
 # Use 'goto' here to maintain the stack trace
 
-## no critic (Subroutines::RequireArgUnpacking)
-
 sub condition_error {
     unshift @_, 'condition_error';
     goto &_mythrow;
