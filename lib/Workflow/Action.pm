@@ -292,7 +292,7 @@ You can validate it like this:
 
 Subclasses may override this method, but it's not very common. It is
 called when you invoke a method in your Workflow object that returns
-an Action object, for example, methods such as $wf->_get_action will
+an Action object, for example, methods such as $wf->get_action will
 call this method.
 
 B<Your action classes usually subclass directly from Workflow::Action
