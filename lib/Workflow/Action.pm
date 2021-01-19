@@ -384,18 +384,6 @@ current $wf_state. Your milage may vary.
   1;
 
 
-=head2 Private Methods
-
-=head3 init( $workflow, \%params )
-
-init is called in conjuction with the overall workflow initialization.
-
-It sets up the necessary validators based on the on configured actions, input fields and required fields.
-
-=head3 add_field( @fields )
-
-Add one or more L<Workflow::Action::InputField>s to the action.
-
 =head3 required_fields()
 
 Return a list of L<Workflow::Action::InputField> objects that are required.
@@ -408,6 +396,19 @@ Return a list of L<Workflow::Action::InputField> objects that are optional.
 
 Return a list of all L<Workflow::Action::InputField> objects
 associated with this action.
+
+
+=head2 Private Methods
+
+=head3 init( $workflow, \%params )
+
+init is called in conjuction with the overall workflow initialization.
+
+It sets up the necessary validators based on the on configured actions, input fields and required fields.
+
+=head3 add_field( @fields )
+
+Add one or more L<Workflow::Action::InputField>s to the action.
 
 =head3 add_validators( @validator_config )
 
