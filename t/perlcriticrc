@@ -10,8 +10,8 @@ verbose  = 8
 lib_sections    = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 
-#Needs to be readdressed at some point
-[-ValuesAndExpressions::ProhibitMagicNumbers]
+[TestingAndDebugging::RequireUseWarnings]
+[ValuesAndExpressions::ProhibitMagicNumbers]
 
 #Might be to late to address
 [-Subroutines::ProhibitExplicitReturnUndef]
