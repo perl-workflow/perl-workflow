@@ -281,7 +281,7 @@ sub _load_observers {
             $self->_load_class( $observer_class,
                       "Cannot require observer '%s' to watch observer "
                     . "of type '$wf_type': %s" );
-            push @observers, $observer_class;
+            push @observers, sub { $observer_class->update(@_) };
         } elsif ( my $observer_sub = $observer_info->{sub} ) {
             my ( $observer_class, $observer_sub )
                 = $observer_sub =~ /^(.*)::(.*)$/;

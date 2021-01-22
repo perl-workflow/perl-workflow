@@ -1,8 +1,7 @@
 package Workflow::Action;
 
 # Note: we may implement a separate event mechanism so that actions
-# can trigger other code (use 'Class::Observable'? read observations
-# from database?)
+# can trigger other code (to read observations from database?)
 
 use warnings;
 use strict;
