@@ -16,7 +16,6 @@ our $VALIDATE_ACTION_CONFIG = 0;
 my ($log);
 my (%INSTANCES);
 
-## no critic (Subroutines::RequireArgUnpacking)
 sub import {
     my $class = shift;
     $log ||= get_logger();
