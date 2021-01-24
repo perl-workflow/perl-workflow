@@ -1151,8 +1151,6 @@ to L<Workflow::Config>, for implementation details.
 
 =item L<Exception::Class>
 
-=item L<Log::Dispatch>
-
 =item L<Log::Log4perl>
 
 =item L<Safe>
