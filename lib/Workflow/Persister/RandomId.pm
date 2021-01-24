@@ -8,7 +8,7 @@ use constant DEFAULT_ID_LENGTH  => 8;
 use constant RANDOM_SEED        => 26;
 use constant CONSTANT_INCREMENT => 65;
 
-$Workflow::Persister::RandomId::VERSION = '1.49';
+$Workflow::Persister::RandomId::VERSION = '1.50';
 
 my @FIELDS = qw( id_length );
 __PACKAGE__->mk_accessors(@FIELDS);

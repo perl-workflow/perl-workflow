@@ -5,7 +5,7 @@ use strict;
 use base qw( Workflow::Validator );
 use Workflow::Exception qw( validation_error );
 
-$Workflow::Validator::HasRequiredField::VERSION = '1.49';
+$Workflow::Validator::HasRequiredField::VERSION = '1.50';
 
 sub validate {
     my ( $self, $wf, @required_fields ) = @_;

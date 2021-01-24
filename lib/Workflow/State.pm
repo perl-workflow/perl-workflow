@@ -11,7 +11,7 @@ use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
 
-$Workflow::State::VERSION = '1.49';
+$Workflow::State::VERSION = '1.50';
 
 my @FIELDS   = qw( state description type );
 my @INTERNAL = qw( _test_condition_count _factory );
@@ -84,7 +84,7 @@ sub is_action_available {
 
 sub clear_condition_cache {
     my ($self) = @_;
-    return; # left for backward compatibility with 1.49
+    return; # left for backward compatibility with 1.50
 }
 
 sub evaluate_action {
@@ -611,7 +611,7 @@ Returns name of action to be used for autorunning the state.
 
 =head3 clear_condition_cache ( )
 
-Deprecated, kept for 1.49 compatibility.
+Deprecated, kept for 1.50 compatibility.
 
 Used to empties the condition result cache for a given state.
 

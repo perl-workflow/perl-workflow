@@ -1,5 +1,22 @@
 Revision history for Perl extension Workflow
 
+1.50 2021-01-24 Maintenance and minor bug fix release, update not required
+
+- Removal of unused dependency: Log::Dispatch, PR #64
+
+- Perl::Critic annotations addressed, enabled a few Perl::Critic tests, PR #58 and #59
+
+- Cleared out VSCode configuration file from distribution 
+
+- Removed obsolete notes directory containing older coverage reports, now covered by Coveralls.io, PR #63
+
+- Removed obsolete prototypes directory containing minor examples for code constructs, PR #62
+
+- Addressed reports of failling tests from CPAN-testers for release 1.49, test suite now supports being run without PERL_USE_UNSAFE_INC, PR #53 
+
+- Implementation of workaround for issue #10 with the failing observers, this is expected to be readdressed, as the observer implementation will be revisited, PR #60
+
+
 1.49 2021-01-12 Maintenance and minor feature release, update not required
 
 - Addressed an issue with return values from Workflow::Condition::GreedyOR's `evaluate_condition`, PR #50 from Erik Huelsmann

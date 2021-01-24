@@ -8,7 +8,7 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 1.49 of Workflow
+This documentation describes version 1.50 of Workflow
 
 # SYNOPSIS
 
@@ -683,7 +683,6 @@ to [Workflow::Config](https://metacpan.org/pod/Workflow%3A%3AConfig), for implem
 - [DateTime](https://metacpan.org/pod/DateTime)
 - [DateTime::Format::Strptime](https://metacpan.org/pod/DateTime%3A%3AFormat%3A%3AStrptime)
 - [Exception::Class](https://metacpan.org/pod/Exception%3A%3AClass)
-- [Log::Dispatch](https://metacpan.org/pod/Log%3A%3ADispatch)
 - [Log::Log4perl](https://metacpan.org/pod/Log%3A%3ALog4perl)
 - [Safe](https://metacpan.org/pod/Safe)
 - [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple)
@@ -894,7 +893,7 @@ Iceland by jonasbn
 # COPYRIGHT
 
 Copyright (c) 2003 Chris Winters and Arvato Direct;
-Copyright (c) 2004-2017 Chris Winters. All rights reserved.
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -907,9 +906,10 @@ Chris Winters <chris@cwinters.com>, original author.
 
 The following folks have also helped out (listed here in no particular order):
 
-Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49
+Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49. Yet another
+batch of PRs resulted in release 1.50
 
-Bug report from Petr Pisar resulted in release 1.49
+Bug report from Petr Pisar resulted in release 1.50
 
 Bug report from Tina Müller (tinita) resulted in release 1.47
 

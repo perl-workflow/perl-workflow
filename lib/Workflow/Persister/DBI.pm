@@ -15,7 +15,7 @@ use Workflow::Persister::DBI::SequenceId;
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::VERSION = '1.49';
+$Workflow::Persister::DBI::VERSION = '1.50';
 
 my @FIELDS = qw( handle dsn user password driver
     workflow_table history_table date_format parser autocommit);

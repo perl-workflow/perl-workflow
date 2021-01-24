@@ -6,7 +6,7 @@ use base qw( Workflow::Base );
 use Carp qw(croak);
 
 $Workflow::Condition::CACHE_RESULTS = 1;
-$Workflow::Condition::VERSION = '1.49';
+$Workflow::Condition::VERSION = '1.50';
 
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -209,9 +209,9 @@ to zero (0):
 
     $Workflow::Condition::CACHE_RESULTS = 0;
 
-All versions before 1.49 used a mechanism that effectively caused global
+All versions before 1.50 used a mechanism that effectively caused global
 state. To address the problems that resulted (see GitHub issues #9 and #7),
-1.49 switched to a new mechanism with a cache per workflow instance.
+1.50 switched to a new mechanism with a cache per workflow instance.
 
 =head1 COPYRIGHT
 

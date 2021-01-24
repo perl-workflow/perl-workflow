@@ -7,7 +7,7 @@ use Data::Dumper qw( Dumper );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::VERSION = '1.49';
+$Workflow::Config::VERSION = '1.50';
 
 # Map the valid type to the top-level XML tag or data
 # structure to look for.
