@@ -99,13 +99,16 @@ CONTRIBUTING.md
 \.sublime-project
 \.sublime-workspace
 
+# VSCode files
+\.code-workspace
+
 # Perl::Tidy error files
 \bperltidy\.ERR
 
 # Jekyll github pages files
 _config.yml
 ^assets
-README.mkdn
+README\.mkdn
 
 # carton files
 local
