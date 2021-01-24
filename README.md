@@ -731,26 +731,6 @@ Your [XML::SAX](https://metacpan.org/pod/XML%3A%3ASAX) configuration is located 
 
         XML/SAX/ParserDetails.ini
 
-## Perl 5.8.x
-
-CPAN testers reports indicate an issue with observers for Perl 5.8.8
-
-    #   Failed test 'One observation sent on workflow fetch to two observers'
-    #   at t/workflow.t line 79.
-    #          got: '4'
-    #     expected: '2'
-    # Looks like you failed 1 test of 35.
-    t/workflow.t .......................
-    Dubious, test returned 1 (wstat 256, 0x100)
-    Failed 1/35 subtests
-
-The issue is being investigated further, so this information is to be regarded
-as a warning before you dig too much into the issue.
-
-See also:
-
-[http://www.cpantesters.org/cpan/report/fc85ca1c-e46e-11e2-891c-ff8a40f4ab3d](http://www.cpantesters.org/cpan/report/fc85ca1c-e46e-11e2-891c-ff8a40f4ab3d)
-
 # BUGS AND LIMITATIONS
 
 Known bugs and limitations can be seen in the Github issue tracker:
