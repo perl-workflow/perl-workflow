@@ -555,16 +555,16 @@ sub _add_action_config {
             $log->is_debug
                 && $log->debug(
                 "Included action '$name' class '$action_class' ok");
-	    if ($self->_validate_action_config) {
-		my $validate_name = $action_class . '::validate_config';
-		if (exists &$validate_name) {
-		    no strict 'refs';
-		    $log->is_debug
-			&& $log->debug(
-			"Validating configuration for action '$name'");
-		    $validate_name->($action_config);
-		}
-	    }
+            if ($self->_validate_action_config) {
+                my $validate_name = $action_class . '::validate_config';
+                if (exists &$validate_name) {
+                    no strict 'refs';
+                    $log->is_debug
+                        && $log->debug(
+                        "Validating configuration for action '$name'");
+                    $validate_name->($action_config);
+                }
+            }
         }    # End action for.
     }
 }

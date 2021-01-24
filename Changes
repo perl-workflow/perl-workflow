@@ -23,7 +23,7 @@ Revision history for Perl extension Workflow
 - Additions to test suite, WIP on better scoped condition caching, PR #26 from Erik Huelsmann
 
 - Minor feature addition addressing issue #5 with condition caching, PR #25 from Erik Huelsmann
-  Condition caching can be disabled by setting: 
+  Condition caching can be disabled by setting:
 
     $Workflow::Condition::CACHE_RESULTS = 0; # false
 
@@ -242,9 +242,9 @@ Revision history for Perl extension Workflow
 
    - Added 3 new accessors to Workflow::Factory:
 
-	 - get_persister_for_workflow_type
-	 - get_persisters
-	 - get_validators
+         - get_persister_for_workflow_type
+         - get_persisters
+         - get_validators
 
    - Added check for existing context so context is not overwritten
      if existing, fixing a bug. Version bumped up to 1.19
@@ -257,13 +257,13 @@ Revision history for Perl extension Workflow
 
 - Patches from Danny Sadinoff to following classes
 
-	Workflow::Config, bumped up to version 1.13
-	Workflow::Persister, bumped up to version 1.10
-	Workflow::Factory, bumped up to version 1.19
+        Workflow::Config, bumped up to version 1.13
+        Workflow::Persister, bumped up to version 1.10
+        Workflow::Factory, bumped up to version 1.19
 
-	- Adding ability to control initial state name via workflow config
+        - Adding ability to control initial state name via workflow config
 
-	- Adding ability to control initial history record details via
+        - Adding ability to control initial history record details via
     Persister subclass code
 
 - Addressing a bug reported by Sergei Vyshenski, related to a
@@ -617,11 +617,11 @@ Revision history for Perl extension Workflow
   coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
 
 - Added new files (for test):
-	t/workflow.perl
-	t/workflow_action.perl
-	t/workflow_condition.perl
-	t/workflow_errorprone.perl
-	t/workflow_validator.perl
+        t/workflow.perl
+        t/workflow_action.perl
+        t/workflow_condition.perl
+        t/workflow_errorprone.perl
+        t/workflow_validator.perl
 
 - Added POD to Workflow::Config::Perl on parse method
 
