@@ -51,6 +51,7 @@ sub create_workflow {
     my $full_history_path = $self->_get_history_path($wf);
     mkdir( $full_history_path, 0777 )
         || persist_error "Cannot create history dir '$full_history_path': $!";
+
     return $wf_id;
 }
 
