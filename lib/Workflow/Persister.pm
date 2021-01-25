@@ -200,6 +200,8 @@ Persister. Since this is a SUPER class.
 Generate an ID for the workflow, serialize the workflow data (ID and
 state) and set the ID in the workflow.
 
+Returns the ID for the workflow.
+
 =head3 update_workflow( $workflow )
 
 Stub that warns that the method should be overwritten in the derived
@@ -207,13 +209,16 @@ Persister. Since this is a SUPER class.
 
 Update the workflow state.
 
+Returns nothing.
+
 =head3 fetch_workflow( $workflow_id )
 
 Stub that warns that the method should be overwritten in the derived
 Persister. Since this is a SUPER class.
 
 Retrieve the workflow data corresponding to C<$workflow_id>. It not
-found return undef, if found return a hashref with the data.
+found return undef, if found return a hashref with at least the keys
+C<state> and C<last_update> (a L<DateTime> instance).
 
 =head3 create_history( $workflow, @history )
 
@@ -221,6 +226,9 @@ Stub that warns that the method should be overwritten in the derived
 Persister. Since this is a SUPER class.
 
 Serialize all objects in C<@history> for later retrieval.
+
+Returns C<@history>, the list of history objects, with the history
+C<id> and C<saved> values set according to the saved results.
 
 =head3 fetch_history( $workflow )
 
