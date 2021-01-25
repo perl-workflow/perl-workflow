@@ -15,14 +15,13 @@ __PACKAGE__->mk_accessors(@FIELDS);
 sub init {
     my ( $self, $params ) = @_;
     $self->SUPER::init($params);
-    my $log = get_logger();
 
     my @not_found = ();
     foreach (qw( table data_field )) {
         push @not_found, $_ unless ( $params->{"extra_$_"} );
     }
     if ( scalar @not_found ) {
-        $log->error( "Required configuration fields not found: ",
+        $self->log->error( "Required configuration fields not found: ",
             join ', ', @not_found );
         configuration_error
             "To fetch extra data with each workflow with this implementation ",
@@ -42,17 +41,16 @@ sub init {
         my $context_key = $params->{extra_context_key} || $data_field;
         $self->context_key($context_key);
     }
-    $log->is_info
-        && $log->info( "Configured extra data fetch with: ",
+    $self->log->is_info
+        && $self->log->info( "Configured extra data fetch with: ",
         join '; ', $self->table, $data_field, $self->context_key );
 }
 
 sub fetch_extra_workflow_data {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
 
-    $log->is_debug
-        && $log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
+    $self->log->is_debug
+        && $self->log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
 
     my $sql = q{
        SELECT %s FROM %s
@@ -66,10 +64,10 @@ sub fetch_extra_workflow_data {
         : $self->handle->quote_identifier($data_field);
     $sql = sprintf $sql, $select_data_fields,
         $self->handle->quote_identifier( $self->table );
-    $log->is_debug
-        && $log->debug("Using SQL\n$sql");
-    $log->is_debug
-        && $log->debug( "Bind parameters: ", $wf->id );
+    $self->log->is_debug
+        && $self->log->debug("Using SQL\n$sql");
+    $self->log->is_debug
+        && $self->log->debug( "Bind parameters: ", $wf->id );
 
     my ($sth);
     eval {
@@ -80,22 +78,22 @@ sub fetch_extra_workflow_data {
         persist_error "Failed to retrieve extra data from table ",
             $self->table, ": $EVAL_ERROR";
     } else {
-        $log->is_debug
-            && $log->debug("Prepared/executed extra data fetch ok");
+        $self->log->is_debug
+            && $self->log->debug("Prepared/executed extra data fetch ok");
         my $row = $sth->fetchrow_arrayref;
         if ( ref $data_field ) {
             foreach my $i ( 0 .. $#{$data_field} ) {
                 $wf->context->param( $data_field->[$i], $row->[$i] );
-                $log->is_info
-                    && $log->info(
+                $self->log->is_info
+                    && $self->log->info(
                     sprintf "Set data from %s.%s into context key %s ok",
                     $self->table, $data_field->[$i], $data_field->[$i] );
             }
         } else {
             my $value = $row->[0];
             $wf->context->param( $self->context_key, $value );
-            $log->is_info
-                && $log->info(
+            $self->log->is_info
+                && $self->log->info(
                 sprintf "Set data from %s.%s into context key %s ok",
                 $self->table, $self->data_field, $self->context_key );
         }

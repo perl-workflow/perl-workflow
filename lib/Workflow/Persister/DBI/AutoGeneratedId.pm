@@ -13,7 +13,6 @@ __PACKAGE__->mk_accessors(@FIELDS);
 
 sub new {
     my ( $class, $params ) = @_;
-    my $log = get_logger();
 
     my $self = bless {}, $class;
     for (@FIELDS) {
@@ -28,15 +27,15 @@ sub new {
             configuration_error "If you specify 'from_handle' you must ",
                 "specify a value for 'handle_property'";
         }
-        $log->is_debug
-            && $log->debug( "Using '", $self->handle_property, "' from ", "'",
+        $self->log->is_debug
+            && $self->log->debug( "Using '", $self->handle_property, "' from ", "'",
             $self->from_handle, "' for ID generator" );
     } elsif ( !$self->func_property ) {
         configuration_error "If you do not specify a value in 'from_handle' ",
             "you must specify a value for 'func_property'";
     } else {
-        $log->is_debug
-            && $log->debug( "Using database func() property '",
+        $self->log->is_debug
+            && $self->log->debug( "Using database func() property '",
             $self->func_property, "' for ID generator" );
     }
     return $self;

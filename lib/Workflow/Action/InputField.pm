@@ -17,7 +17,7 @@ my %INCLUDED = ();
 
 sub new {
     my ( $class, $params ) = @_;
-    my $log = get_logger();
+    my $log = get_logger($class);
     $log->debug("Instantiating new field '$params->{name}'")
         if $params->{name};
 

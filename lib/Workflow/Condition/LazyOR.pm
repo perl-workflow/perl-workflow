@@ -11,7 +11,6 @@ use English qw( -no_match_vars );
 
 __PACKAGE__->mk_accessors('conditions');
 
-my ($log);
 
 sub _init {
     my ( $self, $params ) = @_;

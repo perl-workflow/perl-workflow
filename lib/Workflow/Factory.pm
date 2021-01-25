@@ -13,16 +13,14 @@ $Workflow::Factory::VERSION = '1.50';
 # Extra action attribute validation is off by default for compatibility.
 our $VALIDATE_ACTION_CONFIG = 0;
 
-my ($log);
 my (%INSTANCES);
 
 sub import {
     my $class = shift;
-    $log ||= get_logger();
 
     $class = ref $class || $class;    # just in case
     my $package = caller;
-
+    my $log = get_logger(__PACKAGE__);
     if ( defined $_[0] && $_[0] eq 'FACTORY' ) {
         $log->is_debug
             && $log->debug(
@@ -77,22 +75,24 @@ sub instance {
 
 sub _initialize_instance {
     my ($class) = @_;
-    $log ||= get_logger();
 
+    my $log = get_logger(__PACKAGE__);
     unless ( $INSTANCES{$class} ) {
         $log->is_debug
             && $log->debug(
             "Creating empty instance of '$class' factory for ",
             "singleton use" );
-        $INSTANCES{$class} = bless {} => $class;
+        my $instance = bless {} => $class;
+        $instance->init();
+        $INSTANCES{$class} = $instance;
     }
     return $INSTANCES{$class};
 }
 
 sub _delete_instance {
     my ($class) = @_;
-    $log ||= get_logger();
 
+    my $log = get_logger(__PACKAGE__);
     if ( $INSTANCES{$class} ) {
         $log->is_debug
             && $log->debug("Deleting instance of '$class' factory.");
@@ -111,18 +111,16 @@ sub add_config_from_file {
     my ( $self, %params ) = @_;
     return unless ( scalar keys %params );
 
-    $log ||= get_logger();
-
     _check_config_keys(%params);
 
     foreach my $type ( sort keys %params ) {
-        $log->is_debug
-            && $log->debug( "Using '$type' configuration file(s): ",
+        $self->log->is_debug
+            && $self->log->debug( "Using '$type' configuration file(s): ",
             join ', ', _flatten( $params{$type} ) );
     }
 
-    $log->is_debug
-        && $log->debug("Adding condition configurations...");
+    $self->log->is_debug
+        && $self->log->debug("Adding condition configurations...");
 
     if ( ref $params{condition} eq 'ARRAY' ) {
         foreach my $condition ( @{ $params{condition} } ) {
@@ -138,8 +136,8 @@ sub add_config_from_file {
         );
     }
 
-    $log->is_debug
-        && $log->debug("Adding validator configurations...");
+    $self->log->is_debug
+        && $self->log->debug("Adding validator configurations...");
 
     if ( ref $params{validator} eq 'ARRAY' ) {
         foreach my $validator ( @{ $params{validator} } ) {
@@ -155,8 +153,8 @@ sub add_config_from_file {
         );
     }
 
-    $log->is_debug
-        && $log->debug("Adding persister configurations...");
+    $self->log->is_debug
+        && $self->log->debug("Adding persister configurations...");
 
     if ( ref $params{persister} eq 'ARRAY' ) {
         foreach my $persister ( @{ $params{persister} } ) {
@@ -172,8 +170,8 @@ sub add_config_from_file {
         );
     }
 
-    $log->is_debug
-        && $log->debug("Adding action configurations...");
+    $self->log->is_debug
+        && $self->log->debug("Adding action configurations...");
 
     if ( ref $params{action} eq 'ARRAY' ) {
         foreach my $action ( @{ $params{action} } ) {
@@ -185,8 +183,8 @@ sub add_config_from_file {
             Workflow::Config->parse_all_files( 'action', $params{action} ) );
     }
 
-    $log->is_debug
-        && $log->debug("Adding workflow configurations...");
+    $self->log->is_debug
+        && $self->log->debug("Adding workflow configurations...");
 
     if ( ref $params{workflow} eq 'ARRAY' ) {
         foreach my $workflow ( @{ $params{workflow} } ) {
@@ -240,7 +238,6 @@ sub _flatten {
 sub _add_workflow_config {
     my ( $self, @all_workflow_config ) = @_;
     return unless ( scalar @all_workflow_config );
-    $log ||= get_logger();
 
     foreach my $workflow_config (@all_workflow_config) {
         next unless ( ref $workflow_config eq 'HASH' );
@@ -259,12 +256,12 @@ sub _add_workflow_config {
             push @{ $self->{_workflow_state}{$wf_type} }, $wf_state;
         }
 
-        $log->is_info
-            && $log->info("Added all workflow states...");
+        $self->log->is_info
+            && $self->log->info("Added all workflow states...");
 
         $self->_load_observers($workflow_config);
-        $log->is_info
-            && $log->info("Added all workflow observers...");
+        $self->log->is_info
+            && $self->log->info("Added all workflow observers...");
     }
 }
 
@@ -294,7 +291,7 @@ sub _load_observers {
                 push @observers, \&{ $o_sub_name };
             } else {
                 my $error = 'subroutine not found';
-                $log->error( "Error loading subroutine '$observer_sub' in ",
+                $self->log->error( "Error loading subroutine '$observer_sub' in ",
                     "class '$observer_class': $error" );
                 workflow_error $error;
             }
@@ -304,8 +301,8 @@ sub _load_observers {
                 "Workflow::Factory docs for details.)";
         }
     }
-    $log->is_info
-        && $log->info( "Added observers to '$wf_type': ", join ', ',
+    $self->log->is_info
+        && $self->log->info( "Added observers to '$wf_type': ", join ', ',
         @observers );
     $self->{_workflow_observers}{$wf_type}
         = scalar @observers ? \@observers : undef;
@@ -316,7 +313,7 @@ sub _load_class {
     eval "require $class_to_load";
     if ($EVAL_ERROR) {
         my $full_msg = sprintf $msg, $class_to_load, $EVAL_ERROR;
-        $log->error($full_msg);
+        $self->log->error($full_msg);
         workflow_error $full_msg;
     }
 
@@ -324,7 +321,6 @@ sub _load_class {
 
 sub create_workflow {
     my ( $self, $wf_type, $context, $wf_class ) = @_;
-    $log ||= get_logger();
 
     $wf_class = 'Workflow' unless ($wf_class);
 
@@ -339,13 +335,13 @@ sub create_workflow {
         $wf_config, $self->{_workflow_state}{$wf_type}, $self );
     $wf->context( $context || Workflow::Context->new );
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
-    $log->is_info
-        && $log->info("Instantiated workflow object properly, persisting...");
+    $self->log->is_info
+        && $self->log->info("Instantiated workflow object properly, persisting...");
     my $persister = $self->get_persister( $wf_config->{persister} );
     my $id        = $persister->create_workflow($wf);
     $wf->id($id);
-    $log->is_info
-        && $log->info(
+    $self->log->is_info
+        && $self->log->info(
         "Persisted workflow with ID '$id'; creating history...");
     $persister->create_history(
         $wf,
@@ -360,13 +356,13 @@ sub create_workflow {
             }
         )
     );
-    $log->is_info && $log->info("Created history object ok");
+    $self->log->is_info && $self->log->info("Created history object ok");
 
     $self->_commit_transaction($wf);
 
     my $state = $wf->_get_workflow_state();
     if ( $state->autorun ) {
-        $log->is_info && $log->info( "State '$state' marked to be run ",
+        $self->log->is_info && $self->log->info( "State '$state' marked to be run ",
             "automatically; executing that state/action..." );
         $wf->_auto_execute_state($state);
     }
@@ -379,7 +375,6 @@ sub create_workflow {
 
 sub fetch_workflow {
     my ( $self, $wf_type, $wf_id, $context, $wf_class ) = @_;
-    $log ||= get_logger();
 
     $wf_class = 'Workflow' unless ($wf_class);
 
@@ -391,8 +386,8 @@ sub fetch_workflow {
     my $wf_info   = $persister->fetch_workflow($wf_id);
     return undef unless ($wf_info);
     $wf_info->{last_update} ||= '';
-    $log->is_debug
-        && $log->debug(
+    $self->log->is_debug
+        && $self->log->debug(
         "Fetched data for workflow '$wf_id' ok: ",
         "[State: $wf_info->{state}] ",
         "[Last update: $wf_info->{last_update}]"
@@ -421,7 +416,7 @@ sub associate_observers_with_workflow {
 sub _initialize_workflow_config {
     my $self    = shift;
     my $wf_type = shift;
-    $log ||= get_logger();
+
     if ( ref( $self->config_callback ) eq 'CODE' ) {
         my $args = &{ $self->config_callback }($wf_type);
         $self->add_config_from_file( %{$args} ) if $args && %{$args};
@@ -447,7 +442,6 @@ sub _insert_workflow {
 
 sub save_workflow {
     my ( $self, $wf ) = @_;
-    $log ||= get_logger();
 
     my $old_update = $wf->last_update;
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
@@ -456,15 +450,15 @@ sub save_workflow {
     my $persister = $self->get_persister( $wf_config->{persister} );
     eval {
         $persister->update_workflow($wf);
-        $log->is_info
-            && $log->info( "Workflow '", $wf->id, "' updated ok" );
+        $self->log->is_info
+            && $self->log->info( "Workflow '", $wf->id, "' updated ok" );
         my @unsaved = $wf->get_unsaved_history;
         foreach my $h (@unsaved) {
             $h->set_new_state( $wf->state );
         }
         $persister->create_history( $wf, @unsaved );
-        $log->is_info
-            && $log->info("Created necessary history objects ok");
+        $self->log->is_info
+            && $self->log->info("Created necessary history objects ok");
     };
     if ($EVAL_ERROR) {
         $wf->last_update($old_update);
@@ -480,29 +474,29 @@ sub save_workflow {
 # for other persisters.
 sub _commit_transaction {
     my ( $self, $wf ) = @_;
-    $log ||= get_logger();
+
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
     $persister->commit_transaction();
-    $log->debug('Committed transaction.');
+    $self->log->debug('Committed transaction.');
     return;
 }
 
 sub _rollback_transaction {
     my ( $self, $wf ) = @_;
-    $log ||= get_logger();
+
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
     $persister->rollback_transaction();
-    $log->debug('Rolled back transaction.');
+    $self->log->debug('Rolled back transaction.');
     return;
 }
 
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
-    $log ||= get_logger();
-    $log->is_debug
-        && $log->debug( "Trying to fetch history for workflow ", $wf->id );
+
+    $self->log->is_debug
+        && $self->log->debug( "Trying to fetch history for workflow ", $wf->id );
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
     return $persister->fetch_history($wf);
@@ -513,7 +507,7 @@ sub get_workflow_history {
 
 sub _add_action_config {
     my ( $self, @all_action_config ) = @_;
-    $log ||= get_logger();
+
     return unless ( scalar @all_action_config );
 
     foreach my $actions (@all_action_config) {
@@ -534,8 +528,8 @@ sub _add_action_config {
 
         foreach my $action_config ( @{$action} ) {
             my $name = $action_config->{name};
-            $log->is_debug
-                && $log->debug(
+            $self->log->is_debug
+                && $self->log->debug(
                 "Adding configuration for type '$type', action '$name'");
             $self->{_action_config}{$type}{$name} = $action_config;
             my $action_class = $action_config->{class};
@@ -544,23 +538,23 @@ sub _add_action_config {
                     "Action '$name' must be associated with a ",
                     "class using the 'class' attribute.";
             }
-            $log->is_debug
-                && $log->debug(
+            $self->log->is_debug
+                && $self->log->debug(
                 "Trying to include action class '$action_class'...");
             eval "require $action_class";
             if ($EVAL_ERROR) {
                 configuration_error
                     "Cannot include action class '$action_class': $EVAL_ERROR";
             }
-            $log->is_debug
-                && $log->debug(
+            $self->log->is_debug
+                && $self->log->debug(
                 "Included action '$name' class '$action_class' ok");
             if ($self->_validate_action_config) {
                 my $validate_name = $action_class . '::validate_config';
                 if (exists &$validate_name) {
                     no strict 'refs';
-                    $log->is_debug
-                        && $log->debug(
+                    $self->log->is_debug
+                        && $self->log->debug(
                         "Validating configuration for action '$name'");
                     $validate_name->($action_config);
                 }
@@ -593,30 +587,30 @@ sub get_action {
 
 sub _add_persister_config {
     my ( $self, @all_persister_config ) = @_;
-    $log ||= get_logger();
+
     return unless ( scalar @all_persister_config );
 
     foreach my $persister_config (@all_persister_config) {
         next unless ( ref $persister_config eq 'HASH' );
         my $name = $persister_config->{name};
-        $log->is_debug
-            && $log->debug("Adding configuration for persister '$name'");
+        $self->log->is_debug
+            && $self->log->debug("Adding configuration for persister '$name'");
         $self->{_persister_config}{$name} = $persister_config;
         my $persister_class = $persister_config->{class};
         unless ($persister_class) {
             configuration_error "You must specify a 'class' in persister ",
                 "'$name' configuration";
         }
-        $log->is_debug
-            && $log->debug(
+        $self->log->is_debug
+            && $self->log->debug(
             "Trying to include persister class '$persister_class'...");
         eval "require $persister_class";
         if ($EVAL_ERROR) {
             configuration_error "Cannot include persister class ",
                 "'$persister_class': $EVAL_ERROR";
         }
-        $log->is_debug
-            && $log->debug(
+        $self->log->is_debug
+            && $self->log->debug(
             "Included persister '$name' class '$persister_class' ",
             "ok; now try to instantiate persister..." );
         my $persister = eval { $persister_class->new($persister_config) };
@@ -625,8 +619,8 @@ sub _add_persister_config {
                 "'$name' of class '$persister_class': $EVAL_ERROR";
         }
         $self->{_persister}{$name} = $persister;
-        $log->is_debug
-            && $log->debug("Instantiated persister '$name' ok");
+        $self->log->is_debug
+            && $self->log->debug("Instantiated persister '$name' ok");
     }
 }
 
@@ -664,7 +658,6 @@ sub get_persister_for_workflow_type {
 
 sub _add_condition_config {
     my ( $self, @all_condition_config ) = @_;
-    $log ||= get_logger();
 
     return unless ( scalar @all_condition_config );
 
@@ -683,24 +676,24 @@ sub _add_condition_config {
 
         foreach my $condition_config ( @{$c} ) {
             my $name = $condition_config->{name};
-            $log->is_debug
-                && $log->debug("Adding configuration for condition '$name'");
+            $self->log->is_debug
+                && $self->log->debug("Adding configuration for condition '$name'");
             $self->{_condition_config}{$type}{$name} = $condition_config;
             my $condition_class = $condition_config->{class};
             unless ($condition_class) {
                 configuration_error "Condition '$name' must be associated ",
                     "with a class using the 'class' attribute";
             }
-            $log->is_debug
-                && $log->debug(
+            $self->log->is_debug
+                && $self->log->debug(
                 "Trying to include condition class '$condition_class'");
             eval "require $condition_class";
             if ($EVAL_ERROR) {
                 configuration_error "Cannot include condition class ",
                     "'$condition_class': $EVAL_ERROR";
             }
-            $log->is_debug
-                && $log->debug(
+            $self->log->is_debug
+                && $self->log->debug(
                 "Included condition '$name' class '$condition_class' ",
                 "ok; now try to instantiate condition..." );
             my $condition = eval { $condition_class->new($condition_config) };
@@ -709,8 +702,8 @@ sub _add_condition_config {
                     "Cannot create condition '$name': $EVAL_ERROR";
             }
             $self->{_conditions}{$type}{$name} = $condition;
-            $log->is_debug
-                && $log->debug("Instantiated condition '$name' ok");
+            $self->log->is_debug
+                && $self->log->debug("Instantiated condition '$name' ok");
         }
     }
 }
@@ -742,7 +735,7 @@ sub get_condition {
 
 sub _add_validator_config {
     my ( $self, @all_validator_config ) = @_;
-    $log ||= get_logger();
+
     return unless (@all_validator_config);
 
     foreach my $validators (@all_validator_config) {
@@ -757,8 +750,8 @@ sub _add_validator_config {
 
         for my $validator_config ( @{$v} ) {
             my $name = $validator_config->{name};
-            $log->is_debug
-                && $log->debug("Adding configuration for validator '$name'");
+            $self->log->is_debug
+                && $self->log->debug("Adding configuration for validator '$name'");
             $self->{_validator_config}{$name} = $validator_config;
             my $validator_class = $validator_config->{class};
             unless ($validator_class) {
@@ -766,16 +759,16 @@ sub _add_validator_config {
                     "Validator '$name' must be associated with ",
                     "a class using the 'class' attribute.";
             }
-            $log->is_debug
-                && $log->debug(
+            $self->log->is_debug
+                && $self->log->debug(
                 "Trying to include validator class '$validator_class'");
             eval "require $validator_class";
             if ($EVAL_ERROR) {
                 workflow_error
                     "Cannot include validator class '$validator_class': $EVAL_ERROR";
             }
-            $log->is_debug
-                && $log->debug(
+            $self->log->is_debug
+                && $self->log->debug(
                 "Included validator '$name' class '$validator_class' ",
                 " ok; now try to instantiate validator..."
                 );
@@ -784,8 +777,8 @@ sub _add_validator_config {
                 workflow_error "Cannot create validator '$name': $EVAL_ERROR";
             }
             $self->{_validators}{$name} = $validator;
-            $log->is_debug
-                && $log->debug("Instantiated validator '$name' ok");
+            $self->log->is_debug
+                && $self->log->debug("Instantiated validator '$name' ok");
         }
     }
 }

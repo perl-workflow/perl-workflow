@@ -13,14 +13,12 @@ $Workflow::Persister::DBI::SequenceId::VERSION = '1.50';
 my @FIELDS = qw( sequence_name sequence_select );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-my ($log);
 
 sub pre_fetch_id {
     my ( $self, $dbh ) = @_;
-    $log ||= get_logger();
     my $full_select = sprintf $self->sequence_select, $self->sequence_name;
-    $log->is_debug
-        && $log->debug("SQL to fetch sequence: $full_select");
+    $self->log->is_debug
+        && $self->log->debug("SQL to fetch sequence: $full_select");
     my ($row);
     eval {
         my $sth = $dbh->prepare($full_select);
