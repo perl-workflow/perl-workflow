@@ -280,7 +280,7 @@ You can validate it like this:
     my $config = shift;
     unless ('NOW' eq $config->{when}) {
       configuration_error "`$$config{when}' is not a valid value " .
-		          "for `when'";
+                          "for `when'";
     }
   }
 

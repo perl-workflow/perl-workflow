@@ -1,6 +1,6 @@
 $VAR1 = {
-	  'type'   => 'Type2',
-	  'description' => 'Actions for the Type2 workflow only.',
+          'type'   => 'Type2',
+          'description' => 'Actions for the Type2 workflow only.',
           'action' => [
                       {
                         'name' => 'TIX_NEW',
