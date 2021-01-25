@@ -1,6 +1,6 @@
 Revision history for Perl extension Workflow
 
-1.50 2021-01-24 Maintenance and minor bug fix release, update not required
+1.50 2021-01-25 Maintenance and minor bug fix release, update not required
 
 - Removal of unused dependency: Log::Dispatch, PR #64
 
