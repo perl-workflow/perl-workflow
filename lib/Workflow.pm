@@ -1407,7 +1407,7 @@ The following folks have also helped out (listed here in no particular order):
 Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49. Yet another
 batch of PRs resulted in release 1.50
 
-Bug report from Petr Pisar resulted in release 1.50
+Bug report from Petr Pisar resulted in release 1.48
 
 Bug report from Tina Müller (tinita) resulted in release 1.47
 
