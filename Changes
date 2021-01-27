@@ -16,6 +16,8 @@ Revision history for Perl extension Workflow
 
 - Implementation of workaround for issue #10 with the failing observers, this is expected to be readdressed, as the observer implementation will be revisited, PR #60
 
+- Stop requiring a DSN to be configured when the DBI handle is sourced from elsewhere; instead, require a `driver` attribute to be specified, PR #51
+
 
 1.49 2021-01-12 Maintenance and minor feature release, update not required
 
