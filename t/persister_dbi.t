@@ -91,6 +91,7 @@ my ( $wf );
           $history->[1]->{bound_params}->[6] ],
         ];
     my @hist = $wf->get_history;
+    $handle->{mock_clear_history} = 1;
 }
 
 {

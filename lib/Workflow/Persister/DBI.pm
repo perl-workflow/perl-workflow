@@ -361,9 +361,6 @@ sub fetch_history {
     my ( $self, $wf ) = @_;
     $self->_init_fields();
 
-    #Setting timezone (See: RT:85380)
-    $self->parser()->time_zone($wf->time_zone);
-
     $log ||= get_logger();
     my $sql = qq{
         SELECT %s
