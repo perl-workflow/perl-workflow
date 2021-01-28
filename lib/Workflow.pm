@@ -3,7 +3,7 @@ package Workflow;
 use warnings;
 use strict;
 use 5.006; # warnings
-use base qw( Workflow::Base Class::Observable );
+use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
@@ -13,7 +13,7 @@ use Carp qw(croak carp);
 use English qw( -no_match_vars );
 
 my @FIELDS   = qw( id type description state last_update time_zone );
-my @INTERNAL = qw( _factory );
+my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
 $Workflow::VERSION = '1.50';
@@ -21,6 +21,29 @@ $Workflow::VERSION = '1.50';
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
 my ($log);
+
+########################################
+# INTERNAL METHODS
+
+sub add_observer {
+    my ($self, @observers) = @_;
+
+    if (not $self->_observers) {
+        $self->_observers( [] );
+    }
+    push @{$self->_observers}, @observers;
+
+    return;
+}
+
+sub notify_observers {
+    my ($self, @args) = @_;
+
+    return unless $self->_observers;
+    $_->($self, @args) for @{$self->_observers};
+
+    return;
+}
 
 ########################################
 # PUBLIC METHODS
@@ -935,8 +958,7 @@ method with the signature:
 
 We also issue a 'change state' observation if the executed action
 resulted in a new state. See L<WORKFLOWS ARE OBSERVABLE> above for how
-we use and register observers and L<Class::Observable> for more
-general information about observers as well as implementation details.
+we use and register observers.
 
 Returns: new state of workflow
 
@@ -1129,6 +1151,26 @@ Returns the name of the next state given the action
 C<$action_name>. Throws an exception if C<$action_name> not contained
 in the current state.
 
+=head3 add_observer( @observers )
+
+Adds one or more observers to a C<Workflow> instance. An observer is a
+function. See L</notify_observers> for its calling convention.
+
+This function is used internally by C<Workflow::Factory> to implement
+observability as documented in the section L</WORKFLOWS ARE OBSERVABLE>
+
+=head3 notify_observers( @arguments )
+
+Calls all observer functions registered through C<add_observer> with
+the workflow as the first argument and C<@arguments> as the remaining
+arguments:
+
+   $observer->( $wf, @arguments );
+
+Used by various parts of the library to notify observers of workflow
+instance related events.
+
+
 =head1 CONFIGURATION AND ENVIRONMENT
 
 The configuration of Workflow is done using the format of your choice, currently
@@ -1142,8 +1184,6 @@ to L<Workflow::Config>, for implementation details.
 =item L<Class::Accessor>
 
 =item L<Class::Factory>
-
-=item L<Class::Observable>
 
 =item L<DateTime>
 
