@@ -345,7 +345,7 @@
 
 - Hard coded version numbers to all modules in t/ Subversion uses different scheme so we no longer use automatically updated version numbers, added version 0.01 where no version was present
 
-- Hard coded version numbers to all modules in `eg/` 
+- Hard coded version numbers to all modules in `eg/`
 
   Subversion uses different scheme so we no longer use automatically updated version numbers, added version 0.01 where no version was present
 
