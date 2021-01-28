@@ -48,6 +48,21 @@
         <param name="condition3" value="always_true_2"/>
     </condition>
 
+    <!-- Conditions for Workflow::Condition::LazyOR -->
+
+    <!-- this should evaluate to 'false' -->
+    <condition name="lazy_or_1" class="Workflow::Condition::LazyOR">
+        <param name="condition1" value="always_false"/>
+        <param name="condition2" value="always_false_2"/>
+    </condition>
+
+    <!-- this should evaluate to 'true' -->
+    <condition name="lazy_or_2" class="Workflow::Condition::LazyOR">
+        <param name="condition1" value="always_false"/>
+        <param name="condition2" value="always_true"/>
+        <param name="condition3" value="always_false_2"/>
+    </condition>
+
     <!-- Conditions for Workflow::Condition::CheckReturn -->
 
     <!-- this should evaluate to 'true' -->
