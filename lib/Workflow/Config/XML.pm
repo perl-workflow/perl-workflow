@@ -103,6 +103,8 @@ sub _translate_xml {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Config::XML - Parse workflow configurations from XML content
@@ -149,3 +151,5 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

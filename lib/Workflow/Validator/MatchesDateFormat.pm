@@ -56,6 +56,8 @@ sub validate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Validator::MatchesDateFormat - Ensure a stringified date matches a given pattern
@@ -153,3 +155,5 @@ it under the same terms as Perl itself.
 Current maintainer Jonas B. Nielsen E<lt>jonasbn@cpan.orgE<gt>
 
 Original author Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

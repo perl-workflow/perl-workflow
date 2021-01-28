@@ -29,6 +29,8 @@ sub evaluate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Condition - Evaluate a condition depending on the workflow state and environment

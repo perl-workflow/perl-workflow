@@ -26,6 +26,8 @@ sub validate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Validator::HasRequiredField - Validator to ensure certain data are in the context

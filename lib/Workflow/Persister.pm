@@ -150,6 +150,8 @@ sub rollback_transaction {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister - Base class for workflow persistence

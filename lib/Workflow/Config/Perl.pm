@@ -99,6 +99,8 @@ sub _translate_perl {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Config::Perl - Parse workflow configurations as Perl data structures
@@ -157,3 +159,5 @@ it under the same terms as Perl itself.
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut

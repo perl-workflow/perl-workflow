@@ -1,3 +1,5 @@
+=pod
+
 =head1 Basics of Workflows
 
 =over
@@ -47,3 +49,5 @@ and Workflow. (Although the workflow isn't directly coded...)
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+
+=cut

@@ -51,6 +51,8 @@ sub is_enumerated_value {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Validator::InEnumeratedType - Ensure a value is one of a declared set of values
@@ -224,4 +226,4 @@ Current maintainer Jonas B. Nielsen E<lt>jonasbn@cpan.orgE<gt>
 
 Original author Chris Winters E<lt>chris@cwinters.comE<gt>
 
-
+=cut

@@ -18,6 +18,8 @@ sub merge {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Context - Data blackboard for Workflows, Actions, Conditions and Validators
@@ -78,3 +80,5 @@ it under the same terms as Perl itself.
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+
+=cut

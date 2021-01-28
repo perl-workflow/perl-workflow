@@ -35,6 +35,8 @@ sub validate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Validator - Ensure data are valid
@@ -153,3 +155,5 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

@@ -113,6 +113,8 @@ sub add_possible_values {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Action::InputField - Metadata about information required by an Action

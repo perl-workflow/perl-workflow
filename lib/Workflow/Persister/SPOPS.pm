@@ -136,6 +136,8 @@ sub fetch_history {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::SPOPS - Persist workflows using SPOPS
