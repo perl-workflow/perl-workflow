@@ -240,6 +240,8 @@ sub create_workflow {
         }
     }
     $sth->finish;
+
+    $wf->id($id);
     return $id;
 }
 
