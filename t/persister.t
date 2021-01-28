@@ -1,4 +1,4 @@
-# -*-perl-*-
+#!/usr/bin/env perl
 
 # $Id: Persister.t 304 2007-07-03 14:56:43Z jonasbn $
 
