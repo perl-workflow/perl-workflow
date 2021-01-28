@@ -1,7 +1,5 @@
 package TestApp::Condition::AlwaysTrue;
 
-# $Id$
-
 use strict;
 use base qw( Workflow::Condition );
 use Log::Log4perl       qw( get_logger );

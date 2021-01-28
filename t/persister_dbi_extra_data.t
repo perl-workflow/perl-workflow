@@ -1,7 +1,5 @@
 #!/usr/bin/env perl
 
-# $Id$
-
 use strict;
 use constant NUM_TESTS => 1;
 use Test::More;

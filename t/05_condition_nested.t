@@ -1,6 +1,4 @@
-# --perl--
-#
-# vim: syntax=perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;

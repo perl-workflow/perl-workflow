@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
 
-
 use strict;
 use lib qw(../lib lib ../t t);
 use TestUtil;
