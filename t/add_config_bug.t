@@ -15,7 +15,7 @@ require Workflow::Factory;
 
 my @conditions = ({
          name => 'HasUser',
-         class => 'TestApp::Condition::HasUser'
+         class => 'Workflow::Condition::HasUser'
        },
        {
          name => 'HasUserType',
