@@ -2,7 +2,7 @@ $VAR1 = {
           'condition' => [
                          {
                            'name' => 'HasUser',
-                           'class' => 'TestApp::Condition::HasUser'
+                           'class' => 'Workflow::Condition::HasUser'
                          }
                        ]
         };
