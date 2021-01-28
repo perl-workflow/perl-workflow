@@ -1,6 +1,6 @@
 # Revision history for the Workflow Perl Distribution
 
-## 1.50 2021-01-25 Maintenance and minor bug fix release, update not required
+## 1.50 2021-01-25 Bug fix release, update not required
 
 - Removal of unused dependency: Log::Dispatch, PR [#64](https://github.com/jonasbn/perl-workflow/pull/64)
 
@@ -18,7 +18,7 @@
 
 - Stop requiring a DSN to be configured when the DBI handle is sourced from elsewhere; instead, require a `driver` attribute to be specified, PR [#51](https://github.com/jonasbn/perl-workflow/pull/51)
 
-## 1.49 2021-01-12 Maintenance and minor feature release, update not required
+## 1.49 2021-01-12 Minor feature release, update not required
 
 - Addressed an issue with return values from Workflow::Condition::GreedyOR's `evaluate_condition`, PR [#50](https://github.com/jonasbn/perl-workflow/pull/50) from Erik Huelsmann
 
