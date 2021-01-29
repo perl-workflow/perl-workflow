@@ -466,6 +466,8 @@ sub get_history_fields {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::DBI - Persist workflow and history to DBI database

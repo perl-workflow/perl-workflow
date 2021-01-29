@@ -90,6 +90,8 @@ sub normalize_array {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Base - Base class with constructor
@@ -200,3 +202,5 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

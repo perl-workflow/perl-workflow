@@ -463,6 +463,8 @@ sub _get_next_condition_count {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::State - Information about an individual state in a workflow

@@ -194,6 +194,8 @@ sub _get_history_path {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::File - Persist workflow and history to the filesystem

@@ -1,4 +1,5 @@
 =head1 Configuration Description
+=pod
 
 =head2 Workflows
 
@@ -121,3 +122,5 @@
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+
+=cut

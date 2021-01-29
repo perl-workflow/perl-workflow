@@ -68,6 +68,8 @@ sub evaluate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Condition::Evaluate - Inline condition that evaluates perl code for truth
@@ -150,3 +152,5 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

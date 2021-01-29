@@ -106,6 +106,8 @@ sub fetch_extra_workflow_data {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::DBI::ExtraData - Fetch extra data with each workflow and put it into the context

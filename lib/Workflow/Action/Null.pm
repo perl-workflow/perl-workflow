@@ -15,6 +15,8 @@ sub execute {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Action::Null - Workflow action for the terminally lazy
@@ -67,4 +69,4 @@ it under the same terms as Perl itself.
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
 
-
+=cut

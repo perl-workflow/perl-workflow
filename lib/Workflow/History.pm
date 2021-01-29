@@ -58,6 +58,8 @@ sub clear_saved {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::History - Recorded work on a workflow action or workflow itself

@@ -40,6 +40,8 @@ sub post_fetch_id {return}
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::DBI::SequenceId - Persister to fetch ID from a sequence

@@ -23,6 +23,8 @@ sub post_fetch_id {return}
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::UUID - Persister to generate Universally Unique Identifiers
@@ -90,3 +92,5 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

@@ -34,6 +34,8 @@ sub post_fetch_id {return}
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::RandomId - Persister to generate random ID
@@ -90,3 +92,5 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

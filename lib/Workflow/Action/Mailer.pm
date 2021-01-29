@@ -15,6 +15,8 @@ sub execute {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Action::Mailer - a stub for a SMTP capable action

@@ -111,6 +111,8 @@ sub _massage {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Exception - Base class for workflow exceptions

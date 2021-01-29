@@ -160,6 +160,8 @@ sub init {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Action - Base class for Workflow actions
@@ -457,3 +459,5 @@ it under the same terms as Perl itself.
 =head1 AUTHORS
 
 Chris Winters E<lt>chris@cwinters.comE<gt>
+
+=cut

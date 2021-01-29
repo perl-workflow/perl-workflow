@@ -812,6 +812,7 @@ sub _validate_action_config {
 
 __END__
 
+=pod
 
 =head1 NAME
 
