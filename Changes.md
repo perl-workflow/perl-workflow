@@ -66,7 +66,7 @@
 
 ## 1.46 2019-05-28 Bug fix release, update not required
 
-- Patch from Oliver Welter, addressing issue with greedy join handling error message
+- Patch from Oliver Welter, addressing issue with greedy join handling error message, ref: PR [#16](https://github.com/jonasbn/perl-workflow/pull/16)
 
 ## 1.45 2017-06-29 Maintenance release, update not required
 
@@ -83,7 +83,7 @@
 ## 1.43 2017-06-02 Maintenance release, update recommended
 
 - PR from Oliver Welter providing improvements to logging in relation to
-  condition validation
+  condition validation, ref: PR [#11](https://github.com/jonasbn/perl-workflow/pull/11)
 
 - Exchanged CJM´s:
   [Dist::Zilla::Plugin::VersionFromModule](https://metacpan.org/pod/Dist::Zilla::Plugin::VersionFromModule)
@@ -106,7 +106,7 @@
 
 - Fixed POD issue with encoding, so we now support UTF-8 for authors names
 
-- Minor POD fix by dtikhonov to POD introduced in 1.40
+- Minor POD fix by dtikhonov to POD introduced in 1.40, ref: PR [#3](https://github.com/jonasbn/perl-workflow/pull/3)
 
 - Adjusted permissions on some files, which were executable for no apparent reason
 
@@ -114,7 +114,7 @@
 
 - Update recommended due to bug fix by dtikhonov in observer handling
 
-- Merged pull request from dtikhonov holding a bug fix in observer handling and a feature enabling attribute validation for actions, see the POD added to Workflow::Action
+- Merged pull request from dtikhonov holding a bug fix in observer handling and a feature enabling attribute validation for actions, see the POD added to Workflow::Action, ref: PR [#2](https://github.com/jonasbn/perl-workflow/pull/2)
 
 - Cleaned up the `Build.PL` file
 
