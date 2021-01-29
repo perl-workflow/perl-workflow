@@ -412,53 +412,43 @@
 
 ## 0.25 2006-12-14 Feature release, update not required
 
-- Applied patch from Alexander Klink via rt.cpan.org (#23736). Introduces caching of the result of a condition's evaluate()
+- Applied patch from Alexander Klink via [#23736](https://rt.cpan.org/Public/Bug/Display.html?id=23736). Introduces caching of the result of a condition's evaluate()
 
 ## 0.24 2006-12-14 Feature release, update not required
 
-- Applied patch from Alexander Klink via rt.cpan.org (#23925)
-  Introduces may_stop property for autorunning workflow
+- Applied patch from Alexander Klink via [#23925](https://rt.cpan.org/Public/Bug/Display.html?id=23925). Introduces may_stop property for autorunning workflow
 
   This is why this patch introduces the "may_stop" property for a state, which means that Workflow won't complain if the state is autorun and no or too many activities are present.
 
 ## 0.23 2006-09-12 Feature release, update not required
 
-- Applied patch from Michael Bell via rt.cpan.org (#21100)
-  Fixes problem with handling of 0 and empty strings as parameters
+- Applied patch from Michael Bell via [#21100](https://rt.cpan.org/Public/Bug/Display.html?id=21100). Fixes problem with handling of 0 and empty strings as parameters
 
-- Applied patch from Michael Bell via rt.cpan.org (#21101)
-  Fixes problem with deletion of parameters
+- Applied patch from Michael Bell via [#21101](https://rt.cpan.org/Public/Bug/Display.html?id=21101). Fixes problem with deletion of parameters
 
-- Applied yet another patch from Michael Bell via rt.cpan.org (#21099)
-  The patch fixes some misinforming POD
+- Applied yet another patch from Michael Bell via [#21099](https://rt.cpan.org/Public/Bug/Display.html?id=21099). The patch fixes some misinforming POD
 
-- Applied patch from Alexander Klink via rt.cpan.org (#21422)
-  The patch implement more powerful observers
+- Applied patch from Alexander Klink via [#21422](https://rt.cpan.org/Public/Bug/Display.html?id=21422). The patch implement more powerful observers
 
 ## 0.22 2006-08-18 Feature release, update not required
 
-- Applied patch from Michael Bell via rt.cpan.org (#20871), this
-  patch also contains the patch mentioned below.
+- Applied patch from Michael Bell via [#20871](https://rt.cpan.org/Public/Bug/Display.html?id=20871), this patch also contains the patch mentioned below.
 
 - Applied patch to Workflow::Action from Michael Bell, fixing two bugs
 
-- Changed POD format to accomodate for Pod::Coverage, where B<> is not
-  recognised, but =head<1..3> and =item is
+- Changed POD format to accomodate for Pod::Coverage, where `B<>` is not recognised, but `=head<1..3>` and `=item` is
 
-  So subs are now marked with head3 instead of B<>, I am of the opinion that titles should be marked as titles and B<> (bold) should be used to emphasize important information in the POD.
+  So subs are now marked with head3 instead of `B<>`, I am of the opinion that titles should be marked as titles and `B<>` (bold) should be used to emphasize important information in the POD.
 
 ## 0.21 2006-07-07 Bug fix release, update not required
 
-- Fixed bug reported by Martin Bartosch, Workflow::Context's
-  merge method did not work properly, applied patch from Martin
+- Fixed bug reported by Martin Bartosch, Workflow::Context's merge method did not work properly, applied patch from Martin
 
-- Updated t/context.t to test the above fix, this got the coverage
-  from 53.3 percent to 93.3
+- Updated `t/context.t` to test the above fix, this got the coverage from 53.3 percent to 93.3
 
 ## 0.20 2006-07-07 Bug fix release, update not required
 
-- Fixed bug reported by Martin Bartosch, Workflow::Factory's
-  add_config_from_file now takes an array ref as stated in the POD.
+- Fixed bug reported by Martin Bartosch, Workflow::Factory's add_config_from_file now takes an array ref as stated in the POD.
 
 - Updated t/factory.t to test the above fix, just using the scenarios from the SYNOPSIS. This fix did however not contribute to the coverage of Workflow::Factory, we lost 0.3 percent along the way going from 88.7 to 88.4
 
@@ -466,8 +456,7 @@
 
 ## 0.19 2006-07-07 Bug fix release, update not required
 
-- The 0.18 release contained a broken Makefile.PL, thanks to Randal
-  Schwartz for sending me the feedback to get this addressed immediately.
+- The 0.18 release contained a broken Makefile.PL, thanks to Randal Schwartz for sending me the feedback to get this addressed immediately.
 
 ## 0.18 2006-07-07 Maintenance release, update not required
 
@@ -477,14 +466,11 @@
 
 - Added new TODO file
 
-- Added a handful of tests to t/config.t and added dependency on
-  Test::Exception
+- Added a handful of tests to t/config.t and added dependency on Test::Exception
 
-- Somewhat applied patch from Chris Brown, the use of Perl as
-  configuration was broken, in my attempt to implement tests prior to
-  applying Chris Browns patch I accidently fixed the same problems it addressed.
+- Somewhat applied patch from Chris Brown, the use of Perl as configuration was broken, in my attempt to implement tests prior to applying Chris Browns patch I accidently fixed the same problems it addressed.
 
-  coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
+  Coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
 
 - Added new files (for test):
 
