@@ -1,7 +1,5 @@
 package TestApp::Action::TicketUpdate;
 
-# $Id$
-
 use strict;
 use base qw( Workflow::Action );
 use Log::Log4perl qw( get_logger );

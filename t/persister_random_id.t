@@ -1,6 +1,4 @@
-# -*-perl-*-
-
-# $Id$
+#!/usr/bin/env perl
 
 use strict;
 use lib qw(../lib lib ../t t);
@@ -32,5 +30,3 @@ is( $generator_long->id_length, 36,
 my $id_long = $generator_long->pre_fetch_id;
 is( length( $id_long ), 36,
     'Value returned from generator correct length' );
-
-
