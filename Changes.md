@@ -12,7 +12,7 @@
 
 - Removed obsolete prototypes directory containing minor examples for code constructs, PR [#62](https://github.com/jonasbn/perl-workflow/pull/62)
 
-- Addressed reports of failling tests from CPAN-testers for release 1.49, test suite now supports being run without `PERL_USE_UNSAFE_INC`, PR [#53](https://github.com/jonasbn/perl-workflow/pull/53)
+- Addressed reports of failling tests from CPAN-testers for release 1.49, test suite now supports being run without `PERL_USE_UNSAFE_INC`, PR [#53](https://github.com/jonasbn/perl-workflow/pull/53), addressing issue [#52](https://github.com/jonasbn/perl-workflow/issues/52)
 
 - Implementation of workaround for issue #10 with the failing observers, this is expected to be readdressed, as the observer implementation will be revisited, PR [#60](https://github.com/jonasbn/perl-workflow/pull/60)
 
