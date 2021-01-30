@@ -44,7 +44,7 @@ sub get_available_action_names {
 
     # assuming that the user wants the _fresh_ list of available actions,
     # we clear the condition cache before checking which ones are available
-    delete $wf->{'_condition_result_cache'};
+    local $wf->{'_condition_result_cache'} = {};
 
     foreach my $action_name (@all_actions) {
 
@@ -78,7 +78,6 @@ sub is_action_available {
     $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR);
 
     croak $EVAL_ERROR;
-
 }
 
 sub clear_condition_cache {
@@ -101,127 +100,30 @@ sub evaluate_action {
         } else {
             $condition_name = $condition->name;
         }
-        my $orig_condition = $condition_name;
-        my $opposite       = 0;
 
-        $self->log->is_debug
-            && $self->log->debug("Checking condition $condition_name");
-
-        if ( $condition_name =~ m{ \A ! }xms ) {
-
-            # this condition starts with a '!' and is thus supposed
-            # to return the opposite of an original condition, whose
-            # name is the same except for the '!'
-            $orig_condition =~ s{ \A ! }{}xms;
-            $opposite = 1;
-            $self->log->is_debug
-                && $self->log->debug(
-                "Condition starts with a !: '$condition_name'");
-        }
-
-        if ( $Workflow::Condition::CACHE_RESULTS
-             && exists $wf->{'_condition_result_cache'}->{$orig_condition} ) {
-
-            # The condition has already been evaluated and the result
-            # has been cached
-            $self->log->is_debug
-                && $self->log->debug(
-                "Condition has been cached: '$orig_condition', cached result: ",
-                $wf->{'_condition_result_cache'}->{$orig_condition}
-                );
-            if ( !$opposite ) {
-                $self->log->is_debug
-                    && $self->log->debug("Opposite is false.");
-                if ( !$wf->{'_condition_result_cache'}->{$orig_condition} )
-                {
-                    $self->log->is_debug
-                        && $self->log->debug("Cached condition result is false.");
-                    condition_error "No access to action '$action_name' in ",
-                        "state '$state' because cached ",
-                        "condition '$orig_condition' already ",
-                        "failed before.";
-                }
-            } else {
-
-                # we have to return an error if the original cached
-                # condition did NOT fail
-                $self->log->is_debug
-                    && $self->log->debug("Opposite is true.");
-                if ( $wf->{'_condition_result_cache'}->{$orig_condition} ) {
-                    $self->log->is_debug
-                        && $self->log->debug("Cached condition is true.");
-                    condition_error "No access to action '$action_name' in ",
-                        "state '$state' because cached ",
-                        "condition '$orig_condition' did NOT ",
-                        "fail before and we are being asked ",
-                        "for the opposite.";
-                }
+        my $rv;
+        eval {
+            $rv = Workflow::Condition->evaluate_condition($wf, $condition_name);
+        };
+        if ($EVAL_ERROR) {
+            if (Exception::Class->caught('Workflow::Exception::Condition')) {
+                condition_error "No access to action '$action_name' in ",
+                    "state '$state' because $EVAL_ERROR ";
             }
-        } else {
-
-            # we did not evaluate the condition yet, we have to do
-            # it now
-            if ($opposite) {
-
-                # so far, the condition is just a hash containing a
-                # name. As the result has not been cached, we have
-                # to get the real condition with the original
-                # condition name and evaluate that
-                $condition = $self->_factory()
-                    ->get_condition( $orig_condition, $self->type() );
-            }
-            $self->log->is_debug
-                && $self->log->debug( q{Evaluating condition '},
-                $condition->name, q{'} );
-            eval { $condition->evaluate($wf) };
-            if ($EVAL_ERROR) {
-
-                # Check if this is a Workflow::Exception::Condition
-                if (Exception::Class->caught('Workflow::Exception::Condition')) {
-                    # TODO: We may just want to pass the error up
-                    # without wrapping it...
-                    $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
-                    if ( !$opposite ) {
-                        condition_error "No access to action '$action_name' in ",
-                            "state '$state'; condition '$orig_condition' failed due to: $EVAL_ERROR";
-                    } else {
-                        $self->log->is_debug
-                            && $self->log->debug("opposite condition '$orig_condition' failed due to ' . $EVAL_ERROR");
-                    }
-                } else {
-                    $self->log->is_debug
-                        && $self->log->debug("Got uncatchable exception in condition $condition_name ");
-
-                    # if EVAL_ERROR is an execption object rethrow it
-                    $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne'');
-
-                    # if it is a string (bubbled up from die/croak), make an Exception Object
-                    # For briefness, we just send back the first line of EVAL
-                    my @t = split /\n/, $EVAL_ERROR;
-                    my $ee = shift @t;
-                    Exception::Class::Base->throw( error
-                        => "Got unknown exception while handling condition '$condition_name' / " . $ee );
-                }
-            } else {
-                $wf->{'_condition_result_cache'}->{$orig_condition} = 1;
-                if ($opposite) {
-                    condition_error "No access to action '$action_name' in ",
-                        "state '$state' because condition ",
-                        "$orig_condition did NOT fail and we ",
-                        "are checking $condition_name.";
-                } else {
-
-                    $self->log->is_debug &&
-                        $self->log->debug(
-                            "condition '$orig_condition' failed, because '$EVAL_ERROR', " .
-                            "but opposite requested");
-
-                }
+            else {
+                $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne '');
+                # For briefness, we just send back the first line of EVAL
+                my @t = split /\n/, $EVAL_ERROR;
+                my $ee = shift @t;
+                Exception::Class::Base->throw(
+                    error
+                    => "Got unknown exception while handling condition '$condition_name' / " . $ee );
             }
         }
-        $self->log->is_debug
-            && $self->log->debug(
-            "Condition '$condition_name' evaluated successfully");
+        elsif (! $rv) {
+            condition_error "No access to action '$action_name' in ",
+                "state '$state' because condition '$condition_name' failed";
+        }
     }
 }
 
