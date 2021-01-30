@@ -22,11 +22,13 @@
 
 - Addressed an issue with return values from Workflow::Condition::GreedyOR's `evaluate_condition`, PR [#50](https://github.com/jonasbn/perl-workflow/pull/50) from Erik Huelsmann
 
-- Fixed a bug in condition caching described in issue #9, PR [#27](https://github.com/jonasbn/perl-workflow/pull/27) from Erik Huelsmann
+- Fixed a bug in condition caching described in issue [#9](https://github.com/jonasbn/perl-workflow/issues/9), PR [#27](https://github.com/jonasbn/perl-workflow/pull/27) from Erik Huelsmann
+
+- Cleaned up some TODO items, PR [#41](https://github.com/jonasbn/perl-workflow/pull/41), all TODO items migrated to issues
 
 - Fixed a bug in Workflow::Condition::LazyAND with wrongful return values, PR [#40](https://github.com/jonasbn/perl-workflow/pull/40) from Erik Huelsmann
 
-- Fixed a bug in Workflow::Validator::InEnumeratedType with wrongful naming, PR [#33](https://github.com/jonasbn/perl-workflow/pull/33) from Erik Huelsmann
+- Fixed a bug in Workflow::Validator::InEnumeratedType with wrongful naming, PR [#39](https://github.com/jonasbn/perl-workflow/pull/39) from Erik Huelsmann
 
 - Updated Dist::Zilla configuration and added LICENSE file to repository based on generated from Dist::Zilla build, this should be automated like the README generation at some point
 
@@ -34,13 +36,13 @@
 
 - Improved the SQL used for database creation by adding referentiel integrity, PR [#29](https://github.com/jonasbn/perl-workflow/pull/29) from Erik Huelsmann
 
-- Addressed a bug in initialization and improved the ability to handle a database handle, PR [#32](https://github.com/jonasbn/perl-workflow/pull/32) from Erik Huelsmann
-
 - Improved loading of external of a few dependencies, improving error handling, PR [#31](https://github.com/jonasbn/perl-workflow/pull/31) from Erik Huelsmann
+
+- Addressed a bug in initialization and improved the ability to handle a database handle, PR [#32](https://github.com/jonasbn/perl-workflow/pull/32) from Erik Huelsmann
 
 - Additions to test suite, WIP on better scoped condition caching, PR [#26](https://github.com/jonasbn/perl-workflow/pull/26) from Erik Huelsmann
 
-- Minor feature addition addressing issue #5 with condition caching, PR [#25](https://github.com/jonasbn/perl-workflow/pull/25) from Erik Huelsmann
+- Minor feature addition addressing issue [#5](https://github.com/jonasbn/perl-workflow/issues/5) with condition caching, PR [#25](https://github.com/jonasbn/perl-workflow/pull/25) from Erik Huelsmann
 
   Condition caching can be disabled by setting:
 
@@ -55,6 +57,8 @@
 - Documentation updates, PR [#23](https://github.com/jonasbn/perl-workflow/pull/23) from Erik Huelsmann
 
 - Addressing issue [#21](https://github.com/jonasbn/perl-workflow/issues/21) fixing broken URLs, PR [#22](https://github.com/jonasbn/perl-workflow/pull/22) from Erik Huelsmann
+
+- Fix to POD errors reported by CPANTS, ref: PR [#20](https://github.com/jonasbn/perl-workflow/pull/20) from Manwar
 
 ## 1.48 2019-09-05 Bug fix release, update not required
 
