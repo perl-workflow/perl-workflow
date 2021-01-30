@@ -373,19 +373,6 @@ sub _auto_execute_state {
     }
 }
 
-# This DESTROY method is a work-around for the problem with Class::Observable
-# that when an instance gets allocated in *exactly* the same address as an
-# earlier instance (which has since been destroyed), the observer registration
-# was actually *not* destroyed and the observers are applied to the new
-# instance. See gh issue #10.
-sub DESTROY {
-    my ($self) = @_;
-
-    # ignore all errors: during interpreter shutdown, none of the wrapped
-    # code is expected to work...
-    eval { $self->delete_all_observers() };
-}
-
 1;
 
 __END__
