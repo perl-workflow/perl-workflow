@@ -12,7 +12,7 @@
 
 - Removed obsolete prototypes directory containing minor examples for code constructs, PR [#62](https://github.com/jonasbn/perl-workflow/pull/62)
 
-- Addressed reports of failling tests from CPAN-testers for release 1.49, test suite now supports being run without `PERL_USE_UNSAFE_INC`, PR [#53](https://github.com/jonasbn/perl-workflow/pull/53)
+- Addressed reports of failling tests from CPAN-testers for release 1.49, test suite now supports being run without `PERL_USE_UNSAFE_INC`, PR [#53](https://github.com/jonasbn/perl-workflow/pull/53), addressing issue [#52](https://github.com/jonasbn/perl-workflow/issues/52)
 
 - Implementation of workaround for issue #10 with the failing observers, this is expected to be readdressed, as the observer implementation will be revisited, PR [#60](https://github.com/jonasbn/perl-workflow/pull/60)
 
@@ -22,11 +22,13 @@
 
 - Addressed an issue with return values from Workflow::Condition::GreedyOR's `evaluate_condition`, PR [#50](https://github.com/jonasbn/perl-workflow/pull/50) from Erik Huelsmann
 
-- Fixed a bug in condition caching described in issue #9, PR [#27](https://github.com/jonasbn/perl-workflow/pull/27) from Erik Huelsmann
+- Fixed a bug in condition caching described in issue [#9](https://github.com/jonasbn/perl-workflow/issues/9), PR [#27](https://github.com/jonasbn/perl-workflow/pull/27) from Erik Huelsmann
+
+- Cleaned up some TODO items, PR [#41](https://github.com/jonasbn/perl-workflow/pull/41), all TODO items migrated to issues
 
 - Fixed a bug in Workflow::Condition::LazyAND with wrongful return values, PR [#40](https://github.com/jonasbn/perl-workflow/pull/40) from Erik Huelsmann
 
-- Fixed a bug in Workflow::Validator::InEnumeratedType with wrongful naming, PR [#33](https://github.com/jonasbn/perl-workflow/pull/33) from Erik Huelsmann
+- Fixed a bug in Workflow::Validator::InEnumeratedType with wrongful naming, PR [#39](https://github.com/jonasbn/perl-workflow/pull/39) from Erik Huelsmann
 
 - Updated Dist::Zilla configuration and added LICENSE file to repository based on generated from Dist::Zilla build, this should be automated like the README generation at some point
 
@@ -34,13 +36,13 @@
 
 - Improved the SQL used for database creation by adding referentiel integrity, PR [#29](https://github.com/jonasbn/perl-workflow/pull/29) from Erik Huelsmann
 
-- Addressed a bug in initialization and improved the ability to handle a database handle, PR [#32](https://github.com/jonasbn/perl-workflow/pull/32) from Erik Huelsmann
-
 - Improved loading of external of a few dependencies, improving error handling, PR [#31](https://github.com/jonasbn/perl-workflow/pull/31) from Erik Huelsmann
+
+- Addressed a bug in initialization and improved the ability to handle a database handle, PR [#32](https://github.com/jonasbn/perl-workflow/pull/32) from Erik Huelsmann
 
 - Additions to test suite, WIP on better scoped condition caching, PR [#26](https://github.com/jonasbn/perl-workflow/pull/26) from Erik Huelsmann
 
-- Minor feature addition addressing issue #5 with condition caching, PR [#25](https://github.com/jonasbn/perl-workflow/pull/25) from Erik Huelsmann
+- Minor feature addition addressing issue [#5](https://github.com/jonasbn/perl-workflow/issues/5) with condition caching, PR [#25](https://github.com/jonasbn/perl-workflow/pull/25) from Erik Huelsmann
 
   Condition caching can be disabled by setting:
 
@@ -56,6 +58,8 @@
 
 - Addressing issue [#21](https://github.com/jonasbn/perl-workflow/issues/21) fixing broken URLs, PR [#22](https://github.com/jonasbn/perl-workflow/pull/22) from Erik Huelsmann
 
+- Fix to POD errors reported by CPANTS, ref: PR [#20](https://github.com/jonasbn/perl-workflow/pull/20) from Manwar
+
 ## 1.48 2019-09-05 Bug fix release, update not required
 
 - Eliminated warning emitted from test run. Issue [#14](https://github.com/jonasbn/perl-workflow/issues/14) reported by Petr Pisar
@@ -66,7 +70,7 @@
 
 ## 1.46 2019-05-28 Bug fix release, update not required
 
-- Patch from Oliver Welter, addressing issue with greedy join handling error message
+- Patch from Oliver Welter, addressing issue with greedy join handling error message, ref: PR [#16](https://github.com/jonasbn/perl-workflow/pull/16)
 
 ## 1.45 2017-06-29 Maintenance release, update not required
 
@@ -83,7 +87,7 @@
 ## 1.43 2017-06-02 Maintenance release, update recommended
 
 - PR from Oliver Welter providing improvements to logging in relation to
-  condition validation
+  condition validation, ref: PR [#11](https://github.com/jonasbn/perl-workflow/pull/11)
 
 - Exchanged CJM´s:
   [Dist::Zilla::Plugin::VersionFromModule](https://metacpan.org/pod/Dist::Zilla::Plugin::VersionFromModule)
@@ -106,7 +110,7 @@
 
 - Fixed POD issue with encoding, so we now support UTF-8 for authors names
 
-- Minor POD fix by dtikhonov to POD introduced in 1.40
+- Minor POD fix by dtikhonov to POD introduced in 1.40, ref: PR [#3](https://github.com/jonasbn/perl-workflow/pull/3)
 
 - Adjusted permissions on some files, which were executable for no apparent reason
 
@@ -114,7 +118,7 @@
 
 - Update recommended due to bug fix by dtikhonov in observer handling
 
-- Merged pull request from dtikhonov holding a bug fix in observer handling and a feature enabling attribute validation for actions, see the POD added to Workflow::Action
+- Merged pull request from dtikhonov holding a bug fix in observer handling and a feature enabling attribute validation for actions, see the POD added to Workflow::Action, ref: PR [#2](https://github.com/jonasbn/perl-workflow/pull/2)
 
 - Cleaned up the `Build.PL` file
 
@@ -412,53 +416,43 @@
 
 ## 0.25 2006-12-14 Feature release, update not required
 
-- Applied patch from Alexander Klink via rt.cpan.org (#23736). Introduces caching of the result of a condition's evaluate()
+- Applied patch from Alexander Klink via [#23736](https://rt.cpan.org/Public/Bug/Display.html?id=23736). Introduces caching of the result of a condition's evaluate()
 
 ## 0.24 2006-12-14 Feature release, update not required
 
-- Applied patch from Alexander Klink via rt.cpan.org (#23925)
-  Introduces may_stop property for autorunning workflow
+- Applied patch from Alexander Klink via [#23925](https://rt.cpan.org/Public/Bug/Display.html?id=23925). Introduces may_stop property for autorunning workflow
 
   This is why this patch introduces the "may_stop" property for a state, which means that Workflow won't complain if the state is autorun and no or too many activities are present.
 
 ## 0.23 2006-09-12 Feature release, update not required
 
-- Applied patch from Michael Bell via rt.cpan.org (#21100)
-  Fixes problem with handling of 0 and empty strings as parameters
+- Applied patch from Michael Bell via [#21100](https://rt.cpan.org/Public/Bug/Display.html?id=21100). Fixes problem with handling of 0 and empty strings as parameters
 
-- Applied patch from Michael Bell via rt.cpan.org (#21101)
-  Fixes problem with deletion of parameters
+- Applied patch from Michael Bell via [#21101](https://rt.cpan.org/Public/Bug/Display.html?id=21101). Fixes problem with deletion of parameters
 
-- Applied yet another patch from Michael Bell via rt.cpan.org (#21099)
-  The patch fixes some misinforming POD
+- Applied yet another patch from Michael Bell via [#21099](https://rt.cpan.org/Public/Bug/Display.html?id=21099). The patch fixes some misinforming POD
 
-- Applied patch from Alexander Klink via rt.cpan.org (#21422)
-  The patch implement more powerful observers
+- Applied patch from Alexander Klink via [#21422](https://rt.cpan.org/Public/Bug/Display.html?id=21422). The patch implement more powerful observers
 
 ## 0.22 2006-08-18 Feature release, update not required
 
-- Applied patch from Michael Bell via rt.cpan.org (#20871), this
-  patch also contains the patch mentioned below.
+- Applied patch from Michael Bell via [#20871](https://rt.cpan.org/Public/Bug/Display.html?id=20871), this patch also contains the patch mentioned below.
 
 - Applied patch to Workflow::Action from Michael Bell, fixing two bugs
 
-- Changed POD format to accomodate for Pod::Coverage, where B<> is not
-  recognised, but =head<1..3> and =item is
+- Changed POD format to accomodate for Pod::Coverage, where `B<>` is not recognised, but `=head<1..3>` and `=item` is
 
-  So subs are now marked with head3 instead of B<>, I am of the opinion that titles should be marked as titles and B<> (bold) should be used to emphasize important information in the POD.
+  So subs are now marked with head3 instead of `B<>`, I am of the opinion that titles should be marked as titles and `B<>` (bold) should be used to emphasize important information in the POD.
 
 ## 0.21 2006-07-07 Bug fix release, update not required
 
-- Fixed bug reported by Martin Bartosch, Workflow::Context's
-  merge method did not work properly, applied patch from Martin
+- Fixed bug reported by Martin Bartosch, Workflow::Context's merge method did not work properly, applied patch from Martin
 
-- Updated t/context.t to test the above fix, this got the coverage
-  from 53.3 percent to 93.3
+- Updated `t/context.t` to test the above fix, this got the coverage from 53.3 percent to 93.3
 
 ## 0.20 2006-07-07 Bug fix release, update not required
 
-- Fixed bug reported by Martin Bartosch, Workflow::Factory's
-  add_config_from_file now takes an array ref as stated in the POD.
+- Fixed bug reported by Martin Bartosch, Workflow::Factory's add_config_from_file now takes an array ref as stated in the POD.
 
 - Updated t/factory.t to test the above fix, just using the scenarios from the SYNOPSIS. This fix did however not contribute to the coverage of Workflow::Factory, we lost 0.3 percent along the way going from 88.7 to 88.4
 
@@ -466,8 +460,7 @@
 
 ## 0.19 2006-07-07 Bug fix release, update not required
 
-- The 0.18 release contained a broken Makefile.PL, thanks to Randal
-  Schwartz for sending me the feedback to get this addressed immediately.
+- The 0.18 release contained a broken Makefile.PL, thanks to Randal Schwartz for sending me the feedback to get this addressed immediately.
 
 ## 0.18 2006-07-07 Maintenance release, update not required
 
@@ -477,14 +470,11 @@
 
 - Added new TODO file
 
-- Added a handful of tests to t/config.t and added dependency on
-  Test::Exception
+- Added a handful of tests to t/config.t and added dependency on Test::Exception
 
-- Somewhat applied patch from Chris Brown, the use of Perl as
-  configuration was broken, in my attempt to implement tests prior to
-  applying Chris Browns patch I accidently fixed the same problems it addressed.
+- Somewhat applied patch from Chris Brown, the use of Perl as configuration was broken, in my attempt to implement tests prior to applying Chris Browns patch I accidently fixed the same problems it addressed.
 
-  coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
+  Coverage of Workflow::Config::Perl has gone from 0 to 89.0 with this release
 
 - Added new files (for test):
 
