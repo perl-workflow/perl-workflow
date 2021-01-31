@@ -12,7 +12,7 @@ use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak);
 
-$Workflow::Action::VERSION = '1.50';
+$Workflow::Action::VERSION = '1.51';
 
 my @PROPS    = qw( name class description );
 my @INTERNAL = qw( _factory );
@@ -168,7 +168,7 @@ Workflow::Action - Base class for Workflow actions
 
 =head1 VERSION
 
-This documentation describes version 1.09 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -442,22 +442,27 @@ states you should return a simple scalar for a return value.
 Method to add fields to the workflow. The method takes an array of
 fields.
 
-
 =head1 SEE ALSO
 
-L<Workflow>
+=over
 
-L<Workflow::Factory>
+=item * L<Workflow>
+
+=item * L<Workflow::Factory>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Please see L<Workflow>
 
 =cut

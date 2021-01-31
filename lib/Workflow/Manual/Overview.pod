@@ -46,8 +46,8 @@ and Workflow. (Although the workflow isn't directly coded...)
 
 =back
 
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+=head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+Please see Workflow.
 
 =cut

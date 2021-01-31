@@ -3,7 +3,7 @@ package Workflow::Condition::LazyOR;
 use strict;
 use warnings;
 
-our $VERSION = '1.50';
+our $VERSION = '1.51';
 
 use base qw( Workflow::Condition::Nested );
 use Workflow::Exception qw( condition_error configuration_error );
@@ -53,6 +53,10 @@ __END__
 =head1 NAME
 
 Workflow::Condition::LazyOR
+
+=head1 VERSION
+
+This documentation describes version 1.51 of this package
 
 =head1 DESCRIPTION
 
@@ -106,13 +110,17 @@ B<or>
     <param name="condition1" value="first_condition_to_test" />
     <param name="condition2" value="second_condition_to_test" />
 
-=head1 AUTHORS
-
-See L<Workflow>
-
 =head1 COPYRIGHT
+
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+Please see the F<LICENSE>
+
+=head1 AUTHORS
+
+Please see L<Workflow>
 
 =cut

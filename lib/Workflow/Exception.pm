@@ -35,7 +35,7 @@ my %TYPE_CLASSES = (
     workflow_error      => 'Workflow::Exception',
 );
 
-$Workflow::Exception::VERSION   = '1.50';
+$Workflow::Exception::VERSION   = '1.51';
 @Workflow::Exception::ISA       = qw( Exporter Exception::Class::Base );
 @Workflow::Exception::EXPORT_OK = keys %TYPE_CLASSES;
 
@@ -119,7 +119,7 @@ Workflow::Exception - Base class for workflow exceptions
 
 =head1 VERSION
 
-This documentation describes version 1.08 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -212,31 +212,39 @@ This exception is thrown via </mythrow> when input data or similar of a workflow
 
 =head1 SHORTCUTS
 
-B<Workflow::Exception> - import using C<workflow_error>
+=over
 
-B<Workflow::Exception::Condition> - import using C<condition_error>
+=item * B<Workflow::Exception> - import using C<workflow_error>
 
-B<Workflow::Exception::Configuration> - import using C<configuration_error>
+=item * B<Workflow::Exception::Condition> - import using C<condition_error>
 
-B<Workflow::Exception::Persist> - import using C<persist_error>
+=item * B<Workflow::Exception::Configuration> - import using C<configuration_error>
 
-B<Workflow::Exception::Validation> - import using C<validation_error>
+=item * B<Workflow::Exception::Persist> - import using C<persist_error>
+
+=item * B<Workflow::Exception::Validation> - import using C<validation_error>
+
+=back
 
 =head1 SEE ALSO
 
-L<Exception::Class|Exception::Class>
+=over
+
+=item * L<Exception::Class|Exception::Class>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2010 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Please see L<Workflow>
 
 =cut

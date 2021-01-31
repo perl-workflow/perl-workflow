@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.50';
+$Workflow::VERSION = '1.51';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -393,7 +393,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 1.50 of Workflow
+This documentation describes version 1.51 of Workflow
 
 =head1 SYNOPSIS
 
@@ -1404,8 +1404,7 @@ L<https://metacpan.org/release/Workflow>
 
 =over
 
-=item * November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
-Iceland by jonasbn
+=item * November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik, Iceland by jonasbn
 L<http://www.slideshare.net/jonasbn/workflow-npw2010>
 
 =item * August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn

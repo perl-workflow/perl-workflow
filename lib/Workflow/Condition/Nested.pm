@@ -3,7 +3,7 @@ package Workflow::Condition::Nested;
 use strict;
 use warnings;
 
-our $VERSION = '1.50';
+our $VERSION = '1.51';
 
 use base qw( Workflow::Condition );
 use Workflow::Factory qw( FACTORY );
@@ -97,6 +97,10 @@ __END__
 
 Workflow::Condition::Nested - Evaluate nested workflow conditions
 
+=head1 VERSION
+
+This documentation describes version 1.51 of this package
+
 =head1 DESCRIPTION
 
 Typically, the workflow conditions are evaluated directly by the framework
@@ -178,13 +182,17 @@ value here. If a condition returns zero or an undefined value, but
 did not throw an exception, we consider it to be '1'. Otherwise, we
 consider it to be the value returned.
 
-=head1 AUTHORS
-
-See L<Workflow>
-
 =head1 COPYRIGHT
+
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+Please see the F<LICENSE>
+
+=head1 AUTHORS
+
+Please see L<Workflow>
 
 =cut

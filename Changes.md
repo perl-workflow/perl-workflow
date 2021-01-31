@@ -1,5 +1,37 @@
 # Revision history for the Workflow Perl Distribution
 
+## 1.51 2021-01-31 Bug fix release, update recommended 
+
+- Addressed bug/issue [#10](https://github.com/jonasbn/perl-workflow/issues/10) of failing observers test, ref PR [#61](https://github.com/jonasbn/perl-workflow/pull/61). Documentation also updated accordingly via PR [#66](https://github.com/jonasbn/perl-workflow/pull/66)
+
+- PR [#86](https://github.com/jonasbn/perl-workflow/pull/86) reverts fix to issue [#10](https://github.com/jonasbn/perl-workflow/issues/10) introduced in release 1.49
+
+- PR [#85](https://github.com/jonasbn/perl-workflow/pull/85) addressing bug with use of database fields in persister
+
+- Adressed bug/issue [#72](https://github.com/jonasbn/perl-workflow/issues/72) (_reopened_) and [#73](https://github.com/jonasbn/perl-workflow/issues/73) via PR [#74](https://github.com/jonasbn/perl-workflow/pull/74)
+
+- Improved test coverage, addressing issue [#36](https://github.com/jonasbn/perl-workflow/issues/36) (_not closed_), ref PRs:
+
+  - [#80](https://github.com/jonasbn/perl-workflow/pull/80)
+  - [#81](https://github.com/jonasbn/perl-workflow/pull/81)
+  - [#91](https://github.com/jonasbn/perl-workflow/pull/91)
+
+- Cleaned POD formatting, PR [#83](https://github.com/jonasbn/perl-workflow/pull/83)
+
+- Removed SVN/CVS legacy tags and adjusted shebang lines, PR [#82](https://github.com/jonasbn/perl-workflow/pull/82)
+
+- Change log converted from plain text to Markdown, PR [#76](https://github.com/jonasbn/perl-workflow/pull/76)
+
+- Added missing contributor Mohammad S Anwar to ACKNOWLEDGEMENT section, contribtution was included in release 1.49
+
+- [#70](https://github.com/jonasbn/perl-workflow/pull/70), corrections to documentation on persisters
+
+- [#71](https://github.com/jonasbn/perl-workflow/pull/71) added a missing point to the change log for release 1.50
+
+- PR [#65](https://github.com/jonasbn/perl-workflow/pull/65), converting two older text files to Markdown. Documentation rewrite is being considered and improvements and additions will be made in this area in the future
+
+- PR [#67](https://github.com/jonasbn/perl-workflow/pull/67) converting tabs to spaces
+
 ## 1.50 2021-01-25 Bug fix release, update not required
 
 - Removal of unused dependency: Log::Dispatch, PR [#64](https://github.com/jonasbn/perl-workflow/pull/64)
@@ -14,7 +46,7 @@
 
 - Addressed reports of failling tests from CPAN-testers for release 1.49, test suite now supports being run without `PERL_USE_UNSAFE_INC`, PR [#53](https://github.com/jonasbn/perl-workflow/pull/53), addressing issue [#52](https://github.com/jonasbn/perl-workflow/issues/52)
 
-- Implementation of workaround for issue #10 with the failing observers, this is expected to be readdressed, as the observer implementation will be revisited, PR [#60](https://github.com/jonasbn/perl-workflow/pull/60)
+- Implementation of workaround for issue [#10](https://github.com/jonasbn/perl-workflow/issues/10) with the failing observers, this is expected to be readdressed, as the observer implementation will be revisited, PR [#60](https://github.com/jonasbn/perl-workflow/pull/60)
 
 - Stop requiring a DSN to be configured when the DBI handle is sourced from elsewhere; instead, require a `driver` attribute to be specified, PR [#51](https://github.com/jonasbn/perl-workflow/pull/51)
 
@@ -58,7 +90,7 @@
 
 - Addressing issue [#21](https://github.com/jonasbn/perl-workflow/issues/21) fixing broken URLs, PR [#22](https://github.com/jonasbn/perl-workflow/pull/22) from Erik Huelsmann
 
-- Fix to POD errors reported by CPANTS, ref: PR [#20](https://github.com/jonasbn/perl-workflow/pull/20) from Manwar
+- Fix to POD errors reported by CPANTS, ref: PR [#20](https://github.com/jonasbn/perl-workflow/pull/20) from Mohammad S Anwar
 
 ## 1.48 2019-09-05 Bug fix release, update not required
 
@@ -470,7 +502,7 @@
 
 - Added new TODO file
 
-- Added a handful of tests to t/config.t and added dependency on Test::Exception
+- Added a handful of tests to `t/config.t` and added dependency on Test::Exception
 
 - Somewhat applied patch from Chris Brown, the use of Perl as configuration was broken, in my attempt to implement tests prior to applying Chris Browns patch I accidently fixed the same problems it addressed.
 
@@ -478,11 +510,11 @@
 
 - Added new files (for test):
 
-  - t/workflow.perl
-  - t/workflow_action.perl
-  - t/workflow_condition.perl
-  - t/workflow_errorprone.perl
-  - t/workflow_validator.perl
+  - `t/workflow.perl`
+  - `t/workflow_action.perl`
+  - `t/workflow_condition.perl`
+  - `t/workflow_errorprone.perl`
+  - `t/workflow_validator.perl`
 
 - Added POD to Workflow::Config::Perl on parse method
 

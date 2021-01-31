@@ -8,7 +8,7 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 1.50 of Workflow
+This documentation describes version 1.51 of Workflow
 
 # SYNOPSIS
 
@@ -881,8 +881,7 @@ The code is kept under revision control using Git:
 
 # SEE ALSO
 
-- November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
-Iceland by jonasbn
+- November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik, Iceland by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-npw2010](http://www.slideshare.net/jonasbn/workflow-npw2010)
 - August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-yapceu2010](http://www.slideshare.net/jonasbn/workflow-yapceu2010)

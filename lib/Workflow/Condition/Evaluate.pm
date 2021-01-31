@@ -8,7 +8,7 @@ use Safe;
 use Workflow::Exception qw( condition_error configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Condition::Evaluate::VERSION = '1.50';
+$Workflow::Condition::Evaluate::VERSION = '1.51';
 
 my @FIELDS = qw( test );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -76,7 +76,7 @@ Workflow::Condition::Evaluate - Inline condition that evaluates perl code for tr
 
 =head1 VERSION
 
-This documentation describes version 1.02 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -137,20 +137,23 @@ A hashref of all the parameters in the L<Workflow::Context> object
 
 =head1 SEE ALSO
 
-L<Safe> - From some quick research this module seems to have been
-packaged with core Perl 5.004+, and that's sufficiently ancient
-for me to not worry about people having it. If this is a problem for
-you shoot me an email.
+=over
+
+=item * L<Safe> - From some quick research this module seems to have been packaged with core Perl 5.004+, and that's sufficiently ancient for me to not worry about people having it. If this is a problem for you shoot me an email.
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 Chris Winters. All rights reserved.
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Please see L<Workflow>
 
 =cut
