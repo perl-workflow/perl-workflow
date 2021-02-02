@@ -378,8 +378,8 @@ sub fetch_history {
     my @hist_fields    = @{ $self->_hist_fields };
     my $history_fields = join ', ', @hist_fields;
     $sql = sprintf $sql, $history_fields,
-        $hist_fields[1], $hist_fields[6],
-        $self->history_table;
+        $self->handle->quote_identifier($self->history_table),
+        $hist_fields[1], $hist_fields[6];
 
     if ( $log->is_debug ) {
         $log->debug("Will use SQL\n$sql");
