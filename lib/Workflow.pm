@@ -1372,7 +1372,7 @@ The Workflow project is currently hosted on GitHub
 
 =over
 
-=item GitHub: L<htts://github.com/jonasbn/perl-workflow>
+=item GitHub: L<https://github.com/jonasbn/perl-workflow>
 
 =back
 
