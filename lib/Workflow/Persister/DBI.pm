@@ -292,7 +292,8 @@ sub update_workflow {
          WHERE %s = ?
     };
     my @wf_fields = @{ $self->_wf_fields };
-    $sql          = sprintf $sql, $self->workflow_table,
+    $sql          = sprintf $sql,
+        $self->handle->quote_identifier( $self->workflow_table ),
         $wf_fields[2], $wf_fields[3], $wf_fields[0];
     my $update_date = DateTime->now( time_zone => $wf->time_zone() )
         ->strftime( $self->date_format() );
@@ -378,8 +379,8 @@ sub fetch_history {
     my @hist_fields    = @{ $self->_hist_fields };
     my $history_fields = join ', ', @hist_fields;
     $sql = sprintf $sql, $history_fields,
-        $hist_fields[1], $hist_fields[6],
-        $self->history_table;
+        $self->handle->quote_identifier($self->history_table),
+        $hist_fields[1], $hist_fields[6];
 
     if ( $log->is_debug ) {
         $log->debug("Will use SQL\n$sql");
