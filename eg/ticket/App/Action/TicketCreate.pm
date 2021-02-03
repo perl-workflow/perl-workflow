@@ -1,7 +1,5 @@
 package App::Action::TicketCreate;
 
-# $Id$
-
 use strict;
 use base qw( Workflow::Action );
 use App::Ticket;

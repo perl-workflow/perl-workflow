@@ -7,7 +7,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Action::InputField::VERSION = '1.50';
+$Workflow::Action::InputField::VERSION = '1.51';
 
 my @PROPS = qw( name label description type requirement
     source_class source_list class );
@@ -113,13 +113,15 @@ sub add_possible_values {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Action::InputField - Metadata about information required by an Action
 
 =head1 VERSION
 
-This documentation describes version 1.09 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -301,19 +303,23 @@ example.
 
 =head1 SEE ALSO
 
-L<Workflow::Action>
+=over
+
+=item * L<Workflow::Action>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Please see L<Workflow>
 
 =cut

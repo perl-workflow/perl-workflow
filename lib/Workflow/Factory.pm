@@ -8,7 +8,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
-$Workflow::Factory::VERSION = '1.50';
+$Workflow::Factory::VERSION = '1.51';
 
 # Extra action attribute validation is off by default for compatibility.
 our $VALIDATE_ACTION_CONFIG = 0;
@@ -805,6 +805,7 @@ sub _validate_action_config {
 
 __END__
 
+=pod
 
 =head1 NAME
 
@@ -812,7 +813,7 @@ Workflow::Factory - Generates new workflow and supporting objects
 
 =head1 VERSION
 
-This documentation describes version 1.18 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -1187,29 +1188,33 @@ of L<Workflow::Action> configs.  See L<Workflow::Action> for details.
 
 =head1 SEE ALSO
 
-L<Workflow>
+=over
 
-L<Workflow::Action>
+=item * L<Workflow>
 
-L<Workflow::Condition>
+=item * L<Workflow::Action>
 
-L<Workflow::Config>
+=item * L<Workflow::Condition>
 
-L<Workflow::Persister>
+=item * L<Workflow::Config>
 
-L<Workflow::Validator>
+=item * L<Workflow::Persister>
+
+=item * L<Workflow::Validator>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2010 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E <lt> chris @cwinters . comE <gt>, original author .
+Please see L<Workflow>
 
 =cut

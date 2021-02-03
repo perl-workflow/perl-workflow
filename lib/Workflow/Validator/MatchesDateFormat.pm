@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error validation_error );
 use English qw( -no_match_vars );
 use Carp qw(carp);
 
-$Workflow::Validator::MatchesDateFormat::VERSION = '1.50';
+$Workflow::Validator::MatchesDateFormat::VERSION = '1.51';
 
 __PACKAGE__->mk_accessors('formatter');
 
@@ -56,13 +56,15 @@ sub validate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Validator::MatchesDateFormat - Ensure a stringified date matches a given pattern
 
 =head1 VERSION
 
-This documentation describes version 1.06 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -72,11 +74,6 @@ This documentation describes version 1.06 of this package
       <arg value="$news_post_date"/>
    </validator>
  </action>
-
-=head1 VERSION
-
-This documentation describes version 1.04 of
-L<Workflow::Validator::MatchesDateFormat>
 
 =head1 DESCRIPTION
 
@@ -143,13 +140,15 @@ parameter, which should adhere to a predefined date format.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Current maintainer Jonas B. Nielsen E<lt>jonasbn@cpan.orgE<gt>
+Please see L<Workflow>
 
-Original author Chris Winters E<lt>chris@cwinters.comE<gt>
+=cut

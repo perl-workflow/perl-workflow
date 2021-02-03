@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 
-$Workflow::Context::VERSION = '1.50';
+$Workflow::Context::VERSION = '1.51';
 
 sub merge {
     my ( $self, $other ) = @_;
@@ -18,13 +18,15 @@ sub merge {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Context - Data blackboard for Workflows, Actions, Conditions and Validators
 
 =head1 VERSION
 
-This documentation describes version 1.05 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -64,17 +66,23 @@ C<$other_context> wins.
 
 =head1 SEE ALSO
 
-L<Workflow>
+=over
+
+=item * L<Workflow>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2006 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+Please see L<Workflow>
 
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+=cut

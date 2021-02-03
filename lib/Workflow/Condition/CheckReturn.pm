@@ -3,7 +3,7 @@ package Workflow::Condition::CheckReturn;
 use strict;
 use warnings;
 
-our $VERSION = '1.50';
+our $VERSION = '1.51';
 
 use base qw( Workflow::Condition::Nested );
 use Workflow::Exception qw( condition_error configuration_error );
@@ -88,6 +88,10 @@ __END__
 
 Workflow::Condition::CheckReturn
 
+=head1 VERSION
+
+This documentation describes version 1.51 of this package
+
 =head1 DESCRIPTION
 
 Using nested conditions (See Workflow::Condition::Nested), this evaluates
@@ -158,13 +162,17 @@ above strings map to the following numeric operators internally:
 
     '==', '<', '>', '<=', '>=', !=
 
-=head1 AUTHORS
-
-See L<Workflow>
-
 =head1 COPYRIGHT
+
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+Please see the F<LICENSE>
+
+=head1 AUTHORS
+
+Please see L<Workflow>
 
 =cut

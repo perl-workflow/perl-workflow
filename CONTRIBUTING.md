@@ -29,7 +29,7 @@ Coding guidelines are basic, please use:
 
 For other coding conventions please see the Perl::Critic configuration in: `t/perlcriticrc`.
 
-And if you are really adventurous, you are most welcome to read [my general coding conventions](https://gist.github.com/jonasbn/c2f703c68340384cfc61bb9c38adb2ff) (WIP).
+Additional notes on development are collected in [the Wiki](https://github.com/jonasbn/perl-workflow/wiki/Development).
 
 Do note that the repository uses [probot](https://probot.github.io/), so if you write comments in formatted as:
 

@@ -1,6 +1,4 @@
-# -*-perl-*-
-
-# $Id$
+#!/usr/bin/env perl
 
 use strict;
 use constant NUM_TESTS => 1;

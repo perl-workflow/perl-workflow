@@ -15,14 +15,12 @@ use Workflow::Persister::DBI::SequenceId;
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::VERSION = '1.50';
+$Workflow::Persister::DBI::VERSION = '1.51';
 
-my @FIELDS = qw( handle dsn user password driver
+my @FIELDS = qw( _wf_fields _hist_fields handle dsn user password driver
     workflow_table history_table date_format parser autocommit);
 __PACKAGE__->mk_accessors(@FIELDS);
 
-my @WF_FIELDS   = ();
-my @HIST_FIELDS = ();
 
 sub init {
     my ( $self, $params ) = @_;
@@ -193,8 +191,9 @@ sub create_workflow {
     my ( $self, $wf ) = @_;
 
     $self->_init_fields();
-    my @fields = @WF_FIELDS[ 1, 2, 3 ];
-    my @values = (
+    my @wf_fields = @{ $self->_wf_fields };
+    my @fields    = @wf_fields[ 1, 2, 3 ];
+    my @values    = (
         $wf->type,
         $wf->state,
         DateTime->now( time_zone => $wf->time_zone() )
@@ -204,7 +203,7 @@ sub create_workflow {
 
     my $id = $self->workflow_id_generator->pre_fetch_id($dbh);
     if ($id) {
-        push @fields, $WF_FIELDS[0];
+        push @fields, $wf_fields[0];
         push @values, $id;
         $self->log->is_debug
             && $self->log->debug("Got ID from pre_fetch_id: $id");
@@ -245,14 +244,16 @@ sub create_workflow {
 sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
     $self->_init_fields();
-
-    my $sql = qq{
-        SELECT $WF_FIELDS[2], $WF_FIELDS[3]
+    my $sql = q{
+        SELECT %s, %s
           FROM %s
-         WHERE $WF_FIELDS[0] = ?
+         WHERE %s = ?
     };
+    my @wf_fields = @{ $self->_wf_fields };
     $sql = sprintf $sql,
-        $self->handle->quote_identifier( $self->workflow_table );
+        $wf_fields[2], $wf_fields[3],
+        $self->handle->quote_identifier( $self->workflow_table ),
+        $wf_fields[0];
 
     if ( $self->log->is_debug ) {
         $self->log->debug("Will use SQL\n$sql");
@@ -279,14 +280,15 @@ sub fetch_workflow {
 sub update_workflow {
     my ( $self, $wf ) = @_;
     $self->_init_fields();
-
-    my $sql = qq{
+    my $sql = q{
         UPDATE %s
-           SET $WF_FIELDS[2] = ?,
-               $WF_FIELDS[3] = ?
-         WHERE $WF_FIELDS[0] = ?
+           SET %s = ?,
+               %s = ?
+         WHERE %s = ?
     };
-    $sql = sprintf $sql, $self->workflow_table;
+    my @wf_fields = @{ $self->_wf_fields };
+    $sql          = sprintf $sql, $self->workflow_table,
+        $wf_fields[2], $wf_fields[3], $wf_fields[0];
     my $update_date = DateTime->now( time_zone => $wf->time_zone() )
         ->strftime( $self->date_format() );
 
@@ -316,13 +318,14 @@ sub create_history {
     foreach my $h (@history) {
         next if ( $h->is_saved );
         my $id     = $generator->pre_fetch_id($dbh);
-        my @fields = @HIST_FIELDS[ 1 .. 6 ];
-        my @values = (
+        my @hist_fields = @{ $self->_hist_fields };
+        my @fields      = @hist_fields[ 1 .. 6 ];
+        my @values      = (
             $wf->id, $h->action, $h->description, $h->state, $h->user,
             $h->date->strftime( $self->date_format() ),
         );
         if ($id) {
-            push @fields, $HIST_FIELDS[0];
+            push @fields, $hist_fields[0];
             push @values, $id;
         }
         my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
@@ -363,11 +366,14 @@ sub fetch_history {
     my $sql = qq{
         SELECT %s
           FROM %s
-         WHERE $HIST_FIELDS[1] = ?
-      ORDER BY $HIST_FIELDS[6] DESC
+         WHERE %s = ?
+      ORDER BY %s DESC
     };
-    my $history_fields = join ', ', @HIST_FIELDS;
-    $sql = sprintf $sql, $history_fields, $self->history_table;
+    my @hist_fields    = @{ $self->_hist_fields };
+    my $history_fields = join ', ', @hist_fields;
+    $sql = sprintf $sql, $history_fields,
+        $hist_fields[1], $hist_fields[6],
+        $self->history_table;
 
     if ( $self->log->is_debug ) {
         $self->log->debug("Will use SQL\n$sql");
@@ -436,15 +442,21 @@ sub rollback_transaction {
 
 sub _init_fields {
     my ($self) = @_;
-    unless ( scalar @WF_FIELDS ) {
-        @WF_FIELDS = map {
-            $self->handle->quote_identifier($_)
-        } $self->get_workflow_fields();
+    unless ( $self->_wf_fields ) {
+        $self->_wf_fields(
+            [
+             map {
+                 $self->handle->quote_identifier($_)
+             } $self->get_workflow_fields()
+            ]);
     }
-    unless ( scalar @HIST_FIELDS ) {
-        @HIST_FIELDS = map {
-            $self->handle->quote_identifier($_)
-        } $self->get_history_fields();
+    unless ( $self->_hist_fields ) {
+        $self->_hist_fields(
+            [
+             map {
+                 $self->handle->quote_identifier($_)
+             } $self->get_history_fields()
+            ]);
     }
 }
 
@@ -462,13 +474,15 @@ sub get_history_fields {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::DBI - Persist workflow and history to DBI database
 
 =head1 VERSION
 
-This documentation describes version 1.19 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -808,15 +822,15 @@ Returns nothing
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Please see L<Workflow>
 
 =cut

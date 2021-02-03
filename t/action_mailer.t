@@ -1,6 +1,4 @@
-# -*-perl-*-
-
-# $Id: action_null.t 217 2004-12-09 16:02:45Z cwinters $
+#!/usr/bin/env perl
 
 use strict;
 use lib qw(../lib lib ../t t);

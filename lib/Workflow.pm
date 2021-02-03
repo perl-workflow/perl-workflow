@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.50';
+$Workflow::VERSION = '1.51';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -364,19 +364,6 @@ sub _auto_execute_state {
     }
 }
 
-# This DESTROY method is a work-around for the problem with Class::Observable
-# that when an instance gets allocated in *exactly* the same address as an
-# earlier instance (which has since been destroyed), the observer registration
-# was actually *not* destroyed and the observers are applied to the new
-# instance. See gh issue #10.
-sub DESTROY {
-    my ($self) = @_;
-
-    # ignore all errors: during interpreter shutdown, none of the wrapped
-    # code is expected to work...
-    eval { $self->delete_all_observers() };
-}
-
 1;
 
 __END__
@@ -397,7 +384,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 1.50 of Workflow
+This documentation describes version 1.51 of Workflow
 
 =head1 SYNOPSIS
 
@@ -1376,7 +1363,7 @@ The Workflow project is currently hosted on GitHub
 
 =over
 
-=item GitHub: L<htts://github.com/jonasbn/perl-workflow>
+=item GitHub: L<https://github.com/jonasbn/perl-workflow>
 
 =back
 
@@ -1408,8 +1395,7 @@ L<https://metacpan.org/release/Workflow>
 
 =over
 
-=item * November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
-Iceland by jonasbn
+=item * November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik, Iceland by jonasbn
 L<http://www.slideshare.net/jonasbn/workflow-npw2010>
 
 =item * August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn
@@ -1437,6 +1423,8 @@ The following folks have also helped out (listed here in no particular order):
 
 Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49. Yet another
 batch of PRs resulted in release 1.50
+
+PR from Mohammad S Anwar correcting some POD errors, included in release 1.49
 
 Bug report from Petr Pisar resulted in release 1.48
 

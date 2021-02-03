@@ -12,8 +12,10 @@
 
  <state name="TIX_CREATED">
      <description>State of ticket after it has been created</description>
-     <action name="TIX_COMMENT"
-             resulting_state="NOCHANGE"/>        
+     <action name="TIX_COMMENT">
+       <resulting_state return="never" state="TIX_COMMENT" />
+       <resulting_state return="*" state="NOCHANGE" />
+     </action>
      <action name="TIX_EDIT"
              resulting_state="TIX_IN_PROGRESS">
         <condition name="HasUser"/>

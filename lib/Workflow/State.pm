@@ -11,7 +11,7 @@ use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
 
-$Workflow::State::VERSION = '1.50';
+$Workflow::State::VERSION = '1.51';
 
 my @FIELDS   = qw( state description type );
 my @INTERNAL = qw( _test_condition_count _factory );
@@ -83,7 +83,7 @@ sub is_action_available {
 
 sub clear_condition_cache {
     my ($self) = @_;
-    return; # left for backward compatibility with 1.50
+    return; # left for backward compatibility with 1.49
 }
 
 sub evaluate_action {
@@ -456,13 +456,15 @@ sub _get_next_condition_count {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::State - Information about an individual state in a workflow
 
 =head1 VERSION
 
-This documentation describes version 1.14 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -604,7 +606,7 @@ Returns name of action to be used for autorunning the state.
 
 =head3 clear_condition_cache ( )
 
-Deprecated, kept for 1.50 compatibility.
+Deprecated, kept for 1.51 compatibility.
 
 Used to empties the condition result cache for a given state.
 
@@ -644,23 +646,27 @@ performing some sanity checks like ensuring every action has a
 
 =head1 SEE ALSO
 
-L<Workflow>
+=over
 
-L<Workflow::Condition>
+=item * L<Workflow>
 
-L<Workflow::Factory>
+=item * L<Workflow::Condition>
+
+=item * L<Workflow::Factory>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Please see L<Workflow>
 
 =cut

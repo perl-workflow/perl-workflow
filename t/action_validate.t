@@ -1,4 +1,4 @@
-# -*-perl-*-
+#!/usr/bin/env perl
 
 # Test validation of additional action attributes during parse-time.
 

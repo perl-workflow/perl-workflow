@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Config::XML::VERSION = '1.50';
+$Workflow::Config::XML::VERSION = '1.51';
 
 my ($log);
 
@@ -103,13 +103,15 @@ sub _translate_xml {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Config::XML - Parse workflow configurations from XML content
 
 =head1 VERSION
 
-This documentation describes version 1.05 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -135,17 +137,25 @@ Returns a list of config parameters as a array upon success.
 
 =head1 SEE ALSO
 
-L<XML::Simple>
+=over
 
-L<Workflow::Config>
+=item * L<XML::Simple>
+
+=item * L<Workflow::Config>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 Chris Winters. All rights reserved.
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Please see L<Workflow>
+
+=cut

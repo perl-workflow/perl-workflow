@@ -9,7 +9,7 @@ use Workflow::Exception qw( persist_error );
 
 use constant DEFAULT_ID_LENGTH => 8;
 
-$Workflow::Persister::VERSION = '1.50';
+$Workflow::Persister::VERSION = '1.51';
 
 my @FIELDS = qw( name class
     use_random use_uuid
@@ -146,13 +146,15 @@ sub rollback_transaction {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister - Base class for workflow persistence
 
 =head1 VERSION
 
-This documentation describes version 1.09 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -315,21 +317,25 @@ we shift parameters in?
 
 =head1 SEE ALSO
 
-L<Workflow::Factory>
+=over
 
-L<Workflow::History>
+=item * L<Workflow::Factory>
+
+=item * L<Workflow::History>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Please see L<Workflow>
 
 =cut

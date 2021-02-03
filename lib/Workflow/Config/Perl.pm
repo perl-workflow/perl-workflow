@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );
 
-$Workflow::Config::Perl::VERSION = '1.50';
+$Workflow::Config::Perl::VERSION = '1.51';
 
 sub parse {
     my ( $self, $type, @items ) = @_;
@@ -99,13 +99,15 @@ sub _translate_perl {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Config::Perl - Parse workflow configurations as Perl data structures
 
 =head1 VERSION
 
-This documentation describes version 1.03 of this package
+This documentation describes version 1.51 of this package
 
 =head1 SYNOPSIS
 
@@ -143,17 +145,23 @@ The method returns a list of configuration parameters.
 
 =head1 SEE ALSO
 
-L<Workflow::Config>
+=over
+
+=item * L<Workflow::Config>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004, 2005, 2006 Chris Winters. All rights reserved.
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
+Please see L<Workflow>
 
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+=cut
