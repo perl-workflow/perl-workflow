@@ -15,13 +15,19 @@ dies_ok { $validator = Workflow::Validator::MatchesDateFormat->new({}) } 'Constr
 
 dies_ok { $validator = Workflow::Validator::MatchesDateFormat->new({ date_format => bless {} }) } 'Constructor with bad parameters, we die';
 
-ok($validator = Workflow::Validator::MatchesDateFormat->new({
+lives_and { $validator = Workflow::Validator::MatchesDateFormat->new({
     date_format => '%Y-%m-%d',
-}), 'Constructor with date_format provided, should succeed');
+}), $validator } 'Constructor with date_format provided, should succeed';
+
+if (! $validator) {
+    BAIL_OUT 'validator construction failed';
+}
 
 isa_ok($validator, 'Workflow::Validator');
 
-ok($validator->validate($wf, '2005-05-13'), 'validating a legal date');
+lives_ok { $validator->validate($wf, '2005-05-13') } 'validating a legal date';
+
+lives_ok { $validator->validate($wf, '2005-05-13') } 'validating a legal date';
 
 lives_ok { $validator->validate($wf) } 'Validation without parameters, we live';
 
