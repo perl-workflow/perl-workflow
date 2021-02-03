@@ -292,7 +292,8 @@ sub update_workflow {
          WHERE %s = ?
     };
     my @wf_fields = @{ $self->_wf_fields };
-    $sql          = sprintf $sql, $self->workflow_table,
+    $sql          = sprintf $sql,
+        $self->handle->quote_identifier( $self->workflow_table ),
         $wf_fields[2], $wf_fields[3], $wf_fields[0];
     my $update_date = DateTime->now( time_zone => $wf->time_zone() )
         ->strftime( $self->date_format() );
