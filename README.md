@@ -861,7 +861,7 @@ downloaded from the central repository.
 
 The Workflow project is currently hosted on GitHub
 
-- GitHub: [htts://github.com/jonasbn/perl-workflow](htts://github.com/jonasbn/perl-workflow)
+- GitHub: [https://github.com/jonasbn/perl-workflow](https://github.com/jonasbn/perl-workflow)
 
 ## REPOSITORY
 
