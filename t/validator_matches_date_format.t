@@ -2,7 +2,6 @@
 
 use strict;
 use lib qw(../lib lib ../t t);
-use TestUtil;
 use Test::Exception;
 use DateTime;
 use Test::More;
