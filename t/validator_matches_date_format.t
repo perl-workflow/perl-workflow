@@ -15,9 +15,7 @@ dies_ok { $validator = Workflow::Validator::MatchesDateFormat->new({}) } 'Constr
 
 dies_ok { $validator = Workflow::Validator::MatchesDateFormat->new({ date_format => bless {} }) } 'Constructor with bad parameters, we die';
 
-lives_and { $validator = Workflow::Validator::MatchesDateFormat->new({
-    date_format => '%Y-%m-%d',
-}), $validator } 'Constructor with date_format provided, should succeed';
+lives_ok { $validator = Workflow::Validator::MatchesDateFormat->new({ date_format => '%Y-%m-%d' }) } 'Constructor with date_format provided, should succeed';
 
 if (! $validator) {
     BAIL_OUT 'validator construction failed';
