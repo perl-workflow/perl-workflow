@@ -3,7 +3,7 @@ INSTALL documentation for Workflow
 The recommended way of installing the Workflow is from CPAN.
 
 # Using CPAN
-$ cpan module_name
+$ cpan Workflow
 
 # Using App::cpanminus
 $ cpanm Workflow
