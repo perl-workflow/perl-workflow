@@ -23,7 +23,7 @@ $ make
 $ make test
 $ make install
 
-Dependencies will have to be install separately and manually.
+Dependencies will have to be installed separately and manually.
 
 If you are working directorly on the GitHub repository you need Dist::Zilla.
 
