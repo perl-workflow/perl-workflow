@@ -8,7 +8,7 @@ use Safe;
 use Workflow::Exception qw( condition_error configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Condition::Evaluate::VERSION = '1.51';
+$Workflow::Condition::Evaluate::VERSION = '1.52';
 
 my @FIELDS = qw( test );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -76,7 +76,7 @@ Workflow::Condition::Evaluate - Inline condition that evaluates perl code for tr
 
 =head1 VERSION
 
-This documentation describes version 1.51 of this package
+This documentation describes version 1.52 of this package
 
 =head1 SYNOPSIS
 

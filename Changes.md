@@ -1,5 +1,17 @@
 # Revision history for the Workflow Perl Distribution
 
+## 1.52 2021-02-11 Bug fix release, update recommended
+
+- Addressed bug/issue [#95](https://github.com/jonasbn/perl-workflow/issues/95) via PR [#96](https://github.com/jonasbn/perl-workflow/pull/96), the issue was introduced with PR [#85](https://github.com/jonasbn/perl-workflow/pull/85) in release 1.51
+
+- Improvements to Dist::Zilla config, only ExtUtils::MakeMaker supported via Dist::Zilla now. Module::Build support having been removed. See the [article by Neil Bowers](https://neilb.org/2015/05/18/two-build-files-considered-harmful.html) (NEILB) on the topic. Thanks to Karen Etheridge (ETHER) for information and link to the above-mentioned article (issue [#93](https://github.com/jonasbn/perl-workflow/issues/95), resolved via PR [#98](https://github.com/jonasbn/perl-workflow/pull/98))
+
+- Documentation in `INSTALL` file updated, the information was somewhat scarce and outdated (issue [#92](https://github.com/jonasbn/perl-workflow/issues/92), resolved via PR [#99](https://github.com/jonasbn/perl-workflow/pull/99)) 
+
+- Some URLs fixed via PR [#97](https://github.com/jonasbn/perl-workflow/pull/97), thanks to Michiel W. Beijen for the contribution
+
+- More unit-tests added via PR [#94](https://github.com/jonasbn/perl-workflow/pull/94), continued work on issue [#36](https://github.com/jonasbn/perl-workflow/pull/94) improving test coverage
+
 ## 1.51 2021-01-31 Bug fix release, update recommended 
 
 - Addressed bug/issue [#10](https://github.com/jonasbn/perl-workflow/issues/10) of failing observers test, ref PR [#61](https://github.com/jonasbn/perl-workflow/pull/61). Documentation also updated accordingly via PR [#66](https://github.com/jonasbn/perl-workflow/pull/66)
