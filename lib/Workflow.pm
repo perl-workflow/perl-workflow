@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.51';
+$Workflow::VERSION = '1.52';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -384,7 +384,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 1.51 of Workflow
+This documentation describes version 1.52 of Workflow
 
 =head1 SYNOPSIS
 
@@ -1420,6 +1420,8 @@ Jonas B. (jonasbn) E<lt>jonasbn@cpan.orgE<gt>, current maintainer.
 Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
+
+Thanks for to Michiel W. Beijen for fix to badly formatted URL, included in release 1.52
 
 Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49. Yet another
 batch of PRs resulted in release 1.50

@@ -8,7 +8,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
-$Workflow::Factory::VERSION = '1.51';
+$Workflow::Factory::VERSION = '1.52';
 
 # Extra action attribute validation is off by default for compatibility.
 our $VALIDATE_ACTION_CONFIG = 0;
@@ -256,13 +256,13 @@ sub _add_workflow_config {
             push @{ $self->{_workflow_state}{$wf_type} }, $wf_state;
         }
 
+        $self->_load_observers($workflow_config);
+
         $self->log->is_info
             && $self->log->info("Added all workflow states...");
-
-        $self->_load_observers($workflow_config);
-        $self->log->is_info
-            && $self->log->info("Added all workflow observers...");
     }
+
+    return;
 }
 
 # Load all the observers so they're available when we instantiate the
@@ -301,11 +301,23 @@ sub _load_observers {
                 "Workflow::Factory docs for details.)";
         }
     }
-    $self->log->is_info
-        && $self->log->info( "Added observers to '$wf_type': ", join ', ',
-        @observers );
-    $self->{_workflow_observers}{$wf_type}
-        = scalar @observers ? \@observers : undef;
+
+    my $observers_num = scalar @observers;
+
+    if (@observers) {
+        $self->{_workflow_observers}{$wf_type} = \@observers;
+
+        $self->log->is_info
+            && $self->log->info( "Added $observers_num to '$wf_type': ", join ', ', @observers );
+
+    } else {
+        $self->{_workflow_observers}{$wf_type} = undef;
+
+        $self->log->is_info
+            && $self->log->info( "No observers added to '$wf_type'" );
+    }
+
+    return $observers_num;
 }
 
 sub _load_class {
@@ -813,7 +825,7 @@ Workflow::Factory - Generates new workflow and supporting objects
 
 =head1 VERSION
 
-This documentation describes version 1.51 of this package
+This documentation describes version 1.52 of this package
 
 =head1 SYNOPSIS
 
@@ -1034,6 +1046,12 @@ to a workflow in L<create_workflow()|/create_workflow> and
 L<fetch_workflow()|/fetch_workflow>.
 
 Returns: nothing
+
+=head3 _load_observers( $workflow_config_hashref )
+
+Loads and adds observers based on workflow type
+
+Returns number indicating amount of observers added, meaning zero can indicate success based on expected outcome.
 
 =head3 _add_action_config( @config_hashrefs )
 

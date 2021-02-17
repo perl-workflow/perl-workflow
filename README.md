@@ -8,7 +8,7 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 1.51 of Workflow
+This documentation describes version 1.52 of Workflow
 
 # SYNOPSIS
 
@@ -901,6 +901,8 @@ Jonas B. (jonasbn) <jonasbn@cpan.org>, current maintainer.
 Chris Winters <chris@cwinters.com>, original author.
 
 The following folks have also helped out (listed here in no particular order):
+
+Thanks for to Michiel W. Beijen for fix to badly formatted URL, included in release 1.52
 
 Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49. Yet another
 batch of PRs resulted in release 1.50

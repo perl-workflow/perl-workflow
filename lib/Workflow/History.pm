@@ -5,7 +5,7 @@ use strict;
 use base qw( Class::Accessor );
 use DateTime;
 
-$Workflow::History::VERSION = '1.51';
+$Workflow::History::VERSION = '1.52';
 
 my @FIELDS
     = qw( id workflow_id action description date user state time_zone );
@@ -66,7 +66,7 @@ Workflow::History - Recorded work on a workflow action or workflow itself
 
 =head1 VERSION
 
-This documentation describes version 1.51 of this package
+This documentation describes version 1.52 of this package
 
 =head1 SYNOPSIS
 

@@ -1,8 +1,32 @@
-INSTALL file for Workflow
+INSTALL documentation for Workflow
 
-$Id$
+The recommended way of installing the Workflow is from CPAN.
 
-perl Makefile.PL  or   perl Build.PL
-make                   ./Build
-make test              ./Build test
-make install           ./Build install
+# Using CPAN
+$ cpan Workflow
+
+# Using App::cpanminus
+$ cpanm Workflow
+
+This will also handle dependencies automatically.
+
+The distribution tar-ball can be downloaded from MetaCPAN.
+
+REF: https://metacpan.org/pod/Workflow
+
+After unpacking the distribution tar-ball, the contents of the unpacked directory 
+includes a Makefile.PL and the following procedure can be used (please follow the 
+instructions provided by the different steps):
+
+$ perl Makefile.PL
+$ make
+$ make test
+$ make install
+
+Dependencies will have to be installed separately and manually.
+
+If you are working directorly on the GitHub repository you need Dist::Zilla.
+
+Please see "Development" section of the repository Wiki for more details.
+
+REF: https://github.com/jonasbn/perl-workflow/wiki/Development
