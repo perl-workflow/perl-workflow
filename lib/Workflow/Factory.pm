@@ -261,10 +261,6 @@ sub _add_workflow_config {
 
         $log->is_info
             && $log->info("Added all workflow states...");
-
-        my $num_observers = $self->_load_observers($workflow_config);
-        $log->is_info
-            && $log->info("Added $num_observers workflow observers...");
     }
 }
 
@@ -304,18 +300,23 @@ sub _load_observers {
                 "Workflow::Factory docs for details.)";
         }
     }
-    # FIXME: is logged even though no observers are added
-    if (scalar @observers) {
-        $log->is_info
-            && $log->info( "Added observers to '$wf_type': ", join ', ', @observers );
 
+    my $observers_num = scalar @observers;
+
+    if (@observers) {
         $self->{_workflow_observers}{$wf_type} = \@observers;
+
+        $log->is_info
+            && $log->info( "Added $observers_num to '$wf_type': ", join ', ', @observers );
 
     } else {
         $self->{_workflow_observers}{$wf_type} = undef;
 
+        $log->is_info
+            && $log->info( "No observers added to '$wf_type'" );
     }
-    return scalar @observers;
+
+    return $observers_num;
 }
 
 sub _load_class {
