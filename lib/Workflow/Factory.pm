@@ -259,13 +259,13 @@ sub _add_workflow_config {
             push @{ $self->{_workflow_state}{$wf_type} }, $wf_state;
         }
 
+        $self->_load_observers($workflow_config);
+
         $log->is_info
             && $log->info("Added all workflow states...");
-
-        my $num_observers = $self->_load_observers($workflow_config);
-        $log->is_info
-            && $log->info("Added $num_observers workflow observers...");
     }
+
+    return;
 }
 
 # Load all the observers so they're available when we instantiate the
@@ -304,18 +304,23 @@ sub _load_observers {
                 "Workflow::Factory docs for details.)";
         }
     }
-    # FIXME: is logged even though no observers are added
-    if (scalar @observers) {
-        $log->is_info
-            && $log->info( "Added observers to '$wf_type': ", join ', ', @observers );
 
+    my $observers_num = scalar @observers;
+
+    if (@observers) {
         $self->{_workflow_observers}{$wf_type} = \@observers;
+
+        $log->is_info
+            && $log->info( "Added $observers_num to '$wf_type': ", join ', ', @observers );
 
     } else {
         $self->{_workflow_observers}{$wf_type} = undef;
 
+        $log->is_info
+            && $log->info( "No observers added to '$wf_type'" );
     }
-    return scalar @observers;
+
+    return $observers_num;
 }
 
 sub _load_class {
@@ -1048,6 +1053,12 @@ to a workflow in L<create_workflow()|/create_workflow> and
 L<fetch_workflow()|/fetch_workflow>.
 
 Returns: nothing
+
+=head3 _load_observers( $workflow_config_hashref )
+
+Loads and adds observers based on workflow type
+
+Returns number indicating amount of observers added, meaning zero can indicate success based on expected outcome.
 
 =head3 _add_action_config( @config_hashrefs )
 
