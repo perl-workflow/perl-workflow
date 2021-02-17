@@ -259,9 +259,13 @@ sub _add_workflow_config {
             push @{ $self->{_workflow_state}{$wf_type} }, $wf_state;
         }
 
+        $self->_load_observers($workflow_config);
+
         $log->is_info
             && $log->info("Added all workflow states...");
     }
+
+    return;
 }
 
 # Load all the observers so they're available when we instantiate the
@@ -1049,6 +1053,12 @@ to a workflow in L<create_workflow()|/create_workflow> and
 L<fetch_workflow()|/fetch_workflow>.
 
 Returns: nothing
+
+=head3 _load_observers( $workflow_config_hashref )
+
+Loads and adds observers based on workflow type
+
+Returns number indicating amount of observers added, meaning zero can indicate success based on expected outcome.
 
 =head3 _add_action_config( @config_hashrefs )
 
