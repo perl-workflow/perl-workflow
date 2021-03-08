@@ -23,7 +23,7 @@ sub new {
 sub init {return};
 
 sub log {
-    return ($_[0]->{log} ||=  Log::Log4perl->get_logger(ref $_[0]) );
+    return ( $_[0]->{log} ||=  Log::Log4perl->get_logger(ref $_[0]) );
 }
 
 sub param {
