@@ -71,8 +71,7 @@ sub update_workflow {
 
 sub create_history {
     my ( $self, $wf, @history ) = @_;
-    my $log = get_logger();
-    $log->debug( "Saving history for workflow ", $wf->id );
+    $self->log->debug( "Saving history for workflow ", $wf->id );
     foreach my $h (@history) {
         next if ( $h->is_saved );
         my $hist_persist = eval {
@@ -91,7 +90,7 @@ sub create_history {
         } else {
             $h->id( $hist_persist->id );
             $h->set_saved();
-            $log->info( "Created history record with ID ",
+            $self->log->info( "Created history record with ID ",
                 $hist_persist->id );
         }
     }

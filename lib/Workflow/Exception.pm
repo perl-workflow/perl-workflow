@@ -45,7 +45,8 @@ sub _mythrow {
     my ( $type, @items ) = @_;
 
     my ( $msg, %params ) = _massage(@items);
-    my $log = get_logger();
+    my $caller = caller;
+    my $log = get_logger($caller); # log as if part of the package of the caller
     my ( $pkg, $line ) = (caller)[ 0, 2 ];
     my ( $prev_pkg, $prev_line ) = ( caller 1 )[ 0, 2 ];
 

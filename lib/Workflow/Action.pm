@@ -102,8 +102,6 @@ sub execute {
 sub init {
     my ( $self, $wf, $params ) = @_;
 
-    my $log = get_logger();
-
     # So we don't destroy the original...
     my %copy_params = %{$params};
 
@@ -116,10 +114,10 @@ sub init {
     my @fields = $self->normalize_array( $copy_params{field} );
     foreach my $field_info (@fields) {
         if ( my $field_class = $field_info->{class} ) {
-            $log->debug("Using custom field class $field_class");
+            $self->log->debug("Using custom field class $field_class");
             $self->add_fields( $field_class->new($field_info) );
         } else {
-            $log->debug("Using standard field class");
+            $self->log->debug("Using standard field class");
             $self->add_fields(
                 Workflow::Action::InputField->new($field_info) );
         }

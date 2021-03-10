@@ -20,8 +20,6 @@ $Workflow::VERSION = '1.52';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
-my ($log);
-
 ########################################
 # INTERNAL METHODS
 
@@ -72,9 +70,8 @@ sub context {
 
 sub get_current_actions {
     my ( $self, $group ) = @_;
-    $log ||= get_logger();
-    $log->is_debug
-        && $log->debug( "Getting current actions for wf '", $self->id, "'" );
+    $self->log->is_debug
+        && $self->log->debug( "Getting current actions for wf '", $self->id, "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_available_action_names( $self, $group );
 }
@@ -87,7 +84,6 @@ sub get_action_fields {
 
 sub execute_action {
     my ( $self, $action_name, $autorun ) = @_;
-    $log ||= get_logger();
 
     # This checks the conditions behind the scenes, so there's no
     # explicit 'check conditions' step here
@@ -102,14 +98,14 @@ sub execute_action {
 
     eval {
         $action->validate($self);
-        $log->is_debug && $log->debug("Action validated ok");
+        $self->log->is_debug && $self->log->debug("Action validated ok");
         $action_return = $action->execute($self);
-        $log->is_debug && $log->debug("Action executed ok");
+        $self->log->is_debug && $self->log->debug("Action executed ok");
 
         $new_state = $self->_get_next_state( $action_name, $action_return );
         if ( $new_state ne NO_CHANGE_VALUE ) {
-            $log->is_info
-                && $log->info(
+            $self->log->is_info
+                && $self->log->info(
                 "Set new state '$new_state' after action executed");
             $self->state($new_state);
         }
@@ -128,8 +124,8 @@ sub execute_action {
         # If using a DBI persister with no autocommit, commit here.
         $self->_factory()->_commit_transaction($self);
 
-        $log->is_info
-            && $log->info("Saved workflow with possible new state ok");
+        $self->log->is_info
+            && $self->log->info("Saved workflow with possible new state ok");
     };
 
     # If there's an exception, reset the state to the original one and
@@ -137,7 +133,7 @@ sub execute_action {
 
     if ($EVAL_ERROR) {
         my $error = $EVAL_ERROR;
-        $log->error(
+        $self->log->error(
             "Caught exception from action: $error; reset ",
             "workflow to old state '$old_state'"
         );
@@ -168,8 +164,8 @@ sub execute_action {
     }
 
     if ( $new_state_obj->autorun ) {
-        $log->is_info
-            && $log->info(
+        $self->log->is_info
+            && $self->log->info(
             "State '$new_state' marked to be run ",
             "automatically; executing that state/action..."
             );
@@ -180,7 +176,6 @@ sub execute_action {
 
 sub add_history {
     my ( $self, @items ) = @_;
-    $log ||= get_logger();
 
     my @to_add = ();
     foreach my $item (@items) {
@@ -188,11 +183,11 @@ sub add_history {
             $item->{workflow_id} = $self->id;
             $item->{time_zone}   = $self->time_zone();
             push @to_add, Workflow::History->new($item);
-            $log->is_debug && $log->debug("Adding history from hashref");
+            $self->log->is_debug && $self->log->debug("Adding history from hashref");
         } elsif ( ref $item and $item->isa('Workflow::History') ) {
             $item->workflow_id( $self->id );
             push @to_add, $item;
-            $log->is_debug && $log->debug("Adding history object directly");
+            $self->log->is_debug && $self->log->debug("Adding history object directly");
         } else {
             workflow_error "I don't know how to add a history of ", "type '",
                 ref($item), "'";
@@ -246,9 +241,8 @@ sub init {
     my ( $self, $id, $current_state, $config, $wf_state_objects, $factory )
         = @_;
     $id      ||= '';
-    $log     ||= get_logger();
     $factory ||= FACTORY;
-    $log->info(
+    $self->log->info(
         "Instantiating workflow of with ID '$id' and type ",
         "'$config->{type}' with current state '$current_state'"
     );
@@ -267,8 +261,8 @@ sub init {
     while ( my ( $key, $value ) = each %{$config} ) {
         next if ( $key =~ /^(type|description)$/ );
         next if ( ref $value );
-        $log->is_debug
-            && $log->debug("Assigning parameter '$key' -> '$value'");
+        $self->log->is_debug
+            && $self->log->debug("Assigning parameter '$key' -> '$value'");
         $self->param( $key, $value );
     }
 
@@ -296,11 +290,10 @@ sub set {
 
 sub _get_action {
     my ( $self, $action_name ) = @_;
-    $log ||= get_logger();
 
     my $state = $self->state;
-    $log->is_debug
-        && $log->debug(
+    $self->log->is_debug
+        && $self->log->debug(
         "Trying to find action '$action_name' in state '$state'");
 
     my $wf_state = $self->_get_workflow_state;
@@ -308,8 +301,8 @@ sub _get_action {
         workflow_error
             "State '$state' does not contain action '$action_name'";
     }
-    $log->is_debug
-        && $log->debug("Action '$action_name' exists in state '$state'");
+    $self->log->is_debug
+        && $self->log->debug("Action '$action_name' exists in state '$state'");
 
     my $action = $self->_factory()->get_action( $self, $action_name );
 
@@ -321,11 +314,10 @@ sub _get_action {
 
 sub _get_workflow_state {
     my ( $self, $state ) = @_;
-    $log   ||= get_logger();
     $state ||= '';             # get rid of -w...
     my $use_state = $state || $self->state;
-    $log->is_debug
-        && $log->debug(
+    $self->log->is_debug
+        && $self->log->debug(
         "Finding Workflow::State object for state [given: $use_state] ",
         "[internal: ", $self->state, "]" );
     my $wf_state = $self->{_states}{$use_state};
@@ -349,7 +341,6 @@ sub _get_next_state {
 
 sub _auto_execute_state {
     my ( $self, $wf_state ) = @_;
-    $log ||= get_logger();
     my $action_name;
     eval { $action_name = $wf_state->get_autorun_action_name($self); };
     if ($EVAL_ERROR)
@@ -363,8 +354,8 @@ sub _auto_execute_state {
             $error->rethrow();
         }
     } else {    # everything is fine, execute action
-        $log->is_debug
-            && $log->debug(
+        $self->log->is_debug
+            && $self->log->debug(
             "Found action '$action_name' to execute in ",
             "autorun state ",
             $wf_state->state
