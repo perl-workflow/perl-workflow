@@ -44,7 +44,6 @@ sub evaluate {
     $safe->share('$context');
     my $rv = $safe->reval($to_eval);
     if ($EVAL_ERROR) {
-        $self->log->error("Eval code '$to_eval' threw exception: $EVAL_ERROR");
         condition_error
             "Condition expressed in code threw exception: $EVAL_ERROR";
     }
