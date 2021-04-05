@@ -1,5 +1,14 @@
 # Revision history for the Workflow Perl Distribution
 
+## 1.53 <To be released> Minor feature release, update not required
+
+- Change logging granularity: instead of using the Log::Log4perl root logger for all logging output, use the instance class for logging in object methods as recommended [in the Log4perl documentation](https://metacpan.org/pod/Log::Log4perl#Pitfalls-with-Categories). This change allows logging from workflow to be suppressed in your application by changing the logging level for the "Workflow" category by setting "log4perl.category.Workflow = OFF" in your logging configuration. Please note that if you created classes derived from Workflow, the logger will use those class names as categories. To suppress output entirely, those categories need their own logging configuration.  
+  **NOTE** This change adds a "log()" accessor to the "Workflow::Base" class. If you implement your own "log()" accessor or method, please take care to make it return a valid logger instance before calling "SUPER::new()" so the logger is immediately available for logging.
+
+- PR [#101](https://github.com/jonasbn/perl-workflow/pull/101) changing confusing logging statements regarding observers having been added when none specified
+
+- Add test cases covering Workflow::Exception [#102](https://github.com/jonasbn/perl-workflow/pull/102)
+
 ## 1.52 2021-02-11 Bug fix release, update recommended
 
 - Addressed bug/issue [#95](https://github.com/jonasbn/perl-workflow/issues/95) via PR [#96](https://github.com/jonasbn/perl-workflow/pull/96), the issue was introduced with PR [#85](https://github.com/jonasbn/perl-workflow/pull/85) in release 1.51
