@@ -105,6 +105,7 @@ sub _massage {
 
     my %params = ( ref $items[-1] eq 'HASH' ) ? %{ pop @items } : ();
     my $msg = join '', @items;
+    $msg =~ s/\\n/ /g; # don't log newlines as per Log4perl recommendations
     return ( $msg, %params );
 }
 

@@ -55,7 +55,10 @@ sub init_random_generators {
     my ( $self, $params ) = @_;
     my $length = $params->{id_length} || DEFAULT_ID_LENGTH;
     eval { require Workflow::Persister::RandomId };
-    $self->log->error($EVAL_ERROR) if $EVAL_ERROR;
+    if (my $msg = $EVAL_ERROR) {
+        $msg =~ s/\\n/ /g;
+        $self->log->error($msg);
+    }
     my $generator
         = Workflow::Persister::RandomId->new( { id_length => $length } );
     return ( $generator, $generator );
@@ -65,7 +68,10 @@ sub init_uuid_generators {
     my ( $self, $params ) = @_;
 
     eval { require Workflow::Persister::UUID };
-    $self->log->error($EVAL_ERROR) if $EVAL_ERROR;
+    if (my $msg = $EVAL_ERROR) {
+        $msg =~ s/\\n/ /g;
+        $self->log->error($msg);
+    }
     my $generator = Workflow::Persister::UUID->new();
     return ( $generator, $generator );
 }

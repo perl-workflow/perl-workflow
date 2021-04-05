@@ -555,8 +555,10 @@ sub _add_action_config {
                 "Trying to include action class '$action_class'...");
             eval "require $action_class";
             if ($EVAL_ERROR) {
+                my $msg = $EVAL_ERROR;
+                $msg =~ s/\\n/ /g;
                 configuration_error
-                    "Cannot include action class '$action_class': $EVAL_ERROR";
+                    "Cannot include action class '$action_class': $msg";
             }
             $self->log->is_debug
                 && $self->log->debug(
