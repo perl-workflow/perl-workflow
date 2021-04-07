@@ -186,7 +186,7 @@ sub evaluate_action {
                             "state '$state'; condition '$orig_condition' failed due to: $EVAL_ERROR";
                     } else {
                         $self->log->is_debug
-                            && $self->log->debug("opposite condition '$orig_condition' failed because ' . $EVAL_ERROR");
+                            && $self->log->debug("opposite condition '$orig_condition' failed due to ' . $EVAL_ERROR");
                     }
                 } else {
                     $self->log->is_debug
