@@ -183,7 +183,7 @@ sub evaluate_action {
                     $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
                     if ( !$opposite ) {
                         condition_error "No access to action '$action_name' in ",
-                            "state '$state'; condition '$orig_condition' failed because: $EVAL_ERROR";
+                            "state '$state'; condition '$orig_condition' failed due to: $EVAL_ERROR";
                     } else {
                         $self->log->is_debug
                             && $self->log->debug("opposite condition '$orig_condition' failed because ' . $EVAL_ERROR");
