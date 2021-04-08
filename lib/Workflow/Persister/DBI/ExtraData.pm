@@ -52,10 +52,7 @@ sub fetch_extra_workflow_data {
     $self->log->is_debug
         && $self->log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
 
-    my $sql = q{
-       SELECT %s FROM %s
-        WHERE workflow_id = ?
-    };
+    my $sql = q{SELECT %s FROM %s WHERE workflow_id = ?};
     my $data_field = $self->data_field;
     my $select_data_fields
         = ( ref $data_field )
@@ -65,7 +62,7 @@ sub fetch_extra_workflow_data {
     $sql = sprintf $sql, $select_data_fields,
         $self->handle->quote_identifier( $self->table );
     $self->log->is_debug
-        && $self->log->debug("Using SQL\n$sql");
+        && $self->log->debug("Using SQL: $sql");
     $self->log->is_debug
         && $self->log->debug( "Bind parameters: ", $wf->id );
 

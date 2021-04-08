@@ -216,8 +216,8 @@ sub create_workflow {
         join( ', ', map {'?'} @values );
 
     if ( $self->log->is_debug ) {
-        $self->log->debug("Will use SQL\n$sql");
-        $self->log->debug( "Will use parameters\n", join ', ', @values );
+        $self->log->debug("Will use SQL: $sql");
+        $self->log->debug( "Will use parameters: ", join ', ', @values );
     }
 
     my ($sth);
@@ -244,11 +244,7 @@ sub create_workflow {
 sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
     $self->_init_fields();
-    my $sql = q{
-        SELECT %s, %s
-          FROM %s
-         WHERE %s = ?
-    };
+    my $sql = q{SELECT %s, %s FROM %s WHERE %s = ?};
     my @wf_fields = @{ $self->_wf_fields };
     $sql = sprintf $sql,
         $wf_fields[2], $wf_fields[3],
@@ -256,7 +252,7 @@ sub fetch_workflow {
         $wf_fields[0];
 
     if ( $self->log->is_debug ) {
-        $self->log->debug("Will use SQL\n$sql");
+        $self->log->debug("Will use SQL: $sql");
         $self->log->debug("Will use parameters: $wf_id");
     }
 
@@ -280,12 +276,7 @@ sub fetch_workflow {
 sub update_workflow {
     my ( $self, $wf ) = @_;
     $self->_init_fields();
-    my $sql = q{
-        UPDATE %s
-           SET %s = ?,
-               %s = ?
-         WHERE %s = ?
-    };
+    my $sql = q{UPDATE %s SET %s = ?, %s = ? WHERE %s = ?};
     my @wf_fields = @{ $self->_wf_fields };
     $sql          = sprintf $sql,
         $self->handle->quote_identifier( $self->workflow_table ),
@@ -294,8 +285,8 @@ sub update_workflow {
         ->strftime( $self->date_format() );
 
     if ( $self->log->is_debug ) {
-        $self->log->debug("Will use SQL\n$sql");
-        $self->log->debug( "Will use parameters\n",
+        $self->log->debug("Will use SQL: $sql");
+        $self->log->debug( "Will use parameters: ",
             join ', ', $wf->state, $update_date, $wf->id );
     }
 
@@ -334,8 +325,8 @@ sub create_history {
         $sql = sprintf $sql, $dbh->quote_identifier( $self->history_table ),
             join( ', ', @fields ), join( ', ', map {'?'} @values );
         if ( $self->log->is_debug ) {
-            $self->log->debug("Will use SQL\n$sql");
-            $self->log->debug( "Will use parameters\n", join ', ', @values );
+            $self->log->debug("Will use SQL: $sql");
+            $self->log->debug( "Will use parameters: ", join ', ', @values );
         }
 
         my ($sth);
@@ -364,12 +355,7 @@ sub fetch_history {
     my ( $self, $wf ) = @_;
     $self->_init_fields();
 
-    my $sql = qq{
-        SELECT %s
-          FROM %s
-         WHERE %s = ?
-      ORDER BY %s DESC
-    };
+    my $sql = qq{SELECT %s FROM %s WHERE %s = ? ORDER BY %s DESC};
     my @hist_fields    = @{ $self->_hist_fields };
     my $history_fields = join ', ', @hist_fields;
     $sql = sprintf $sql, $history_fields,
@@ -377,7 +363,7 @@ sub fetch_history {
         $hist_fields[1], $hist_fields[6];
 
     if ( $self->log->is_debug ) {
-        $self->log->debug("Will use SQL\n$sql");
+        $self->log->debug("Will use SQL: $sql");
         $self->log->debug( "Will use parameters: ", $wf->id );
     }
 
