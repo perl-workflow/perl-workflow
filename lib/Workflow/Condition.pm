@@ -104,8 +104,6 @@ sub evaluate_condition {
 
             # Check if this is a Workflow::Exception::Condition
             if (Exception::Class->caught('Workflow::Exception::Condition')) {
-                # TODO: We may just want to pass the error up
-                # without wrapping it...
                 $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
                 if ( !$opposite ) {
                     $log->is_debug
@@ -365,9 +363,6 @@ If the condition name starts with an '!', the result of the condition
 is negated. Note that a side-effect of this is that the return
 value of the condition is ignored. Only the negated boolean-ness
 is preserved.
-
-**** TODO **** We need a deprecation warning of some sort! This is
-no longer restricted to nested conditions!
 
 This does implement a trick that is not a convention in the underlying
 Workflow library: by default, workflow conditions throw an error when
