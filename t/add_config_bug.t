@@ -1,7 +1,5 @@
 #!/usr/bin/perl
 
-# $Id$
-
 use strict;
 use lib qw(../lib lib ../t t);
 use TestUtil;
@@ -15,7 +13,7 @@ require Workflow::Factory;
 
 my @conditions = ({
          name => 'HasUser',
-         class => 'TestApp::Condition::HasUser'
+         class => 'Workflow::Condition::HasUser'
        },
        {
          name => 'HasUserType',

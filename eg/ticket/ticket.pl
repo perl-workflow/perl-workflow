@@ -32,9 +32,9 @@ my $DB_FILE = 'ticket.db';
 
 if ( $OPT_db_init ) {
   TestDBUtil::create_tables({
-			     db_type => $OPT_db_type,
-			     db_file => $DB_FILE,
-			    });
+                             db_type => $OPT_db_type,
+                             db_file => $DB_FILE,
+                            });
   print "Created database and tables ok\n";
   exit();
 }

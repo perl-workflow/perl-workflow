@@ -1,6 +1,4 @@
-# -*-perl-*-
-
-# $Id$
+#!/usr/bin/env perl
 
 use strict;
 use lib qw(../lib lib ../t t);
@@ -51,7 +49,7 @@ $wf_state = $wf1->_get_workflow_state();
 @conditions = $wf_state->get_conditions( 'TIX_EDIT' );
 
 # The Ticket version of the HasUser condition should be a
-# TestApp::Condition::HasUser.
+# Workflow::Condition::HasUser.
 
 is( $conditions[0]->name(), 'HasUser', 'Got a HasUser condition.');
-isa_ok( $conditions[0], 'TestApp::Condition::HasUser');
+isa_ok( $conditions[0], 'Workflow::Condition::HasUser');

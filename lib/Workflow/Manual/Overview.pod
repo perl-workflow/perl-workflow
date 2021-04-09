@@ -1,0 +1,53 @@
+=pod
+
+=head1 Basics of Workflows
+
+=over
+
+=item * A Workflow is an object of a particular type (even if no code exists)
+
+=item * Workflows consist of states, all custom except one 'INITIAL' which
+ is the state of the workflow when it's first created.
+
+=item * The Workflow is responsible for declaring state transitions upon
+ successful execution of certain actions.
+
+=item * The application that creates or fetches a Workflow fills it (or its
+ associated context) with objects required by Actions, Validators and
+ Conditions
+
+=item * A Workflow uses Condition objects to determine whether an action is
+ accessible
+
+=item * Every workflow state has zero or more accessible actions. When the
+ action is called it has access to the workflow and its associated
+ context so it can work with the environment. (For example, create a
+ ticket associate the current user with it.)
+
+=item * Actions do not change workflow state. They just respond to state
+ changes by the workflow and complete some operations outside of it.
+
+=item * The Workflow is observable and fires events on state changes.
+
+=item * Action declaration: workflow_action.xml
+
+=item * Validator declaration: workflow_action_validator.xml
+
+=item * The workflow declaration binds the actions together and declares
+states and their transitions.
+
+=item * Workflow declaration: customer_foo_workflow.xml
+
+=item * Conditions are objects just like everything else, and like everything
+else they have access to the same universe of objects as the Actions
+and Workflow. (Although the workflow isn't directly coded...)
+
+=item * Condition declaration: workflow_condition.xml
+
+=back
+
+=head1 AUTHORS
+
+Please see Workflow.
+
+=cut

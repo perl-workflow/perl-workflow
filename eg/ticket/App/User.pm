@@ -1,7 +1,5 @@
 package App::User;
 
-# $Id$
-
 use strict;
 
 $App::User::VERSION = '1.01';

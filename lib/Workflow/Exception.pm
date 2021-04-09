@@ -26,6 +26,7 @@ use Exception::Class (
 );
 
 use Log::Log4perl qw( get_logger );
+use Log::Log4perl::Level;
 
 my %TYPE_CLASSES = (
     condition_error     => 'Workflow::Exception::Condition',
@@ -34,8 +35,16 @@ my %TYPE_CLASSES = (
     validation_error    => 'Workflow::Exception::Validation',
     workflow_error      => 'Workflow::Exception',
 );
+my %TYPE_LOGGING = (
+    condition_error     => $TRACE,
+    configuration_error => $ERROR,
+    persist_error       => $ERROR,
+    validation_error    => $INFO,
+    workflow_error      => $ERROR,
+);
 
-$Workflow::Exception::VERSION   = '1.49';
+
+$Workflow::Exception::VERSION   = '1.53';
 @Workflow::Exception::ISA       = qw( Exporter Exception::Class::Base );
 @Workflow::Exception::EXPORT_OK = keys %TYPE_CLASSES;
 
@@ -45,15 +54,15 @@ sub _mythrow {
     my ( $type, @items ) = @_;
 
     my ( $msg, %params ) = _massage(@items);
-    my $log = get_logger();
+    my $caller = caller;
+    my $log = get_logger($caller); # log as if part of the package of the caller
     my ( $pkg, $line ) = (caller)[ 0, 2 ];
     my ( $prev_pkg, $prev_line ) = ( caller 1 )[ 0, 2 ];
 
     # Do not log condition errors
-    if ($type ne 'condition_error') {
-        $log->error( "$type exception thrown from [$pkg: $line; before: ",
-            "$prev_pkg: $prev_line]: $msg" );
-    }
+    $log->log( $TYPE_LOGGING{$type},
+               "$type exception thrown from [$pkg: $line; before: ",
+               "$prev_pkg: $prev_line]: $msg" );
 
     goto &Exception::Class::Base::throw(
         $TYPE_CLASSES{$type},
@@ -104,6 +113,7 @@ sub _massage {
 
     my %params = ( ref $items[-1] eq 'HASH' ) ? %{ pop @items } : ();
     my $msg = join '', @items;
+    $msg =~ s/\\n/ /g; # don't log newlines as per Log4perl recommendations
     return ( $msg, %params );
 }
 
@@ -111,13 +121,15 @@ sub _massage {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Exception - Base class for workflow exceptions
 
 =head1 VERSION
 
-This documentation describes version 1.08 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 
@@ -210,31 +222,39 @@ This exception is thrown via </mythrow> when input data or similar of a workflow
 
 =head1 SHORTCUTS
 
-B<Workflow::Exception> - import using C<workflow_error>
+=over
 
-B<Workflow::Exception::Condition> - import using C<condition_error>
+=item * B<Workflow::Exception> - import using C<workflow_error>
 
-B<Workflow::Exception::Configuration> - import using C<configuration_error>
+=item * B<Workflow::Exception::Condition> - import using C<condition_error>
 
-B<Workflow::Exception::Persist> - import using C<persist_error>
+=item * B<Workflow::Exception::Configuration> - import using C<configuration_error>
 
-B<Workflow::Exception::Validation> - import using C<validation_error>
+=item * B<Workflow::Exception::Persist> - import using C<persist_error>
+
+=item * B<Workflow::Exception::Validation> - import using C<validation_error>
+
+=back
 
 =head1 SEE ALSO
 
-L<Exception::Class|Exception::Class>
+=over
+
+=item * L<Exception::Class|Exception::Class>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2010 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Please see L<Workflow>
 
 =cut

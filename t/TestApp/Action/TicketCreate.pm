@@ -1,7 +1,5 @@
 package TestApp::Action::TicketCreate;
 
-# $Id$
-
 use strict;
 use base qw( Workflow::Action );
 use File::Spec::Functions qw( catdir );

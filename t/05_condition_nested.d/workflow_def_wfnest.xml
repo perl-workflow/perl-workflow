@@ -19,6 +19,8 @@
         </action>
         <action name="test_lazy_and" resulting_state="TEST_LAZY_AND">
         </action>
+        <action name="test_lazy_or" resulting_state="TEST_LAZY_OR">
+        </action>
         <action name="test_check_return" resulting_state="TEST_CHECK_RETURN">
         </action>
         <action name="tests_done" resulting_state="SUCCESS">
@@ -73,6 +75,8 @@
         </action>
     </state>
 
+    <!-- Test set for Workflow::Condition::LazyAND -->
+
     <state name="TEST_LAZY_AND">
         <description>TEST_LAZY_AND</description>
         <action name="lazy_and_1" resulting_state="TEST_LAZY_AND_1">
@@ -102,6 +106,40 @@
         </action>
         <action name="null2" resulting_state="SUBTEST_FAIL">
             <condition name="!lazy_and_2"/>
+        </action>
+    </state>
+
+    <!-- Test set for Workflow::Condition::LazyOR -->
+
+    <state name="TEST_LAZY_OR">
+        <description>TEST_LAZY_OR</description>
+        <action name="lazy_or_1" resulting_state="TEST_LAZY_OR_1">
+        </action>
+        <action name="lazy_or_2" resulting_state="TEST_LAZY_OR_2">
+        </action>
+        <action name="subtests_done" resulting_state="INITIALIZED">
+        </action>
+    </state>
+
+    <state name="TEST_LAZY_OR_1"
+            autorun="yes">
+        <description>TEST_LAZY_OR_1</description>
+        <action name="null1" resulting_state="INITIALIZED">
+            <condition name="lazy_or_1"/>
+        </action>
+        <action name="null2" resulting_state="SUBTEST_FAIL">
+            <condition name="!lazy_or_1"/>
+        </action>
+    </state>
+
+    <state name="TEST_LAZY_OR_2"
+            autorun="yes">
+        <description>TEST_LAZY_OR_2</description>
+        <action name="null1" resulting_state="INITIALIZED">
+            <condition name="lazy_or_2"/>
+        </action>
+        <action name="null2" resulting_state="SUBTEST_FAIL">
+            <condition name="!lazy_or_2"/>
         </action>
     </state>
 

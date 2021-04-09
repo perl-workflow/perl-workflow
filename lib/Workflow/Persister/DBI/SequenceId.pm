@@ -8,19 +8,25 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::SequenceId::VERSION = '1.49';
+$Workflow::Persister::DBI::SequenceId::VERSION = '1.53';
 
-my @FIELDS = qw( sequence_name sequence_select );
+my @FIELDS = qw( log sequence_name sequence_select );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-my ($log);
+
+sub new {
+    my ( $class, $params ) = @_;
+    $params ||= {};
+    $params->{log} = get_logger( $class );
+
+    return bless { %$params }, $class;
+}
 
 sub pre_fetch_id {
     my ( $self, $dbh ) = @_;
-    $log ||= get_logger();
     my $full_select = sprintf $self->sequence_select, $self->sequence_name;
-    $log->is_debug
-        && $log->debug("SQL to fetch sequence: $full_select");
+    $self->log->is_debug
+        && $self->log->debug("SQL to fetch sequence: $full_select");
     my ($row);
     eval {
         my $sth = $dbh->prepare($full_select);
@@ -40,13 +46,15 @@ sub post_fetch_id {return}
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::DBI::SequenceId - Persister to fetch ID from a sequence
 
 =head1 VERSION
 
-This documentation describes version 1.05 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 
@@ -60,7 +68,35 @@ This documentation describes version 1.05 of this package
 
 Implementation for DBI persister to fetch an ID value from a sequence.
 
+=head2 Properties
+
+B<sequence_name>
+
+Name of the sequence to select the next id value from.
+
+B<sequence_select>
+
+C<sprintf> template string with a single placeholder (C<%s>) used to
+interpolate the sequence name. The resulting string is used as the SQL
+statement to retrieve the next sequence value.
+
+=head2 ATTRIBUTES
+
+=head3 log
+
+Contains the logger object associated with this instance.
+
 =head2 METHODS
+
+=head3 new ( \%params )
+
+This method instantiates a class for retrieval of sequence ids from a
+L<DBI> based persistance entity.
+
+It takes a hashref containing keys matching the properties outlines in the
+section above or throws L<Workflow::Exception>s if these are not defined.
+
+Returns instantiated object upon success.
 
 =head3 pre_fetch_id
 
@@ -77,15 +113,15 @@ This is a I<dummy> method, use L</pre_fetch_id>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Please see L<Workflow>
 
 =cut

@@ -2,7 +2,7 @@ $VAR1 = {
           'persister' => 'TestPersister',
           'type' => 'Type3',
           'description' => 'This is a sample workflow of yet a different type',
-	  initial_state => 'START',
+          initial_state => 'START',
           'state' => [
                      {
                        'action' => [

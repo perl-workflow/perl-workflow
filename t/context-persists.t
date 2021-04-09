@@ -1,4 +1,4 @@
-#! /usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -51,7 +51,7 @@ my $file = catfile(FACTORY->get_persister("file")->path->{DIRNAME},
   if $wf0;
 
 if ($TEST_VERBOSE) {
-	diag "serializing workflow and context to: $file";
+        diag "serializing workflow and context to: $file";
 }
 
 ### PERSISTER file: $file

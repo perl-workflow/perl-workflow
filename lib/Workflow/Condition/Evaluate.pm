@@ -8,7 +8,7 @@ use Safe;
 use Workflow::Exception qw( condition_error configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Condition::Evaluate::VERSION = '1.49';
+$Workflow::Condition::Evaluate::VERSION = '1.53';
 
 my @FIELDS = qw( test );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -16,28 +16,24 @@ __PACKAGE__->mk_accessors(@FIELDS);
 # These get put into the safe compartment...
 $Workflow::Condition::Evaluate::context = undef;
 
-my ($log);
-
 sub _init {
     my ( $self, $params ) = @_;
-    $log ||= get_logger();
 
     $self->test( $params->{test} );
     unless ( $self->test ) {
         configuration_error
             "The evaluate condition must be configured with 'test'";
     }
-    $log->is_info
-        && $log->info("Added evaluation condition with '$params->{test}'");
+    $self->log->is_info
+        && $self->log->info("Added evaluation condition with '$params->{test}'");
 }
 
 sub evaluate {
     my ( $self, $wf ) = @_;
-    $log ||= get_logger();
 
     my $to_eval = $self->test;
-    $log->is_info
-        && $log->info("Evaluating '$to_eval' to see if it returns true...");
+    $self->log->is_info
+        && $self->log->info("Evaluating '$to_eval' to see if it returns true...");
 
     # Assign our local stuff to package variables...
     $Workflow::Condition::Evaluate::context = $wf->context->param;
@@ -48,13 +44,12 @@ sub evaluate {
     $safe->share('$context');
     my $rv = $safe->reval($to_eval);
     if ($EVAL_ERROR) {
-        $log->error("Eval code '$to_eval' threw exception: $EVAL_ERROR");
         condition_error
             "Condition expressed in code threw exception: $EVAL_ERROR";
     }
 
-    $log->is_debug
-        && $log->debug( "Safe eval ran ok, returned: '"
+    $self->log->is_debug
+        && $self->log->debug( "Safe eval ran ok, returned: '"
             . ( defined $rv ? $rv : '<undef>' )
             . "'" );
     unless ($rv) {
@@ -68,13 +63,15 @@ sub evaluate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Condition::Evaluate - Inline condition that evaluates perl code for truth
 
 =head1 VERSION
 
-This documentation describes version 1.02 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 
@@ -135,18 +132,23 @@ A hashref of all the parameters in the L<Workflow::Context> object
 
 =head1 SEE ALSO
 
-L<Safe> - From some quick research this module seems to have been
-packaged with core Perl 5.004+, and that's sufficiently ancient
-for me to not worry about people having it. If this is a problem for
-you shoot me an email.
+=over
+
+=item * L<Safe> - From some quick research this module seems to have been packaged with core Perl 5.004+, and that's sufficiently ancient for me to not worry about people having it. If this is a problem for you shoot me an email.
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 Chris Winters. All rights reserved.
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Please see L<Workflow>
+
+=cut

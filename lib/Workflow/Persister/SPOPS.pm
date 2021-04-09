@@ -8,7 +8,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::SPOPS::VERSION = '1.49';
+$Workflow::Persister::SPOPS::VERSION = '1.53';
 
 my @FIELDS = qw( workflow_class history_class );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -71,8 +71,7 @@ sub update_workflow {
 
 sub create_history {
     my ( $self, $wf, @history ) = @_;
-    my $log = get_logger();
-    $log->debug( "Saving history for workflow ", $wf->id );
+    $self->log->debug( "Saving history for workflow ", $wf->id );
     foreach my $h (@history) {
         next if ( $h->is_saved );
         my $hist_persist = eval {
@@ -91,7 +90,7 @@ sub create_history {
         } else {
             $h->id( $hist_persist->id );
             $h->set_saved();
-            $log->info( "Created history record with ID ",
+            $self->log->info( "Created history record with ID ",
                 $hist_persist->id );
         }
     }
@@ -136,13 +135,15 @@ sub fetch_history {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Persister::SPOPS - Persist workflows using SPOPS
 
 =head1 VERSION
 
-This documentation describes version 1.07 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 
@@ -236,23 +237,27 @@ Returns an array of workflow history objects upon success
 
 =head1 SEE ALSO
 
-L<Workflow::Persister>
+=over
 
-L<SPOPS>
+=item * L<Workflow::Persister>
 
-L<SPOPS::Tool::DateConvert>
+=item * L<SPOPS>
+
+=item * L<SPOPS::Tool::DateConvert>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2007 Chris Winters. All rights reserved.
+Copyright (c) 2003-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Jonas B. Nielsen (jonasbn) E<lt>jonasbn@cpan.orgE<gt> is the current maintainer.
-
-Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
+Please see L<Workflow>
 
 =cut

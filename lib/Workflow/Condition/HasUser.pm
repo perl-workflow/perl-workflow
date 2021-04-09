@@ -6,7 +6,7 @@ use base qw( Workflow::Condition );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( condition_error );
 
-$Workflow::Condition::HasUser::VERSION = '1.49';
+$Workflow::Condition::HasUser::VERSION = '1.53';
 
 my $DEFAULT_USER_KEY = 'current_user';
 
@@ -18,12 +18,11 @@ sub _init {
 
 sub evaluate {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
-    $log->is_debug
-        && $log->debug( "Trying to execute condition ", ref $self );
+    $self->log->is_debug
+        && $self->log->debug( "Trying to execute condition ", ref $self );
     my $user_key     = $self->param('user_key');
     my $current_user = $wf->context->param($user_key);
-    $log->debug( "Current user in the context is '$current_user' retrieved ",
+    $self->log->debug( "Current user in the context is '$current_user' retrieved ",
         "using parameter key '$user_key'" );
     unless ($current_user) {
         condition_error
@@ -35,13 +34,15 @@ sub evaluate {
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Workflow::Condition::HasUser - Condition to determine if a user is available
 
 =head1 VERSION
 
-This documentation describes version 1.05 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 
@@ -100,15 +101,23 @@ Throws L<Workflow::Exception> if evaluation fails
 
 =head1 SEE ALSO
 
-L<Workflow::Condition>
+=over
+
+=item * L<Workflow::Condition>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004 Chris Winters. All rights reserved.
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
 
+Please see the F<LICENSE>
+
 =head1 AUTHORS
 
-Chris Winters E<lt>chris@cwinters.comE<gt>
+Please see L<Workflow>
+
+=cut

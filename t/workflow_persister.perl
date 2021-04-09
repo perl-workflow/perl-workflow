@@ -1,5 +1,5 @@
 $VAR1 = {
-	'persister' => [
+        'persister' => [
                        {
                         'history_sequence' => 'wf_history_seq',
                         'name' => 'BackupDatabase',

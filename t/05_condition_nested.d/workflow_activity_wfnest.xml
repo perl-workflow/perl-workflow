@@ -31,6 +31,14 @@
 
     <action name="lazy_and_2" class="Workflow::Action::Null"/>
 
+    <!-- Actions for Workflow::Condition::LazyAND -->
+
+    <action name="test_lazy_or" class="Workflow::Action::Null"/>
+
+    <action name="lazy_or_1" class="Workflow::Action::Null"/>
+
+    <action name="lazy_or_2" class="Workflow::Action::Null"/>
+
     <!-- Actions for Workflow::Condition::CheckReturn -->
 
     <action name="test_check_return" class="Workflow::Action::Null"/>

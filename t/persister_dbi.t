@@ -1,11 +1,9 @@
-# -*-perl-*-
-
-# $Id$
+#!/usr/bin/env perl
 
 use strict;
 use lib qw(../lib lib ../t t);
 use TestUtil;
-use constant NUM_TESTS => 46;
+use constant NUM_TESTS => 50;
 use Test::More;
 use Test::Exception;
 
@@ -80,6 +78,18 @@ my ( $wf );
           sub { my ( $val ) = @_; return ( length( $val ), 8 ) } ]
     );
     $handle->{mock_clear_history} = 1;
+
+    # Load history back from the database
+    $handle->{mock_add_resultset} = [
+        [ qw/ workflow_id action description state
+          workflow_user history_date
+          workflow_hist_id / ],
+        [ $wf_id, "Create workflow", "Create new workflow", 'INITIAL',
+          "n/a", $history->[1]->{bound_params}->[5],
+          $history->[1]->{bound_params}->[6] ],
+        ];
+    my @hist = $wf->get_history;
+    $handle->{mock_clear_history} = 1;
 }
 
 {
@@ -147,4 +157,30 @@ my ( $wf );
     is( $wf, undef,
         'Trying to fetch non-existent workflow returns undef' );
 
+}
+
+
+{
+    $handle->{mock_clear_history} = 1;
+    my $wf = $factory->create_workflow( 'Ticket' );
+    my $wf_hist = $handle->{mock_all_history};
+    $handle->{mock_clear_history} = 1;
+    $handle->{mock_add_resultset} =
+        [
+         [ qw/workflow_hist_id workflow_id
+           action description state workflow_user
+              history_date / ],
+         [ 'def', $wf->id, 'Create workflow', 'Create new workflow',
+          'INITIAL', 'n/a', $wf_hist->[1]->{bound_params}->[5] ]
+        ];
+    my @history = $wf->get_history();
+
+
+    my $stmt = $handle->{mock_all_history}->[0]->statement;
+    like($stmt,
+         qr/SELECT "workflow_hist_id", "workflow_id", "action", "description", "state", "workflow_user", "history_date"/,
+         'Quote workflow history table identifiers');
+    like($stmt, qr/FROM "workflow_history"/, 'Query from "workflow_history" table');
+    like($stmt, qr/WHERE "workflow_id" = ?/, 'Query history by "workflow_id"');
+    like($stmt, qr/ORDER BY "history_date" DESC/, 'Ordering on "history_date"');
 }

@@ -1,6 +1,6 @@
 package App::Condition::IsCreator;
 
-# $Id$
+
 
 use strict;
 use base qw( Workflow::Condition );

@@ -8,7 +8,7 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 1.49 of Workflow
+This documentation describes version 1.53 of Workflow
 
 # SYNOPSIS
 
@@ -490,8 +490,7 @@ method with the signature:
 
 We also issue a 'change state' observation if the executed action
 resulted in a new state. See ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable) above for how
-we use and register observers and [Class::Observable](https://metacpan.org/pod/Class%3A%3AObservable) for more
-general information about observers as well as implementation details.
+we use and register observers.
 
 Returns: new state of workflow
 
@@ -669,6 +668,25 @@ Returns the name of the next state given the action
 `$action_name`. Throws an exception if `$action_name` not contained
 in the current state.
 
+### add\_observer( @observers )
+
+Adds one or more observers to a `Workflow` instance. An observer is a
+function. See ["notify\_observers"](#notify_observers) for its calling convention.
+
+This function is used internally by `Workflow::Factory` to implement
+observability as documented in the section ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable)
+
+### notify\_observers( @arguments )
+
+Calls all observer functions registered through `add_observer` with
+the workflow as the first argument and `@arguments` as the remaining
+arguments:
+
+    $observer->( $wf, @arguments );
+
+Used by various parts of the library to notify observers of workflow
+instance related events.
+
 # CONFIGURATION AND ENVIRONMENT
 
 The configuration of Workflow is done using the format of your choice, currently
@@ -679,11 +697,9 @@ to [Workflow::Config](https://metacpan.org/pod/Workflow%3A%3AConfig), for implem
 
 - [Class::Accessor](https://metacpan.org/pod/Class%3A%3AAccessor)
 - [Class::Factory](https://metacpan.org/pod/Class%3A%3AFactory)
-- [Class::Observable](https://metacpan.org/pod/Class%3A%3AObservable)
 - [DateTime](https://metacpan.org/pod/DateTime)
 - [DateTime::Format::Strptime](https://metacpan.org/pod/DateTime%3A%3AFormat%3A%3AStrptime)
 - [Exception::Class](https://metacpan.org/pod/Exception%3A%3AClass)
-- [Log::Dispatch](https://metacpan.org/pod/Log%3A%3ADispatch)
 - [Log::Log4perl](https://metacpan.org/pod/Log%3A%3ALog4perl)
 - [Safe](https://metacpan.org/pod/Safe)
 - [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple)
@@ -731,26 +747,6 @@ The following diagnostic points to the problem:
 Your [XML::SAX](https://metacpan.org/pod/XML%3A%3ASAX) configuration is located in the file:
 
         XML/SAX/ParserDetails.ini
-
-## Perl 5.8.x
-
-CPAN testers reports indicate an issue with observers for Perl 5.8.8
-
-    #   Failed test 'One observation sent on workflow fetch to two observers'
-    #   at t/workflow.t line 79.
-    #          got: '4'
-    #     expected: '2'
-    # Looks like you failed 1 test of 35.
-    t/workflow.t .......................
-    Dubious, test returned 1 (wstat 256, 0x100)
-    Failed 1/35 subtests
-
-The issue is being investigated further, so this information is to be regarded
-as a warning before you dig too much into the issue.
-
-See also:
-
-[http://www.cpantesters.org/cpan/report/fc85ca1c-e46e-11e2-891c-ff8a40f4ab3d](http://www.cpantesters.org/cpan/report/fc85ca1c-e46e-11e2-891c-ff8a40f4ab3d)
 
 # BUGS AND LIMITATIONS
 
@@ -865,7 +861,7 @@ downloaded from the central repository.
 
 The Workflow project is currently hosted on GitHub
 
-- GitHub: [htts://github.com/jonasbn/perl-workflow](htts://github.com/jonasbn/perl-workflow)
+- GitHub: [https://github.com/jonasbn/perl-workflow](https://github.com/jonasbn/perl-workflow)
 
 ## REPOSITORY
 
@@ -885,8 +881,7 @@ The code is kept under revision control using Git:
 
 # SEE ALSO
 
-- November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik,
-Iceland by jonasbn
+- November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik, Iceland by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-npw2010](http://www.slideshare.net/jonasbn/workflow-npw2010)
 - August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn
 [http://www.slideshare.net/jonasbn/workflow-yapceu2010](http://www.slideshare.net/jonasbn/workflow-yapceu2010)
@@ -894,7 +889,7 @@ Iceland by jonasbn
 # COPYRIGHT
 
 Copyright (c) 2003 Chris Winters and Arvato Direct;
-Copyright (c) 2004-2017 Chris Winters. All rights reserved.
+Copyright (c) 2004-2021 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -907,9 +902,14 @@ Chris Winters <chris@cwinters.com>, original author.
 
 The following folks have also helped out (listed here in no particular order):
 
-Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49
+Thanks for to Michiel W. Beijen for fix to badly formatted URL, included in release 1.52
 
-Bug report from Petr Pisar resulted in release 1.49
+Several PRs (13 to be exact) from Erik Huelsmann resulting in release 1.49. Yet another
+batch of PRs resulted in release 1.50
+
+PR from Mohammad S Anwar correcting some POD errors, included in release 1.49
+
+Bug report from Petr Pisar resulted in release 1.48
 
 Bug report from Tina Müller (tinita) resulted in release 1.47
 

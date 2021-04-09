@@ -1,7 +1,5 @@
 package TestUtil;
 
-# $Id$
-
 use strict;
 use vars qw($VERSION);
 use DateTime;

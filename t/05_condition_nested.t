@@ -1,6 +1,4 @@
-# --perl--
-#
-# vim: syntax=perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -28,7 +26,7 @@ if ($debug) {
     Log::Log4perl::init($CONF_FILE);
 }
 
-plan tests => 21;
+plan tests => 26;
 
 my $workflow_conf  = $cfgbase . '/workflow_def_wfnest.xml';
 my $action_conf    = $cfgbase . '/workflow_activity_wfnest.xml';
@@ -99,6 +97,23 @@ $workflow->execute_action('test_lazy_and');
 is( $workflow->state, 'TEST_LAZY_AND', 'wfcond state after test_lazy_and' );
 $workflow->execute_action('lazy_and_2');
 is( $workflow->state, 'INITIALIZED', 'wfcond state after lazy_and_2' )
+    or $workflow->execute_action('ack_subtest_fail');
+
+##################################################
+# RUN TESTS FOR 'Workflow::Condition::LazyOR'
+##################################################
+
+$workflow->execute_action('test_lazy_or');
+is( $workflow->state, 'TEST_LAZY_OR', 'wfcond state after test_lazy_or' );
+$workflow->execute_action('lazy_or_1');
+is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after lazy_or_1' );
+$workflow->execute_action('ack_subtest_fail');
+is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
+
+$workflow->execute_action('test_lazy_or');
+is( $workflow->state, 'TEST_LAZY_OR', 'wfcond state after test_lazy_or' );
+$workflow->execute_action('lazy_or_2');
+is( $workflow->state, 'INITIALIZED', 'wfcond state after lazy_or_2' )
     or $workflow->execute_action('ack_subtest_fail');
 
 ##################################################

@@ -1,5 +1,4 @@
-# -*-perl-*-
-
+#!/usr/bin/env perl
 
 use strict;
 use lib qw(../lib lib ../t t);
@@ -20,9 +19,9 @@ if ( $@ ) {
 }
 
 TestDBUtil::create_tables({
-			   db_type => 'sqlite',
-			   db_file => 'workflow.db',
-			  });
+                           db_type => 'sqlite',
+                           db_file => 'workflow.db',
+                          });
 
 plan tests => NUM_TESTS;
 
@@ -79,7 +78,7 @@ my ( $wf );
     is( (scalar keys %$history_ref), 1, 'Commited one history record.');
     my ($hist_id) = keys %$history_ref;
     is( $history_ref->{$hist_id}{state}, 'INITIAL',
-	'History entry with WF in INITIAL state.');
+        'History entry with WF in INITIAL state.');
 }
 
 {
@@ -103,7 +102,7 @@ my ( $wf );
     my @hist_ids = sort {$a cmp $b} keys %$history_ref;
 
     is( $history_ref->{$hist_ids[-1]}{state}, 'TIX_CREATED',
-	'History entry with WF in TIX_CREATED state.');
+        'History entry with WF in TIX_CREATED state.');
 
 # Copied these over still commented from the original persister_dbi test.
 # Not sure if it's valuable to get them working in this test.

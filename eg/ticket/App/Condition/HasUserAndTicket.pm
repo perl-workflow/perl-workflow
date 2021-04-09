@@ -1,6 +1,6 @@
 package App::Condition::HasUserAndTicket;
 
-# $Id$
+
 
 use strict;
 use base qw( Workflow::Condition );

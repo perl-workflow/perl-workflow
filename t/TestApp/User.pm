@@ -1,7 +1,5 @@
 package TestApp::User;
 
-# $Id$
-
 use strict;
 
 $TestApp::User::VERSION = '0.01';
