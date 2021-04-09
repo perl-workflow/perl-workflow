@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 
-$Workflow::Context::VERSION = '1.52';
+$Workflow::Context::VERSION = '1.53';
 
 sub merge {
     my ( $self, $other ) = @_;
@@ -26,7 +26,7 @@ Workflow::Context - Data blackboard for Workflows, Actions, Conditions and Valid
 
 =head1 VERSION
 
-This documentation describes version 1.52 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 

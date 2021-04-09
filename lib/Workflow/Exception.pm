@@ -44,7 +44,7 @@ my %TYPE_LOGGING = (
 );
 
 
-$Workflow::Exception::VERSION   = '1.52';
+$Workflow::Exception::VERSION   = '1.53';
 @Workflow::Exception::ISA       = qw( Exporter Exception::Class::Base );
 @Workflow::Exception::EXPORT_OK = keys %TYPE_CLASSES;
 
@@ -129,7 +129,7 @@ Workflow::Exception - Base class for workflow exceptions
 
 =head1 VERSION
 
-This documentation describes version 1.52 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 

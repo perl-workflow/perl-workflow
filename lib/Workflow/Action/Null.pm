@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Action );
 
-$Workflow::Action::Null::VERSION = '1.52';
+$Workflow::Action::Null::VERSION = '1.53';
 
 sub execute {
     my ($self) = @_;
@@ -23,7 +23,7 @@ Workflow::Action::Null - Workflow action for the terminally lazy
 
 =head1 VERSION
 
-This documentation describes version 1.52 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 

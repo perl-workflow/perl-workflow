@@ -11,7 +11,7 @@ use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use English qw( -no_match_vars );
 
-$Workflow::State::VERSION = '1.52';
+$Workflow::State::VERSION = '1.53';
 
 my @FIELDS   = qw( state description type );
 my @INTERNAL = qw( _test_condition_count _factory );
@@ -454,7 +454,7 @@ Workflow::State - Information about an individual state in a workflow
 
 =head1 VERSION
 
-This documentation describes version 1.52 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 
@@ -596,7 +596,7 @@ Returns name of action to be used for autorunning the state.
 
 =head3 clear_condition_cache ( )
 
-Deprecated, kept for 1.52 compatibility.
+Deprecated, kept for 1.53 compatibility.
 
 Used to empties the condition result cache for a given state.
 

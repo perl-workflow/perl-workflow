@@ -6,7 +6,7 @@ use base qw( Workflow::Base );
 use Carp qw(croak);
 
 $Workflow::Condition::CACHE_RESULTS = 1;
-$Workflow::Condition::VERSION = '1.52';
+$Workflow::Condition::VERSION = '1.53';
 
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -37,7 +37,7 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
 
 =head1 VERSION
 
-This documentation describes version 1.52 of this package
+This documentation describes version 1.53 of this package
 
 =head1 SYNOPSIS
 
