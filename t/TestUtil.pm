@@ -154,7 +154,7 @@ sub run_state_tests{
   is( $actions[0], 'TIX_NEW', 'Got TIX_NEW as available action.');
 
   # Verify the correct action and class.
-  my $wf_action = $wf2->_get_action('TIX_NEW');
+  my $wf_action = $wf2->get_action('TIX_NEW');
   is( $wf_action->name(), 'TIX_NEW', 'Got TIX_NEW action for Type2.');
   is( $wf_action->class(), 'TestApp::Action::TicketCreateType',
       'Got TicketCreateType class.');
@@ -181,7 +181,7 @@ sub run_state_tests{
   is( $actions[0], 'TIX_NEW', 'Got TIX_NEW as available action.');
 
   # Verify the correct action and class.
-  $wf_action = $wf->_get_action('TIX_NEW');
+  $wf_action = $wf->get_action('TIX_NEW');
   is( $wf_action->name(), 'TIX_NEW', 'Got TIX_NEW action for Ticket.');
   is( $wf_action->class(), 'TestApp::Action::TicketCreate',
       'Got TicketCreate class.');

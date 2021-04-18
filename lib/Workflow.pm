@@ -76,9 +76,32 @@ sub get_current_actions {
     return $wf_state->get_available_action_names( $self, $group );
 }
 
+sub get_action {
+    my ( $self, $action_name ) = @_;
+
+    my $state = $self->state;
+    $self->log->is_debug
+        && $self->log->debug(
+        "Trying to find action '$action_name' in state '$state'");
+
+    my $wf_state = $self->_get_workflow_state;
+    unless ( $wf_state->contains_action($action_name) ) {
+        workflow_error
+            "State '$state' does not contain action '$action_name'";
+    }
+    $self->log->is_debug
+        && $self->log->debug("Action '$action_name' exists in state '$state'");
+
+    my $action = $self->_factory()->get_action( $self, $action_name );
+
+    # This will throw an exception which we want to bubble up
+    $wf_state->evaluate_action( $self, $action_name );
+    return $action;
+}
+
 sub get_action_fields {
     my ( $self, $action_name ) = @_;
-    my $action = $self->_get_action($action_name);
+    my $action = $self->get_action($action_name);
     return $action->fields;
 }
 
@@ -88,7 +111,7 @@ sub execute_action {
     # This checks the conditions behind the scenes, so there's no
     # explicit 'check conditions' step here
 
-    my $action = $self->_get_action($action_name);
+    my $action = $self->get_action($action_name);
 
     # Need this in case we encounter an exception after we store the
     # new state
@@ -288,28 +311,8 @@ sub set {
     $self->{$prop} = $value;
 }
 
-sub _get_action {
-    my ( $self, $action_name ) = @_;
-
-    my $state = $self->state;
-    $self->log->is_debug
-        && $self->log->debug(
-        "Trying to find action '$action_name' in state '$state'");
-
-    my $wf_state = $self->_get_workflow_state;
-    unless ( $wf_state->contains_action($action_name) ) {
-        workflow_error
-            "State '$state' does not contain action '$action_name'";
-    }
-    $self->log->is_debug
-        && $self->log->debug("Action '$action_name' exists in state '$state'");
-
-    my $action = $self->_factory()->get_action( $self, $action_name );
-
-    # This will throw an exception which we want to bubble up
-
-    $wf_state->evaluate_action( $self, $action_name );
-    return $action;
+sub _get_action { # for backward compatibility with 1.49 and before
+    goto &get_action;
 }
 
 sub _get_workflow_state {
@@ -962,6 +965,34 @@ $group is optional parameter.
 
 Returns: list of strings representing available actions
 
+=head3 get_action( $action_name )
+
+Retrieves the action object associated with C<$action_name> in the
+current workflow state. This will throw an exception if:
+
+=over 4
+
+=item *
+
+No workflow state exists with a name of the current state. (This is
+usually some sort of configuration error and should be caught at
+initialization time, so it should not happen.)
+
+=item *
+
+No action C<$action_name> exists in the current state.
+
+=item *
+
+No action C<$action_name> exists in the workflow universe.
+
+=item *
+
+One of the conditions for the action in this state is not met.
+
+=back
+
+
 =head3 get_action_fields( $action_name )
 
 Return a list of L<Workflow::Action::InputField> objects for the given
@@ -1086,33 +1117,6 @@ This is called by the inherited constructor and sets the
 C<$current_state> value to the property C<state> and uses the other
 non-state values from C<\%config> to set parameters via the inherited
 C<param()>.
-
-=head3 _get_action( $action_name )
-
-Retrieves the action object associated with C<$action_name> in the
-current workflow state. This will throw an exception if:
-
-=over 4
-
-=item *
-
-No workflow state exists with a name of the current state. (This is
-usually some sort of configuration error and should be caught at
-initialization time, so it should not happen.)
-
-=item *
-
-No action C<$action_name> exists in the current state.
-
-=item *
-
-No action C<$action_name> exists in the workflow universe.
-
-=item *
-
-One of the conditions for the action in this state is not met.
-
-=back
 
 =head3 _get_workflow_state( [ $state ] )
 
