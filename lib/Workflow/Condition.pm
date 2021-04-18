@@ -37,7 +37,7 @@ sub evaluate_condition {
 
     my $factory = $wf->_factory();
     my $orig_condition = $condition_name;
-    my $opposite       = 0;
+    my $negation       = 0;
     my $condition;
 
     $log->is_debug
@@ -46,13 +46,13 @@ sub evaluate_condition {
     if ( $condition_name =~ m{ \A ! }xms ) {
 
         # this condition starts with a '!' and is thus supposed
-        # to return the opposite of an original condition, whose
+        # to return the negation of an original condition, whose
         # name is the same except for the '!'
         $orig_condition =~ s{ \A ! }{}xms;
-        $opposite = 1;
+        $negation = 1;
         $log->is_debug
             && $log->debug(
-            "Condition starts with a !: '$condition_name'");
+            "Condition starts with a ! (negation): '$condition_name'");
     }
 
     local $wf->{'_condition_result_cache'} =
@@ -67,9 +67,9 @@ sub evaluate_condition {
             "Condition has been cached: '$orig_condition', cached result: ",
             $wf->{'_condition_result_cache'}->{$orig_condition}
             );
-        if ( !$opposite ) {
+        if ( !$negation ) {
             $log->is_debug
-                && $log->debug("Opposite is false.");
+                && $log->debug("Negation is false.");
             if ( !$wf->{'_condition_result_cache'}->{$orig_condition} )
             {
                 $log->is_debug
@@ -81,7 +81,7 @@ sub evaluate_condition {
             # we have to return an error if the original cached
             # condition did NOT fail
             $log->is_debug
-                && $log->debug("Opposite is true.");
+                && $log->debug("Negation is true.");
             if ( $wf->{'_condition_result_cache'}->{$orig_condition} ) {
                 $log->is_debug
                     && $log->debug("Cached condition is true.");
@@ -105,13 +105,13 @@ sub evaluate_condition {
             # Check if this is a Workflow::Exception::Condition
             if (Exception::Class->caught('Workflow::Exception::Condition')) {
                 $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
-                if ( !$opposite ) {
+                if ( !$negation ) {
                     $log->is_debug
                         && $log->debug("condition '$orig_condition' failed due to: $EVAL_ERROR");
                     return 0;
                 } else {
                     $log->is_debug
-                        && $log->debug("opposite condition '$orig_condition' failed due to ' . $EVAL_ERROR");
+                        && $log->debug("negated condition '$orig_condition' failed due to ' . $EVAL_ERROR");
                     return 1;
                 }
                 # unreachable
@@ -137,12 +137,12 @@ sub evaluate_condition {
 
         } else {
             $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
-            if ($opposite) {
+            if ($negation) {
 
                 $log->is_debug
                     && $log->debug(
                     "condition '$orig_condition' ".
-                    "did NOT fail but opposite requested");
+                    "did NOT fail but negation requested");
 
                 return 0;
             } else {
@@ -336,7 +336,7 @@ change between the two evaluate() calls.
 
 Caching is also used with an inverted condition, which you can specify
 in the definition using C<<condition name="!some_condition">>.
-This condition returns exactly the opposite of the original one, i.e.
+This condition returns the negation of the original one, i.e.
 if the original condition fails, this one does not and the other way
 round. As caching is used, you can model "yes/no" decisions using this
 feature - if you have both C<<condition name="some_condition">> and
