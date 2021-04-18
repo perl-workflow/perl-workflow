@@ -96,8 +96,7 @@ sub evaluate_condition {
         $condition = $wf->_factory()
             ->get_condition( $orig_condition, $wf->type );
         $log->is_debug
-            && $log->debug( q{Evaluating condition '},
-                            $condition->name, q{'} );
+            && $log->debug( "Evaluating condition '$orig_condition'" );
         my $return_value;
         eval { $return_value = $condition->evaluate($wf) };
         if ($EVAL_ERROR) {
