@@ -70,8 +70,7 @@ sub context {
 
 sub get_current_actions {
     my ( $self, $group ) = @_;
-    $self->log->is_debug
-        && $self->log->debug( "Getting current actions for wf '", $self->id, "'" );
+    $self->log->debug( "Getting current actions for wf '", $self->id, "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_available_action_names( $self, $group );
 }
@@ -121,9 +120,9 @@ sub execute_action {
 
     eval {
         $action->validate($self);
-        $self->log->is_debug && $self->log->debug("Action validated ok");
+        $self->log->debug("Action validated ok");
         $action_return = $action->execute($self);
-        $self->log->is_debug && $self->log->debug("Action executed ok");
+        $self->log->debug("Action executed ok");
 
         $new_state = $self->_get_next_state( $action_name, $action_return );
         if ( $new_state ne NO_CHANGE_VALUE ) {
@@ -147,8 +146,7 @@ sub execute_action {
         # If using a DBI persister with no autocommit, commit here.
         $self->_factory()->_commit_transaction($self);
 
-        $self->log->is_info
-            && $self->log->info("Saved workflow with possible new state ok");
+        $self->log->info("Saved workflow with possible new state ok");
     };
 
     # If there's an exception, reset the state to the original one and
@@ -206,11 +204,11 @@ sub add_history {
             $item->{workflow_id} = $self->id;
             $item->{time_zone}   = $self->time_zone();
             push @to_add, Workflow::History->new($item);
-            $self->log->is_debug && $self->log->debug("Adding history from hashref");
+            $self->log->debug("Adding history from hashref");
         } elsif ( ref $item and $item->isa('Workflow::History') ) {
             $item->workflow_id( $self->id );
             push @to_add, $item;
-            $self->log->is_debug && $self->log->debug("Adding history object directly");
+            $self->log->debug("Adding history object directly");
         } else {
             workflow_error "I don't know how to add a history of ", "type '",
                 ref($item), "'";

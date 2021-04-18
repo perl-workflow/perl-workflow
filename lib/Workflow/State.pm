@@ -307,8 +307,7 @@ sub _create_condition_objects {
                 }
                 );
         } else {
-            $self->log->is_info
-                && $self->log->info(
+            $self->log->info(
                 "Fetching condition '$condition_info->{name}'");
             push @condition_objects,
                 $self->_factory()

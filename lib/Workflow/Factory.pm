@@ -120,8 +120,7 @@ sub add_config_from_file {
             join ', ', _flatten( $params{$type} ) );
     }
 
-    $self->log->is_debug
-        && $self->log->debug("Adding condition configurations...");
+    $self->log->debug("Adding condition configurations...");
 
     if ( ref $params{condition} eq 'ARRAY' ) {
         foreach my $condition ( @{ $params{condition} } ) {
@@ -137,8 +136,7 @@ sub add_config_from_file {
         );
     }
 
-    $self->log->is_debug
-        && $self->log->debug("Adding validator configurations...");
+    $self->log->debug("Adding validator configurations...");
 
     if ( ref $params{validator} eq 'ARRAY' ) {
         foreach my $validator ( @{ $params{validator} } ) {
@@ -154,8 +152,7 @@ sub add_config_from_file {
         );
     }
 
-    $self->log->is_debug
-        && $self->log->debug("Adding persister configurations...");
+    $self->log->debug("Adding persister configurations...");
 
     if ( ref $params{persister} eq 'ARRAY' ) {
         foreach my $persister ( @{ $params{persister} } ) {
@@ -171,8 +168,7 @@ sub add_config_from_file {
         );
     }
 
-    $self->log->is_debug
-        && $self->log->debug("Adding action configurations...");
+    $self->log->debug("Adding action configurations...");
 
     if ( ref $params{action} eq 'ARRAY' ) {
         foreach my $action ( @{ $params{action} } ) {
@@ -184,8 +180,7 @@ sub add_config_from_file {
             Workflow::Config->parse_all_files( 'action', $params{action} ) );
     }
 
-    $self->log->is_debug
-        && $self->log->debug("Adding workflow configurations...");
+    $self->log->debug("Adding workflow configurations...");
 
     if ( ref $params{workflow} eq 'ARRAY' ) {
         foreach my $workflow ( @{ $params{workflow} } ) {
@@ -259,8 +254,7 @@ sub _add_workflow_config {
 
         $self->_load_observers($workflow_config);
 
-        $self->log->is_info
-            && $self->log->info("Added all workflow states...");
+        $self->log->info("Added all workflow states...");
     }
 
     return;
@@ -348,8 +342,7 @@ sub create_workflow {
         $wf_config, $self->{_workflow_state}{$wf_type}, $self );
     $wf->context( $context || Workflow::Context->new );
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
-    $self->log->is_info
-        && $self->log->info("Instantiated workflow object properly, persisting...");
+    $self->log->info("Instantiated workflow object properly, persisting...");
     my $persister = $self->get_persister( $wf_config->{persister} );
     my $id        = $persister->create_workflow($wf);
     $wf->id($id);
@@ -369,7 +362,7 @@ sub create_workflow {
             }
         )
     );
-    $self->log->is_info && $self->log->info("Created history object ok");
+    $self->log->info("Created history object ok");
 
     $self->_commit_transaction($wf);
 
@@ -463,15 +456,13 @@ sub save_workflow {
     my $persister = $self->get_persister( $wf_config->{persister} );
     eval {
         $persister->update_workflow($wf);
-        $self->log->is_info
-            && $self->log->info( "Workflow '", $wf->id, "' updated ok" );
+        $self->log->info( "Workflow '", $wf->id, "' updated ok" );
         my @unsaved = $wf->get_unsaved_history;
         foreach my $h (@unsaved) {
             $h->set_new_state( $wf->state );
         }
         $persister->create_history( $wf, @unsaved );
-        $self->log->is_info
-            && $self->log->info("Created necessary history objects ok");
+        $self->log->info("Created necessary history objects ok");
     };
     if ($EVAL_ERROR) {
         $wf->last_update($old_update);
@@ -508,8 +499,7 @@ sub _rollback_transaction {
 sub get_workflow_history {
     my ( $self, $wf ) = @_;
 
-    $self->log->is_debug
-        && $self->log->debug( "Trying to fetch history for workflow ", $wf->id );
+    $self->log->debug( "Trying to fetch history for workflow ", $wf->id );
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
     return $persister->fetch_history($wf);

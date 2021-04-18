@@ -62,8 +62,7 @@ sub fetch_workflow {
         $self->log->error("No file at path '$full_path'");
         persist_error "No workflow with ID '$wf_id' is available";
     }
-    $self->log->is_debug
-        && $self->log->debug("File exists, reconstituting workflow");
+    $self->log->debug("File exists, reconstituting workflow");
     my $wf_info = eval { $self->constitute_object($full_path) };
     if ($EVAL_ERROR) {
         persist_error "Cannot reconstitute data from file for ",
@@ -139,8 +138,7 @@ sub _serialize_workflow {
 
     );
     $self->serialize_object( $full_path, \%wf_info );
-    $self->log->is_debug
-        && $self->log->debug("Wrote workflow ok");
+    $self->log->debug("Wrote workflow ok");
 }
 
 sub serialize_object {
@@ -153,8 +151,7 @@ sub serialize_object {
     print THINGY Dumper($object)
         || persist_error "Error writing to '$path': $!";
     close(THINGY) || persist_error "Cannot close '$path': $!";
-    $self->log->is_debug
-        && $self->log->debug("Wrote object to file ok");
+    $self->log->debug("Wrote object to file ok");
 }
 
 sub constitute_object {

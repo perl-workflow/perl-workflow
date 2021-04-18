@@ -27,16 +27,14 @@ sub new {
             configuration_error "If you specify 'from_handle' you must ",
                 "specify a value for 'handle_property'";
         }
-        $self->log->is_debug
-            && $self->log->debug( "Using '", $self->handle_property, "' from ", "'",
-            $self->from_handle, "' for ID generator" );
+        $self->log->debug( "Using '", $self->handle_property, "' from ", "'",
+                           $self->from_handle, "' for ID generator" );
     } elsif ( !$self->func_property ) {
         configuration_error "If you do not specify a value in 'from_handle' ",
             "you must specify a value for 'func_property'";
     } else {
-        $self->log->is_debug
-            && $self->log->debug( "Using database func() property '",
-            $self->func_property, "' for ID generator" );
+        $self->log->debug( "Using database func() property '",
+                           $self->func_property, "' for ID generator" );
     }
     return $self;
 }

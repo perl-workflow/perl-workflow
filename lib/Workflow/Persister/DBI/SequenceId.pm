@@ -25,8 +25,7 @@ sub new {
 sub pre_fetch_id {
     my ( $self, $dbh ) = @_;
     my $full_select = sprintf $self->sequence_select, $self->sequence_name;
-    $self->log->is_debug
-        && $self->log->debug("SQL to fetch sequence: $full_select");
+    $self->log->debug("SQL to fetch sequence: ", $full_select);
     my ($row);
     eval {
         my $sth = $dbh->prepare($full_select);
