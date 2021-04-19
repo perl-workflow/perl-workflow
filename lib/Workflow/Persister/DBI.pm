@@ -198,8 +198,7 @@ sub create_workflow {
     if ($id) {
         push @fields, $wf_fields[0];
         push @values, $id;
-        $self->log->is_debug
-            && $self->log->debug("Got ID from pre_fetch_id: $id");
+        $self->log->debug("Got ID from pre_fetch_id: $id");
     }
     my $sql = 'INSERT INTO %s ( %s ) VALUES ( %s )';
 
@@ -383,8 +382,7 @@ sub fetch_history {
                 date        => $self->parser->parse_datetime( $row->[6] ),
             }
         );
-        $self->log->is_debug
-            && $self->log->debug("Fetched history object '$row->[0]'");
+        $self->log->debug("Fetched history object '$row->[0]'");
         $hist->set_saved();
         push @history, $hist;
     }

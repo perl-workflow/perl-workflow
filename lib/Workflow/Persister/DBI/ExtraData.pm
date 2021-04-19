@@ -76,18 +76,18 @@ sub fetch_extra_workflow_data {
         if ( ref $data_field ) {
             foreach my $i ( 0 .. $#{$data_field} ) {
                 $wf->context->param( $data_field->[$i], $row->[$i] );
-                $self->log->is_info
-                    && $self->log->info(
-                    sprintf "Set data from %s.%s into context key %s ok",
-                    $self->table, $data_field->[$i], $data_field->[$i] );
+                $self->log->info(
+                    sub { sprintf "Set data from %s.%s into context key %s ok",
+                              $self->table, $data_field->[$i],
+                              $data_field->[$i] } );
             }
         } else {
             my $value = $row->[0];
             $wf->context->param( $self->context_key, $value );
-            $self->log->is_info
-                && $self->log->info(
-                sprintf "Set data from %s.%s into context key %s ok",
-                $self->table, $self->data_field, $self->context_key );
+            $self->log->info(
+                sub { sprintf "Set data from %s.%s into context key %s ok",
+                          $self->table, $self->data_field,
+                          $self->context_key } );
         }
     }
 }

@@ -167,9 +167,7 @@ sub get_autorun_action_name {
         workflow_error
             "$pre_error there are no actions available for execution.";
     }
-    $self->log->is_debug
-        && $self->log->debug(
-        "Auto-running state '$state' with action '$actions[0]'");
+    $self->log->debug("Auto-running state '$state' with action '$actions[0]'");
     return $actions[0];
 }
 
@@ -209,8 +207,7 @@ sub init {
 
     my $class = ref $self;
 
-    $self->log->is_debug
-        && $self->log->debug("Constructing '$class' object for state $name");
+    $self->log->debug("Constructing '$class' object for state $name");
 
     $self->state($name);
     $self->_factory($factory);
@@ -265,9 +262,8 @@ sub _assign_resulting_state_from_array {
         workflow_error "Errors found assigning 'resulting_state' to ",
             "action '$action_name' in state '$name': ", join '; ', @errors;
     }
-    $self->log->is_debug
-        && $self->log->debug( "Assigned multiple resulting states in '$name' and ",
-        "action '$action_name' from array ok" );
+    $self->log->debug( "Assigned multiple resulting states in '$name' and ",
+                       "action '$action_name' from array ok" );
     return \%new_resulting;
 }
 
@@ -281,8 +277,7 @@ sub _add_action_config {
             "is required -- if you do not want the state to ",
             "change, use the value '$no_change_value'.";
     }
-    $self->log->is_debug
-        && $self->log->debug("Adding '$state' '$action_name' config");
+    $self->log->debug("Adding '$state' '$action_name' config");
     $self->{_actions}{$action_name} = $action_config;
     my @action_conditions = $self->_create_condition_objects($action_config);
     $self->{_conditions}{$action_name} = \@action_conditions;

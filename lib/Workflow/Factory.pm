@@ -339,9 +339,7 @@ sub create_workflow {
     my $persister = $self->get_persister( $wf_config->{persister} );
     my $id        = $persister->create_workflow($wf);
     $wf->id($id);
-    $self->log->is_info
-        && $self->log->info(
-        "Persisted workflow with ID '$id'; creating history...");
+    $self->log->info("Persisted workflow with ID '$id'; creating history...");
     $persister->create_history(
         $wf,
         Workflow::History->new(
@@ -361,8 +359,8 @@ sub create_workflow {
 
     my $state = $wf->_get_workflow_state();
     if ( $state->autorun ) {
-        $self->log->is_info && $self->log->info( "State '$state' marked to be run ",
-            "automatically; executing that state/action..." );
+        $self->log->info( "State '$state' marked to be run ",
+                          "automatically; executing that state/action..." );
         $wf->_auto_execute_state($state);
     }
 
@@ -385,8 +383,7 @@ sub fetch_workflow {
     my $wf_info   = $persister->fetch_workflow($wf_id);
     return undef unless ($wf_info);
     $wf_info->{last_update} ||= '';
-    $self->log->is_debug
-        && $self->log->debug(
+    $self->log->debug(
         "Fetched data for workflow '$wf_id' ok: ",
         "[State: $wf_info->{state}] ",
         "[Last update: $wf_info->{last_update}]"
