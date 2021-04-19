@@ -32,8 +32,7 @@ sub init {
             "specified in the 'path' key of the configuration ",
             "(given: '$params->{path}')";
     }
-    $self->log->is_info
-        && $self->log->info(
+    $self->log->info(
         "Using path for workflows and histories '$params->{path}'");
     $self->path( $params->{path} );
 }

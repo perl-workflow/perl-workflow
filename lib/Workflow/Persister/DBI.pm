@@ -39,8 +39,7 @@ sub init {
     $self->handle($self->create_handle);
     my $driver
         = $self->handle ? $self->handle->{Driver}->{Name} : ($params->{driver} || '');
-    $self->log->is_debug
-        && $self->log->debug("Pulled driver '$driver' from DBI DSN");
+    $self->log->debug( "Pulled driver '$driver' from DBI DSN" );
     $self->driver($driver);
     $self->assign_generators( $params, $driver );
     $self->log->info(

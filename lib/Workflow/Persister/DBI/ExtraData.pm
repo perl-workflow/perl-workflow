@@ -41,9 +41,8 @@ sub init {
         my $context_key = $params->{extra_context_key} || $data_field;
         $self->context_key($context_key);
     }
-    $self->log->is_info
-        && $self->log->info( "Configured extra data fetch with: ",
-        join '; ', $self->table, $data_field, $self->context_key );
+    $self->log->info( "Configured extra data fetch with: ",
+                      join '; ', $self->table, $data_field, $self->context_key );
 }
 
 sub fetch_extra_workflow_data {

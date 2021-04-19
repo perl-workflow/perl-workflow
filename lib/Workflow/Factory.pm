@@ -22,18 +22,15 @@ sub import {
     my $package = caller;
     my $log = get_logger(__PACKAGE__);
     if ( defined $_[0] && $_[0] eq 'FACTORY' ) {
-        $log->is_debug
-            && $log->debug(
-            "Trying to import 'FACTORY' of type '$class' to '$package'");
+        $log->debug( "Trying to import 'FACTORY' of type '$class' to '$package'" );
         shift;
         my $instance = _initialize_instance($class);
 
         my $import_target = $package . '::FACTORY';
         no strict 'refs';
         unless ( defined &{$import_target} ) {
-            $log->is_debug
-                && $log->debug( "Target '$import_target' not yet defined, ",
-                "creating subroutine on the fly" );
+            $log->debug( "Target '$import_target' not yet defined, ",
+                         "creating subroutine on the fly" );
             *{$import_target} = sub { return $instance };
         }
         return $instance;
@@ -79,10 +76,8 @@ sub _initialize_instance {
 
     my $log = get_logger(__PACKAGE__);
     unless ( $INSTANCES{$class} ) {
-        $log->is_debug
-            && $log->debug(
-            "Creating empty instance of '$class' factory for ",
-            "singleton use" );
+        $log->debug( "Creating empty instance of '$class' factory for ",
+                     "singleton use" );
         my $instance = bless {} => $class;
         $instance->init();
         $INSTANCES{$class} = $instance;
@@ -95,12 +90,10 @@ sub _delete_instance {
 
     my $log = get_logger(__PACKAGE__);
     if ( $INSTANCES{$class} ) {
-        $log->is_debug
-            && $log->debug("Deleting instance of '$class' factory.");
+        $log->debug( "Deleting instance of '$class' factory." );
         delete $INSTANCES{$class};
     } else {
-        $log->is_debug
-            && $log->debug("No instance of '$class' factory found.");
+        $log->debug( "No instance of '$class' factory found." );
     }
 
     return;
@@ -115,9 +108,9 @@ sub add_config_from_file {
     _check_config_keys(%params);
 
     foreach my $type ( sort keys %params ) {
-        $self->log->is_debug
-            && $self->log->debug( "Using '$type' configuration file(s): ",
-            join ', ', _flatten( $params{$type} ) );
+        $self->log->debug(
+            sub { "Using '$type' configuration file(s): " .
+                      join( ', ', _flatten( $params{$type} ) ) } );
     }
 
     $self->log->debug( "Adding condition configurations..." );
@@ -287,7 +280,7 @@ sub _load_observers {
             } else {
                 my $error = 'subroutine not found';
                 $self->log->error( "Error loading subroutine '$observer_sub' in ",
-                    "class '$observer_class': $error" );
+                                   "class '$observer_class': $error" );
                 workflow_error $error;
             }
         } else {
@@ -302,14 +295,14 @@ sub _load_observers {
     if (@observers) {
         $self->{_workflow_observers}{$wf_type} = \@observers;
 
-        $self->log->is_info
-            && $self->log->info( "Added $observers_num to '$wf_type': ", join ', ', @observers );
+        $self->log->info(
+            sub { "Added $observers_num to '$wf_type': " .
+                      join( ', ', @observers ) } );
 
     } else {
         $self->{_workflow_observers}{$wf_type} = undef;
 
-        $self->log->is_info
-            && $self->log->info( "No observers added to '$wf_type'" );
+        $self->log->info( "No observers added to '$wf_type'" );
     }
 
     return $observers_num;
@@ -531,8 +524,7 @@ sub _add_action_config {
 
         foreach my $action_config ( @{$action} ) {
             my $name = $action_config->{name};
-            $self->log->is_debug
-                && $self->log->debug(
+            $self->log->debug(
                 "Adding configuration for type '$type', action '$name'");
             $self->{_action_config}{$type}{$name} = $action_config;
             my $action_class = $action_config->{class};
@@ -541,8 +533,7 @@ sub _add_action_config {
                     "Action '$name' must be associated with a ",
                     "class using the 'class' attribute.";
             }
-            $self->log->is_debug
-                && $self->log->debug(
+            $self->log->debug(
                 "Trying to include action class '$action_class'...");
             eval "require $action_class";
             if ($EVAL_ERROR) {
@@ -551,15 +542,13 @@ sub _add_action_config {
                 configuration_error
                     "Cannot include action class '$action_class': $msg";
             }
-            $self->log->is_debug
-                && $self->log->debug(
+            $self->log->debug(
                 "Included action '$name' class '$action_class' ok");
             if ($self->_validate_action_config) {
                 my $validate_name = $action_class . '::validate_config';
                 if (exists &$validate_name) {
                     no strict 'refs';
-                    $self->log->is_debug
-                        && $self->log->debug(
+                    $self->log->debug(
                         "Validating configuration for action '$name'");
                     $validate_name->($action_config);
                 }
@@ -598,24 +587,21 @@ sub _add_persister_config {
     foreach my $persister_config (@all_persister_config) {
         next unless ( ref $persister_config eq 'HASH' );
         my $name = $persister_config->{name};
-        $self->log->is_debug
-            && $self->log->debug("Adding configuration for persister '$name'");
+        $self->log->debug( "Adding configuration for persister '$name'" );
         $self->{_persister_config}{$name} = $persister_config;
         my $persister_class = $persister_config->{class};
         unless ($persister_class) {
             configuration_error "You must specify a 'class' in persister ",
                 "'$name' configuration";
         }
-        $self->log->is_debug
-            && $self->log->debug(
+        $self->log->debug(
             "Trying to include persister class '$persister_class'...");
         eval "require $persister_class";
         if ($EVAL_ERROR) {
             configuration_error "Cannot include persister class ",
                 "'$persister_class': $EVAL_ERROR";
         }
-        $self->log->is_debug
-            && $self->log->debug(
+        $self->log->debug(
             "Included persister '$name' class '$persister_class' ",
             "ok; now try to instantiate persister..." );
         my $persister = eval { $persister_class->new($persister_config) };
@@ -624,8 +610,7 @@ sub _add_persister_config {
                 "'$name' of class '$persister_class': $EVAL_ERROR";
         }
         $self->{_persister}{$name} = $persister;
-        $self->log->is_debug
-            && $self->log->debug("Instantiated persister '$name' ok");
+        $self->log->debug( "Instantiated persister '$name' ok" );
     }
 }
 
@@ -681,24 +666,21 @@ sub _add_condition_config {
 
         foreach my $condition_config ( @{$c} ) {
             my $name = $condition_config->{name};
-            $self->log->is_debug
-                && $self->log->debug("Adding configuration for condition '$name'");
+            $self->log->debug( "Adding configuration for condition '$name'" );
             $self->{_condition_config}{$type}{$name} = $condition_config;
             my $condition_class = $condition_config->{class};
             unless ($condition_class) {
                 configuration_error "Condition '$name' must be associated ",
                     "with a class using the 'class' attribute";
             }
-            $self->log->is_debug
-                && $self->log->debug(
+            $self->log->debug(
                 "Trying to include condition class '$condition_class'");
             eval "require $condition_class";
             if ($EVAL_ERROR) {
                 configuration_error "Cannot include condition class ",
                     "'$condition_class': $EVAL_ERROR";
             }
-            $self->log->is_debug
-                && $self->log->debug(
+            $self->log->debug(
                 "Included condition '$name' class '$condition_class' ",
                 "ok; now try to instantiate condition..." );
             my $condition = eval { $condition_class->new($condition_config) };
@@ -707,8 +689,7 @@ sub _add_condition_config {
                     "Cannot create condition '$name': $EVAL_ERROR";
             }
             $self->{_conditions}{$type}{$name} = $condition;
-            $self->log->is_debug
-                && $self->log->debug("Instantiated condition '$name' ok");
+            $self->log->debug( "Instantiated condition '$name' ok" );
         }
     }
 }
@@ -770,8 +751,7 @@ sub _add_validator_config {
 
         for my $validator_config ( @{$v} ) {
             my $name = $validator_config->{name};
-            $self->log->is_debug
-                && $self->log->debug("Adding configuration for validator '$name'");
+            $self->log->debug( "Adding configuration for validator '$name'" );
             $self->{_validator_config}{$name} = $validator_config;
             my $validator_class = $validator_config->{class};
             unless ($validator_class) {
@@ -779,16 +759,14 @@ sub _add_validator_config {
                     "Validator '$name' must be associated with ",
                     "a class using the 'class' attribute.";
             }
-            $self->log->is_debug
-                && $self->log->debug(
+            $self->log->debug(
                 "Trying to include validator class '$validator_class'");
             eval "require $validator_class";
             if ($EVAL_ERROR) {
                 workflow_error
                     "Cannot include validator class '$validator_class': $EVAL_ERROR";
             }
-            $self->log->is_debug
-                && $self->log->debug(
+            $self->log->debug(
                 "Included validator '$name' class '$validator_class' ",
                 " ok; now try to instantiate validator..."
                 );
@@ -797,8 +775,7 @@ sub _add_validator_config {
                 workflow_error "Cannot create validator '$name': $EVAL_ERROR";
             }
             $self->{_validators}{$name} = $validator;
-            $self->log->is_debug
-                && $self->log->debug("Instantiated validator '$name' ok");
+            $self->log->debug( "Instantiated validator '$name' ok" );
         }
     }
 }
