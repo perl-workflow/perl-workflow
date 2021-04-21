@@ -516,6 +516,18 @@ $group is optional parameter.
 
 Returns: list of strings representing available actions
 
+### get\_action( $action\_name )
+
+Retrieves the action object associated with `$action_name` in the
+current workflow state. This will throw an exception if:
+
+- No workflow state exists with a name of the current state. (This is
+usually some sort of configuration error and should be caught at
+initialization time, so it should not happen.)
+- No action `$action_name` exists in the current state.
+- No action `$action_name` exists in the workflow universe.
+- One of the conditions for the action in this state is not met.
+
 ### get\_action\_fields( $action\_name )
 
 Return a list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow%3A%3AAction%3A%3AInputField) objects for the given
@@ -640,18 +652,6 @@ This is called by the inherited constructor and sets the
 `$current_state` value to the property `state` and uses the other
 non-state values from `\%config` to set parameters via the inherited
 `param()`.
-
-### \_get\_action( $action\_name )
-
-Retrieves the action object associated with `$action_name` in the
-current workflow state. This will throw an exception if:
-
-- No workflow state exists with a name of the current state. (This is
-usually some sort of configuration error and should be caught at
-initialization time, so it should not happen.)
-- No action `$action_name` exists in the current state.
-- No action `$action_name` exists in the workflow universe.
-- One of the conditions for the action in this state is not met.
 
 ### \_get\_workflow\_state( \[ $state \] )
 
