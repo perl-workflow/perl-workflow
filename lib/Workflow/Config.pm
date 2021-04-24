@@ -322,12 +322,6 @@ the 'type' and 'description' keys are at the top level
 
 =item *
 
-the 'extra_data' key holds an array of zero or more hashrefs with
-'table', 'field', 'class' and 'context' keys
-
-
-=item *
-
 'initial_state' key holds a string declaring the name of the initial state.
 by default, this value is 'INIITAL'.
 
