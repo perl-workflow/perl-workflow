@@ -6,84 +6,6 @@ use warnings;
 our $VERSION = '1.54';
 
 use base qw( Workflow::Condition );
-use Workflow::Factory qw( FACTORY );
-use English qw( -no_match_vars );
-use Log::Log4perl qw( get_logger );
-use Exception::Class;
-
-
-sub evaluate_condition {
-    my ( $self, $wf, $condition_name ) = @_;
-
-    my $factory;
-    if ( $wf->can('_factory') ) {
-        $factory = $wf->_factory();
-    } else {
-        $factory = FACTORY;
-    }
-
-    my $condition;
-
-    my $orig_condition = $condition_name;
-    my $opposite       = 0;
-
-    $self->log->is_debug
-        && $self->log->debug("Checking condition $condition_name");
-
-    if ( $condition_name =~ m{ \A ! }xms ) {
-
-        $orig_condition =~ s{ \A ! }{}xms;
-        $opposite = 1;
-        $self->log->is_debug
-            && $self->log->debug("Condition starts with a !: '$condition_name'");
-    }
-
-    # NOTE: CACHING IS NOT IMPLEMENTED/TESTED YET
-
-    $condition = $factory->get_condition( $orig_condition, $wf->type() );
-
-    my $result;
-    $self->log->is_debug
-        && $self->log->debug( q{Evaluating condition '}, $condition->name, q{'} );
-    eval { $result = $condition->evaluate($wf) };
-    if ($EVAL_ERROR) {
-
-        # Only stop on workflow_condition errors and bubble up anything else
-        if (!Exception::Class->caught('Workflow::Exception::Condition')) {
-            # We can use die here as it will be caught by the outer condition
-            (ref $EVAL_ERROR ne '') ? $EVAL_ERROR->rethrow() : die $EVAL_ERROR;
-        }
-
-        # TODO: We may just want to pass the error up without wrapping it...
-        $factory->{'_condition_result_cache'}->{$orig_condition} = 0;
-        if ( !$opposite ) {
-            $self->log->is_debug
-                && $self->log->debug("Condition '$condition_name' failed");
-            return 0;
-        } else {
-            $self->log->is_debug
-                && $self->log->debug(
-                "Condition '$condition_name' failed, but result is negated");
-            return 1;
-        }
-    } else {
-        $factory->{'_condition_result_cache'}->{$orig_condition} = $result
-            || 1;
-        if ($opposite) {
-            $self->log->is_debug
-                && $self->log->debug(
-                "Condition '$condition_name' OK, but result is negated");
-            return 0;
-        } else {
-            $self->log->is_debug
-                && $self->log->debug(
-                " Condition '$condition_name' OK and not negated");
-
-            # If the condition returned nothing, bump it to 1
-            return $result || 1;
-        }
-    }
-}
 
 1;
 
@@ -117,7 +39,8 @@ return the total number of successes. The result is then checked against
 the number needed, returning the boolean value needed by Workflow::State.
 
 B<Note:> This class is not used directly, but subclassed by your class
-that implements the C<evaluate()> method and calls methods declared here.
+that implements the C<evaluate()> method and calls the C<evaluate_condition>
+method to evaluate its nested conditions.
 
 =head1 SYNOPSIS
 
@@ -157,28 +80,9 @@ In workflow.xml:
 
 =cut
 
-=head1 IMPLEMENTATION DETAILS
+=head1 AUTHORS
 
-This wicked hack runs the condition half-outside of the Workflow framework.
-If the Workflow internals change, this may break.
-
-=head2 $self->evaluate_condition( $WORKFLOW, $CONDITION_NAME )
-
-The child object class that subclasses this object calls
-this method to evaluate a nested condition.
-
-If the condition name starts with an '!', the result of the condition
-is negated. Note that a side-effect of this is that the return
-value of the nested condition is ignored. Only the negated boolean-ness
-is preserved.
-
-This does implement a trick that is not a convention in the underlying
-Workflow library. By default, workflow conditions throw an error when
-the condition is false and just return when the condition is true. To
-allow for counting the true conditions, we also look at the return
-value here. If a condition returns zero or an undefined value, but
-did not throw an exception, we consider it to be '1'. Otherwise, we
-consider it to be the value returned.
+See L<Workflow>
 
 =head1 COPYRIGHT
 

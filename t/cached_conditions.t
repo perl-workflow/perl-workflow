@@ -19,13 +19,14 @@ my $wf = $factory->create_workflow( 'CachedCondition' );
 my $does_change;
 
 my @actions = $wf->get_current_actions();
-is(scalar @actions, 2, 'Exactly two actions available');
+is(scalar @actions, 2, 'Exactly two actions available')
+     or diag "got these:  @actions";
 my $old_actions = join q{, }, sort @actions;
 
 CHECK_TIME_CHANGE:
-for (my $i = 0; $i < 5; $i++) {
+for (my $i = 0; $i < 10; $i++) {
     my $curr_actions = join q{, }, sort ( $wf->get_current_actions() );
-    # diag $curr_actions;
+    #    diag "check_change: $curr_actions";
     if ($old_actions ne $curr_actions) {
         # the current action is not the one from before, this is good
         # as we need to recheck the conditions everytime someone wants
@@ -40,14 +41,14 @@ ok($does_change, 'Available actions change over time');
 
 $does_change = 0;
 CHECK_STATE_CHANGE:
-for (my $i = 0; $i < 5; $i++) {
+for (my $i = 0; $i < 10; $i++) {
     # execute a null action to go to the second state
     $wf->execute_action('FORWARD');
     # and go back again
     $wf->execute_action('BACK');
 
     my $curr_actions = join q{, }, sort ( $wf->get_current_actions() );
-    # diag $curr_actions;
+    #    diag "check_state: $curr_actions";
     if ($old_actions ne $curr_actions) {
         # the current action is not the one from before, this is good
         # as we need to recheck the conditions everytime someone wants
@@ -62,7 +63,8 @@ ok($does_change, 'Available actions change when changing states');
 is( $wf->state, 'INITIAL', 'workflow is in INITIAL state' );
 my $actions = join( ', ', sort $wf->get_current_actions() );
 ok( ( $actions =~ m/FORWARD,/ ) ,
-    'FORWARD action is available in workflow' );
+    'FORWARD action is available in workflow' )
+    or diag $actions;
 $wf->context->param( alternative => 'yes' );
 $actions = join( ', ', sort $wf->get_current_actions() );
 ok( ( $actions =~ m/FORWARD-ALT,/ ) ,
