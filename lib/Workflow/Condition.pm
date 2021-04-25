@@ -4,10 +4,14 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);
+use English qw( -no_match_vars );
+use Log::Log4perl qw( get_logger );
+use Workflow::Exception qw( workflow_error condition_error );
 
 $Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '1.53';
 
+my $log;
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
 
@@ -24,6 +28,139 @@ sub evaluate {
     my ($self) = @_;
     croak "Class ", ref($self), " must implement 'evaluate()'!\n";
 }
+
+
+sub evaluate_condition {
+    my ( $class, $wf, $condition_name) = @_;
+    $log ||= get_logger();
+    $wf->type;
+
+    my $factory = $wf->_factory();
+    my $orig_condition = $condition_name;
+    my $negation       = 0;
+    my $condition;
+
+    $log->is_debug
+        && $log->debug("Checking condition $condition_name");
+
+    if ( $condition_name =~ m{ \A ! }xms ) {
+
+        # this condition starts with a '!' and is thus supposed
+        # to return the negation of an original condition, whose
+        # name is the same except for the '!'
+        $orig_condition =~ s{ \A ! }{}xms;
+        $negation = 1;
+        $log->is_debug
+            && $log->debug(
+            "Condition starts with a ! (negation): '$condition_name'");
+    }
+
+    local $wf->{'_condition_result_cache'} =
+        $wf->{'_condition_result_cache'} || {};
+    if ( $Workflow::Condition::CACHE_RESULTS
+         && exists $wf->{'_condition_result_cache'}->{$orig_condition} ) {
+
+        # The condition has already been evaluated and the result
+        # has been cached
+        $log->is_debug
+            && $log->debug(
+            "Condition has been cached: '$orig_condition', cached result: ",
+            $wf->{'_condition_result_cache'}->{$orig_condition}
+            );
+        if ( !$negation ) {
+            $log->is_debug
+                && $log->debug("Negation is false.");
+            if ( !$wf->{'_condition_result_cache'}->{$orig_condition} )
+            {
+                $log->is_debug
+                    && $log->debug("Cached condition result is false.");
+            }
+            return $wf->{'_condition_result_cache'}->{$orig_condition};
+        } else {
+
+            # we have to return an error if the original cached
+            # condition did NOT fail
+            $log->is_debug
+                && $log->debug("Negation is true.");
+            if ( $wf->{'_condition_result_cache'}->{$orig_condition} ) {
+                $log->is_debug
+                    && $log->debug("Cached condition is true.");
+                return 0;
+            }
+            return 1;
+        }
+    } else {
+
+        # we did not evaluate the condition yet, we have to do
+        # it now
+        $condition = $wf->_factory()
+            ->get_condition( $orig_condition, $wf->type );
+        $log->is_debug
+            && $log->debug( "Evaluating condition '$orig_condition'" );
+        my $return_value;
+        eval { $return_value = $condition->evaluate($wf) };
+        if ($EVAL_ERROR) {
+
+            # Check if this is a Workflow::Exception::Condition
+            if (Exception::Class->caught('Workflow::Exception::Condition')) {
+                $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
+                if ( !$negation ) {
+                    $log->is_debug
+                        && $log->debug("condition '$orig_condition' failed due to: $EVAL_ERROR");
+                    return 0;
+                } else {
+                    $log->is_debug
+                        && $log->debug("negated condition '$orig_condition' failed due to ' . $EVAL_ERROR");
+                    return 1;
+                }
+                # unreachable
+
+            } else {
+                $log->is_debug
+                    && $log->debug("Got uncatchable exception in condition $condition_name ");
+
+                # if EVAL_ERROR is an execption object rethrow it
+                $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne '');
+
+                # if it is a string (bubbled up from die/croak), make an Exception Object
+                # For briefness, we just send back the first line of EVAL
+                my @t = split /\n/, $EVAL_ERROR;
+                my $ee = shift @t;
+
+                Exception::Class::Base->throw( error
+                                               => "Got unknown exception while handling condition '$condition_name' / " . $ee );
+                # unreachable
+
+            }
+            # unreachable
+
+        } else {
+            $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
+            if ($negation) {
+
+                $log->is_debug
+                    && $log->debug(
+                    "condition '$orig_condition' ".
+                    "did NOT fail but negation requested");
+
+                return 0;
+            } else {
+
+                $log->is_debug &&
+                    $log->debug(
+                        "condition '$orig_condition' succeeded");
+                return $return_value;
+            }
+            # unreachable
+
+        }
+        # unreachable
+
+    }
+    # unreachable
+}
+
+
 
 1;
 
@@ -198,7 +335,7 @@ change between the two evaluate() calls.
 
 Caching is also used with an inverted condition, which you can specify
 in the definition using C<<condition name="!some_condition">>.
-This condition returns exactly the opposite of the original one, i.e.
+This condition returns the negation of the original one, i.e.
 if the original condition fails, this one does not and the other way
 round. As caching is used, you can model "yes/no" decisions using this
 feature - if you have both C<<condition name="some_condition">> and
@@ -214,6 +351,27 @@ to zero (0):
 All versions before 1.49 used a mechanism that effectively caused global
 state. To address the problems that resulted (see GitHub issues #9 and #7),
 1.49 switched to a new mechanism with a cache per workflow instance.
+
+
+=head3 $class->evaluate_condition( $WORKFLOW, $CONDITION_NAME )
+
+Users call this method to evaluate a condition; subclasses call this
+method to evaluate a nested condition.
+
+If the condition name starts with an '!', the result of the condition
+is negated. Note that a side-effect of this is that the return
+value of the condition is ignored. Only the negated boolean-ness
+is preserved.
+
+This does implement a trick that is not a convention in the underlying
+Workflow library: by default, workflow conditions throw an error when
+the condition is false and just return when the condition is true. To
+allow for counting the true conditions, we also look at the return
+value here. If a condition returns zero or an undefined value, but
+did not throw an exception, we consider it to be '1'. Otherwise, we
+consider it to be the value returned.
+
+
 
 =head1 COPYRIGHT
 

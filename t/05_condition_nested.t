@@ -6,8 +6,10 @@ use lib qw(../lib lib ../t t);
 
 use Test::More;
 
+
 require Workflow::Factory;
 require Workflow::Persister::DBI;
+
 
 my $debug = $ENV{TEST_DEBUG};
 
@@ -24,6 +26,10 @@ if ($debug) {
         unlink($LOG_FILE);
     }
     Log::Log4perl::init($CONF_FILE);
+}
+else {
+    no warnings 'once';
+    Log::Log4perl::easy_init($Log::Log4perl::OFF);
 }
 
 plan tests => 26;
@@ -71,6 +77,8 @@ is( $workflow->state, 'INITIALIZED', 'initialized state' );
 #diag( "Available actions: " . join(', ', $workflow->get_current_actions));
 $workflow->execute_action('test_greedy_or');
 is( $workflow->state, 'TEST_GREEDY_OR', 'wfcond state after test_greedy_or' );
+
+Log::Log4perl::get_logger()->error('START OFFENDING TEST');
 $workflow->execute_action('greedy_or_1');
 is( $workflow->state, 'INITIALIZED', 'wfcond state after greedy_or_1' )
     or $workflow->execute_action('ack_subtest_fail');
