@@ -8,7 +8,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::SequenceId::VERSION = '1.53';
+$Workflow::Persister::DBI::SequenceId::VERSION = '1.54';
 
 my @FIELDS = qw( log sequence_name sequence_select );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -54,7 +54,7 @@ Workflow::Persister::DBI::SequenceId - Persister to fetch ID from a sequence
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.54 of this package
 
 =head1 SYNOPSIS
 

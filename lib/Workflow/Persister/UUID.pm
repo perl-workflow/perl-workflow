@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use Data::UUID;
 
-$Workflow::Persister::UUID::VERSION = '1.53';
+$Workflow::Persister::UUID::VERSION = '1.54';
 
 sub new {
     my ( $class, $params ) = @_;
@@ -31,7 +31,7 @@ Workflow::Persister::UUID - Persister to generate Universally Unique Identifiers
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.54 of this package
 
 =head1 SYNOPSIS
 

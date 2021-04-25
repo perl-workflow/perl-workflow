@@ -1,5 +1,15 @@
 # Revision history for the Workflow Perl Distribution
 
+## 1.54 2021-04-25 Minor feature release, update not required
+
+- The existing private API: `Workflow->_get_action()` has been made public as: `get_action()` via PR [#56](https://github.com/jonasbn/perl-workflow/pull/56) addressing issue [#54](https://github.com/jonasbn/perl-workflow/issues/54), a private version is still available as `_get_action()` ensuring backwards compatibility. The change should improve and ease implementations where actions are consumed
+
+- The existing methods: `fields()`, `optional_fields()` and `required_fields` have all been made public PR [#57](https://github.com/jonasbn/perl-workflow/pull/57) addressing issue [#55](https://github.com/jonasbn/perl-workflow/issues/55) these methods provide information a UI or other consumer of the workflow could use for user interaction as for issue [#54](https://github.com/jonasbn/perl-workflow/issues/54) and PR: [#56](https://github.com/jonasbn/perl-workflow/pull/56) mentioned above
+
+- The implementation of caching for evaluation of nested has been revisted and improved via PR [#90](https://github.com/jonasbn/perl-workflow/pull/90)
+
+- A minor issue has been corrected in the documentation was corrected via PR [#111](https://github.com/jonasbn/perl-workflow/pull/111), it seems some design ideas had snuck into the documentation a long time ago, without ever being implemented
+
 ## 1.53 2021-04-09 Minor feature release, update not required
 
 - This release changes logging granularity: instead of using the Log::Log4perl root logger for all logging output, use the instance class for logging in object methods as recommended [in the Log4perl documentation](https://metacpan.org/pod/Log::Log4perl#Pitfalls-with-Categories). This change allows logging from workflow to be suppressed in your application by changing the logging level for the `Workflow` category by setting `log4perl.category.Workflow = OFF` in your logging configuration. Please note that if you created classes derived from Workflow, the logger will use those class names as categories. To suppress output entirely, those categories need their own logging configuration.  
