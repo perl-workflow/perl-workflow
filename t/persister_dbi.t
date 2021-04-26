@@ -84,12 +84,11 @@ my ( $wf );
 
     # Load history back from the database
     $handle->{mock_add_resultset} = [
-        [ qw/ workflow_id action description state
-          workflow_user history_date
-          workflow_hist_id / ],
-        [ $wf_id, "Create workflow", "Create new workflow", 'INITIAL',
-          "n/a", $history->[1]->{bound_params}->[5],
-          $history->[1]->{bound_params}->[6] ],
+        [ qw/ workflow_hist_id workflow_id action description state
+          workflow_user history_date / ],
+        [ $history->[1]->{bound_params}->[6],
+          $wf_id, "Create workflow", "Create new workflow", 'INITIAL',
+          "n/a", $history->[1]->{bound_params}->[5], ]
         ];
     my @hist = $wf->get_history;
     $handle->{mock_clear_history} = 1;
