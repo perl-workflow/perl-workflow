@@ -34,7 +34,7 @@ jobs:
       - name: Install author dependencies
         run: dzil authordeps | cpm install -g -
       - name: Install dependencies
-        run: dzil listdeps --develop | cpm install -g -
+        run: dzil listdeps --develop | cpanm
       - name: Build dist
         run: dzil build --no-tgz --in build
       - name: Install dependencies
