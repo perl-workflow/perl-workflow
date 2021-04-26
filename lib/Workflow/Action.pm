@@ -269,7 +269,7 @@ Provide function validate_config() in your action class.
 =back
 
 Then, this function will be called with all the acton attributes when
-it is parsed.  For exmaple, if your action XML looks like this:
+it is parsed.  For example, if your action XML looks like this:
 
   <action name="BEGIN" class="My::Class" when="NOW">
 
