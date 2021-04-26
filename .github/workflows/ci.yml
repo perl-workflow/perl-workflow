@@ -30,11 +30,11 @@ jobs:
       - name: Log perl version
         run: perl -V
       - name: Install Dist::Zilla & Devel::Cover::Report::Coveralls
-        run: cpm install Dist::Zilla Devel::Cover::Report::Coveralls
+        run: cpm install -g Dist::Zilla Devel::Cover::Report::Coveralls
       - name: Install author dependencies
-        run: dzil authordeps | cpm install -
+        run: dzil authordeps | cpm install -g -
       - name: Install dependencies
-        run: dzil listdeps --develop | cpm install -
+        run: dzil listdeps --develop | cpm install -g -
       - name: Build dist
         run: dzil build --no-tgz --in build
       - name: Install dependencies
