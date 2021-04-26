@@ -29,19 +29,19 @@ jobs:
       - uses: shogo82148/actions-setup-perl@v1
       - name: Log perl version
         run: perl -V
-      - name: Install Dist::Zilla
-        run: cpanm Dist::Zilla
+      - name: Install Dist::Zilla & Devel::Cover::Report::Coveralls
+        run: cpm install Dist::Zilla Devel::Cover::Report::Coveralls
       - name: Install author dependencies
-        run: dzil authordeps | cpanm
+        run: dzil authordeps | cpm install -
       - name: Install dependencies
-        run: dzil listdeps --develop | cpanm
+        run: dzil listdeps --develop | cpm install -
       - name: Build dist
         run: dzil build --no-tgz --in build
       - name: Install dependencies
         run: |
           cd build
           cpanm --installdeps --local-lib ${GITHUB_WORKSPACE}/local --with-all-features --with-develop --with-suggests .
-      - name: Install Devel::Cover::Report::Coveralls
+      - name: Install
         run: cpanm Devel::Cover::Report::Coveralls
       - name: Run tests
         run: |
@@ -75,6 +75,7 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build_results
+          path: build
       - name: Setup Perl
         uses: shogo82148/actions-setup-perl@v1
         with:
@@ -82,9 +83,9 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cpanm --installdeps --with-all-features .
+        run: cd build && cpanm --installdeps --with-all-features .
       - name: Run tests
-        run: prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
   macos:
     needs: build
@@ -96,12 +97,13 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: build_results
+          path: build
       - name: Setup Perl
         uses: shogo82148/actions-setup-perl@v1
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cpanm --installdeps --with-all-features .
+        run: cd build && cpanm --installdeps --with-all-features .
       - name: Run tests
-        run: prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
