@@ -5,7 +5,7 @@ version: 2
 updates:
   # Enable version updates for Actions
   - package-ecosystem: "github-actions"
-    # Look for a `.github/workflows` in the `root` directory
+    # Look for `.github/workflows` in the `root` directory
     directory: "/"
     # Check for updates once a week
     schedule:
