@@ -105,5 +105,5 @@ jobs:
       - name: Install dependencies
         run: cd build && cpanm --installdeps --with-all-features .
       - name: Run tests
-        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
 
