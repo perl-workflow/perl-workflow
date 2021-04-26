@@ -1,0 +1,109 @@
+name: build and test
+
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - '*'
+  pull_request:
+
+env:
+  PERL_CPANM_OPT: "--quiet --notest"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      AUTHOR_TESTING: 1
+      EXTENDED_TESTING: 1
+      RELEASE_TESTING: 1
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+      - name: Extract author information
+        run: |
+          echo AUTHOR_NAME="$(git log -1 ${GITHUB_REF} --pretty='%aN')" >> $GITHUB_ENV
+          echo AUTHOR_EMAIL="$(git log -1 ${GITHUB_REF} --pretty='%aE')" >> $GITHUB_ENV
+      - uses: shogo82148/actions-setup-perl@v1
+      - name: Log perl version
+        run: perl -V
+      - name: Install Dist::Zilla & Devel::Cover::Report::Coveralls
+        run: cpm install -g Dist::Zilla Devel::Cover::Report::Coveralls
+      - name: Install author dependencies
+        run: dzil authordeps | cpm install -g -
+      - name: Install dependencies
+        run: dzil listdeps --develop | cpanm
+      - name: Build dist
+        run: dzil build --no-tgz --in build
+      - name: Install dependencies
+        run: |
+          cd build
+          cpanm --installdeps --local-lib ${GITHUB_WORKSPACE}/local --with-all-features --with-develop --with-suggests .
+      - name: Install
+        run: cpanm Devel::Cover::Report::Coveralls
+      - name: Run tests
+        run: |
+          cd build
+          [ -d xt ] && prove --timer --lib --recurse --jobs $(nproc) --shuffle xt
+          HARNESS_PERL_SWITCHES=-MDevel::Cover=+ignore,^t/ prove --timer --lib --recurse --jobs $(nproc) --shuffle t/
+      - name: Report coverage info to Coveralls
+        run: |
+          cd build
+          cover -report coveralls
+          rm -rf cover_db
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload build results
+        uses: actions/upload-artifact@v2
+        with:
+          name: build_results
+          path: build
+
+  linux:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        perl: [ "5.10", "5.14", "5.20", "5.26", "5.30" ]
+    name: linux ${{ matrix.perl }}
+
+
+    steps:
+      - name: Download build results
+        uses: actions/download-artifact@v2
+        with:
+          name: build_results
+          path: build
+      - name: Setup Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+      - name: Log perl information
+        run: perl -V
+      - name: Install dependencies
+        run: cd build && cpanm --installdeps --with-all-features .
+      - name: Run tests
+        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+
+  macos:
+    needs: build
+    runs-on: macos-latest
+    name: macos
+
+    steps:
+      - name: Download build results
+        uses: actions/download-artifact@v2
+        with:
+          name: build_results
+          path: build
+      - name: Setup Perl
+        uses: shogo82148/actions-setup-perl@v1
+      - name: Log perl information
+        run: perl -V
+      - name: Install dependencies
+        run: cd build && cpanm --installdeps --with-all-features .
+      - name: Run tests
+        run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
+
