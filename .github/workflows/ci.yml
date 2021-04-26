@@ -67,19 +67,41 @@ jobs:
     strategy:
       matrix:
         perl: [ "5.10", "5.14", "5.20", "5.26", "5.30" ]
+    name: linux ${{ matrix.perl }}
+
 
     steps:
       - name: Download build results
         uses: actions/download-artifact@v2
         with:
           name: build_results
-          path: build
+      - name: Setup Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: ${{ matrix.perl }}
+      - name: Log perl information
+        run: perl -V
+      - name: Install dependencies
+        run: cpanm --installdeps --with-all-features .
+      - name: Run tests
+        run: prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+
+  macos:
+    needs: build
+    runs-on: macos-latest
+    name: macos
+
+    steps:
+      - name: Download build results
+        uses: actions/download-artifact@v2
+        with:
+          name: build_results
       - name: Setup Perl
         uses: shogo82148/actions-setup-perl@v1
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpanm --installdeps --with-all-features .
+        run: cpanm --installdeps --with-all-features .
       - name: Run tests
-        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
