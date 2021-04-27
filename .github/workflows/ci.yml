@@ -107,3 +107,25 @@ jobs:
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
 
+  windows:
+    needs: build
+    runs-on: windows-latest
+    name: windows
+
+    steps:
+      - name: Download build results
+        uses: actions/download-artifact@v2
+        with:
+          name: build_results
+          path: build
+      - name: Setup Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          distribution: strawberry
+      - name: Log perl information
+        run: perl -V
+      - name: Install dependencies
+        run: cd build && cpanm --installdeps --with-all-features .
+      - name: Run tests
+        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+
