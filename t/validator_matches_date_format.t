@@ -6,6 +6,10 @@ use Test::Exception;
 use DateTime;
 use Test::More;
 
+use Log::Log4perl qw(:easy);
+Log::Log4perl->easy_init($OFF);
+
+
 require_ok( 'Workflow::Validator::MatchesDateFormat');
 
 my $validator;
