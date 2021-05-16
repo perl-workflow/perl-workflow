@@ -37,58 +37,26 @@ sub evaluate_condition {
 
     my $factory = $wf->_factory();
     my $orig_condition = $condition_name;
-    my $negation       = 0;
     my $condition;
 
     $log->is_debug
         && $log->debug("Checking condition $condition_name");
-
-    if ( $condition_name =~ m{ \A ! }xms ) {
-
-        # this condition starts with a '!' and is thus supposed
-        # to return the negation of an original condition, whose
-        # name is the same except for the '!'
-        $orig_condition =~ s{ \A ! }{}xms;
-        $negation = 1;
-        $log->is_debug
-            && $log->debug(
-            "Condition starts with a ! (negation): '$condition_name'");
-    }
 
     local $wf->{'_condition_result_cache'} =
         $wf->{'_condition_result_cache'} || {};
     if ( $Workflow::Condition::CACHE_RESULTS
          && exists $wf->{'_condition_result_cache'}->{$orig_condition} ) {
 
+        my $cache_value = $wf->{'_condition_result_cache'}->{$orig_condition};
         # The condition has already been evaluated and the result
         # has been cached
         $log->is_debug
             && $log->debug(
             "Condition has been cached: '$orig_condition', cached result: ",
-            $wf->{'_condition_result_cache'}->{$orig_condition}
+            $cache_value || ''
             );
-        if ( !$negation ) {
-            $log->is_debug
-                && $log->debug("Negation is false.");
-            if ( !$wf->{'_condition_result_cache'}->{$orig_condition} )
-            {
-                $log->is_debug
-                    && $log->debug("Cached condition result is false.");
-            }
-            return $wf->{'_condition_result_cache'}->{$orig_condition};
-        } else {
 
-            # we have to return an error if the original cached
-            # condition did NOT fail
-            $log->is_debug
-                && $log->debug("Negation is true.");
-            if ( $wf->{'_condition_result_cache'}->{$orig_condition} ) {
-                $log->is_debug
-                    && $log->debug("Cached condition is true.");
-                return 0;
-            }
-            return 1;
-        }
+        return $cache_value;
     } else {
 
         # we did not evaluate the condition yet, we have to do
@@ -104,15 +72,9 @@ sub evaluate_condition {
             # Check if this is a Workflow::Exception::Condition
             if (Exception::Class->caught('Workflow::Exception::Condition')) {
                 $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
-                if ( !$negation ) {
-                    $log->is_debug
-                        && $log->debug("condition '$orig_condition' failed due to: $EVAL_ERROR");
-                    return 0;
-                } else {
-                    $log->is_debug
-                        && $log->debug("negated condition '$orig_condition' failed due to ' . $EVAL_ERROR");
-                    return 1;
-                }
+                $log->is_debug
+                    && $log->debug("condition '$orig_condition' failed due to: $EVAL_ERROR");
+                return 0;
                 # unreachable
 
             } else {
@@ -136,23 +98,10 @@ sub evaluate_condition {
 
         } else {
             $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
-            if ($negation) {
-
-                $log->is_debug
-                    && $log->debug(
-                    "condition '$orig_condition' ".
-                    "did NOT fail but negation requested");
-
-                return 0;
-            } else {
-
-                $log->is_debug &&
-                    $log->debug(
-                        "condition '$orig_condition' succeeded");
-                return $return_value;
-            }
-            # unreachable
-
+            $log->is_debug &&
+                $log->debug(
+                    "condition '$orig_condition' succeeded");
+            return $return_value;
         }
         # unreachable
 

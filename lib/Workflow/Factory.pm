@@ -44,6 +44,7 @@ sub import {
 require Workflow;
 require Workflow::Action;
 require Workflow::Condition;
+require Workflow::Condition::Negated;
 require Workflow::Config;
 require Workflow::Context;
 require Workflow::History;
@@ -736,6 +737,21 @@ sub get_condition {
     # the current Workflow type.
     if ( not defined $condition ) {
         $condition = $self->{_conditions}{'default'}{$name};
+    }
+
+    if ( not defined $condition
+         and $name =~ m/ \A ! /msx ) {
+        my $negated = $name;
+        $negated =~ s/ \A ! //gx;
+
+        if ( $self->get_condition( $negated, $type ) ) {
+            $condition = Workflow::Condition::Negated->new(
+                { name => $name }
+                );
+
+            $type = 'default' unless defined $type;
+            $self->{_conditions}{$type}{$name} = $condition;
+        }
     }
 
     unless ($condition) {

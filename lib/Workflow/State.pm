@@ -6,7 +6,6 @@ use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Condition;
 use Workflow::Condition::Evaluate;
-use Workflow::Condition::Negated;
 use Workflow::Exception qw( workflow_error condition_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
@@ -297,26 +296,12 @@ sub _create_condition_objects {
                 }
                 );
         } else {
-            if ( $condition_info->{name} =~ m{ \A ! }xms ) {
-                $self->log->is_debug
-                    && $self->log->debug(
-                    "Condition starts with !, pushing hash with name only");
-
-                # push a hashref only, not a real object
-                # the real object will be gotten from the factory
-                # if needed in evaluate_action
-                push @condition_objects,
-                    Workflow::Condition::Negated->new(
-                        { 'name' => $condition_info->{name} }
-                    );
-            } else {
-                $self->log->is_info
-                    && $self->log->info(
-                    "Fetching condition '$condition_info->{name}'");
-                push @condition_objects,
-                    $self->_factory()
-                    ->get_condition( $condition_info->{name}, $self->type() );
-            }
+            $self->log->is_info
+                && $self->log->info(
+                "Fetching condition '$condition_info->{name}'");
+            push @condition_objects,
+                $self->_factory()
+                ->get_condition( $condition_info->{name}, $self->type() );
         }
     }
     return @condition_objects;
