@@ -6,7 +6,6 @@ use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Condition;
 use Workflow::Condition::Evaluate;
-use Workflow::Condition::Negated;
 use Workflow::Exception qw( workflow_error condition_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
