@@ -6,6 +6,7 @@ use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Condition;
 use Workflow::Condition::Evaluate;
+use Workflow::Condition::Negated;
 use Workflow::Exception qw( workflow_error condition_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
@@ -94,12 +95,7 @@ sub evaluate_action {
 
     my @conditions = $self->get_conditions($action_name);
     foreach my $condition (@conditions) {
-        my $condition_name;
-        if ( exists $condition->{name} ) {    # hash only, no object
-            $condition_name = $condition->{name};
-        } else {
-            $condition_name = $condition->name;
-        }
+        my $condition_name = $condition->name;
 
         my $rv;
         eval {
@@ -310,7 +306,9 @@ sub _create_condition_objects {
                 # the real object will be gotten from the factory
                 # if needed in evaluate_action
                 push @condition_objects,
-                    { 'name' => $condition_info->{name} };
+                    Workflow::Condition::Negated->new(
+                        { 'name' => $condition_info->{name} }
+                    );
             } else {
                 $self->log->is_info
                     && $self->log->info(
