@@ -6,7 +6,7 @@ use base qw( Workflow::Base );
 use Carp qw(croak);
 use English qw( -no_match_vars );
 use Log::Log4perl qw( get_logger );
-use Workflow::Exception qw( workflow_error condition_error );
+use Workflow::Exception qw( workflow_error );
 
 $Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '1.55';
@@ -43,6 +43,7 @@ sub evaluate_condition {
 
     local $wf->{'_condition_result_cache'} =
         $wf->{'_condition_result_cache'} || {};
+
     if ( $Workflow::Condition::CACHE_RESULTS
          && exists $wf->{'_condition_result_cache'}->{$orig_condition} ) {
 
@@ -62,46 +63,11 @@ sub evaluate_condition {
         $condition = $wf->_factory()
             ->get_condition( $orig_condition, $wf->type );
         $log->debug( "Evaluating condition '$orig_condition'" );
-        my $return_value;
-        eval { $return_value = $condition->evaluate($wf) };
-        if ($EVAL_ERROR) {
+        my $return_value = $condition->evaluate($wf);
+        $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
 
-            # Check if this is a Workflow::Exception::Condition
-            if (Exception::Class->caught('Workflow::Exception::Condition')) {
-                $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
-                $log->debug(
-                    "condition '$orig_condition' failed due to: $EVAL_ERROR");
-                return 0;
-                # unreachable
-
-            } else {
-                $log->debug("Got uncatchable exception in condition $condition_name ");
-
-                # if EVAL_ERROR is an execption object rethrow it
-                $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne '');
-
-                # if it is a string (bubbled up from die/croak), make an Exception Object
-                # For briefness, we just send back the first line of EVAL
-                my @t = split /\n/, $EVAL_ERROR;
-                my $ee = shift @t;
-
-                Exception::Class::Base->throw( error
-                                               => "Got unknown exception while handling condition '$condition_name' / " . $ee );
-                # unreachable
-
-            }
-            # unreachable
-
-        } else {
-            $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
-            $log->debug("condition '$orig_condition' succeeded; returned: ",
-                        $return_value ? 'true' : 'false');
-            return $return_value;
-        }
-        # unreachable
-
+        return $return_value;
     }
-    # unreachable
 }
 
 
