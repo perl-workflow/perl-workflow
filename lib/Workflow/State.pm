@@ -27,6 +27,17 @@ sub get_conditions {
     return @{ $self->{_conditions}{$action_name} };
 }
 
+sub get_action {
+    my ( $self, $wf, $action_name ) = @_;
+    my $common_config =
+        $self->_factory->get_action_config($wf, $action_name);
+    my $state_config  = $self->{_actions}{$action_name};
+    my $config        = { %{$common_config}, %{$state_config} };
+    my $action_class  = $common_config->{class};
+
+    return $action_class->new( $wf, $config );
+}
+
 sub contains_action {
     my ( $self, $action_name ) = @_;
     return $self->{_actions}{$action_name};
@@ -449,6 +460,14 @@ stop automatic execution if it does not have a single action to execute.
 Returns a list of L<Workflow::Condition> objects for action
 C<$action_name>. Throws exception if object does not contain
 C<$action_name> at all.
+
+=head3 get_action( $workflow, $action_name )
+
+Returns an L<Workflow::Action> instance initialized using both the
+global configuration provided to the named action in the "action
+configuration" provided to the factory as well as any configuration
+specified as part of the listing of actions in the state of the
+workflow declaration.
 
 =head3 contains_action( $action_name )
 

@@ -577,21 +577,21 @@ sub _add_action_config {
     }
 }
 
-sub get_action {
+sub get_action_config {
     my ( $self, $wf, $action_name ) = @_;
-    my $config;
-
-    # Check for a specific action type.
-    $config = $self->{_action_config}{ $wf->type }{$action_name};
-
-    # Check for a default if no type is available.
+    my $config = $self->{_action_config}{ $wf->type }{$action_name};
     $config = $self->{_action_config}{default}{$action_name}
-        if not keys %{$config};
+        unless ($config and %{$config});
 
     unless ($config) {
         workflow_error "No action with name '$action_name' available";
     }
+    return $config;
+}
 
+sub get_action {
+    my ( $self, $wf, $action_name ) = @_;
+    my $config       = $self->get_action_config( $wf, $action_name );;
     my $action_class = $config->{class};
     return $action_class->new( $wf, $config );
 }
@@ -1000,7 +1000,7 @@ object itself. Under the covers it calls this.
 
 Returns: list of L<Workflow::History> objects
 
-=head3 get_action( $workflow, $action_name )
+=head3 get_action( $workflow, $action_name ) [ deprecated ]
 
 Retrieves the action C<$action_name> from workflow C<$workflow>. Note
 that this does not do any checking as to whether the action is proper
@@ -1010,7 +1010,15 @@ propriety of the action) to instantiate new actions.
 
 Throws exception if no action with name C<$action_name> available.
 
-Returns: L<Workflow::Action> object
+=head3 get_action_config( $workflow, $action_name )
+
+Retrieves the configuration for action C<$action_name> as specified in
+the actions configuration file, with the keys listed in
+L<the 'action' section of Workflow::Config|Workflow::Config/"action">
+
+Throws exception if no action with name C<$action_name> available.
+
+Returns: A hash with the configuration as its keys.
 
 =head3 get_persister( $persister_name )
 

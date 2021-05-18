@@ -195,6 +195,9 @@ sub run_state_tests{
   @actions = $wf_state->get_available_action_names( $wf2 );
   is( (scalar @actions), 2, 'Got back two available actions.');
   ok(all { defined $_ } qw(TIX_EDIT TIX_COMMENT), 'Got TIX_EDIT and TIX_COMMENT as available actions.');
+
+  $wf_action = $wf->get_action( 'TIX_COMMENT' );
+  is( $wf_action->index, 42, 'Got config specified in State' );
 }
 
 'I am true!';

@@ -12,7 +12,7 @@
 
  <state name="TIX_CREATED">
      <description>State of ticket after it has been created</description>
-     <action name="TIX_COMMENT">
+     <action name="TIX_COMMENT" index="42">
        <resulting_state return="never" state="TIX_COMMENT" />
        <resulting_state return="*" state="NOCHANGE" />
      </action>

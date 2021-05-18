@@ -92,7 +92,7 @@ sub get_action {
     $self->log->is_debug
         && $self->log->debug("Action '$action_name' exists in state '$state'");
 
-    my $action = $self->_factory()->get_action( $self, $action_name );
+    my $action = $self->_get_workflow_state()->get_action( $self, $action_name );
 
     # This will throw an exception which we want to bubble up
     $wf_state->evaluate_action( $self, $action_name );
