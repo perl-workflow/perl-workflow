@@ -19,7 +19,8 @@ $VAR1 = {
                        'action' => [
                                    {
                                      'name' => 'TIX_COMMENT',
-                                     'resulting_state' => 'NOCHANGE'
+                                     'resulting_state' => 'NOCHANGE',
+                                     'index' => '42'
                                    },
                                    {
                                      'name' => 'TIX_EDIT',

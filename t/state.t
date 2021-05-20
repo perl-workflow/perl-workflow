@@ -3,7 +3,7 @@
 use strict;
 use lib qw(../lib lib ../t t);
 use TestUtil;
-use Test::More  tests => 21;
+use Test::More  tests => 22;
 
 require_ok( 'Workflow::State' );
 
