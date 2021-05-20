@@ -105,12 +105,7 @@ sub evaluate_action {
 
     my @conditions = $self->get_conditions($action_name);
     foreach my $condition (@conditions) {
-        my $condition_name;
-        if ( exists $condition->{name} ) {    # hash only, no object
-            $condition_name = $condition->{name};
-        } else {
-            $condition_name = $condition->name;
-        }
+        my $condition_name = $condition->name;
 
         my $rv;
         eval {
@@ -312,24 +307,12 @@ sub _create_condition_objects {
                 }
                 );
         } else {
-            if ( $condition_info->{name} =~ m{ \A ! }xms ) {
-                $self->log->is_debug
-                    && $self->log->debug(
-                    "Condition starts with !, pushing hash with name only");
-
-                # push a hashref only, not a real object
-                # the real object will be gotten from the factory
-                # if needed in evaluate_action
-                push @condition_objects,
-                    { 'name' => $condition_info->{name} };
-            } else {
-                $self->log->is_info
-                    && $self->log->info(
-                    "Fetching condition '$condition_info->{name}'");
-                push @condition_objects,
-                    $self->_factory()
-                    ->get_condition( $condition_info->{name}, $self->type() );
-            }
+            $self->log->is_info
+                && $self->log->info(
+                "Fetching condition '$condition_info->{name}'");
+            push @condition_objects,
+                $self->_factory()
+                ->get_condition( $condition_info->{name}, $self->type() );
         }
     }
     return @condition_objects;
