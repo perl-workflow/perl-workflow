@@ -32,8 +32,7 @@ sub init {
             "specified in the 'path' key of the configuration ",
             "(given: '$params->{path}')";
     }
-    $self->log->is_info
-        && $self->log->info(
+    $self->log->info(
         "Using path for workflows and histories '$params->{path}'");
     $self->path( $params->{path} );
 }
@@ -43,8 +42,7 @@ sub create_workflow {
     my $generator = $self->workflow_id_generator;
     my $wf_id     = $generator->pre_fetch_id();
     $wf->id($wf_id);
-    $self->log->is_debug
-        && $self->log->debug("Generated workflow ID '$wf_id'");
+    $self->log->debug("Generated workflow ID '$wf_id'");
     $self->_serialize_workflow($wf);
     my $full_history_path = $self->_get_history_path($wf);
     mkdir( $full_history_path, 0777 )
@@ -56,14 +54,12 @@ sub create_workflow {
 sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
     my $full_path = $self->_get_workflow_path($wf_id);
-    $self->log->is_debug
-        && $self->log->debug("Checking to see if workflow exists in '$full_path'");
+    $self->log->debug("Checking to see if workflow exists in '$full_path'");
     unless ( -f $full_path ) {
         $self->log->error("No file at path '$full_path'");
         persist_error "No workflow with ID '$wf_id' is available";
     }
-    $self->log->is_debug
-        && $self->log->debug("File exists, reconstituting workflow");
+    $self->log->debug("File exists, reconstituting workflow");
     my $wf_info = eval { $self->constitute_object($full_path) };
     if ($EVAL_ERROR) {
         persist_error "Cannot reconstitute data from file for ",
@@ -81,22 +77,18 @@ sub create_history {
     my ( $self, $wf, @history ) = @_;
     my $generator   = $self->history_id_generator;
     my $history_dir = $self->_get_history_path($wf);
-    $self->log->is_info
-        && $self->log->info("Will use directory '$history_dir' for history");
+    $self->log->info("Will use directory '$history_dir' for history");
     foreach my $history (@history) {
         if ( $history->is_saved ) {
-            $self->log->is_debug
-                && $self->log->debug("History object saved, skipping...");
+            $self->log->debug("History object saved, skipping...");
             next;
         }
-        $self->log->is_debug
-            && $self->log->debug("History object unsaved, continuing...");
+        $self->log->debug("History object unsaved, continuing...");
         my $history_id = $generator->pre_fetch_id();
         $history->id($history_id);
         my $history_file = catfile( $history_dir, $history_id );
         $self->serialize_object( $history_file, $history );
-        $self->log->is_info
-            && $self->log->info("Created history object '$history_id' ok");
+        $self->log->info("Created history object '$history_id' ok");
         $history->set_saved();
     }
 }
@@ -104,9 +96,7 @@ sub create_history {
 sub fetch_history {
     my ( $self, $wf ) = @_;
     my $history_dir = $self->_get_history_path($wf);
-    $self->log->is_debug
-        && $self->log->debug(
-        "Trying to read history files from dir '$history_dir'");
+    $self->log->debug("Trying to read history files from dir '$history_dir'");
     opendir( HISTORY, $history_dir )
         || persist_error "Cannot read history from '$history_dir': $!";
     my @history_files = grep { -f $_ }
@@ -115,8 +105,7 @@ sub fetch_history {
     my @histories = ();
 
     foreach my $history_file (@history_files) {
-        $self->log->is_debug
-            && $self->log->debug("Reading history from file '$history_file'");
+        $self->log->debug("Reading history from file '$history_file'");
         my $history = $self->constitute_object($history_file);
         $history->set_saved();
         push @histories, $history;
@@ -128,8 +117,7 @@ sub _serialize_workflow {
     my ( $self, $wf ) = @_;
     local $Data::Dumper::Indent = 1;
     my $full_path = $self->_get_workflow_path( $wf->id );
-    $self->log->is_debug
-        && $self->log->debug("Trying to write workflow to '$full_path'");
+    $self->log->debug("Trying to write workflow to '$full_path'");
     my %wf_info = (
         id          => $wf->id,
         state       => $wf->state,
@@ -139,22 +127,19 @@ sub _serialize_workflow {
 
     );
     $self->serialize_object( $full_path, \%wf_info );
-    $self->log->is_debug
-        && $self->log->debug("Wrote workflow ok");
+    $self->log->debug("Wrote workflow ok");
 }
 
 sub serialize_object {
     my ( $self, $path, $object ) = @_;
-    $self->log->is_info
-        && $self->log->info( "Trying to save object of type '",
-        ref($object), "' ", "to path '$path'" );
+    $self->log->info( "Trying to save object of type '",
+                      ref($object), "' ", "to path '$path'" );
     open( THINGY, '>', $path )
         || persist_error "Cannot write to '$path': $!";
     print THINGY Dumper($object)
         || persist_error "Error writing to '$path': $!";
     close(THINGY) || persist_error "Cannot close '$path': $!";
-    $self->log->is_debug
-        && $self->log->debug("Wrote object to file ok");
+    $self->log->debug("Wrote object to file ok");
 }
 
 sub constitute_object {
@@ -171,9 +156,8 @@ sub constitute_object {
 
 sub _get_workflow_path {
     my ( $self, $wf_id ) = @_;
-    $self->log->is_info
-        && $self->log->info( "Creating workflow file from '",
-        $self->path, "' ", "and ID '$wf_id'" );
+    $self->log->info( "Creating workflow file from '",
+                      $self->path, "' ", "and ID '$wf_id'" );
     return catfile( $self->path, $wf_id . '_workflow' );
 }
 

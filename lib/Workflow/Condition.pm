@@ -39,8 +39,7 @@ sub evaluate_condition {
     my $orig_condition = $condition_name;
     my $condition;
 
-    $log->is_debug
-        && $log->debug("Checking condition $condition_name");
+    $log->debug("Checking condition $condition_name");
 
     local $wf->{'_condition_result_cache'} =
         $wf->{'_condition_result_cache'} || {};
@@ -50,8 +49,7 @@ sub evaluate_condition {
         my $cache_value = $wf->{'_condition_result_cache'}->{$orig_condition};
         # The condition has already been evaluated and the result
         # has been cached
-        $log->is_debug
-            && $log->debug(
+        $log->debug(
             "Condition has been cached: '$orig_condition', cached result: ",
             $cache_value || ''
             );
@@ -63,8 +61,7 @@ sub evaluate_condition {
         # it now
         $condition = $wf->_factory()
             ->get_condition( $orig_condition, $wf->type );
-        $log->is_debug
-            && $log->debug( "Evaluating condition '$orig_condition'" );
+        $log->debug( "Evaluating condition '$orig_condition'" );
         my $return_value;
         eval { $return_value = $condition->evaluate($wf) };
         if ($EVAL_ERROR) {
@@ -72,14 +69,13 @@ sub evaluate_condition {
             # Check if this is a Workflow::Exception::Condition
             if (Exception::Class->caught('Workflow::Exception::Condition')) {
                 $wf->{'_condition_result_cache'}->{$orig_condition} = 0;
-                $log->is_debug
-                    && $log->debug("condition '$orig_condition' failed due to: $EVAL_ERROR");
+                $log->debug(
+                    "condition '$orig_condition' failed due to: $EVAL_ERROR");
                 return 0;
                 # unreachable
 
             } else {
-                $log->is_debug
-                    && $log->debug("Got uncatchable exception in condition $condition_name ");
+                $log->debug("Got uncatchable exception in condition $condition_name ");
 
                 # if EVAL_ERROR is an execption object rethrow it
                 $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne '');
@@ -98,9 +94,7 @@ sub evaluate_condition {
 
         } else {
             $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
-            $log->is_debug &&
-                $log->debug(
-                    "condition '$orig_condition' succeeded");
+            $log->debug("condition '$orig_condition' succeeded");
             return $return_value;
         }
         # unreachable

@@ -24,16 +24,14 @@ sub _init {
         configuration_error
             "The evaluate condition must be configured with 'test'";
     }
-    $self->log->is_info
-        && $self->log->info("Added evaluation condition with '$params->{test}'");
+    $self->log->info("Added evaluation condition with '$params->{test}'");
 }
 
 sub evaluate {
     my ( $self, $wf ) = @_;
 
     my $to_eval = $self->test;
-    $self->log->is_info
-        && $self->log->info("Evaluating '$to_eval' to see if it returns true...");
+    $self->log->info("Evaluating '$to_eval' to see if it returns true...");
 
     # Assign our local stuff to package variables...
     $Workflow::Condition::Evaluate::context = $wf->context->param;
@@ -48,10 +46,9 @@ sub evaluate {
             "Condition expressed in code threw exception: $EVAL_ERROR";
     }
 
-    $self->log->is_debug
-        && $self->log->debug( "Safe eval ran ok, returned: '"
-            . ( defined $rv ? $rv : '<undef>' )
-            . "'" );
+    $self->log->debug( "Safe eval ran ok, returned: '",
+                       ( defined $rv ? $rv : '<undef>' ),
+                       "'" );
     unless ($rv) {
         condition_error "Condition expressed by test '$to_eval' did not ",
             "return a true value.";

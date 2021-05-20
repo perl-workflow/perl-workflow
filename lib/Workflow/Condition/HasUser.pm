@@ -18,8 +18,7 @@ sub _init {
 
 sub evaluate {
     my ( $self, $wf ) = @_;
-    $self->log->is_debug
-        && $self->log->debug( "Trying to execute condition ", ref $self );
+    $self->log->debug( "Trying to execute condition ", ref $self );
     my $user_key     = $self->param('user_key');
     my $current_user = $wf->context->param($user_key);
     $self->log->debug( "Current user in the context is '$current_user' retrieved ",
