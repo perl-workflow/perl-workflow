@@ -1,5 +1,5 @@
 <workflow>
-
+ <class>TestApp::CustomWorkflow</class>
  <type>ObservedTicket</type>
  <description>This is the workflow for sample application Ticket</description>
  <persister>TestPersister</persister>
