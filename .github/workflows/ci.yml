@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        perl: [ "5.10", "5.14", "5.20", "5.26", "5.30" ]
+        perl: [ "5.14", "5.20", "5.26", "5.30" ]
     name: linux ${{ matrix.perl }}
 
 
