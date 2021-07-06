@@ -298,6 +298,7 @@ workflow pieces:
 =head2 workflow
 
    workflow
+      class         $
       type          $
       description   $
       persister     $
@@ -318,7 +319,7 @@ workflow pieces:
 
 =item *
 
-the 'type' and 'description' keys are at the top level
+the 'class', 'type' and 'description' keys are at the top level
 
 =item *
 

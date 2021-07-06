@@ -245,6 +245,11 @@ sub _add_workflow_config {
             push @{ $self->{_workflow_state}{$wf_type} }, $wf_state;
         }
 
+        my $wf_class = $workflow_config->{class};
+        if ( $wf_class ) {
+            $self->_load_class( $wf_class,
+                q{Cannot require workflow class '%s': %s} );
+        }
         $self->_load_observers($workflow_config);
 
         $self->log->info( "Added all workflow states..." );
@@ -321,14 +326,13 @@ sub _load_class {
 
 sub create_workflow {
     my ( $self, $wf_type, $context, $wf_class ) = @_;
-
-    $wf_class = 'Workflow' unless ($wf_class);
-
     my $wf_config = $self->_get_workflow_config($wf_type);
+
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
     }
 
+    $wf_class = $wf_config->{class} || 'Workflow' unless ($wf_class);
     my $wf
         = $wf_class->new( undef,
         $wf_config->{initial_state} || $DEFAULT_INITIAL_STATE,
@@ -372,15 +376,15 @@ sub create_workflow {
 
 sub fetch_workflow {
     my ( $self, $wf_type, $wf_id, $context, $wf_class ) = @_;
-
-    $wf_class = 'Workflow' unless ($wf_class);
-
     my $wf_config = $self->_get_workflow_config($wf_type);
+
     unless ($wf_config) {
         workflow_error "No workflow of type '$wf_type' available";
     }
     my $persister = $self->get_persister( $wf_config->{persister} );
     my $wf_info   = $persister->fetch_workflow($wf_id);
+    $wf_class     = $wf_config->{class} || 'Workflow' unless ($wf_class);
+
     return undef unless ($wf_info);
     $wf_info->{last_update} ||= '';
     $self->log->debug(
