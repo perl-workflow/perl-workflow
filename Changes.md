@@ -2,7 +2,7 @@
 
 ## DEPRECATION NOTICE
 
-- With release 2.00 Workflow::Persister::SPOPS will no longer be included in the distribution, it will possibly be made available as a separate distribution, but with decreased maintenance efforts. [SPOPS](https://metacpan.org/pod/SPOPS) does no longer seem to be actively supported and [issues with Perls versions from 5.11.1 and onwards](http://matrix.cpantesters.org/?dist=SPOPS+0.87) underlines this fact.
+- With release 2.00 Workflow::Persister::SPOPS will no longer be included in the distribution, it will possibly be made available as a separate distribution, but with decreased maintenance efforts. [SPOPS](https://metacpan.org/pod/SPOPS) does no longer seem to be actively supported and [issues with Perls versions from 5.11.1 and onwards](http://matrix.cpantesters.org/?dist=SPOPS+0.87) underline this fact.
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
@@ -12,7 +12,7 @@ SPOPS was developed by the original author of Workflow and the two have worked i
 
 - Simplified logging handing in code base via PR [#108](https://github.com/jonasbn/perl-workflow/pull/108) investigation into possible performance issue described in [#89](https://github.com/jonasbn/perl-workflow/issues/89) determined penalty to be insignificant
 
-- `Workflow::State->get_conditions()` now returns all conditions, fixed via PR [#122](https://github.com/jonasbn/perl-workflow/pull/122) addressing issue [#121](https://github.com/jonasbn/perl-workflow/issues/121), This fix actually implements was is documented, but if you rely on previously undocumented behaviour, you might need to evaluate this fix
+- `Workflow::State->get_conditions()` now returns all conditions, fixed via PR [#122](https://github.com/jonasbn/perl-workflow/pull/122) addressing issue [#121](https://github.com/jonasbn/perl-workflow/issues/121), This fix actually implements, what is documented, but if you rely on previously undocumented behaviour, you might need to evaluate this fix
 
 - Issue with broken support action attribute specified in the state config has been addressed via PR [#123](https://github.com/jonasbn/perl-workflow/pull/123) described in issue [#113](https://github.com/jonasbn/perl-workflow/issues/113)
 
