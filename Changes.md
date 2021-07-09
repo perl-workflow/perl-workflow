@@ -1,5 +1,25 @@
 # Revision history for the Workflow Perl Distribution
 
+## DEPRECATION NOTICE
+
+- With release 2.00 Workflow::Persister::SPOPS will no longer be included in the distribution, it will possibly be made available as a separate distribution, but with decreased maintenance efforts. [SPOPS](https://metacpan.org/pod/SPOPS) does no longer seem to be actively supported and [issues with Perls versions from 5.11.1 and onwards](http://matrix.cpantesters.org/?dist=SPOPS+0.87) underlines this fact.
+
+SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
+
+## 1.55 2021-07-09 Minor feature release, update not required
+
+- PR [#119](https://github.com/jonasbn/perl-workflow/pull/119) adds capability of configuring custom workflow classes addressing issue [#107](https://github.com/jonasbn/perl-workflow/issues/107)
+
+- Simplified logging handing in code base via PR [#108](https://github.com/jonasbn/perl-workflow/pull/108) investigation into possible performance issue described in [#89](https://github.com/jonasbn/perl-workflow/issues/89) determined penalty to be insignificant
+
+- `Workflow::State->get_conditions()` now returns all conditions, fixed via PR [#122](https://github.com/jonasbn/perl-workflow/pull/122) addressing issue [#121](https://github.com/jonasbn/perl-workflow/issues/121), This fix actually implements was is documented, but if you rely on previously undocumented behaviour, you might need to evaluate this fix
+
+- Issue with broken support action attribute specified in the state config has been addressed via PR [#123](https://github.com/jonasbn/perl-workflow/pull/123) described in issue [#113](https://github.com/jonasbn/perl-workflow/issues/113)
+
+- A warning emitted from the test suite has been addressed via PR [#115](https://github.com/jonasbn/perl-workflow/pull/115)
+
+- A timing issue observed with the Travis CI setup have been addressed in PR [#112](https://github.com/jonasbn/perl-workflow/pull/112)
+
 ## 1.54 2021-04-25 Minor feature release, update not required
 
 - The existing private API: `Workflow->_get_action()` has been made public as: `get_action()` via PR [#56](https://github.com/jonasbn/perl-workflow/pull/56) addressing issue [#54](https://github.com/jonasbn/perl-workflow/issues/54), a private version is still available as `_get_action()` ensuring backwards compatibility. The change should improve and ease implementations where actions are consumed
@@ -25,13 +45,13 @@
 
 - Improvements to Dist::Zilla config, only ExtUtils::MakeMaker supported via Dist::Zilla now. Module::Build support having been removed. See the [article by Neil Bowers](https://neilb.org/2015/05/18/two-build-files-considered-harmful.html) (NEILB) on the topic. Thanks to Karen Etheridge (ETHER) for information and link to the above-mentioned article (issue [#93](https://github.com/jonasbn/perl-workflow/issues/95), resolved via PR [#98](https://github.com/jonasbn/perl-workflow/pull/98))
 
-- Documentation in `INSTALL` file updated, the information was somewhat scarce and outdated (issue [#92](https://github.com/jonasbn/perl-workflow/issues/92), resolved via PR [#99](https://github.com/jonasbn/perl-workflow/pull/99)) 
+- Documentation in `INSTALL` file updated, the information was somewhat scarce and outdated (issue [#92](https://github.com/jonasbn/perl-workflow/issues/92), resolved via PR [#99](https://github.com/jonasbn/perl-workflow/pull/99))
 
 - Some URLs fixed via PR [#97](https://github.com/jonasbn/perl-workflow/pull/97), thanks to Michiel W. Beijen for the contribution
 
 - More unit-tests added via PR [#94](https://github.com/jonasbn/perl-workflow/pull/94), continued work on issue [#36](https://github.com/jonasbn/perl-workflow/pull/94) improving test coverage
 
-## 1.51 2021-01-31 Bug fix release, update recommended 
+## 1.51 2021-01-31 Bug fix release, update recommended
 
 - Addressed bug/issue [#10](https://github.com/jonasbn/perl-workflow/issues/10) of failing observers test, ref PR [#61](https://github.com/jonasbn/perl-workflow/pull/61). Documentation also updated accordingly via PR [#66](https://github.com/jonasbn/perl-workflow/pull/66)
 
