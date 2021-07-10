@@ -59,12 +59,11 @@ sub get_available_action_names {
 
     foreach my $action_name (@all_actions) {
 
-        #From Ivan Paponov
-        my $action_group = $self->_factory()
-            ->{_action_config}{ $self->type() }{$action_name}{'group'};
-
-        if ( defined $group && length $group ) {
-            if ( $action_group ne $group ) {
+        if ( $group ) {
+            my $action_config =
+                $self->_factory()->get_action_config( $wf, $action_name );
+            if ( defined $action_config->{group}
+                 and $action_config->{group} ne $group ) {
                 next;
             }
         }
