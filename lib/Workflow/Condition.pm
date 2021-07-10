@@ -94,7 +94,8 @@ sub evaluate_condition {
 
         } else {
             $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
-            $log->debug("condition '$orig_condition' succeeded");
+            $log->debug("condition '$orig_condition' succeeded; returned: ",
+                        $return_value ? 'true' : 'false');
             return $return_value;
         }
         # unreachable
