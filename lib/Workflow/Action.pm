@@ -299,6 +299,8 @@ and they I<don't> need to override this method at all>. However, under
 some circumstances, you may find the need to extend your action
 classes.
 
+=head3 init()
+
 Suppose you want to define some extra properties to actions but you
 also want for some of these properties to depend on a particular
 state. For example, the action "icon" will almost allways be the same,
@@ -344,9 +346,9 @@ an example on how you easily do this by overriding new():
   my @EXTRA_PROPS = qw( index icon type data );
   __PACKAGE__->mk_accessors(@EXTRA_PROPS);
 
-  sub new {
-    my ($class, $wf, $params) = @_;
-    my $self = $class->SUPER::new($wf, $params);
+  sub init {
+    my ($self, $wf, $params) = @_;
+    $self->SUPER::init($wf, $params);
     # set only our extra properties from action class def
     foreach my $prop (@EXTRA_PROPS) {
       next if ( $self->$prop );
@@ -356,15 +358,10 @@ an example on how you easily do this by overriding new():
     my $wf_state = $wf->_get_workflow_state;
     my $action = $wf_state->{_actions}->{$self->name};
     $self->index($action->{index});
-    return $self;
   }
 
 
   1;
-
-B<Note>: this hack takes advantage of the fact that the XML parser
-picks up the extra parameters and add them to the action hash of the
-current $wf_state. Your milage may vary.
 
 4) Use your custom action base class instead of the default
 
