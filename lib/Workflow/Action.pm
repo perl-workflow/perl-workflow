@@ -252,6 +252,36 @@ to all types. For example:
 The type must match an existing workflow type or the action will never
 be called.
 
+=head1 STANDARD ATTRIBUTES
+
+Each action supports the following attributes:
+
+=over
+
+=item * C<class>
+
+The Perl class which provides the behaviour of the action.
+
+=item * C<description>
+
+A free text field describing the action.
+
+=item * C<name>
+
+The name by which workflows can reference the action.
+
+=item * C<type>
+
+Associates the action with workflows of the same type, when set. When
+not set, the action is available to all workflows.
+
+=back
+
+
+These attributes (except for the C<class> attribute) all map to instance
+properties by the same name.
+
+
 =head1 ADDITIONAL ATTRIBUTES
 
 You can validate additional attributes in of your action by doing two things:
