@@ -42,7 +42,9 @@ sub init {
         $self->context_key($context_key);
     }
     $self->log->info( "Configured extra data fetch with: ",
-                      join '; ', $self->table, $data_field, $self->context_key );
+                      join( '; ', $self->table, $data_field,
+                            ( defined $self->context_key
+                              ? $self->context_key : '' ) ) );
 }
 
 sub fetch_extra_workflow_data {
