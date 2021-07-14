@@ -14,7 +14,7 @@ use Carp qw(croak);
 
 $Workflow::Action::VERSION = '1.55';
 
-my @PROPS    = qw( name class description );
+my @PROPS    = qw( name class description group );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @PROPS, @INTERNAL );
 
@@ -109,6 +109,7 @@ sub init {
     $self->class( $copy_params{class} );
     $self->name( $copy_params{name} );
     $self->description( $copy_params{description} );
+    $self->group( $copy_params{group} );
 
     ## init normal fields
     my @fields = $self->normalize_array( $copy_params{field} );
@@ -145,7 +146,7 @@ sub init {
     my @validator_info = $self->normalize_array( $copy_params{validator} );
     $self->add_validators(@validator_info);
 
-    delete @copy_params{qw( class name description field validator )};
+    delete @copy_params{(@PROPS, qw( field validator ))};
 
     # everything else is just a passthru param
 
@@ -265,6 +266,11 @@ The Perl class which provides the behaviour of the action.
 =item * C<description>
 
 A free text field describing the action.
+
+=item * C<group>
+
+The group for use with the L<Workflow::State/get_available_action_names>
+C<$group> filter.
 
 =item * C<name>
 
