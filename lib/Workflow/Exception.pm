@@ -179,12 +179,6 @@ makes for very readable code:
                 "frightfully wrong: $@",
                 { foo => 'bar' };
 
-=head3 condition_error
-
-This method transforms the error to a condition error.
-
-This exception is thrown via </mythrow> when a condition of a workflow is invalid.
-
 =head3 configuration_error
 
 This method transforms the error to a configuration error.

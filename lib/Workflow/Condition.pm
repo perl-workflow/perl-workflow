@@ -125,7 +125,7 @@ This documentation describes version 1.55 of this package
 
  use strict;
  use base qw( Workflow::Condition );
- use Workflow::Exception qw( condition_error configuration_error );
+ use Workflow::Exception qw( configuration_error );
 
  __PACKAGE__->mk_accessors( 'admin_group_id' );
 
@@ -145,12 +145,12 @@ This documentation describes version 1.55 of this package
      my $admin_ids = $self->admin_group_id;
      my $current_user = $wf->context->param( 'current_user' );
      unless ( $current_user ) {
-         condition_error "No user defined, cannot check groups";
+         return ''; # return false
      }
      foreach my $group ( @{ $current_user->get_groups } ) {
-         return if ( $admin_ids->{ $group->id } );
+         return 1 if ( $admin_ids->{ $group->id } ); # return true
      }
-     condition_error "Not member of any Admin groups";
+     return ''; # return false
  }
 
 =head1 DESCRIPTION
@@ -216,7 +216,7 @@ To create your own condition you should implement the following:
 This is optional, but called when the condition is first
 initialized. It may contain information you will want to initialize
 your condition with in C<\%params>, which are all the declared
-parameters in the condition declartion except for 'class' and 'name'.
+parameters in the condition declaration except for 'class' and 'name'.
 
 You may also do any initialization here -- you can fetch data from the
 database and store it in the class or object, whatever you need.
@@ -227,9 +227,13 @@ L<Workflow::Exception>).
 
 =head3 evaluate( $workflow )
 
-Determine whether your condition fails by throwing an exception. You
-can get the application context information necessary to process your
-condition from the C<$workflow> object.
+Determine whether your condition fails by returning a false value or
+a true value upon success. You can get the application context information
+necessary to process your condition from the C<$workflow> object.
+
+B<NOTE> Callers wanting to evaluate a condition, should not call
+this method directly, but rather use the C<< $class->evaluate_condition >>
+class method described below.
 
 =head3 _init
 
