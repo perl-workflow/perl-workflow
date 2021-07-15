@@ -14,7 +14,7 @@ use Carp qw(croak);
 
 $Workflow::Action::VERSION = '1.55';
 
-my @PROPS    = qw( name class description );
+my @PROPS    = qw( name class description group );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @PROPS, @INTERNAL );
 
@@ -109,6 +109,7 @@ sub init {
     $self->class( $copy_params{class} );
     $self->name( $copy_params{name} );
     $self->description( $copy_params{description} );
+    $self->group( $copy_params{group} );
 
     ## init normal fields
     my @fields = $self->normalize_array( $copy_params{field} );
@@ -145,7 +146,7 @@ sub init {
     my @validator_info = $self->normalize_array( $copy_params{validator} );
     $self->add_validators(@validator_info);
 
-    delete @copy_params{qw( class name description field validator )};
+    delete @copy_params{(@PROPS, qw( field validator ))};
 
     # everything else is just a passthru param
 
@@ -251,6 +252,41 @@ to all types. For example:
 
 The type must match an existing workflow type or the action will never
 be called.
+
+=head1 STANDARD ATTRIBUTES
+
+Each action supports the following attributes:
+
+=over
+
+=item * C<class>
+
+The Perl class which provides the behaviour of the action.
+
+=item * C<description>
+
+A free text field describing the action.
+
+=item * C<group>
+
+The group for use with the L<Workflow::State/get_available_action_names>
+C<$group> filter.
+
+=item * C<name>
+
+The name by which workflows can reference the action.
+
+=item * C<type>
+
+Associates the action with workflows of the same type, when set. When
+not set, the action is available to all workflows.
+
+=back
+
+
+These attributes (except for the C<class> attribute) all map to instance
+properties by the same name.
+
 
 =head1 ADDITIONAL ATTRIBUTES
 
