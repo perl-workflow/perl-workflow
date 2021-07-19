@@ -14,7 +14,8 @@ use English qw( -no_match_vars );
 $Workflow::State::VERSION = '1.55';
 
 my @FIELDS   = qw( state description type );
-my @INTERNAL = qw( _test_condition_count _factory _actions _conditions );
+my @INTERNAL = qw( _test_condition_count _factory _actions _conditions
+    _next_state );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
 
@@ -135,7 +136,7 @@ sub evaluate_action {
 sub get_next_state {
     my ( $self, $action_name, $action_return ) = @_;
     $self->_contains_action_check($action_name);
-    my $resulting_state = $self->_actions->{$action_name}{resulting_state};
+    my $resulting_state = $self->_resulting_state->{$action_name};
     return $resulting_state unless ( ref($resulting_state) eq 'HASH' );
 
     if ( defined $action_return ) {
@@ -212,6 +213,7 @@ sub init {
     $self->_factory($factory);
     $self->_actions( {} );
     $self->_conditions( {} );
+    $self->_next_state( {} );
 
     # Note this is the workflow type.
     $self->type( $config->{type} );
@@ -278,6 +280,7 @@ sub _add_action_config {
             "is required -- if you do not want the state to ",
             "change, use the value '$no_change_value'.";
     }
+    $self->_next_state->{$action_name} = $action_config->{resulting_state};
     $self->log->debug("Adding '$state' '$action_name' config");
     $self->_actions->{$action_name} = $action_config;
     my @action_conditions = $self->_create_condition_objects($action_config);
