@@ -14,7 +14,7 @@ use English qw( -no_match_vars );
 $Workflow::State::VERSION = '1.55';
 
 my @FIELDS   = qw( state description type );
-my @INTERNAL = qw( _test_condition_count _factory _actions );
+my @INTERNAL = qw( _test_condition_count _factory _actions _conditions );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
 
@@ -24,7 +24,7 @@ __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 sub get_conditions {
     my ( $self, $action_name ) = @_;
     $self->_contains_action_check($action_name);
-    return @{ $self->{_conditions}{$action_name} };
+    return @{ $self->_conditions->{$action_name} };
 }
 
 sub get_action {
@@ -211,6 +211,7 @@ sub init {
     $self->state($name);
     $self->_factory($factory);
     $self->_actions( {} );
+    $self->_conditions( {} );
 
     # Note this is the workflow type.
     $self->type( $config->{type} );
@@ -280,7 +281,7 @@ sub _add_action_config {
     $self->log->debug("Adding '$state' '$action_name' config");
     $self->_actions->{$action_name} = $action_config;
     my @action_conditions = $self->_create_condition_objects($action_config);
-    $self->{_conditions}{$action_name} = \@action_conditions;
+    $self->_conditions->{$action_name} = \@action_conditions;
 }
 
 sub _create_condition_objects {
