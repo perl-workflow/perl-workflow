@@ -14,7 +14,7 @@ use English qw( -no_match_vars );
 $Workflow::State::VERSION = '1.55';
 
 my @FIELDS   = qw( state description type );
-my @INTERNAL = qw( _test_condition_count _factory );
+my @INTERNAL = qw( _test_condition_count _factory _actions );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
 
@@ -31,7 +31,7 @@ sub get_action {
     my ( $self, $wf, $action_name ) = @_;
     my $common_config =
         $self->_factory->get_action_config($wf, $action_name);
-    my $state_config  = $self->{_actions}{$action_name};
+    my $state_config  = $self->_actions->{$action_name};
     my $config        = { %{$common_config}, %{$state_config} };
     my $action_class  = $common_config->{class};
 
@@ -40,12 +40,12 @@ sub get_action {
 
 sub contains_action {
     my ( $self, $action_name ) = @_;
-    return $self->{_actions}{$action_name};
+    return $self->_actions->{$action_name};
 }
 
 sub get_all_action_names {
     my ($self) = @_;
-    return keys %{ $self->{_actions} };
+    return keys %{ $self->_actions };
 }
 
 sub get_available_action_names {
@@ -135,7 +135,7 @@ sub evaluate_action {
 sub get_next_state {
     my ( $self, $action_name, $action_return ) = @_;
     $self->_contains_action_check($action_name);
-    my $resulting_state = $self->{_actions}{$action_name}{resulting_state};
+    my $resulting_state = $self->_actions->{$action_name}{resulting_state};
     return $resulting_state unless ( ref($resulting_state) eq 'HASH' );
 
     if ( defined $action_return ) {
@@ -210,6 +210,7 @@ sub init {
 
     $self->state($name);
     $self->_factory($factory);
+    $self->_actions( {} );
 
     # Note this is the workflow type.
     $self->type( $config->{type} );
@@ -277,7 +278,7 @@ sub _add_action_config {
             "change, use the value '$no_change_value'.";
     }
     $self->log->debug("Adding '$state' '$action_name' config");
-    $self->{_actions}{$action_name} = $action_config;
+    $self->_actions->{$action_name} = $action_config;
     my @action_conditions = $self->_create_condition_objects($action_config);
     $self->{_conditions}{$action_name} = \@action_conditions;
 }
