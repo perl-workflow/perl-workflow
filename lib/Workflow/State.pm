@@ -236,7 +236,7 @@ sub init {
     }
 }
 
-sub _assign_resulting_state_from_array {
+sub _assign_next_state_from_array {
     my ( $self, $action_name, $resulting ) = @_;
     my $name          = $self->state;
     my @errors        = ();
@@ -262,14 +262,14 @@ sub _assign_resulting_state_from_array {
     return \%new_resulting;
 }
 
-sub _create_resulting_state {
+sub _create_next_state {
     my ( $self, $action_name, $resulting ) = @_;
 
     if ( my $resulting_type = ref $resulting ) {
         if ( $resulting_type eq 'ARRAY' ) {
             $resulting
-                = $self->_assign_resulting_state_from_array( $action_name,
-                                                             $resulting );
+                = $self->_assign_next_state_from_array( $action_name,
+                                                        $resulting );
         }
     }
 
@@ -294,7 +294,7 @@ sub _add_action_config {
 
     # Removes 'resulting_state' key from action_config
     $self->_next_state->{$action_name} =
-        $self->_create_resulting_state( $action_name, $resulting_state );
+        $self->_create_next_state( $action_name, $resulting_state );
 
     # Removes 'condition' key from action_config
     $self->_conditions->{$action_name} = [
