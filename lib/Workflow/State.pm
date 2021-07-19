@@ -136,7 +136,7 @@ sub evaluate_action {
 sub get_next_state {
     my ( $self, $action_name, $action_return ) = @_;
     $self->_contains_action_check($action_name);
-    my $resulting_state = $self->_resulting_state->{$action_name};
+    my $resulting_state = $self->_next_state->{$action_name};
     return $resulting_state unless ( ref($resulting_state) eq 'HASH' );
 
     if ( defined $action_return ) {
@@ -231,14 +231,6 @@ sub init {
     }
     foreach my $state_action_config ( @{ $config->{action} } ) {
         my $action_name = $state_action_config->{name};
-        my $resulting   = $state_action_config->{resulting_state};
-        if ( my $resulting_type = ref $resulting ) {
-            if ( $resulting_type eq 'ARRAY' ) {
-                $state_action_config->{resulting_state}
-                    = $self->_assign_resulting_state_from_array( $action_name,
-                    $resulting );
-            }
-        }
         $self->log->debug("Adding action '$action_name' to '$class' '$name'");
         $self->_add_action_config( $action_name, $state_action_config );
     }
@@ -270,6 +262,20 @@ sub _assign_resulting_state_from_array {
     return \%new_resulting;
 }
 
+sub _create_resulting_state {
+    my ( $self, $action_name, $resulting ) = @_;
+
+    if ( my $resulting_type = ref $resulting ) {
+        if ( $resulting_type eq 'ARRAY' ) {
+            $resulting
+                = $self->_assign_resulting_state_from_array( $action_name,
+                                                             $resulting );
+        }
+    }
+
+    return $resulting;
+}
+
 sub _add_action_config {
     my ( $self, $action_name, $action_config ) = @_;
     my $state = $self->state;
@@ -280,27 +286,37 @@ sub _add_action_config {
             "is required -- if you do not want the state to ",
             "change, use the value '$no_change_value'.";
     }
-    $self->_next_state->{$action_name} = $action_config->{resulting_state};
-    $self->log->debug("Adding '$state' '$action_name' config");
-    $self->_actions->{$action_name} = $action_config;
-    my @action_conditions = $self->_create_condition_objects($action_config);
-    $self->_conditions->{$action_name} = \@action_conditions;
+    # Copy the action config,
+    # so we can delete keys consumed by the state below
+    my $copied_config   = { %$action_config };
+    my $resulting_state = delete $copied_config->{resulting_state};
+    my $condition       = delete $copied_config->{condition};
+
+    # Removes 'resulting_state' key from action_config
+    $self->_next_state->{$action_name} =
+        $self->_create_resulting_state( $action_name, $resulting_state );
+
+    # Removes 'condition' key from action_config
+    $self->_conditions->{$action_name} = [
+        $self->_create_condition_objects( $action_name, $condition )
+        ];
+
+    $self->_actions->{$action_name} = $copied_config;
 }
 
 sub _create_condition_objects {
-    my ( $self, $action_config ) = @_;
-    my @conditions = $self->normalize_array( $action_config->{condition} );
+    my ( $self, $action_name, $action_conditions ) = @_;
+    my @conditions = $self->normalize_array( $action_conditions );
     my @condition_objects = ();
     foreach my $condition_info (@conditions) {
 
         # Special case: a 'test' denotes our 'evaluate' condition
         if ( $condition_info->{test} ) {
             my $state  = $self->state();
-            my $action = $action_config->{name};
             my $count  = $self->_get_next_condition_count();
             push @condition_objects,
                 Workflow::Condition::Evaluate->new(
-                {   name  => "_$state\_$action\_condition\_$count",
+                {   name  => "_$state\_$action_name\_condition\_$count",
                     class => 'Workflow::Condition::Evaluate',
                     test  => $condition_info->{test},
                 }
