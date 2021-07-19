@@ -14,7 +14,7 @@ use English qw( -no_match_vars );
 $Workflow::State::VERSION = '1.55';
 
 my @FIELDS   = qw( state description type );
-my @INTERNAL = qw( _test_condition_count _factory );
+my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
 
@@ -286,13 +286,13 @@ sub _create_condition_objects {
     my ( $self, $action_config ) = @_;
     my @conditions = $self->normalize_array( $action_config->{condition} );
     my @condition_objects = ();
+    my $count             = 1;
     foreach my $condition_info (@conditions) {
 
         # Special case: a 'test' denotes our 'evaluate' condition
         if ( $condition_info->{test} ) {
             my $state  = $self->state();
             my $action = $action_config->{name};
-            my $count  = $self->_get_next_condition_count();
             push @condition_objects,
                 Workflow::Condition::Evaluate->new(
                 {   name  => "_$state\_$action\_condition\_$count",
@@ -300,6 +300,7 @@ sub _create_condition_objects {
                     test  => $condition_info->{test},
                 }
                 );
+            $count++;
         } else {
             $self->log->info(
                 "Fetching condition '$condition_info->{name}'");
@@ -317,18 +318,6 @@ sub _contains_action_check {
         workflow_error "State '", $self->state, "' does not contain ",
             "action '$action_name'";
     }
-}
-
-sub _get_next_condition_count {
-    my ($self) = @_;
-
-    # Initialize if not set.
-    my $count
-        = defined $self->_test_condition_count()
-        ? $self->_test_condition_count() + 1
-        : 1;
-
-    return $self->_test_condition_count($count);
 }
 
 1;
