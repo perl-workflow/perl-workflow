@@ -8,13 +8,11 @@ $TestApp::Action::TicketComment::VERSION  = '1.02';
 
 __PACKAGE__->mk_accessors(qw(index));
 
-### Straight out of the Workflow::Action->new() documentation
-sub new {
-    my ($class, $wf, $params) = @_;
-    my $self = $class->SUPER::new($wf, $params);
+### Straight out of the Workflow::Action->init() documentation
+sub init {
+    my ($self, $wf, $params) = @_;
+    $self->SUPER::init($wf, $params);
     $self->index($params->{index}) if defined $params->{index};
-
-    return $self;
 }
 
 sub execute {
