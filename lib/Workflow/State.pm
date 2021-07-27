@@ -314,7 +314,6 @@ sub _create_condition_objects {
         # Special case: a 'test' denotes our 'evaluate' condition
         if ( $condition_info->{test} ) {
             my $state  = $self->state();
-            my $count  = $self->_get_next_condition_count();
             push @condition_objects,
                 Workflow::Condition::Evaluate->new(
                 {   name  => "_$state\_$action_name\_condition\_$count",
