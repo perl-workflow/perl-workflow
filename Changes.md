@@ -6,7 +6,7 @@
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
-## 1.56 2021-07-27 Bug fix release, update recommended
+## 1.56 2021-07-28 Bug fix release, update recommended
 
 - PR [#139](https://github.com/jonasbn/perl-workflow/pull/139) addresses an issue introduced in 1.55, where action configurations would contain unnecessary information
 
