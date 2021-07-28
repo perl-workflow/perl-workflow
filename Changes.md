@@ -8,21 +8,21 @@ SPOPS was developed by the original author of Workflow and the two have worked i
 
 ## 1.56 2021-07-27 Bug fix release, update recommended
 
-- PR [#139](https://github.com/jonasbn/perl-workflow/pull/139) addresses an issue introduced in 1.55, where action configurations would contain unnecessary informationß
+- PR [#139](https://github.com/jonasbn/perl-workflow/pull/139) addresses an issue introduced in 1.55, where action configurations would contain unnecessary information
 
 - Elimination of global state, with improved abstraction the complexity could be removed via PR [#140](https://github.com/jonasbn/perl-workflow/pull/140)
 
 - PR [#141](https://github.com/jonasbn/perl-workflow/pull/141) improves test suite, following up on PR [#131](https://github.com/jonasbn/perl-workflow/pull/131)
 
-- PR [#132](https://github.com/jonasbn/perl-workflow/pull/132) followsß up on issue [#129](https://github.com/jonasbn/perl-workflow/issues/129) by improving documentation on group property of Workflow::Action
+- PR [#132](https://github.com/jonasbn/perl-workflow/pull/132) follows up on issue [#129](https://github.com/jonasbn/perl-workflow/issues/129) by improving documentation on group property of Workflow::Action
 
 - Elimination of warning about undefined value, which surfaced with release 1.55, adressed with PR [#135](https://github.com/jonasbn/perl-workflow/pull/135)
 
-- PR [#131](https://github.com/jonasbn/perl-workflow/pull/131) documents the importance of overiding `init` for processing of parameters and not using `new`
+- PR [#131](https://github.com/jonasbn/perl-workflow/pull/131) documents the importance of overriding `init` for processing of parameters and not using `new`
 
-- PR [#130](https://github.com/jonasbn/perl-workflow/pull/130) addresses issue [#129](https://github.com/jonasbn/perl-workflow/issues/129), by adhering to the API implemented and not breaking encapsulation
+- PR [#130](https://github.com/jonasbn/perl-workflow/pull/130) addresses issue [#129](https://github.com/jonasbn/perl-workflow/issues/129), respects encapsulation by adhering to the API
 
-- Improves and clarification of some error and log messages via PR [#128](https://github.com/jonasbn/perl-workflow/pull/128)
+- Improves some error and log messages via PR [#128](https://github.com/jonasbn/perl-workflow/pull/128)
 
 ## 1.55 2021-07-09 Minor feature release, update not required
 
