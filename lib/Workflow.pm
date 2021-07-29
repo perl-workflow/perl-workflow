@@ -335,8 +335,6 @@ sub _execute_single_action {
         croak $error;
     }
 
-    # clear condition cache on state change
-    delete $self->{'_condition_result_cache'};
     $self->notify_observers( 'execute', $old_state, $action_name, $autorun );
 
     my $new_state_obj = $self->_get_workflow_state;
@@ -376,30 +374,6 @@ sub _get_next_state {
     my ( $self, $action_name, $action_return ) = @_;
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_next_state( $action_name, $action_return );
-}
-
-sub _auto_execute_state {
-    my ( $self, $wf_state ) = @_;
-    my $action_name;
-    eval { $action_name = $wf_state->get_autorun_action_name($self); };
-    if ($EVAL_ERROR)
-    {    # we found an error, possibly more than one or none action
-            # are available in this state
-        if ( !$wf_state->may_stop() ) {
-
-            # we are in autorun, but stopping is not allowed, so
-            # rethrow
-            my $error = $EVAL_ERROR;
-            $error->rethrow();
-        }
-    } else {    # everything is fine, execute action
-        $self->log->debug(
-            "Found action '$action_name' to execute in ",
-            "autorun state ",
-            $wf_state->state
-            );
-        $self->execute_action( $action_name, 1 );
-    }
 }
 
 1;
