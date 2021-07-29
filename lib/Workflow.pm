@@ -335,8 +335,6 @@ sub _execute_single_action {
         croak $error;
     }
 
-    # clear condition cache on state change
-    delete $self->{'_condition_result_cache'};
     $self->notify_observers( 'execute', $old_state, $action_name, $autorun );
 
     my $new_state_obj = $self->_get_workflow_state;
