@@ -1,4 +1,4 @@
-package Workflow::Action::InputField;
+package Workflow::InputField;
 
 use warnings;
 use strict;
@@ -7,7 +7,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Action::InputField::VERSION = '1.53';
+$Workflow::Action::InputField::VERSION = '1.56';
 
 my @PROPS = qw( name label description type requirement
     source_class source_list class );
@@ -117,11 +117,11 @@ __END__
 
 =head1 NAME
 
-Workflow::Action::InputField - Metadata about information required by an Action
+Workflow::InputField - Metadata about information required by an Action
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 
@@ -205,7 +205,7 @@ extra properties. Just derive your custom fields class like so:
   use warnings;
   use strict;
 
-  use base qw( Workflow::Action::InputField );
+  use base qw( Workflow::InputField );
   use Workflow::Exception qw( workflow_error );
 
   # extra action class properties

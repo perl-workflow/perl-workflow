@@ -7,7 +7,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::ExtraData::VERSION = '1.53';
+$Workflow::Persister::DBI::ExtraData::VERSION = '1.56';
 
 my @FIELDS = qw( table data_field context_key );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -41,16 +41,16 @@ sub init {
         my $context_key = $params->{extra_context_key} || $data_field;
         $self->context_key($context_key);
     }
-    $self->log->is_info
-        && $self->log->info( "Configured extra data fetch with: ",
-        join '; ', $self->table, $data_field, $self->context_key );
+    $self->log->info( "Configured extra data fetch with: ",
+                      join( '; ', $self->table, $data_field,
+                            ( defined $self->context_key
+                              ? $self->context_key : '' ) ) );
 }
 
 sub fetch_extra_workflow_data {
     my ( $self, $wf ) = @_;
 
-    $self->log->is_debug
-        && $self->log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
+    $self->log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
 
     my $sql = q{SELECT %s FROM %s WHERE workflow_id = ?};
     my $data_field = $self->data_field;
@@ -61,10 +61,8 @@ sub fetch_extra_workflow_data {
         : $self->handle->quote_identifier($data_field);
     $sql = sprintf $sql, $select_data_fields,
         $self->handle->quote_identifier( $self->table );
-    $self->log->is_debug
-        && $self->log->debug("Using SQL: $sql");
-    $self->log->is_debug
-        && $self->log->debug( "Bind parameters: ", $wf->id );
+    $self->log->debug( "Using SQL: ", $sql);
+    $self->log->debug( "Bind parameters: ", $wf->id );
 
     my ($sth);
     eval {
@@ -75,24 +73,23 @@ sub fetch_extra_workflow_data {
         persist_error "Failed to retrieve extra data from table ",
             $self->table, ": $EVAL_ERROR";
     } else {
-        $self->log->is_debug
-            && $self->log->debug("Prepared/executed extra data fetch ok");
+        $self->log->debug("Prepared/executed extra data fetch ok");
         my $row = $sth->fetchrow_arrayref;
         if ( ref $data_field ) {
             foreach my $i ( 0 .. $#{$data_field} ) {
                 $wf->context->param( $data_field->[$i], $row->[$i] );
-                $self->log->is_info
-                    && $self->log->info(
-                    sprintf "Set data from %s.%s into context key %s ok",
-                    $self->table, $data_field->[$i], $data_field->[$i] );
+                $self->log->info(
+                    sub { sprintf "Set data from %s.%s into context key %s ok",
+                              $self->table, $data_field->[$i],
+                              $data_field->[$i] } );
             }
         } else {
             my $value = $row->[0];
             $wf->context->param( $self->context_key, $value );
-            $self->log->is_info
-                && $self->log->info(
-                sprintf "Set data from %s.%s into context key %s ok",
-                $self->table, $self->data_field, $self->context_key );
+            $self->log->info(
+                sub { sprintf "Set data from %s.%s into context key %s ok",
+                          $self->table, $self->data_field,
+                          $self->context_key } );
         }
     }
 }
@@ -109,7 +106,7 @@ Workflow::Persister::DBI::ExtraData - Fetch extra data with each workflow and pu
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 

@@ -7,14 +7,14 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
-use Workflow::Action::InputField;
+use Workflow::InputField;
 use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak);
 
-$Workflow::Action::VERSION = '1.53';
+$Workflow::Action::VERSION = '1.56';
 
-my @PROPS    = qw( name class description );
+my @PROPS    = qw( name class description group );
 my @INTERNAL = qw( _factory );
 __PACKAGE__->mk_accessors( @PROPS, @INTERNAL );
 
@@ -109,6 +109,7 @@ sub init {
     $self->class( $copy_params{class} );
     $self->name( $copy_params{name} );
     $self->description( $copy_params{description} );
+    $self->group( $copy_params{group} );
 
     ## init normal fields
     my @fields = $self->normalize_array( $copy_params{field} );
@@ -119,7 +120,7 @@ sub init {
         } else {
             $self->log->debug("Using standard field class");
             $self->add_fields(
-                Workflow::Action::InputField->new($field_info) );
+                Workflow::InputField->new($field_info) );
         }
     }
 
@@ -145,7 +146,7 @@ sub init {
     my @validator_info = $self->normalize_array( $copy_params{validator} );
     $self->add_validators(@validator_info);
 
-    delete @copy_params{qw( class name description field validator )};
+    delete @copy_params{(@PROPS, qw( field validator ))};
 
     # everything else is just a passthru param
 
@@ -166,7 +167,7 @@ Workflow::Action - Base class for Workflow actions
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 
@@ -252,6 +253,41 @@ to all types. For example:
 The type must match an existing workflow type or the action will never
 be called.
 
+=head1 STANDARD ATTRIBUTES
+
+Each action supports the following attributes:
+
+=over
+
+=item * C<class>
+
+The Perl class which provides the behaviour of the action.
+
+=item * C<description>
+
+A free text field describing the action.
+
+=item * C<group>
+
+The group for use with the L<Workflow::State/get_available_action_names>
+C<$group> filter.
+
+=item * C<name>
+
+The name by which workflows can reference the action.
+
+=item * C<type>
+
+Associates the action with workflows of the same type, when set. When
+not set, the action is available to all workflows.
+
+=back
+
+
+These attributes (except for the C<class> attribute) all map to instance
+properties by the same name.
+
+
 =head1 ADDITIONAL ATTRIBUTES
 
 You can validate additional attributes in of your action by doing two things:
@@ -269,7 +305,7 @@ Provide function validate_config() in your action class.
 =back
 
 Then, this function will be called with all the acton attributes when
-it is parsed.  For exmaple, if your action XML looks like this:
+it is parsed.  For example, if your action XML looks like this:
 
   <action name="BEGIN" class="My::Class" when="NOW">
 
@@ -298,6 +334,8 @@ B<Your action classes usually subclass directly from Workflow::Action
 and they I<don't> need to override this method at all>. However, under
 some circumstances, you may find the need to extend your action
 classes.
+
+=head3 init()
 
 Suppose you want to define some extra properties to actions but you
 also want for some of these properties to depend on a particular
@@ -344,9 +382,9 @@ an example on how you easily do this by overriding new():
   my @EXTRA_PROPS = qw( index icon type data );
   __PACKAGE__->mk_accessors(@EXTRA_PROPS);
 
-  sub new {
-    my ($class, $wf, $params) = @_;
-    my $self = $class->SUPER::new($wf, $params);
+  sub init {
+    my ($self, $wf, $params) = @_;
+    $self->SUPER::init($wf, $params);
     # set only our extra properties from action class def
     foreach my $prop (@EXTRA_PROPS) {
       next if ( $self->$prop );
@@ -356,15 +394,10 @@ an example on how you easily do this by overriding new():
     my $wf_state = $wf->_get_workflow_state;
     my $action = $wf_state->{_actions}->{$self->name};
     $self->index($action->{index});
-    return $self;
   }
 
 
   1;
-
-B<Note>: this hack takes advantage of the fact that the XML parser
-picks up the extra parameters and add them to the action hash of the
-current $wf_state. Your milage may vary.
 
 4) Use your custom action base class instead of the default
 
@@ -385,15 +418,15 @@ current $wf_state. Your milage may vary.
 
 =head3 required_fields()
 
-Return a list of L<Workflow::Action::InputField> objects that are required.
+Return a list of L<Workflow::InputField> objects that are required.
 
 =head3 optional_fields()
 
-Return a list of L<Workflow::Action::InputField> objects that are optional.
+Return a list of L<Workflow::InputField> objects that are optional.
 
 =head3 fields()
 
-Return a list of all L<Workflow::Action::InputField> objects
+Return a list of all L<Workflow::InputField> objects
 associated with this action.
 
 
@@ -407,7 +440,7 @@ It sets up the necessary validators based on the on configured actions, input fi
 
 =head3 add_field( @fields )
 
-Add one or more L<Workflow::Action::InputField>s to the action.
+Add one or more L<Workflow::InputField>s to the action.
 
 =head3 add_validators( @validator_config )
 

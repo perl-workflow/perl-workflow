@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.53';
+$Workflow::VERSION = '1.56';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -70,8 +70,7 @@ sub context {
 
 sub get_current_actions {
     my ( $self, $group ) = @_;
-    $self->log->is_debug
-        && $self->log->debug( "Getting current actions for wf '", $self->id, "'" );
+    $self->log->debug( "Getting current actions for wf '", $self->id, "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_available_action_names( $self, $group );
 }
@@ -80,8 +79,7 @@ sub get_action {
     my ( $self, $action_name ) = @_;
 
     my $state = $self->state;
-    $self->log->is_debug
-        && $self->log->debug(
+    $self->log->debug(
         "Trying to find action '$action_name' in state '$state'");
 
     my $wf_state = $self->_get_workflow_state;
@@ -89,10 +87,9 @@ sub get_action {
         workflow_error
             "State '$state' does not contain action '$action_name'";
     }
-    $self->log->is_debug
-        && $self->log->debug("Action '$action_name' exists in state '$state'");
+    $self->log->debug("Action '$action_name' exists in state '$state'");
 
-    my $action = $self->_factory()->get_action( $self, $action_name );
+    my $action = $self->_get_workflow_state()->get_action( $self, $action_name );
 
     # This will throw an exception which we want to bubble up
     $wf_state->evaluate_action( $self, $action_name );
@@ -139,6 +136,7 @@ sub execute_action {
             }
         }
     }
+
     return $self->state;
 }
 
@@ -151,11 +149,11 @@ sub add_history {
             $item->{workflow_id} = $self->id;
             $item->{time_zone}   = $self->time_zone();
             push @to_add, Workflow::History->new($item);
-            $self->log->is_debug && $self->log->debug("Adding history from hashref");
+            $self->log->debug("Adding history from hashref");
         } elsif ( ref $item and $item->isa('Workflow::History') ) {
             $item->workflow_id( $self->id );
             push @to_add, $item;
-            $self->log->is_debug && $self->log->debug("Adding history object directly");
+            $self->log->debug("Adding history object directly");
         } else {
             workflow_error "I don't know how to add a history of ", "type '",
                 ref($item), "'";
@@ -174,17 +172,29 @@ sub get_history {
     $self->{_histories} ||= [];
     my @uniq_history = ();
     my %seen_ids     = ();
-    my @all_history  = (
-        $self->_factory()->get_workflow_history($self),
-        @{ $self->{_histories} }
-    );
-    foreach my $history (@all_history) {
-        my $id = $history->id;
-        if ($id) {
+
+    foreach my $history (
+        $self->_factory()->get_workflow_history($self)
+        ) {
+        my $id = $history->{id};
+        if (defined $id) {
             unless ( $seen_ids{$id} ) {
+                $seen_ids{$id}++;
+                my $hist = Workflow::History->new($history);
+                $hist->set_saved;
+                push @uniq_history, $hist;
+            }
+        } else {
+            die "Persister returned history item without 'id' key";
+        }
+    }
+    foreach my $history (@{ $self->{_histories} }) {
+        my $id = $history->id;
+        if (defined $id) {
+            unless ( $seen_ids{$id} ) {
+                $seen_ids{$id}++;
                 push @uniq_history, $history;
             }
-            $seen_ids{$id}++;
         } else {
             push @uniq_history, $history;
         }
@@ -229,8 +239,7 @@ sub init {
     while ( my ( $key, $value ) = each %{$config} ) {
         next if ( $key =~ /^(type|description)$/ );
         next if ( ref $value );
-        $self->log->is_debug
-            && $self->log->debug("Assigning parameter '$key' -> '$value'");
+        $self->log->debug("Assigning parameter '$key' -> '$value'");
         $self->param( $key, $value );
     }
 
@@ -347,8 +356,7 @@ sub _get_workflow_state {
     my ( $self, $state ) = @_;
     $state ||= '';             # get rid of -w...
     my $use_state = $state || $self->state;
-    $self->log->is_debug
-        && $self->log->debug(
+    $self->log->debug(
         "Finding Workflow::State object for state [given: $use_state] ",
         "[internal: ", $self->state, "]" );
     my $wf_state = $self->{_states}{$use_state};
@@ -368,6 +376,30 @@ sub _get_next_state {
     my ( $self, $action_name, $action_return ) = @_;
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_next_state( $action_name, $action_return );
+}
+
+sub _auto_execute_state {
+    my ( $self, $wf_state ) = @_;
+    my $action_name;
+    eval { $action_name = $wf_state->get_autorun_action_name($self); };
+    if ($EVAL_ERROR)
+    {    # we found an error, possibly more than one or none action
+            # are available in this state
+        if ( !$wf_state->may_stop() ) {
+
+            # we are in autorun, but stopping is not allowed, so
+            # rethrow
+            my $error = $EVAL_ERROR;
+            $error->rethrow();
+        }
+    } else {    # everything is fine, execute action
+        $self->log->debug(
+            "Found action '$action_name' to execute in ",
+            "autorun state ",
+            $wf_state->state
+            );
+        $self->execute_action( $action_name, 1 );
+    }
 }
 
 1;
@@ -390,7 +422,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 1.53 of Workflow
+This documentation describes version 1.56 of Workflow
 
 =head1 SYNOPSIS
 
@@ -998,11 +1030,11 @@ One of the conditions for the action in this state is not met.
 
 =head3 get_action_fields( $action_name )
 
-Return a list of L<Workflow::Action::InputField> objects for the given
+Return a list of L<Workflow::InputField> objects for the given
 C<$action_name>. If C<$action_name> not in the current state or not
 accessible by the environment an exception is thrown.
 
-Returns: list of L<Workflow::Action::InputField> objects
+Returns: list of L<Workflow::InputField> objects
 
 =head3 add_history( @( \%params | $wf_history_object ) )
 

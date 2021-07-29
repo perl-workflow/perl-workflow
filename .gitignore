@@ -26,3 +26,5 @@ t/workflow_tests.log
 *.sublime-workspace
 .DS_Store
 local/
+eg/ticket/db/
+eg/ticket/workflow.log

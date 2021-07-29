@@ -6,6 +6,15 @@ use Log::Log4perl qw( get_logger );
 
 $TestApp::Action::TicketComment::VERSION  = '1.02';
 
+__PACKAGE__->mk_accessors(qw(index));
+
+### Straight out of the Workflow::Action->init() documentation
+sub init {
+    my ($self, $wf, $params) = @_;
+    $self->SUPER::init($wf, $params);
+    $self->index($params->{index}) if defined $params->{index};
+}
+
 sub execute {
     my ( $self, $wf ) = @_;
     my $log = get_logger();

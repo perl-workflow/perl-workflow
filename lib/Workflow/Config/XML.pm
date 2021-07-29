@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Config::XML::VERSION = '1.53';
+$Workflow::Config::XML::VERSION = '1.56';
 
 my ($log);
 
@@ -53,27 +53,23 @@ sub parse {
     my @config = ();
     foreach my $item (@config_items) {
         my $file_name = ( ref $item ) ? '[scalar ref]' : $item;
-        $log->is_info
-            && $log->info("Will parse '$type' XML config file '$file_name'");
+        $log->info("Will parse '$type' XML config file '$file_name'");
         my $this_config;
         eval { $this_config = $self->_translate_xml( $type, $item ); };
 
         # If processing multiple config files, this makes it much easier
         # to find a problem.
         croak "Processing $file_name: $EVAL_ERROR" if $EVAL_ERROR;
-        $log->is_info
-            && $log->info("Parsed XML '$file_name' ok");
+        $log->info("Parsed XML '$file_name' ok");
 
         # This sets the outer-most tag to use
         # when returning the parsed XML.
         my $outer_tag = $self->get_config_type_tag($type);
         if ( ref $this_config->{$outer_tag} eq 'ARRAY' ) {
-            $log->is_debug
-                && $log->debug("Adding multiple configurations for '$type'");
+            $log->debug("Adding multiple configurations for '$type'");
             push @config, @{ $this_config->{$outer_tag} };
         } else {
-            $log->is_debug
-                && $log->debug("Adding single configuration for '$type'");
+            $log->debug("Adding single configuration for '$type'");
             push @config, $this_config;
         }
     }
@@ -111,7 +107,7 @@ Workflow::Config::XML - Parse workflow configurations from XML content
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 

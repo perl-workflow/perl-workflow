@@ -4,10 +4,14 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);
+use English qw( -no_match_vars );
+use Log::Log4perl qw( get_logger );
+use Workflow::Exception qw( workflow_error );
 
 $Workflow::Condition::CACHE_RESULTS = 1;
-$Workflow::Condition::VERSION = '1.53';
+$Workflow::Condition::VERSION = '1.56';
 
+my $log;
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
 
@@ -25,6 +29,49 @@ sub evaluate {
     croak "Class ", ref($self), " must implement 'evaluate()'!\n";
 }
 
+
+sub evaluate_condition {
+    my ( $class, $wf, $condition_name) = @_;
+    $log ||= get_logger();
+    $wf->type;
+
+    my $factory = $wf->_factory();
+    my $orig_condition = $condition_name;
+    my $condition;
+
+    $log->debug("Checking condition $condition_name");
+
+    local $wf->{'_condition_result_cache'} =
+        $wf->{'_condition_result_cache'} || {};
+
+    if ( $Workflow::Condition::CACHE_RESULTS
+         && exists $wf->{'_condition_result_cache'}->{$orig_condition} ) {
+
+        my $cache_value = $wf->{'_condition_result_cache'}->{$orig_condition};
+        # The condition has already been evaluated and the result
+        # has been cached
+        $log->debug(
+            "Condition has been cached: '$orig_condition', cached result: ",
+            $cache_value || ''
+            );
+
+        return $cache_value;
+    } else {
+
+        # we did not evaluate the condition yet, we have to do
+        # it now
+        $condition = $wf->_factory()
+            ->get_condition( $orig_condition, $wf->type );
+        $log->debug( "Evaluating condition '$orig_condition'" );
+        my $return_value = $condition->evaluate($wf);
+        $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
+
+        return $return_value;
+    }
+}
+
+
+
 1;
 
 __END__
@@ -37,7 +84,7 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 
@@ -78,7 +125,7 @@ This documentation describes version 1.53 of this package
 
  use strict;
  use base qw( Workflow::Condition );
- use Workflow::Exception qw( condition_error configuration_error );
+ use Workflow::Exception qw( configuration_error );
 
  __PACKAGE__->mk_accessors( 'admin_group_id' );
 
@@ -98,12 +145,12 @@ This documentation describes version 1.53 of this package
      my $admin_ids = $self->admin_group_id;
      my $current_user = $wf->context->param( 'current_user' );
      unless ( $current_user ) {
-         condition_error "No user defined, cannot check groups";
+         return ''; # return false
      }
      foreach my $group ( @{ $current_user->get_groups } ) {
-         return if ( $admin_ids->{ $group->id } );
+         return 1 if ( $admin_ids->{ $group->id } ); # return true
      }
-     condition_error "Not member of any Admin groups";
+     return ''; # return false
  }
 
 =head1 DESCRIPTION
@@ -169,7 +216,7 @@ To create your own condition you should implement the following:
 This is optional, but called when the condition is first
 initialized. It may contain information you will want to initialize
 your condition with in C<\%params>, which are all the declared
-parameters in the condition declartion except for 'class' and 'name'.
+parameters in the condition declaration except for 'class' and 'name'.
 
 You may also do any initialization here -- you can fetch data from the
 database and store it in the class or object, whatever you need.
@@ -180,9 +227,13 @@ L<Workflow::Exception>).
 
 =head3 evaluate( $workflow )
 
-Determine whether your condition fails by throwing an exception. You
-can get the application context information necessary to process your
-condition from the C<$workflow> object.
+Determine whether your condition fails by returning a false value or
+a true value upon success. You can get the application context information
+necessary to process your condition from the C<$workflow> object.
+
+B<NOTE> Callers wanting to evaluate a condition, should not call
+this method directly, but rather use the C<< $class->evaluate_condition >>
+class method described below.
 
 =head3 _init
 
@@ -198,7 +249,7 @@ change between the two evaluate() calls.
 
 Caching is also used with an inverted condition, which you can specify
 in the definition using C<<condition name="!some_condition">>.
-This condition returns exactly the opposite of the original one, i.e.
+This condition returns the negation of the original one, i.e.
 if the original condition fails, this one does not and the other way
 round. As caching is used, you can model "yes/no" decisions using this
 feature - if you have both C<<condition name="some_condition">> and
@@ -214,6 +265,27 @@ to zero (0):
 All versions before 1.49 used a mechanism that effectively caused global
 state. To address the problems that resulted (see GitHub issues #9 and #7),
 1.49 switched to a new mechanism with a cache per workflow instance.
+
+
+=head3 $class->evaluate_condition( $WORKFLOW, $CONDITION_NAME )
+
+Users call this method to evaluate a condition; subclasses call this
+method to evaluate a nested condition.
+
+If the condition name starts with an '!', the result of the condition
+is negated. Note that a side-effect of this is that the return
+value of the condition is ignored. Only the negated boolean-ness
+is preserved.
+
+This does implement a trick that is not a convention in the underlying
+Workflow library: by default, workflow conditions throw an error when
+the condition is false and just return when the condition is true. To
+allow for counting the true conditions, we also look at the return
+value here. If a condition returns zero or an undefined value, but
+did not throw an exception, we consider it to be '1'. Otherwise, we
+consider it to be the value returned.
+
+
 
 =head1 COPYRIGHT
 

@@ -10,7 +10,7 @@ eval "require DBI";
 if ( $@ ) {
     plan skip_all => 'DBI not installed';
 } else {
-    plan tests => 37;
+    plan tests => 38;
 }
 
 require_ok( 'Workflow' );
@@ -32,6 +32,8 @@ ok( ! $@, "Added configuration for workflow with observer" );
 {
     SomeObserver->clear_observations;
     my $wf = $factory->create_workflow( 'ObservedTicket' );
+    ok( $wf->isa( 'TestApp::CustomWorkflow' ),
+        'Instantiated workflow is of expected type TestApp::CustomWorkflow' );
     my @observations = SomeObserver->get_observations;
     is( scalar @observations, 2,
         'One observation sent on workflow create to two observers' );

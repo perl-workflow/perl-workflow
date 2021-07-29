@@ -3,10 +3,10 @@ package Workflow::Condition::CheckReturn;
 use strict;
 use warnings;
 
-our $VERSION = '1.53';
+our $VERSION = '1.56';
 
-use base qw( Workflow::Condition::Nested );
-use Workflow::Exception qw( condition_error configuration_error );
+use base qw( Workflow::Condition );
+use Workflow::Exception qw( configuration_error );
 use English qw( -no_match_vars );
 
 __PACKAGE__->mk_accessors( 'condition', 'operator', 'argument' );
@@ -68,14 +68,7 @@ sub evaluate {
 
     my $condval = $self->evaluate_condition( $wf, $cond );
 
-    if ( eval "\$condval $op \$argval" ) {
-        return 1;
-    } else {
-        condition_error "Condition failed: '$condval' $op '$argval'";
-    }
-
-    configuration_error
-        "Unknown error in CheckReturn.pm: cond=$cond, op=$op, arg=$arg";
+    return eval "\$condval $op \$argval";
 }
 
 1;
@@ -90,7 +83,7 @@ Workflow::Condition::CheckReturn
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 DESCRIPTION
 

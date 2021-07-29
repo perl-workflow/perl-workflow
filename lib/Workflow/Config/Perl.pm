@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );
 
-$Workflow::Config::Perl::VERSION = '1.53';
+$Workflow::Config::Perl::VERSION = '1.56';
 
 sub parse {
     my ( $self, $type, @items ) = @_;
@@ -36,14 +36,12 @@ sub parse {
             $method    = '_translate_perl_file';
             $file_name = $item;
         }
-        $log->is_info
-            && $log->info("Will parse '$type' Perl config file '$file_name'");
+        $log->info("Will parse '$type' Perl config file '$file_name'");
         my $this_config = $self->$method( $type, $item );
 
         #warn "This config looks like:";
         #warn Dumper (\$this_config);
-        $log->is_info
-            && $log->info("Parsed Perl '$file_name' ok");
+        $log->info("Parsed Perl '$file_name' ok");
 
         if ( exists $this_config->{'type'} ) {
             $log->debug("Adding typed configuration for '$type'");
@@ -77,8 +75,7 @@ sub _translate_perl_file {
     my $config = <CONF>;
     close(CONF) || configuration_error "Cannot close file '$file': $!";
     my $data = $class->_translate_perl( $type, $config, $file );
-    $log->is_debug
-        && $log->debug( "Translated '$type' '$file' into: ", Dumper($data) );
+    $log->debug( sub { "Translated '$type' '$file' into: ", Dumper($data) } );
     return $data;
 }
 
@@ -107,7 +104,7 @@ Workflow::Config::Perl - Parse workflow configurations as Perl data structures
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 

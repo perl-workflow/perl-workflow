@@ -2,8 +2,11 @@
 
 use strict;
 use lib qw(../lib lib ../t t);
+
+use Mock::MonkeyPatch;
 use TestUtil;
 use constant NUM_TESTS => 50;
+
 use Test::More;
 use Test::Exception;
 
@@ -81,18 +84,25 @@ my ( $wf );
 
     # Load history back from the database
     $handle->{mock_add_resultset} = [
-        [ qw/ workflow_id action description state
-          workflow_user history_date
-          workflow_hist_id / ],
-        [ $wf_id, "Create workflow", "Create new workflow", 'INITIAL',
-          "n/a", $history->[1]->{bound_params}->[5],
-          $history->[1]->{bound_params}->[6] ],
+        [ qw/ workflow_hist_id workflow_id action description state
+          workflow_user history_date / ],
+        [ $history->[1]->{bound_params}->[6],
+          $wf_id, "Create workflow", "Create new workflow", 'INITIAL',
+          "n/a", $history->[1]->{bound_params}->[5], ]
         ];
     my @hist = $wf->get_history;
     $handle->{mock_clear_history} = 1;
 }
 
 {
+    my $now    = DateTime->now();
+    my $nowstr = $now->strftime( $DATE_FORMAT );
+    # Prevent test failure due to minute-wrapping between
+    # preparing the query and verifying the result
+    my $mock = Mock::MonkeyPatch->patch(
+        'DateTime::now' => sub { $now->clone }
+        );
+
     TestUtil->set_new_ticket_context( $wf );
     my $old_state = $wf->state();
     $wf->execute_action( 'TIX_NEW' );
@@ -117,7 +127,7 @@ my ( $wf );
           'due date', 'last update' ],
         [ $ticket_id, $ticket_info{type}, $ticket_info{subject},
           $ticket_info{description}, $ticket_info{creator}, $old_state,
-          $ticket_info{due_date}->strftime( '%Y-%m-%d' ), DateTime->now->strftime( $DATE_FORMAT ) ]
+          $ticket_info{due_date}->strftime( '%Y-%m-%d' ), $nowstr ]
     );
 
     my $link_create = $history->[1];
@@ -128,7 +138,7 @@ my ( $wf );
     TestUtil->check_workflow_history(
         $hst_update,
         [ $wf_id, 'Create ticket', $history_desc,
-          'TIX_CREATED', $ticket_info{creator}, DateTime->now->strftime( $DATE_FORMAT ),
+          'TIX_CREATED', $ticket_info{creator}, $nowstr,
           sub { my ( $val ) = @_; return ( length( $val ), 8 ) } ]
     );
 

@@ -7,7 +7,7 @@ use Data::Dumper qw( Dumper );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::VERSION = '1.53';
+$Workflow::Config::VERSION = '1.56';
 
 # Map the valid type to the top-level XML tag or data
 # structure to look for.
@@ -114,7 +114,7 @@ Workflow::Config - Parse configuration files for the workflow components
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 
@@ -298,6 +298,7 @@ workflow pieces:
 =head2 workflow
 
    workflow
+      class         $
       type          $
       description   $
       persister     $
@@ -318,13 +319,12 @@ workflow pieces:
 
 =item *
 
-the 'type' and 'description' keys are at the top level
+the 'class', 'type' and 'description' keys are at the top level
 
 =item *
 
-the 'extra_data' key holds an array of zero or more hashrefs with
-'table', 'field', 'class' and 'context' keys
-
+'persister' key holds a string declaring the name of a persister
+as declared in the array of persisters
 
 =item *
 
@@ -393,8 +393,11 @@ keys
  actions:
 
     action \@
-       name  $
-       field \@
+       name        $
+       class       $
+       description $
+       type        $
+       field      \@
           name         $
           is_required  yes|no
           type         $
@@ -417,6 +420,13 @@ array of one or more action hashrefs with 'name', 'class' and
 
 =item *
 
+each 'action' may specify a 'type' (default value: 'default'); in case
+a workflow specifies a 'type', actions specifying the same 'type' will
+be preferred over actions with the 'default' type when multiple actions
+by the same name exist.
+
+=item *
+
 each 'action' may have zero or more values used to fill it; each value
 has a 'name', 'description' and 'necessity' ('required' or 'optional')
 
@@ -435,11 +445,51 @@ each 'action' may have any number of 'validator' hashrefs, each with a
 =head2 persister
 
  persister:
+   name           $        # all persister classes
+   class          $        # all persister classes
+   use_random     yes|no   # all persister classes
+   use_uuid       yes|no   # all persister classes
 
-   extra_table   $
-   extra_field   $
-   extra_class   $
-   extra_context $
+   driver         $   # DBI persisters
+   dsn            $   # DBI persisters
+   user           $   # DBI persisters
+   password       $   # DBI persisters
+   workflow_table $   # DBI persisters
+   history_table  $   # DBI persisters
+   autocommit     $   # DBI persisters
+   date_format    $   # DBI persisters
+
+   table          $   # DBI/ExtraData persisters
+   data_field     $   # DBI/ExtraData persisters
+   context_key    $   # DBI/ExtraData persisters
+
+   path           $   # File persisters
+
+=over 4
+
+=item *
+
+'name' key holds a string declaring the name by which workflows may
+refer to this persister configuration
+
+=item *
+
+'class' key names a Perl class name to use when instantiating the persister
+
+=item *
+
+'use_random' key holds a string declaring (through 'yes'/'no' value) to
+use random values for the workflow identifier
+
+=item *
+
+'use_uuid' key holds a string declaring (through 'yes'/'no' value) to
+use UUID (universally unique ID) values for the workflow identifier; UUIDs
+take preference over random IDs
+
+=back
+
+For documentation of the other keys, please refer to the respective classes.
 
 =head1 COPYRIGHT
 

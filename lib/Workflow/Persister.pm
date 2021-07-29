@@ -9,7 +9,7 @@ use Workflow::Exception qw( persist_error );
 
 use constant DEFAULT_ID_LENGTH => 8;
 
-$Workflow::Persister::VERSION = '1.53';
+$Workflow::Persister::VERSION = '1.56';
 
 my @FIELDS = qw( name class
     use_random use_uuid
@@ -160,7 +160,7 @@ Workflow::Persister - Base class for workflow persistence
 
 =head1 VERSION
 
-This documentation describes version 1.53 of this package
+This documentation describes version 1.56 of this package
 
 =head1 SYNOPSIS
 
@@ -239,7 +239,9 @@ C<id> and C<saved> values set according to the saved results.
 Stub that warns that the method should be overwritten in the derived
 Persister. Since this is a SUPER class.
 
-The derived class method should return a list of L<Workflow::History> objects.
+The derived class method should return a list of hashes containing at least
+the `id` key. The hashes will be used by the workflow object to instantiate
+L<Workflow::History> objects (or a derived class).
 
 
 =head3 get_create_user( $workflow )
