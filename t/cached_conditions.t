@@ -1,6 +1,6 @@
 use strict;
 use warnings;
-use lib qw(../lib lib ../t t);
+use lib qw(lib t);
 use Test::More;
 use Test::Exception;
 use TestUtil;

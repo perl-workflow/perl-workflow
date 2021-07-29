@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(lib t);
 use TestUtil;
 use Test::More tests => 7;
 use Test::Exception;
