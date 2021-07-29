@@ -47,10 +47,11 @@ jobs:
         run: |
           cd build
           [ -d xt ] && prove --timer --lib --recurse --jobs $(nproc) --shuffle xt
-          HARNESS_PERL_SWITCHES=-MDevel::Cover=+ignore,^t/,+ignore,^/ prove --timer --lib --recurse --jobs $(nproc) --shuffle t/
+          prove --timer --lib --recurse --jobs $(nproc) --shuffle t/
       - name: Report coverage info to Coveralls
         run: |
-          cd build
+          dzil cover --outputdir /tmp/cover_db
+          cd /tmp
           cover -report coveralls
           rm -rf cover_db
         env:
