@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(lib t);
+use lib qw(t);
 use Test::Exception;
 use DateTime;
 use Test::More;
