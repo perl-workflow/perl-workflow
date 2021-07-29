@@ -24,7 +24,7 @@ my $handle = $persister->handle;
 # add a separate configuration for the observed workflow
 
 eval {
-    $factory->add_config_from_file( workflow => 'workflow_observer.xml' )
+    $factory->add_config_from_file( workflow => 't/workflow_observer.xml' )
 };
 $@ && diag( "Error: $@" );
 ok( ! $@, "Added configuration for workflow with observer" );
