@@ -58,9 +58,9 @@ sub init_random_generators {
         require Workflow::Persister::RandomId;
     }
     catch ($msg) {
-        $msg =~ s/\\n/ /g;
-        $self->log->error($msg);
-        ###TODO: shouldn't the error be rethrown?? the code below happily tries to use the failed-to-load class!
+        my $logmsg = ($msg =~ s/\\n/ /gr);
+        $self->log->error($logmsg);
+        die $msg;
     }
     my $generator
         = Workflow::Persister::RandomId->new( { id_length => $length } );
@@ -74,9 +74,9 @@ sub init_uuid_generators {
         require Workflow::Persister::UUID
     }
     catch ($msg) {
-        $msg =~ s/\\n/ /g;
-        $self->log->error($msg);
-        ###TODO: shouldn't the error be rethrown?? the code below happily tries to use the failed-to-load class!
+        my $logmsg = ($msg =~ s/\\n/ /gr);
+        $self->log->error($logmsg);
+        die $msg;
     }
     my $generator = Workflow::Persister::UUID->new();
     return ( $generator, $generator );
