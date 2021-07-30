@@ -204,10 +204,10 @@ This documentation describes version 1.56 of this package
          $user = User->create({ username => $context->param( 'username' ),
                                 email    => $context->param( 'email' ) })
      }
-     catch ($err) {
+     catch ($error) {
         # Wrap all errors returned...
          workflow_error
-             "Cannot create new user with name '", $context->param( 'username' ), "': $err";
+             "Cannot create new user with name '", $context->param( 'username' ), "': $error";
      }
 
      # Set the created user in the context for the application and/or
