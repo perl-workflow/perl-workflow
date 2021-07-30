@@ -31,8 +31,8 @@ jobs:
       - uses: shogo82148/actions-setup-perl@v1
       - name: Log perl version
         run: perl -V
-      - name: Install Dist::Zilla, Dist::Zilla::App::Command::cover & Devel::Cover::Report::Coveralls
-        run: cpm install -g Dist::Zilla Dist::Zilla::App::Command::cover Devel::Cover::Report::Coveralls
+      - name: Install Dist::Zilla & Devel::Cover::Report::Coveralls
+        run: cpm install -g Dist::Zilla Devel::Cover::Report::Coveralls
       - name: Install author dependencies
         run: dzil authordeps | cpm install -g -
       - name: Install dependencies
@@ -50,8 +50,7 @@ jobs:
           prove --timer --lib --recurse --jobs $(nproc) --shuffle t/
       - name: Report coverage info to Coveralls
         run: |
-          dzil cover --outputdir /tmp/cover_db
-          cd /tmp
+          cd build
           cover -report coveralls
           rm -rf cover_db
         env:
