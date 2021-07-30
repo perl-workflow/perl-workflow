@@ -19,7 +19,7 @@ sub new {
     $params ||= {};
     $params->{log} = get_logger( $class );
 
-    return bless { %$params }, $class;
+    return bless { %{$params} }, $class;
 }
 
 sub pre_fetch_id {
