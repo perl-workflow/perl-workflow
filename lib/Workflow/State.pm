@@ -9,7 +9,6 @@ use Workflow::Condition::Evaluate;
 use Workflow::Exception qw( workflow_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
-use English qw( -no_match_vars );
 
 $Workflow::State::VERSION = '1.56';
 

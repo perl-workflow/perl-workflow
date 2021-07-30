@@ -6,7 +6,7 @@ use base qw( Class::Accessor );
 use DBI;
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( persist_error );
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
 
 $Workflow::Persister::DBI::SequenceId::VERSION = '1.56';
 
@@ -27,14 +27,14 @@ sub pre_fetch_id {
     my $full_select = sprintf $self->sequence_select, $self->sequence_name;
     $self->log->debug("SQL to fetch sequence: ", $full_select);
     my ($row);
-    eval {
+    try {
         my $sth = $dbh->prepare($full_select);
         $sth->execute;
         $row = $sth->fetchrow_arrayref;
         $sth->finish;
-    };
-    if ($EVAL_ERROR) {
-        persist_error "Failed to retrieve sequence: $EVAL_ERROR";
+    }
+    catch ($error) {
+        persist_error "Failed to retrieve sequence: $error";
     }
     return $row->[0];
 }

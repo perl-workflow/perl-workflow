@@ -190,6 +190,7 @@ This documentation describes version 1.56 of this package
 
  use base qw( Workflow::Action );
  use Workflow::Exception qw( workflow_error );
+ use Syntax::Keyword::Try;
 
  sub execute {
      my ( $self, $wf ) = @_;
@@ -198,16 +199,15 @@ This documentation describes version 1.56 of this package
      # Since 'username' and 'email' have already been validated we
      # don't need to check them for uniqueness, well-formedness, etc.
 
-     my $user = eval {
-         User->create({ username => $context->param( 'username' ),
-                        email    => $context->param( 'email' ) })
-     };
-
-     # Wrap all errors returned...
-
-     if ( $@ ) {
+     my $user;
+     try {
+         $user = User->create({ username => $context->param( 'username' ),
+                                email    => $context->param( 'email' ) })
+     }
+     catch ($err) {
+        # Wrap all errors returned...
          workflow_error
-             "Cannot create new user with name '", $context->param( 'username' ), "': $EVAL_ERROR";
+             "Cannot create new user with name '", $context->param( 'username' ), "': $err";
      }
 
      # Set the created user in the context for the application and/or

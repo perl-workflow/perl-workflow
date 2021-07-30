@@ -3,9 +3,9 @@ package Workflow::Persister;
 use warnings;
 use strict;
 use base qw( Workflow::Base );
-use English qw( -no_match_vars );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( persist_error );
+use Syntax::Keyword::Try;
 
 use constant DEFAULT_ID_LENGTH => 8;
 
@@ -53,11 +53,14 @@ sub assign_generators {
 
 sub init_random_generators {
     my ( $self, $params ) = @_;
-    my $length = $params->{id_length} || DEFAULT_ID_LENGTH;
-    eval { require Workflow::Persister::RandomId };
-    if (my $msg = $EVAL_ERROR) {
+    my $length  = $params->{id_length} || DEFAULT_ID_LENGTH;
+    try {
+        require Workflow::Persister::RandomId;
+    }
+    catch ($msg) {
         $msg =~ s/\\n/ /g;
         $self->log->error($msg);
+        ###TODO: shouldn't the error be rethrown?? the code below happily tries to use the failed-to-load class!
     }
     my $generator
         = Workflow::Persister::RandomId->new( { id_length => $length } );
@@ -67,10 +70,13 @@ sub init_random_generators {
 sub init_uuid_generators {
     my ( $self, $params ) = @_;
 
-    eval { require Workflow::Persister::UUID };
-    if (my $msg = $EVAL_ERROR) {
+    try {
+        require Workflow::Persister::UUID
+    }
+    catch ($msg) {
         $msg =~ s/\\n/ /g;
         $self->log->error($msg);
+        ###TODO: shouldn't the error be rethrown?? the code below happily tries to use the failed-to-load class!
     }
     my $generator = Workflow::Persister::UUID->new();
     return ( $generator, $generator );

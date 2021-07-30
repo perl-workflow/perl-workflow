@@ -6,7 +6,7 @@ use base qw( Workflow::Config );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
 
 $Workflow::Config::XML::VERSION = '1.56';
 
@@ -55,11 +55,15 @@ sub parse {
         my $file_name = ( ref $item ) ? '[scalar ref]' : $item;
         $log->info("Will parse '$type' XML config file '$file_name'");
         my $this_config;
-        eval { $this_config = $self->_translate_xml( $type, $item ); };
-
-        # If processing multiple config files, this makes it much easier
-        # to find a problem.
-        croak "Processing $file_name: $EVAL_ERROR" if $EVAL_ERROR;
+        try {
+            $this_config = $self->_translate_xml( $type, $item );
+        }
+        catch ($error) {
+            # If processing multiple config files, this makes it much easier
+            # to find a problem.
+            $log->error("Processing $file_name: ", $error);
+            croak "Processing $file_name: $error";
+        }
         $log->info("Parsed XML '$file_name' ok");
 
         # This sets the outer-most tag to use
@@ -81,14 +85,16 @@ sub parse {
 sub _translate_xml {
     my ( $self, $type, $config ) = @_;
     unless ($XML_REQUIRED) {
-        eval { require XML::Simple };
-        if ($EVAL_ERROR) {
+        try {
+            require XML::Simple;
+        }
+        catch ($error) {
             configuration_error "XML::Simple must be installed to parse ",
                 "configuration files/data in XML format";
-        } else {
-            XML::Simple->import(':strict');
-            $XML_REQUIRED++;
         }
+
+        XML::Simple->import(':strict');
+        $XML_REQUIRED++;
     }
     my $options = $XML_OPTIONS{$type} || {};
     my $data = XMLin( $config, %{$options} );

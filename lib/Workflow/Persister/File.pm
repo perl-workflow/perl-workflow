@@ -4,12 +4,13 @@ use warnings;
 use strict;
 use base qw( Workflow::Persister );
 use Data::Dumper qw( Dumper );
+use English qw( -no_match_vars );
 use File::Spec::Functions qw( catdir catfile );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
 
 $Workflow::Persister::File::VERSION = '1.56';
 
@@ -60,10 +61,13 @@ sub fetch_workflow {
         persist_error "No workflow with ID '$wf_id' is available";
     }
     $self->log->debug("File exists, reconstituting workflow");
-    my $wf_info = eval { $self->constitute_object($full_path) };
-    if ($EVAL_ERROR) {
+    my $wf_info;
+    try {
+        $wf_info = $self->constitute_object($full_path);
+    }
+    catch ($error) {
         persist_error "Cannot reconstitute data from file for ",
-            "workflow '$wf_id': $EVAL_ERROR";
+            "workflow '$wf_id': $error";
     }
     return $wf_info;
 }
