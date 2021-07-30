@@ -10,7 +10,7 @@ eval "require DBI";
 if ( $@ ) {
     plan skip_all => 'DBI not installed';
 } else {
-    plan tests => 38;
+    plan tests => 33;
 }
 
 require_ok( 'Workflow' );
@@ -89,27 +89,6 @@ my @result_data   = ( 'INITIAL', $date );
         'Observation sent to configured subroutine observer second' );
     is( $observations[1]->[2], 'fetch',
         'Subroutine observer sent the correct fetch action' );
-}
-
-{
-    $handle->{mock_add_resultset} = [ \@result_fields, \@result_data ];
-    my $wf = $factory->fetch_workflow( 'ObservedTicket', 1 );
-    SomeObserver->clear_observations;
-
-    $factory->save_workflow( $wf );
-    my @observations = SomeObserver->get_observations;
-    is( scalar @observations, 2,
-        'One observation sent on workflow store to two observers' );
-
-    is( $observations[0]->[0], 'class',
-        'Observation sent to configured class observer first' );
-    is( $observations[0]->[2], 'save',
-        'Class observer sent the correct save action' );
-
-    is( $observations[1]->[0], 'sub',
-        'Observation sent to configured subroutine observer second' );
-    is( $observations[1]->[2], 'save',
-        'Subroutine observer sent the correct save action' );
 }
 
 {

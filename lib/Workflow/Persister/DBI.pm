@@ -398,6 +398,7 @@ sub commit_transaction {
             $self->log->error("Caught error committing transaction: $error");
             persist_error $error;
         }
+        $self->log->debug('Committed transaction.');
     }
 }
 
@@ -411,6 +412,12 @@ sub rollback_transaction {
             $self->log->error("Caught error rolling back transaction: $error");
             persist_error $error;
         }
+        $self->log->debug('Rolled back transaction.');
+    }
+    else {
+        $self->log->warn(
+            'Transaction NOT rolled back due to "autocommit" being enabled.'
+            );
     }
 }
 
