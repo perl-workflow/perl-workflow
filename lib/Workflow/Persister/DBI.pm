@@ -590,7 +590,7 @@ Password for C<user> to login with.
 
 Date format to use when working with the database. Accepts a format string
 that can be processed by the DateTime module. See
-L<http://search.cpan.org/~drolsky/DateTime-0.39/lib/DateTime.pm#strftime_Specifiers>
+L<DateTime's strftime Patterns|https://metacpan.org/pod/DateTime#strftime-Patterns>
 for the format options.
 
 The default is '%Y-%m-%d %H:%M' for backward compatibility.
