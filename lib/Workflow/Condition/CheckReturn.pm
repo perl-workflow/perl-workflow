@@ -62,11 +62,14 @@ sub evaluate {
     } elsif ( $arg =~ /^[a-zA-Z0-9_]+$/ ) {    # alpha-numeric, plus '_'
         $argval = $wf->context->param($arg);
     } else {
+        local $@;
+        ###TODO any exceptions are ignored???
         $argval = eval $arg;
     }
 
     my $condval = $self->evaluate_condition( $wf, $cond );
 
+    local $@;
     return eval "\$condval $op \$argval";
 }
 

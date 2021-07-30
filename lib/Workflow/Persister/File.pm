@@ -153,10 +153,18 @@ sub constitute_object {
     my $content = slurp($object_path);
 
     no strict;
-    my $object = eval $content;
-    croak $EVAL_ERROR if ($EVAL_ERROR);
+    my $object;
+    my $error;
+    my $success = do {
+        local $@;
+        my $rv = eval "\$object = do { $content }; 1;";
+        $error = $EVAL_ERROR;
+        $rv;
+    };
+    if (not $success) {
+        die $error;
+    }
     return $object;
-
 }
 
 sub _get_workflow_path {
