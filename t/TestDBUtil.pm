@@ -31,7 +31,7 @@ sub initialize_db {
 
   # Get the base workflow directory.
   my $workflow_base = cwd();
-  
+
   #we are called from the examples directory
   if ($workflow_base =~ m[/eg/ticket]) {
     $workflow_base =~ s/\A(.*)\/eg\/ticket/$1/;
@@ -46,7 +46,7 @@ sub initialize_db {
     }
 
     my ( $dbh );
-  my $DB_FILE = $arg_ref->{db_file};
+    my $DB_FILE = $arg_ref->{db_file};
     my @tables = ();
     if ( $arg_ref->{db_type} eq 'sqlite' ) {
       if ( -f "$path/$DB_FILE" ) {

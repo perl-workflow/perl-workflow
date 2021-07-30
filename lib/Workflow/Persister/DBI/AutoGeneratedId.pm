@@ -43,7 +43,9 @@ sub pre_fetch_id {return}
 
 sub post_fetch_id {
     my ( $self, $dbh, $sth ) = @_;
+
     my $from_handle = $self->from_handle;
+
     if ( defined $from_handle and $from_handle eq 'database' ) {
         return $dbh->{ $self->handle_property };
     } elsif ( defined $from_handle and $from_handle eq 'statement' ) {
