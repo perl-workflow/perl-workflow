@@ -4,11 +4,11 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 use DateTime;
-use English qw( -no_match_vars );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use Syntax::Keyword::Try;
+use Module::Runtime qw( require_module );
 
 $Workflow::Factory::VERSION = '1.56';
 
@@ -317,13 +317,15 @@ sub _load_observers {
 
 sub _load_class {
     my ( $self, $class_to_load, $msg ) = @_;
-    eval "require $class_to_load";
-    if ($EVAL_ERROR) {
-        my $full_msg = sprintf $msg, $class_to_load, $EVAL_ERROR;
+
+    try {
+        require_module( $class_to_load );
+    }
+    catch ($error) {
+        my $full_msg = sprintf $msg, $class_to_load, $error;
         $self->log->error($full_msg);
         workflow_error $full_msg;
     }
-
 }
 
 sub create_workflow {
@@ -539,9 +541,10 @@ sub _add_action_config {
             }
             $self->log->debug(
                 "Trying to include action class '$action_class'...");
-            eval "require $action_class";
-            if ($EVAL_ERROR) {
-                my $msg = $EVAL_ERROR;
+            try {
+                require_module( $action_class );
+            }
+            catch ($msg) {
                 $msg =~ s/\\n/ /g;
                 configuration_error
                     "Cannot include action class '$action_class': $msg";
@@ -600,10 +603,13 @@ sub _add_persister_config {
         }
         $self->log->debug(
             "Trying to include persister class '$persister_class'...");
-        eval "require $persister_class";
-        if ($EVAL_ERROR) {
+
+        try {
+            require_module( $persister_class );
+        }
+        catch ($error) {
             configuration_error "Cannot include persister class ",
-                "'$persister_class': $EVAL_ERROR";
+                "'$persister_class': $error";
         }
         $self->log->debug(
             "Included persister '$name' class '$persister_class' ",
@@ -682,10 +688,12 @@ sub _add_condition_config {
             }
             $self->log->debug(
                 "Trying to include condition class '$condition_class'");
-            eval "require $condition_class";
-            if ($EVAL_ERROR) {
+            try {
+                require_module( $condition_class );
+            }
+            catch ($error) {
                 configuration_error "Cannot include condition class ",
-                    "'$condition_class': $EVAL_ERROR";
+                    "'$condition_class': $error";
             }
             $self->log->debug(
                 "Included condition '$name' class '$condition_class' ",
@@ -771,10 +779,12 @@ sub _add_validator_config {
             }
             $self->log->debug(
                 "Trying to include validator class '$validator_class'");
-            eval "require $validator_class";
-            if ($EVAL_ERROR) {
+            try {
+                require_module( $validator_class )
+            }
+            catch ($error) {
                 workflow_error
-                    "Cannot include validator class '$validator_class': $EVAL_ERROR";
+                    "Cannot include validator class '$validator_class': $error";
             }
             $self->log->debug(
                 "Included validator '$name' class '$validator_class' ",
