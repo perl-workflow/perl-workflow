@@ -46,7 +46,7 @@ jobs:
       - name: Run tests
         run: |
           cd build
-          [ -d xt ] && prove --timer --lib --recurse --jobs $(nproc) --shuffle xt
+          [ -d xt ] && prove --timer --lib --recurse --jobs $(nproc) --shuffle xt/
           HARNESS_PERL_SWITCHES=-MDevel::Cover=+ignore,^t/ prove --timer --lib --recurse --jobs $(nproc) --shuffle t/
       - name: Report coverage info to Coveralls
         run: |
