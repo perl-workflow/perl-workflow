@@ -2,7 +2,7 @@ use strict;
 use warnings;
 no warnings 'once';
 
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use Test::More;
 use TestUtil;
 use Workflow::Condition;
@@ -17,9 +17,9 @@ $Workflow::Condition::CACHE_RESULTS = 0;
 
 my $factory = Workflow::Factory->instance();
 $factory->add_config_from_file(
-    workflow  => "workflow_cached_condition.xml",
-    action    => "workflow_cached_condition_action.xml",
-    condition => "workflow_cached_condition_condition.xml",
+    workflow  => "t/workflow_cached_condition.xml",
+    action    => "t/workflow_cached_condition_action.xml",
+    condition => "t/workflow_cached_condition_condition.xml",
 );
 TestUtil->init_mock_persister();
 my $wf = $factory->create_workflow( 'CachedCondition' );

@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 
 use Test::More;
 

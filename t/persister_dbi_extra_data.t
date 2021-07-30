@@ -3,7 +3,7 @@
 use strict;
 use constant NUM_TESTS => 1;
 use Test::More;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 
 eval "require DBI";
 if ( $@ ) {
