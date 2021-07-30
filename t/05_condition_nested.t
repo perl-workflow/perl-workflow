@@ -6,11 +6,6 @@ use lib qw(t);
 
 use Test::More;
 
-
-require Workflow::Factory;
-require Workflow::Persister::DBI;
-
-
 my $debug = $ENV{TEST_DEBUG};
 
 # base name used to find config files
@@ -31,6 +26,13 @@ else {
     no warnings 'once';
     Log::Log4perl::easy_init($Log::Log4perl::OFF);
 }
+
+
+
+
+require Workflow::Factory;
+require Workflow::Persister::DBI;
+
 
 plan tests => 26;
 
