@@ -296,14 +296,8 @@ sub _execute_single_action {
         # the workflow; if it fails we should have some means for the
         # factory to rollback other transactions...
 
-        # Update
-        # Jim Brandt 4/16/2008: Implemented transactions for DBI persisters.
-        # Implementation still depends on each persister.
-
-        $self->_factory()->save_workflow($self);
-
-        # If using a DBI persister with no autocommit, commit here.
-        $self->_factory()->_commit_transaction($self);
+        $self->_factory()->save_workflow( $self );
+        $self->notify_observers( 'save' );
 
         $self->log->is_info
             && $self->log->info("Saved workflow with possible new state ok");
@@ -315,7 +309,7 @@ sub _execute_single_action {
         );
         $self->state($old_state);
 
-        $self->_factory()->_rollback_transaction($self);
+        $self->notify_observers( 'rollback' );
 
         # If it is a validation error we rethrow it so it can be evaluated
         # by the caller to provide better feedback to the user
@@ -844,6 +838,13 @@ No additional parameters.
 =item *
 
 B<fetch> - Issued after a workflow is fetched from the persister.
+
+No additional parameters.
+
+=item *
+
+B<rollback> - Issued after a workflow is rolled back, e.g. due to failed
+action execution.
 
 No additional parameters.
 

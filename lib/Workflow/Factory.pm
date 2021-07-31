@@ -363,8 +363,7 @@ sub create_workflow {
         )
     );
     $self->log->info( "Created history object ok" );
-
-    $self->_commit_transaction($wf);
+    $persister->commit_transaction;
 
     my $state = $wf->_get_workflow_state();
     if ( $state->autorun ) {
@@ -375,6 +374,7 @@ sub create_workflow {
     }
 
     $self->associate_observers_with_workflow($wf);
+    $self->_associate_transaction_observer_with_workflow($wf, $persister);
     $wf->notify_observers('create');
 
     return $wf;
@@ -407,6 +407,7 @@ sub fetch_workflow {
     $persister->fetch_extra_workflow_data($wf);
 
     $self->associate_observers_with_workflow($wf);
+    $self->_associate_transaction_observer_with_workflow($wf, $persister);
     $wf->notify_observers('fetch');
 
     return $wf;
@@ -417,6 +418,20 @@ sub associate_observers_with_workflow {
     my $observers = $self->{_workflow_observers}{ $wf->type };
     return unless ( ref $observers eq 'ARRAY' );
     $wf->add_observer($_) for ( @{$observers} );
+}
+
+sub _associate_transaction_observer_with_workflow {
+    my ( $self, $wf, $persister ) = @_;
+    $wf->add_observer(
+        sub {
+            my ($unused, $action) = @_; # first argument repeats $wf
+            if ( $action eq 'save' ) {
+                $persister->commit_transaction;
+            }
+            elsif ( $action eq 'rollback' ) {
+                $persister->rollback_transaction;
+            }
+        });
 }
 
 sub _initialize_workflow_config {
@@ -469,31 +484,7 @@ sub save_workflow {
         die $error;
     }
 
-    $wf->notify_observers('save');
-
     return $wf;
-}
-
-# Only implemented for DBI. Don't know if this could be implemented
-# for other persisters.
-sub _commit_transaction {
-    my ( $self, $wf ) = @_;
-
-    my $wf_config = $self->_get_workflow_config( $wf->type );
-    my $persister = $self->get_persister( $wf_config->{persister} );
-    $persister->commit_transaction();
-    $self->log->debug('Committed transaction.');
-    return;
-}
-
-sub _rollback_transaction {
-    my ( $self, $wf ) = @_;
-
-    my $wf_config = $self->_get_workflow_config( $wf->type );
-    my $persister = $self->get_persister( $wf_config->{persister} );
-    $persister->rollback_transaction();
-    $self->log->debug('Rolled back transaction.');
-    return;
 }
 
 sub get_workflow_history {
@@ -1116,16 +1107,6 @@ validator, if we cannot 'require' that class, or if we cannot
 instantiate an object of that class.
 
 Returns: nothing
-
-=head3 _commit_transaction
-
-Calls the commit method in the workflow's persister.
-
-Returns: nothing
-
-=head3 _rollback_transaction
-
-Calls the rollback method in the workflow's persister.
 
 =head3 associate_observers_with_workflow
 
