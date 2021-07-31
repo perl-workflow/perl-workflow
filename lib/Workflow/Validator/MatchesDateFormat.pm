@@ -6,7 +6,6 @@ use 5.006;
 use base qw( Workflow::Validator );
 use DateTime::Format::Strptime;
 use Workflow::Exception qw( configuration_error validation_error );
-use Carp qw(carp);
 use Scalar::Util qw( blessed );
 
 $Workflow::Validator::MatchesDateFormat::VERSION = '1.56';
@@ -38,9 +37,6 @@ sub validate {
     if ( blessed $date_string and $date_string->isa('DateTime') ) {
         # already converted!
         return;
-    }
-    if ( ref $date_string ) { # ref but not blessed?!
-        carp 'Unable to assert DateTime or similar object';
     }
 
     my $fmt         = $self->formatter;
