@@ -1165,64 +1165,17 @@ to L<Workflow::Config>, for implementation details.
 
 =head1 DEPENDENCIES
 
-=over
-
-=item L<Class::Accessor>
-
-=item L<Class::Factory>
-
-=item L<DateTime>
-
-=item L<DateTime::Format::Strptime>
-
-=item L<Exception::Class>
-
-=item L<Log::Log4perl>
-
-=item L<Safe>
-
-=item L<XML::Simple>
-
-=item L<DBI>
-
-=item L<Data::Dumper>
-
-=item L<Carp>
-
-=item L<File::Slurp>
-
-=item L<Data::UUID>
-
-=back
-
-=head2 DEPENDENCIES FOR THE EXAMPLE APPLICATION
+The full list of dependencies is specified in the cpanfile in the distribution
+archive. Additional dependencies are listed by feature. The following features
+are currently supported by this distribution:
 
 =over
 
-=item L<CGI>
+=item *
 
-=item L<CGI::Cookie>
+C<examples>
 
-=item L<DBD::SQLite>
-
-=item L<HTTP::Daemon>
-
-=item L<HTTP::Request>
-
-=item L<HTTP::Response>
-
-=item L<HTTP::Status>
-
-=item L<Template> (Template Toolkit)
-
-=back
-
-For Win32 systems you can get the Template Toolkit and DBD::SQLite
-PPDs from TheoryX:
-
-=over
-
-=item * L<http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58>
+The additional dependencies required to run the example applications.
 
 =back
 
