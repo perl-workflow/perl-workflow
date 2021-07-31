@@ -37,11 +37,17 @@ on test => sub {
     requires 'DBD::Mock'             => '0.10';
     requires 'List::MoreUtils';
     requires 'Mock::MonkeyPatch';
-    requires 'Pod::Coverage::TrustPod';
     requires 'Test::Exception';
-    requires 'Test::Kwalitee'        => '1.21';
     requires 'Test::More'            => '0.88';
-    requires 'Test::Pod'             => '1.41';
-    requires 'Test::Pod::Coverage'   => '1.08';
     requires 'Test::Without::Module' => '0.20';
+};
+
+on develop => sub {
+    requires 'Test::CPAN::Meta::JSON' => '0.16'; # from Dist::Zilla
+    requires 'Test::Kwalitee'         => '1.21'; # from Dist::Zilla
+    requires 'Test::Perl::Critic'     => '1.04'; # from Dist::Zilla
+    requires 'Test::Pod'              => '1.41'; # from Dist::Zilla
+    requires 'Test::Pod::Coverage'    => '1.08'; # from Dist::Zilla
+    requires 'Pod::Coverage::TrustPod'; # ??? from Dist::Zilla
+    requires 'Test::Pod::Links'       => '0.003';
 };
