@@ -2,6 +2,7 @@ package Workflow::Validator;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Workflow::Base );
 use Carp qw(croak);
 

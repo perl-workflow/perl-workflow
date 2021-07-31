@@ -2,6 +2,7 @@ package Workflow::State;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Condition;
