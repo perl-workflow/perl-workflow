@@ -2,8 +2,10 @@ package Workflow::Base;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Class::Accessor );
 use Log::Log4perl;
+
 $Workflow::Base::VERSION = '1.56';
 
 sub new {

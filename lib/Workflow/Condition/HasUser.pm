@@ -2,6 +2,8 @@ package Workflow::Condition::HasUser;
 
 use warnings;
 use strict;
+use 5.006;
+
 use base qw( Workflow::Condition );
 use Log::Log4perl qw( get_logger );
 

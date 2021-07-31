@@ -2,6 +2,7 @@ package Workflow::Factory;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Workflow::Base );
 use DateTime;
 use Log::Log4perl qw( get_logger );

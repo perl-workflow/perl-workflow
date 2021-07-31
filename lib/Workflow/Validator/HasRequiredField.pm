@@ -2,6 +2,7 @@ package Workflow::Validator::HasRequiredField;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Workflow::Validator );
 use Workflow::Exception qw( validation_error );
 

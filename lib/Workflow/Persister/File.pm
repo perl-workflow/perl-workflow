@@ -2,6 +2,7 @@ package Workflow::Persister::File;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Workflow::Persister );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );

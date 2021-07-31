@@ -2,6 +2,7 @@ package Workflow::Config;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Class::Factory );
 use Data::Dumper qw( Dumper );
 use Log::Log4perl qw( get_logger );

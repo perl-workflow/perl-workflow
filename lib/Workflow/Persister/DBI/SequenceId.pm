@@ -2,6 +2,7 @@ package Workflow::Persister::DBI::SequenceId;
 
 use warnings;
 use strict;
+use 5.006;
 use base qw( Class::Accessor );
 use DBI;
 use Log::Log4perl qw( get_logger );
