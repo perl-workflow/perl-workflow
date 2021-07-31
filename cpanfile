@@ -43,11 +43,6 @@ on test => sub {
 };
 
 on develop => sub {
-    requires 'Test::CPAN::Meta::JSON' => '0.16'; # from Dist::Zilla
-    requires 'Test::Kwalitee'         => '1.21'; # from Dist::Zilla
-    requires 'Test::Perl::Critic'     => '1.04'; # from Dist::Zilla
-    requires 'Test::Pod'              => '1.41'; # from Dist::Zilla
-    requires 'Test::Pod::Coverage'    => '1.08'; # from Dist::Zilla
-    requires 'Pod::Coverage::TrustPod'; # ??? from Dist::Zilla
+    # Note that Dist::Zilla injects its own dependencies for AUTHOR_TESTS
     requires 'Test::Pod::Links'       => '0.003';
 };

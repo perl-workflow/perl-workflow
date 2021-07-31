@@ -1218,12 +1218,18 @@ A list of currently known issues can be seen via the same URL.
 
 =head1 TEST
 
-The test suite can be run using, L<Module::Build>
+The test suite can be run using L<prove>
 
-        % ./Build test
+  % prove --lib
 
 Some of the tests are reserved for the developers and are only run of the
-environment variable TEST_AUTHOR is set to true.
+environment variable TEST_AUTHOR is set to true. Requirements for these tests
+will only be installed through L<Dist::Zilla>'s C<authordeps> command:
+
+  % dzil authordeps --missing | cpanm --notest
+
+The test to verify the (http/https) links in the POD documentation will only
+run when the variable POD_LINKS is set.
 
 =head1 TEST COVERAGE
 
@@ -1267,49 +1273,6 @@ flag enabled.
         ---------------------------- ------ ------ ------ ------ ------ ------ ------
 
 Activities to get improved coverage are ongoing.
-
-=head1 QUALITY ASSURANCE
-
-The Workflow project utilizes L<Perl::Critic> in an attempt to avoid common
-pitfalls and programming mistakes.
-
-The static analysis performed by L<Perl::Critic> is integrated into the L</TEST>
-tool chain and is performed either by running the test suite.
-
-        % ./Build test
-
-Or by running the test file containing the L<Perl::Critic> tests explicitly.
-
-        % ./Build test --verbose 1 --test_files t/04_critic.t
-
-Or
-
-        % perl t/critic.t
-
-The test does however require that the TEST_AUTHOR flag is set since this is
-regarded as a part of the developer tool chain and we do not want to disturb
-users and CPAN testers with this.
-
-The following policies are disabled
-
-=over
-
-=item * L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers>
-
-=item * L<Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef>
-
-=item * L<Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames>
-
-=item * L<Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma>
-
-=back
-
-The complete policy configuration can be found in t/perlcriticrc.
-
-Currently a large number other policies are disabled, but these are being
-addressed as ongoing work and they will either be listed here or changes will
-be applied, which will address the Workflow code's problematic areas from
-L<Perl::Critic> perspective.
 
 =head1 CODING STYLE
 
