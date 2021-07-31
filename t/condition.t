@@ -6,6 +6,11 @@ use TestUtil;
 use Test::More  tests => 11;
 use Test::Exception;
 
+no warnings 'once';
+require Log::Log4perl;
+Log::Log4perl::easy_init($Log::Log4perl::OFF);
+
+
 require_ok( 'Workflow::Condition' );
 
 dies_ok { Workflow::Condition->evaluate() };
