@@ -87,13 +87,19 @@ sub _translate_perl {
     no strict 'vars';
     my $data;
     my $error;
+    my $warnings = '';
     my $success = do {
         local $@;
 
+        local $SIG{__WARN__} = sub { $warnings .= $_[0] };
         my $rv = eval "\$data = do { $config }; 1;";
         $error = $EVAL_ERROR;
         $rv;
     };
+    if ($warnings) {
+        $warnings =~ s/\r?\n/\\n/g; # don't log line-endings
+        get_logger()->warn( 'Config evaluation warned: ', $warnings );
+    }
     if (not $success) {
         configuration_error "Cannot evaluate perl data structure ",
             "in '$file': $error";
