@@ -8,12 +8,6 @@ use List::MoreUtils qw(all);
 
 $VERSION = '0.02';
 
-my ( $original_dir );
-
-END {
-    chdir( $original_dir );
-}
-
 my $LOG_FILE  = 't/workflow_tests.log';
 my $CONF_FILE = 't/log4perl.conf';
 
