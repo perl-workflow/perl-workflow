@@ -4,7 +4,6 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);
-use English qw( -no_match_vars );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( workflow_error );
 

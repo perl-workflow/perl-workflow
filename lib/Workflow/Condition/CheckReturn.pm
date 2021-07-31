@@ -6,8 +6,7 @@ use warnings;
 our $VERSION = '1.56';
 
 use base qw( Workflow::Condition );
-use Workflow::Exception qw( configuration_error );
-use English qw( -no_match_vars );
+use Workflow::Exception qw( configuration_error workflow_error );
 
 __PACKAGE__->mk_accessors( 'condition', 'operator', 'argument' );
 
@@ -63,11 +62,22 @@ sub evaluate {
     } elsif ( $arg =~ /^[a-zA-Z0-9_]+$/ ) {    # alpha-numeric, plus '_'
         $argval = $wf->context->param($arg);
     } else {
-        $argval = eval $arg;
+        my $error;
+        my $success = do {
+            local $@;
+            my $rv = eval "\$argval = do { $arg }; 1;";
+            $error = $@;
+            $rv;
+        };
+        if (not $success) {
+            workflow_error
+                "Unable to evaluate condition expression '$arg': $error";
+        }
     }
 
     my $condval = $self->evaluate_condition( $wf, $cond );
 
+    local $@;
     return eval "\$condval $op \$argval";
 }
 

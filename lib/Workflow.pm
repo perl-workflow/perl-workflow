@@ -10,7 +10,7 @@ use Workflow::Exception qw( workflow_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak carp);
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
 
 my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory _observers );
@@ -120,8 +120,10 @@ sub execute_action {
                 );
 
             if ( $wf_state->may_stop() ) {
-                $action_name =
-                    eval { $wf_state->get_autorun_action_name($self); };
+                try {
+                    $action_name = $wf_state->get_autorun_action_name($self);
+                }
+                catch { }
             }
             else {
                 $action_name = $wf_state->get_autorun_action_name($self);
@@ -275,7 +277,7 @@ sub _execute_single_action {
     my $old_state = $self->state;
     my ( $new_state, $action_return );
 
-    eval {
+    try {
         $action->validate($self);
         $self->log->is_debug && $self->log->debug("Action validated ok");
         $action_return = $action->execute($self);
@@ -305,13 +307,8 @@ sub _execute_single_action {
 
         $self->log->is_info
             && $self->log->info("Saved workflow with possible new state ok");
-    };
-
-    # If there's an exception, reset the state to the original one and
-    # rethrow
-
-    if ($EVAL_ERROR) {
-        my $error = $EVAL_ERROR;
+     }
+    catch ($error) {
         $self->log->error(
             "Caught exception from action: $error; reset ",
             "workflow to old state '$old_state'"
@@ -323,7 +320,7 @@ sub _execute_single_action {
         # If it is a validation error we rethrow it so it can be evaluated
         # by the caller to provide better feedback to the user
         if (Exception::Class->caught('Workflow::Exception::Validation')) {
-            $EVAL_ERROR->rethrow();
+            $error->rethrow();
         }
 
         # Don't use 'workflow_error' here since $error should already

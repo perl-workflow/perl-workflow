@@ -7,7 +7,9 @@ use DateTime;
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
+use Module::Runtime qw( require_module );
+
 $Workflow::Factory::VERSION = '1.56';
 
 # Extra action attribute validation is off by default for compatibility.
@@ -315,13 +317,15 @@ sub _load_observers {
 
 sub _load_class {
     my ( $self, $class_to_load, $msg ) = @_;
-    eval "require $class_to_load";
-    if ($EVAL_ERROR) {
-        my $full_msg = sprintf $msg, $class_to_load, $EVAL_ERROR;
+
+    try {
+        require_module( $class_to_load );
+    }
+    catch ($error) {
+        my $full_msg = sprintf $msg, $class_to_load, $error;
         $self->log->error($full_msg);
         workflow_error $full_msg;
     }
-
 }
 
 sub create_workflow {
@@ -449,7 +453,7 @@ sub save_workflow {
 
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
-    eval {
+    try {
         $persister->update_workflow($wf);
         $self->log->info( "Workflow '", $wf->id, "' updated ok" );
         my @unsaved = $wf->get_unsaved_history;
@@ -458,10 +462,10 @@ sub save_workflow {
         }
         $persister->create_history( $wf, @unsaved );
         $self->log->info( "Created necessary history objects ok" );
-    };
-    if ($EVAL_ERROR) {
+    }
+    catch ($error) {
         $wf->last_update($old_update);
-        croak $EVAL_ERROR;
+        die $error;
     }
 
     $wf->notify_observers('save');
@@ -537,9 +541,10 @@ sub _add_action_config {
             }
             $self->log->debug(
                 "Trying to include action class '$action_class'...");
-            eval "require $action_class";
-            if ($EVAL_ERROR) {
-                my $msg = $EVAL_ERROR;
+            try {
+                require_module( $action_class );
+            }
+            catch ($msg) {
                 $msg =~ s/\\n/ /g;
                 configuration_error
                     "Cannot include action class '$action_class': $msg";
@@ -598,19 +603,25 @@ sub _add_persister_config {
         }
         $self->log->debug(
             "Trying to include persister class '$persister_class'...");
-        eval "require $persister_class";
-        if ($EVAL_ERROR) {
+
+        try {
+            require_module( $persister_class );
+        }
+        catch ($error) {
             configuration_error "Cannot include persister class ",
-                "'$persister_class': $EVAL_ERROR";
+                "'$persister_class': $error";
         }
         $self->log->debug(
             "Included persister '$name' class '$persister_class' ",
             "ok; now try to instantiate persister..." );
-        my $persister = eval { $persister_class->new($persister_config) };
-        if ($EVAL_ERROR) {
-            configuration_error "Failed to create instance of persister ",
-                "'$name' of class '$persister_class': $EVAL_ERROR";
+        my $persister;
+        try {
+            $persister = $persister_class->new($persister_config)
         }
+        catch ($error) {
+            configuration_error "Failed to create instance of persister ",
+                "'$name' of class '$persister_class': $error";
+        };
         $self->{_persister}{$name} = $persister;
         $self->log->debug( "Instantiated persister '$name' ok" );
     }
@@ -677,18 +688,23 @@ sub _add_condition_config {
             }
             $self->log->debug(
                 "Trying to include condition class '$condition_class'");
-            eval "require $condition_class";
-            if ($EVAL_ERROR) {
+            try {
+                require_module( $condition_class );
+            }
+            catch ($error) {
                 configuration_error "Cannot include condition class ",
-                    "'$condition_class': $EVAL_ERROR";
+                    "'$condition_class': $error";
             }
             $self->log->debug(
                 "Included condition '$name' class '$condition_class' ",
                 "ok; now try to instantiate condition..." );
-            my $condition = eval { $condition_class->new($condition_config) };
-            if ($EVAL_ERROR) {
+            my $condition;
+            try {
+                $condition = $condition_class->new($condition_config)
+            }
+            catch ($error) {
                 configuration_error
-                    "Cannot create condition '$name': $EVAL_ERROR";
+                    "Cannot create condition '$name': $error";
             }
             $self->{_conditions}{$type}{$name} = $condition;
             $self->log->debug( "Instantiated condition '$name' ok" );
@@ -763,18 +779,23 @@ sub _add_validator_config {
             }
             $self->log->debug(
                 "Trying to include validator class '$validator_class'");
-            eval "require $validator_class";
-            if ($EVAL_ERROR) {
+            try {
+                require_module( $validator_class )
+            }
+            catch ($error) {
                 workflow_error
-                    "Cannot include validator class '$validator_class': $EVAL_ERROR";
+                    "Cannot include validator class '$validator_class': $error";
             }
             $self->log->debug(
                 "Included validator '$name' class '$validator_class' ",
                 " ok; now try to instantiate validator..."
                 );
-            my $validator = eval { $validator_class->new($validator_config) };
-            if ($EVAL_ERROR) {
-                workflow_error "Cannot create validator '$name': $EVAL_ERROR";
+            my $validator;
+            try {
+                $validator = $validator_class->new($validator_config)
+            }
+            catch ($error) {
+                workflow_error "Cannot create validator '$name': $error";
             }
             $self->{_validators}{$name} = $validator;
             $self->log->debug( "Instantiated validator '$name' ok" );

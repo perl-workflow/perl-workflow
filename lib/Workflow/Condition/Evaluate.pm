@@ -6,7 +6,6 @@ use base qw( Workflow::Condition );
 use Log::Log4perl qw( get_logger );
 use Safe;
 use Workflow::Exception qw( configuration_error );
-use English qw( -no_match_vars );
 
 $Workflow::Condition::Evaluate::VERSION = '1.56';
 
