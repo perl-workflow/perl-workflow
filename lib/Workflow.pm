@@ -1162,6 +1162,23 @@ The configuration of Workflow is done using the format of your choice, currently
 XML and Perl are implemented, but additional formats can be added. Please refer
 to L<Workflow::Config>, for implementation details.
 
+=head2 Logging
+
+As of version 2.0, Workflow allows application developers to select their own
+logging solution of preference: The library is a L<Log::Any> log producer. See
+L<Log::Any::Adapter> for examples on how to configure logging. For those
+wanting to keep running their L<Log::Log4perl> configuration, please install
+L<Log::Any::Adapter::Log4perl> and add one C<use> statement and one line after
+the initialization of C<Log::Log4perl>:
+
+
+   use Log::Log4perl;
+   use Log::Any::Adapter;   # Add this additional use-statement
+
+   Log::Log4perl::init('/etc/log4perl.conf');
+   Log::Any::Adapter->set( 'Log4perl' ); # Additional: Log::Any initialization
+
+
 =head1 DEPENDENCIES
 
 The full list of dependencies is specified in the cpanfile in the distribution

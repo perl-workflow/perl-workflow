@@ -698,6 +698,21 @@ The configuration of Workflow is done using the format of your choice, currently
 XML and Perl are implemented, but additional formats can be added. Please refer
 to [Workflow::Config](https://metacpan.org/pod/Workflow%3A%3AConfig), for implementation details.
 
+## Logging
+
+As of version 2.0, Workflow allows application developers to select their own
+logging solution of preference: The library is a [Log::Any](https://metacpan.org/pod/Log%3A%3AAny) log producer. See
+[Log::Any::Adapter](https://metacpan.org/pod/Log%3A%3AAny%3A%3AAdapter) for examples on how to configure logging. For those
+wanting to keep running their [Log::Log4perl](https://metacpan.org/pod/Log%3A%3ALog4perl) configuration, please install
+[Log::Any::Adapter::Log4perl](https://metacpan.org/pod/Log%3A%3AAny%3A%3AAdapter%3A%3ALog4perl) and add one `use` statement and one line after
+the initialization of `Log::Log4perl`:
+
+    use Log::Log4perl;
+    use Log::Any::Adapter;   # Add this additional use-statement
+
+    Log::Log4perl::init('/etc/log4perl.conf');
+    Log::Any::Adapter->set( 'Log4perl' ); # Additional: Log::Any initialization
+
 # DEPENDENCIES
 
 The full list of dependencies is specified in the cpanfile in the distribution
