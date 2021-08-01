@@ -37,11 +37,12 @@ on test => sub {
     requires 'DBD::Mock'             => '0.10';
     requires 'List::MoreUtils';
     requires 'Mock::MonkeyPatch';
-    requires 'Pod::Coverage::TrustPod';
     requires 'Test::Exception';
-    requires 'Test::Kwalitee'        => '1.21';
     requires 'Test::More'            => '0.88';
-    requires 'Test::Pod'             => '1.41';
-    requires 'Test::Pod::Coverage'   => '1.08';
     requires 'Test::Without::Module' => '0.20';
+};
+
+on develop => sub {
+    # Note that Dist::Zilla injects its own dependencies for AUTHOR_TESTS
+    requires 'Test::Pod::Links'       => '0.003';
 };
