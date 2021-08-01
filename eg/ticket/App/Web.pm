@@ -6,7 +6,8 @@ use CGI::Cookie;
 use Cwd                   qw( cwd );
 use Data::Dumper          qw( Dumper );
 use File::Spec::Functions qw( catdir );
-use Log::Log4perl         qw( get_logger );
+use Log::Any              qw( $log );
+use Log::Any::Adapter;
 use Template;
 use Workflow::Factory     qw( FACTORY );
 use XML::Simple           qw( :strict );
@@ -16,8 +17,6 @@ $VERSION = '0.01';
 # Default logfile name; can change with arg to init_logger()
 my $DEFAULT_LOG_FILE = 'workflow.log';
 
-my ( $log );
-
 my %ACTION_DATA = ();
 my %DISPATCH    = ();
 
@@ -26,7 +25,7 @@ my %DISPATCH    = ();
 
 sub create_dispatcher {
     my ( $class, %params ) = @_;
-    $log ||= get_logger();
+
     $log->is_info && $log->info( "Creating new dispatcher" );
     my $self = bless({
         cgi        => $params{cgi},
@@ -235,7 +234,7 @@ sub _action_login {
 sub _get_workflow {
     my ( $self ) = @_;
     return $self->param( 'workflow' )  if ( $self->param( 'workflow' ) );
-    my $log = get_logger();
+
     my $wf_id = $self->param( 'workflow_id' ) || $self->cookie_in( 'workflow_id' );
     unless ( $wf_id ) {
         die "No workflow ID given! Please fetch a workflow or create ",
@@ -316,8 +315,7 @@ sub init_logger {
             unlink( $log_file );
         }
     }
-    Log::Log4perl::init( 'log4perl.conf' );
-    $log = get_logger();
+    Log::Any::Adapter->set( 'File', $log_file );
 }
 
 sub init_factory {

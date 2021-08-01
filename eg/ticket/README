@@ -93,8 +93,7 @@ Following Application Progress
 
 No matter which interface you're using you can see what the
 application is doing watch the file 'workflow.log'. This is the
-logfile for all phases of the application, and it's controlled by the
-Log::Log4perl configuration file 'log4perl.conf'. It's very useful to
+logfile for all phases of the application. It's very useful to
 watch what's going on with a 'tail -f' or whatever your platform
 supports.
 
