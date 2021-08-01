@@ -7,8 +7,6 @@ use Test::More  tests => 50;
 use Test::Exception;
 
 no warnings 'once';
-require Log::Log4perl;
-Log::Log4perl::easy_init($Log::Log4perl::OFF);
 
 
 my ($parser);

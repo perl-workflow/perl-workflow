@@ -8,8 +8,6 @@ use Test::Exception;
 use Mock::MonkeyPatch;
 
 no warnings 'once';
-require Log::Log4perl;
-Log::Log4perl::easy_init($Log::Log4perl::OFF);
 
 
 require Workflow::Factory;

@@ -7,8 +7,6 @@ use Test::Exception;
 use Test::More  tests => 18;
 
 no warnings 'once';
-require Log::Log4perl;
-Log::Log4perl::easy_init($Log::Log4perl::OFF);
 
 
 require_ok( 'Workflow::Persister' );

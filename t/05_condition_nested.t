@@ -5,28 +5,13 @@ use warnings;
 use lib qw(t);
 
 use Test::More;
+use Log::Any qw( $log );
 
 my $debug = $ENV{TEST_DEBUG};
 
 # base name used to find config files
 my $cfgbase = $0;
 $cfgbase =~ s/\.t$/.d/;
-
-my $LOG_FILE  = 'workflow_tests.log';
-my $CONF_FILE = $cfgbase . '/log4perl.conf';
-
-require Log::Log4perl;
-if ($debug) {
-    if ( -f $LOG_FILE ) {
-        unlink($LOG_FILE);
-    }
-    Log::Log4perl::init($CONF_FILE);
-}
-else {
-    no warnings 'once';
-    Log::Log4perl::easy_init($Log::Log4perl::OFF);
-}
-
 
 
 
@@ -80,7 +65,7 @@ is( $workflow->state, 'INITIALIZED', 'initialized state' );
 $workflow->execute_action('test_greedy_or');
 is( $workflow->state, 'TEST_GREEDY_OR', 'wfcond state after test_greedy_or' );
 
-Log::Log4perl::get_logger()->error('START OFFENDING TEST');
+$log->error('START OFFENDING TEST');
 $workflow->execute_action('greedy_or_1');
 is( $workflow->state, 'INITIALIZED', 'wfcond state after greedy_or_1' )
     or $workflow->execute_action('ack_subtest_fail');

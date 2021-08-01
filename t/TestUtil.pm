@@ -3,13 +3,16 @@ package TestUtil;
 use strict;
 use vars qw($VERSION);
 use DateTime;
+use Log::Any::Adapter;
 use Test::More;
 use List::MoreUtils qw(all);
 
 $VERSION = '0.02';
 
-my $LOG_FILE  = 't/workflow_tests.log';
-my $CONF_FILE = 't/log4perl.conf';
+
+if ($ENV{DEBUG}) {
+    Log::Any::Adapter->set('Stderr');
+}
 
 ########################################
 # TICKET INFO
@@ -109,21 +112,6 @@ sub init_mock_persister {
 }
 
 
-
-# Initialize the logger and other resources; called when module
-# required by test
-
-sub init {
-    if ( -f $LOG_FILE ) {
-        unlink( $LOG_FILE );
-    }
-
-    require Log::Log4perl;
-    Log::Log4perl::init( $CONF_FILE );
-
-}
-
-init();
 
 # Used with state tests with various configs.
 sub run_state_tests{
