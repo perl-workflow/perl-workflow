@@ -405,6 +405,11 @@ in the workflow lifecycle; these are the events fired:
 
     No additional parameters.
 
+- **rollback** - Issued after a workflow is rolled back, e.g. due to failed
+action execution.
+
+    No additional parameters.
+
 - **save** - Issued after a workflow is successfully saved.
 
     No additional parameters.
@@ -530,11 +535,11 @@ initialization time, so it should not happen.)
 
 ### get\_action\_fields( $action\_name )
 
-Return a list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow%3A%3AAction%3A%3AInputField) objects for the given
+Return a list of [Workflow::InputField](https://metacpan.org/pod/Workflow%3A%3AInputField) objects for the given
 `$action_name`. If `$action_name` not in the current state or not
 accessible by the environment an exception is thrown.
 
-Returns: list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow%3A%3AAction%3A%3AInputField) objects
+Returns: list of [Workflow::InputField](https://metacpan.org/pod/Workflow%3A%3AInputField) objects
 
 ### add\_history( @( \\%params | $wf\_history\_object ) )
 
@@ -583,18 +588,18 @@ Unless otherwise noted, properties are **read-only**.
 Some properties are set in the configuration file for each
 workflow. These remain static once the workflow is instantiated.
 
-**type**
+#### **type**
 
 Type of workflow this is. You may have many individual workflows
 associated with a type or you may have many different types
 running in a single workflow engine.
 
-**description**
+#### **description**
 
 Description (usually brief, hopefully with a URL...)  of this
 workflow.
 
-**time\_zone**
+#### **time\_zone**
 
 Workflow uses the DateTime module to create all date objects. The time\_zone
 parameter allows you to pass a time zone value directly to the DateTime
@@ -605,17 +610,17 @@ See the DateTime module for acceptable values.
 
 You can get the following properties from any workflow object.
 
-**id**
+#### **id**
 
 ID of this workflow. This will **always** be defined, since when the
 [Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory) creates a new workflow it first saves it to
 long-term storage.
 
-**state**
+#### **state**
 
 The current state of the workflow.
 
-**last\_update** (read-write)
+#### **last\_update** (read-write)
 
 Date of the workflow's last update.
 
@@ -695,35 +700,13 @@ to [Workflow::Config](https://metacpan.org/pod/Workflow%3A%3AConfig), for implem
 
 # DEPENDENCIES
 
-- [Class::Accessor](https://metacpan.org/pod/Class%3A%3AAccessor)
-- [Class::Factory](https://metacpan.org/pod/Class%3A%3AFactory)
-- [DateTime](https://metacpan.org/pod/DateTime)
-- [DateTime::Format::Strptime](https://metacpan.org/pod/DateTime%3A%3AFormat%3A%3AStrptime)
-- [Exception::Class](https://metacpan.org/pod/Exception%3A%3AClass)
-- [Log::Log4perl](https://metacpan.org/pod/Log%3A%3ALog4perl)
-- [Safe](https://metacpan.org/pod/Safe)
-- [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple)
-- [DBI](https://metacpan.org/pod/DBI)
-- [Data::Dumper](https://metacpan.org/pod/Data%3A%3ADumper)
-- [Carp](https://metacpan.org/pod/Carp)
-- [File::Slurp](https://metacpan.org/pod/File%3A%3ASlurp)
-- [Data::UUID](https://metacpan.org/pod/Data%3A%3AUUID)
+The full list of dependencies is specified in the cpanfile in the distribution
+archive. Additional dependencies are listed by feature. The following features
+are currently supported by this distribution:
 
-## DEPENDENCIES FOR THE EXAMPLE APPLICATION
+- `examples`
 
-- [CGI](https://metacpan.org/pod/CGI)
-- [CGI::Cookie](https://metacpan.org/pod/CGI%3A%3ACookie)
-- [DBD::SQLite](https://metacpan.org/pod/DBD%3A%3ASQLite)
-- [HTTP::Daemon](https://metacpan.org/pod/HTTP%3A%3ADaemon)
-- [HTTP::Request](https://metacpan.org/pod/HTTP%3A%3ARequest)
-- [HTTP::Response](https://metacpan.org/pod/HTTP%3A%3AResponse)
-- [HTTP::Status](https://metacpan.org/pod/HTTP%3A%3AStatus)
-- [Template](https://metacpan.org/pod/Template) (Template Toolkit)
-
-For Win32 systems you can get the Template Toolkit and DBD::SQLite
-PPDs from TheoryX:
-
-- [http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58](http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58)
+    The additional dependencies required to run the example applications.
 
 # INCOMPATIBILITIES
 

@@ -1052,18 +1052,18 @@ Unless otherwise noted, properties are B<read-only>.
 Some properties are set in the configuration file for each
 workflow. These remain static once the workflow is instantiated.
 
-B<type>
+=head4 B<type>
 
 Type of workflow this is. You may have many individual workflows
 associated with a type or you may have many different types
 running in a single workflow engine.
 
-B<description>
+=head4 B<description>
 
 Description (usually brief, hopefully with a URL...)  of this
 workflow.
 
-B<time_zone>
+=head4 B<time_zone>
 
 Workflow uses the DateTime module to create all date objects. The time_zone
 parameter allows you to pass a time zone value directly to the DateTime
@@ -1074,17 +1074,17 @@ See the DateTime module for acceptable values.
 
 You can get the following properties from any workflow object.
 
-B<id>
+=head4 B<id>
 
 ID of this workflow. This will B<always> be defined, since when the
 L<Workflow::Factory> creates a new workflow it first saves it to
 long-term storage.
 
-B<state>
+=head4 B<state>
 
 The current state of the workflow.
 
-B<last_update> (read-write)
+=head4 B<last_update> (read-write)
 
 Date of the workflow's last update.
 
