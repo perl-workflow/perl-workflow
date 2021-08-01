@@ -35,7 +35,7 @@ Do note that the repository uses [probot](https://probot.github.io/), so if you 
 
 ```perl
 # @todo You have an in issue in your heading
-# @body But a descriptive body 
+# @body But a descriptive body
 ```
 
 The [`TODO bot`](https://probot.github.io/apps/todo/) will the create a GitHub issue automatically upon `push` to the repository.
