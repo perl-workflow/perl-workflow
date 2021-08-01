@@ -5,7 +5,7 @@ use strict;
 use 5.006;
 use base qw( Workflow::Base );
 use DateTime;
-use Log::Log4perl qw( get_logger );
+use Log::Any qw( $log );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
 use Syntax::Keyword::Try;
@@ -23,7 +23,6 @@ sub import {
 
     $class = ref $class || $class;    # just in case
     my $package = caller;
-    my $log = get_logger(__PACKAGE__);
     if ( defined $_[0] && $_[0] eq 'FACTORY' ) {
         $log->debug( "Trying to import 'FACTORY' of type '$class' to '$package'" );
         shift;
@@ -77,7 +76,6 @@ sub instance {
 sub _initialize_instance {
     my ($class) = @_;
 
-    my $log = get_logger(__PACKAGE__);
     unless ( $INSTANCES{$class} ) {
         $log->debug( "Creating empty instance of '$class' factory for ",
                      "singleton use" );
@@ -91,7 +89,6 @@ sub _initialize_instance {
 sub _delete_instance {
     my ($class) = @_;
 
-    my $log = get_logger(__PACKAGE__);
     if ( $INSTANCES{$class} ) {
         $log->debug( "Deleting instance of '$class' factory." );
         delete $INSTANCES{$class};

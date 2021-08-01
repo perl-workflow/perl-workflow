@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use 5.006;
 use base qw( Workflow::Config );
-use Log::Log4perl qw( get_logger );
+use Log::Any qw( $log );
 use Workflow::Exception qw( configuration_error );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );
@@ -13,7 +13,6 @@ $Workflow::Config::Perl::VERSION = '1.56';
 
 sub parse {
     my ( $self, $type, @items ) = @_;
-    my $log ||= get_logger();
 
     $self->_check_config_type($type);
 
@@ -68,7 +67,6 @@ sub parse {
 
 sub _translate_perl_file {
     my ( $class, $type, $file ) = @_;
-    my $log = get_logger();
 
     local $INPUT_RECORD_SEPARATOR = undef;
     open( CONF, '<', $file )
@@ -82,7 +80,6 @@ sub _translate_perl_file {
 
 sub _translate_perl {
     my ( $class, $type, $config, $file ) = @_;
-    my $log = get_logger();
 
     no strict 'vars';
     my $data;
@@ -98,7 +95,7 @@ sub _translate_perl {
     };
     if ($warnings) {
         $warnings =~ s/\r?\n/\\n/g; # don't log line-endings
-        get_logger()->warn( 'Config evaluation warned: ', $warnings );
+        $log->warn( 'Config evaluation warned: ', $warnings );
     }
     if (not $success) {
         configuration_error "Cannot evaluate perl data structure ",

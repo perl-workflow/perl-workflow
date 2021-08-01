@@ -22,8 +22,7 @@ use Exception::Class (
     },
 );
 
-use Log::Log4perl qw( get_logger );
-use Log::Log4perl::Level;
+use Log::Any;
 
 my %TYPE_CLASSES = (
     configuration_error => 'Workflow::Exception::Configuration',
@@ -32,10 +31,10 @@ my %TYPE_CLASSES = (
     workflow_error      => 'Workflow::Exception',
 );
 my %TYPE_LOGGING = (
-    configuration_error => $ERROR,
-    persist_error       => $ERROR,
-    validation_error    => $INFO,
-    workflow_error      => $ERROR,
+    configuration_error => 'error',
+    persist_error       => 'error',
+    validation_error    => 'info',
+    workflow_error      => 'error',
 );
 
 
@@ -50,14 +49,16 @@ sub _mythrow {
 
     my ( $msg, %params ) = _massage(@items);
     my $caller = caller;
-    my $log = get_logger($caller); # log as if part of the package of the caller
+    my $log = Log::Any->get_logger( category => $caller ); # log as if part of the package of the caller
     my ( $pkg, $line ) = (caller)[ 0, 2 ];
     my ( $prev_pkg, $prev_line ) = ( caller 1 )[ 0, 2 ];
 
     # Do not log condition errors
-    $log->log( $TYPE_LOGGING{$type},
-               "$type exception thrown from [$pkg: $line; before: ",
-               "$prev_pkg: $prev_line]: $msg" );
+    my $method = $TYPE_LOGGING{$type};
+    $log->$method(
+        "$type exception thrown from [$pkg: $line; before: ",
+        "$prev_pkg: $prev_line]: $msg"
+    );
 
     goto &Exception::Class::Base::throw(
         $TYPE_CLASSES{$type},

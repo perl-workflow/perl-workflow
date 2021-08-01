@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use 5.006;
 use base qw( Class::Accessor );
-use Log::Log4perl qw( get_logger );
+use Log::Any;
 use Module::Runtime qw( require_module );
 use Workflow::Exception qw( configuration_error );
 use Syntax::Keyword::Try;
@@ -19,7 +19,7 @@ my %INCLUDED = ();
 
 sub new {
     my ( $class, $params ) = @_;
-    my $log = get_logger($class);
+    my $log = Log::Any->get_logger( category => $class );
     $log->debug("Instantiating new field '$params->{name}'")
         if $params->{name};
 

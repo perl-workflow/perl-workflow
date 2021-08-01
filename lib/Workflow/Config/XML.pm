@@ -4,14 +4,12 @@ use warnings;
 use strict;
 use 5.006;
 use base qw( Workflow::Config );
-use Log::Log4perl qw( get_logger );
+use Log::Any qw( $log );
 use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use Syntax::Keyword::Try;
 
 $Workflow::Config::XML::VERSION = '1.56';
-
-my ($log);
 
 my %XML_OPTIONS = (
     action => {
@@ -45,7 +43,6 @@ my $XML_REQUIRED = 0;
 
 sub parse {
     my ( $self, $type, @items ) = @_;
-    $log ||= get_logger();
 
     $self->_check_config_type($type);
     my @config_items = Workflow::Config::_expand_refs(@items);
