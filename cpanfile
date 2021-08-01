@@ -22,9 +22,15 @@ requires 'XML::Simple'          => '2.00';
 feature examples =>
     ("The example ticketing application" =>
      sub {
+         requires 'DBD::SQLite';
+         requires 'DBI';
+         requires 'File::Spec::Functions';
+         requires 'Getopt::Long';
+
+         # specific for the CGI & web application:
          requires 'CGI';
          requires 'CGI::Cookie';
-         requires 'DBD::SQLite';
+         requires 'Cwd';
          requires 'HTTP::Daemon';
          requires 'HTTP::Request';
          requires 'HTTP::Response';
