@@ -5,13 +5,12 @@ use strict;
 use base qw( Workflow::Base );
 use 5.006;
 use Carp qw(croak);
-use Log::Log4perl qw( get_logger );
+use Log::Any qw( $log );
 use Workflow::Exception qw( workflow_error );
 
 $Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '1.56';
 
-my $log;
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
 
@@ -32,7 +31,6 @@ sub evaluate {
 
 sub evaluate_condition {
     my ( $class, $wf, $condition_name) = @_;
-    $log ||= get_logger();
     $wf->type;
 
     my $factory = $wf->_factory();

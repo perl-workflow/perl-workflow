@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use 5.006;
 use base qw( Class::Accessor );
-use Log::Log4perl;
+use Log::Any;
 
 $Workflow::Base::VERSION = '1.56';
 
@@ -25,7 +25,7 @@ sub new {
 sub init {return};
 
 sub log {
-    return ( $_[0]->{log} ||=  Log::Log4perl->get_logger(ref $_[0]) );
+    return ( $_[0]->{log} ||=  Log::Any->get_logger( category => ref $_[0] ) );
 }
 
 sub param {

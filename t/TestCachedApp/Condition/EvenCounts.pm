@@ -3,10 +3,8 @@ package TestCachedApp::Condition::EvenCounts;
 use strict;
 use base qw( Workflow::Condition );
 
-use Log::Log4perl qw(get_logger);
+use Log::Any qw( $log );
 
-
-my $log = get_logger();
 
 our $count = 0;
 

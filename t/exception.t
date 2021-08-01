@@ -7,8 +7,6 @@ use Test::More;
 use Test::Exception;
 use English qw(-no_match_vars);
 
-use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($OFF);
 
 use_ok( 'Workflow::Exception', qw(workflow_error validation_error configuration_error persist_error) );
 

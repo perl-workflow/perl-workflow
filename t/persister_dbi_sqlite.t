@@ -5,7 +5,6 @@ use lib qw(t);
 use TestUtil;
 use constant NUM_TESTS => 15;
 use Test::More;
-use Log::Log4perl     qw( get_logger );
 use TestDBUtil;
 
 eval "require DBI";

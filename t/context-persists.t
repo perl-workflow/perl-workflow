@@ -11,7 +11,6 @@ use Env qw($TEST_VERBOSE);
 use lib qw(t);
 use TestUtil;
 
-#use Log::Log4perl ":easy";    # makes workflow happy
 
 use Workflow::Factory qw(FACTORY);
 

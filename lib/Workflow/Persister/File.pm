@@ -7,7 +7,6 @@ use base qw( Workflow::Persister );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );
 use File::Spec::Functions qw( catdir catfile );
-use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);

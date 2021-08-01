@@ -5,7 +5,7 @@ use strict;
 use 5.006;
 use base qw( Class::Accessor );
 use DBI;
-use Log::Log4perl qw( get_logger );
+use Log::Any;
 use Workflow::Exception qw( persist_error );
 use Syntax::Keyword::Try;
 
@@ -18,7 +18,7 @@ __PACKAGE__->mk_accessors(@FIELDS);
 sub new {
     my ( $class, $params ) = @_;
     $params ||= {};
-    $params->{log} = get_logger( $class );
+    $params->{log} = Log::Any->get_logger( category => $class );
 
     return bless { %{$params} }, $class;
 }

@@ -4,7 +4,8 @@ use strict;
 use App::Ticket;
 use DBI;
 use Getopt::Long      qw( GetOptions );
-use Log::Log4perl     qw( get_logger );
+use Log::Any          qw( $log );
+use Log::Any::Adapter;
 use Workflow::Factory qw( FACTORY );
 
 require '../../t/TestDBUtil.pm';
@@ -18,8 +19,7 @@ if ( -f $LOG_FILE ) {
         unlink( $LOG_FILE );
     }
 }
-Log::Log4perl::init( 'log4perl.conf' );
-my $log = get_logger();
+Log::Any::Adapter->set( 'File', $LOG_FILE );
 
 $log->info( "Starting: ", scalar( localtime ) );
 

@@ -8,11 +8,10 @@ use Cwd               qw( cwd );
 use File::Spec::Functions;
 use HTTP::Daemon;
 use HTTP::Status;
-use Log::Log4perl     qw( get_logger );
+use Log::Any          qw( $log );
 use Workflow::Factory qw( FACTORY );
 
 App::Web->init_logger();
-my $log = get_logger();
 
 $log->info( "Starting web daemon: ", scalar( localtime ) );
 

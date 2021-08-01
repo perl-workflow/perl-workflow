@@ -11,16 +11,12 @@ use lib qw(
 use App::Web;
 use CGI;
 use HTTP::Status;
-use Log::Log4perl qw( get_logger );
-
-my ( $log );
+use Log::Any qw( $log );
 
 {
     App::Web->init_logger();
     App::Web->init_factory();
     App::Web->init_url_mappings( 'web_workflow.xml' );
-
-    $log = get_logger();
 
     my $cgi = CGI->new();
     my $cookie_text = $cgi->raw_cookie;
