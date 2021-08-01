@@ -5,7 +5,6 @@ use strict;
 use 5.006;
 use base qw( Class::Factory );
 use Data::Dumper qw( Dumper );
-use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
 $Workflow::Config::VERSION = '1.56';

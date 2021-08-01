@@ -4,7 +4,6 @@ use warnings;
 use strict;
 use 5.006;
 use base qw( Workflow::Persister::DBI );
-use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Syntax::Keyword::Try;
 
