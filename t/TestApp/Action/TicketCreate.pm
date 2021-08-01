@@ -3,7 +3,7 @@ package TestApp::Action::TicketCreate;
 use strict;
 use base qw( Workflow::Action );
 use File::Spec::Functions qw( catdir );
-use Log::Log4perl         qw( get_logger );
+use Log::Any qw( $log );
 use TestApp::Ticket;
 use Workflow::Exception   qw( persist_error );
 use Workflow::Factory     qw( FACTORY );
@@ -12,7 +12,6 @@ $TestApp::Action::TicketCreate::VERSION = '1.06';
 
 sub execute {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
     $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
 
     my $context = $wf->context;

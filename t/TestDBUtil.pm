@@ -3,7 +3,7 @@ package TestDBUtil;
 use strict;
 use warnings;
 
-use Log::Log4perl     qw( get_logger );
+use Log::Any          qw( $log );
 use Cwd               qw( cwd );
 use File::Spec::Functions;
 
@@ -11,8 +11,8 @@ use File::Spec::Functions;
 # DB INIT
 
 sub create_tables {
-  my $arg_ref = shift;
-    my $log = get_logger();
+    my $arg_ref = shift;
+
     my ( $dbh, @tables ) = initialize_db($arg_ref);
     for ( @tables ) {
         next if ( /^\s*$/ );
@@ -27,7 +27,6 @@ sub create_tables {
 
 sub initialize_db {
   my $arg_ref = shift;
-  my $log = get_logger();
 
   # Get the base workflow directory.
   my $workflow_base = cwd();
