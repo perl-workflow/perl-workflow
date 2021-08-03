@@ -1042,6 +1042,28 @@ properties caller has to be a L<Workflow> namespace package.
 
 Sets property to value or throws L<Workflow::Exception>
 
+=head2 Observer methods
+
+=head3 add_observer( @observers )
+
+Adds one or more observers to a C<Workflow> instance. An observer is a
+function. See L</notify_observers> for its calling convention.
+
+This function is used internally by C<Workflow::Factory> to implement
+observability as documented in the section L</WORKFLOWS ARE OBSERVABLE>
+
+=head3 notify_observers( @arguments )
+
+Calls all observer functions registered through C<add_observer> with
+the workflow as the first argument and C<@arguments> as the remaining
+arguments:
+
+   $observer->( $wf, @arguments );
+
+Used by various parts of the library to notify observers of workflow
+instance related events.
+
+
 =head2 Properties
 
 Unless otherwise noted, properties are B<read-only>.
@@ -1135,26 +1157,6 @@ Assign the L<Workflow::State> object C<$wf_state> to the workflow.
 Returns the name of the next state given the action
 C<$action_name>. Throws an exception if C<$action_name> not contained
 in the current state.
-
-=head3 add_observer( @observers )
-
-Adds one or more observers to a C<Workflow> instance. An observer is a
-function. See L</notify_observers> for its calling convention.
-
-This function is used internally by C<Workflow::Factory> to implement
-observability as documented in the section L</WORKFLOWS ARE OBSERVABLE>
-
-=head3 notify_observers( @arguments )
-
-Calls all observer functions registered through C<add_observer> with
-the workflow as the first argument and C<@arguments> as the remaining
-arguments:
-
-   $observer->( $wf, @arguments );
-
-Used by various parts of the library to notify observers of workflow
-instance related events.
-
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
