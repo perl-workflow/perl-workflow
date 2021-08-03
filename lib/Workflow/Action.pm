@@ -247,7 +247,10 @@ to all types. For example:
     <type>Ticket</type>
     <description>Actions for the Ticket workflow only.</description>
     <action name="TIX_NEW"
-           class="TestApp::Action::TicketCreate">
+            group="some_action_group"
+            class="TestApp::Action::TicketCreate">
+       <description>My action description</description> <!-- optional -->
+       <!-- the 'group' attribute is optional -->
   ...Addtional configuration...
 
 The type must match an existing workflow type or the action will never
@@ -259,24 +262,24 @@ Each action supports the following attributes:
 
 =over
 
-=item * C<class>
+=item * C<class> (required)
 
 The Perl class which provides the behaviour of the action.
 
-=item * C<description>
+=item * C<description> (optional)
 
 A free text field describing the action.
 
-=item * C<group>
+=item * C<group> (optional)
 
 The group for use with the L<Workflow::State/get_available_action_names>
 C<$group> filter.
 
-=item * C<name>
+=item * C<name> (required)
 
 The name by which workflows can reference the action.
 
-=item * C<type>
+=item * C<type> (optional)
 
 Associates the action with workflows of the same type, when set. When
 not set, the action is available to all workflows.
