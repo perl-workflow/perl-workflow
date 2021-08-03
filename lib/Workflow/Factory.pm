@@ -351,15 +351,13 @@ sub create_workflow {
     $wf->id($id);
     $self->log->info("Persisted workflow with ID '$id'; creating history...");
     $wf->add_history(
-            {   workflow_id => $id,
-                action      => $persister->get_create_action($wf),
-                description => $persister->get_create_description($wf),
-                user        => $persister->get_create_user($wf),
-                state       => $wf->state,
-                date        => DateTime->now( time_zone => $wf->time_zone() ),
-                time_zone   => $wf->time_zone(),
-            }
-        );
+        {
+            $wf->get_initial_history_data(), # returns a *list*
+            workflow_id => $id,
+            state       => $wf->state,
+            date        => DateTime->now( time_zone => $wf->time_zone() ),
+            time_zone   => $wf->time_zone(),
+        });
     $persister->create_history( $wf, $wf->get_unsaved_history() );
     $self->log->info( "Created history object ok" );
     $persister->commit_transaction;
