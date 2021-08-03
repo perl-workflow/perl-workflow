@@ -396,8 +396,8 @@ This documentation describes version 1.56 of Workflow
 
  <workflow>
      <type>myworkflow</type>
-     <time_zone>local</time_zone>
-     <description>This is my workflow.</description>
+     <time_zone>local</time_zone>                    <!-- optional -->
+     <description>This is my workflow.</description> <!-- optional -->
 
      <state name="INITIAL">
          <action name="upload file" resulting_state="uploaded" />
@@ -1161,6 +1161,34 @@ instance related events.
 The configuration of Workflow is done using the format of your choice, currently
 XML and Perl are implemented, but additional formats can be added. Please refer
 to L<Workflow::Config>, for implementation details.
+
+=head2 Configuration examples
+
+=head3 XML configuration
+
+
+ <workflow>
+     <type>myworkflow</type>
+     <class>My::Workflow</class>                     <!-- optional -->
+     <initial_state>INITIAL</initial_state>          <!-- optional -->
+     <time_zone>local</time_zone>                    <!-- optional -->
+     <description>This is my workflow.</description> <!-- optional -->
+
+     <!-- List one or more states -->
+     <state name="INITIAL">
+         <action name="upload file" resulting_state="uploaded" />
+         <action name="cancel upload" resulting_state="finished" />
+     </state>
+
+     <state name="uploaded">
+         <action name="verify file">
+            <resulting_state return="redo"     state="INITIAL" />
+            <resulting_state return="finished" state="finished"/>
+         </action>
+     </state>
+
+     <state name="finished" />
+ </workflow>
 
 =head2 Logging
 
