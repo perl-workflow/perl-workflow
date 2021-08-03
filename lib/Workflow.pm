@@ -11,7 +11,8 @@ use Workflow::Factory qw( FACTORY );
 use Carp qw(croak carp);
 use Syntax::Keyword::Try;
 
-my @FIELDS   = qw( id type description state last_update time_zone );
+my @FIELDS   = qw( id type description state last_update time_zone
+    history_class );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
@@ -144,14 +145,15 @@ sub execute_action {
 sub add_history {
     my ( $self, @items ) = @_;
 
-    my @to_add = ();
+    my @to_add  = ();
+    my $history = $self->history_class;
     foreach my $item (@items) {
         if ( ref $item eq 'HASH' ) {
             $item->{workflow_id} = $self->id;
             $item->{time_zone}   = $self->time_zone();
-            push @to_add, Workflow::History->new($item);
+            push @to_add, $history->new($item);
             $self->log->debug("Adding history from hashref");
-        } elsif ( ref $item and $item->isa('Workflow::History') ) {
+        } elsif ( ref $item and $item->isa($history) ) {
             $item->workflow_id( $self->id );
             push @to_add, $item;
             $self->log->debug("Adding history object directly");
@@ -171,6 +173,7 @@ sub get_history {
     my @uniq_history = ();
     my %seen_ids     = ();
 
+    my $history_class = $self->history_class;
     foreach my $history (
         $self->_factory()->get_workflow_history($self)
         ) {
@@ -178,7 +181,7 @@ sub get_history {
         if (defined $id) {
             unless ( $seen_ids{$id} ) {
                 $seen_ids{$id}++;
-                my $hist = Workflow::History->new($history);
+                my $hist = $history_class->new($history);
                 $hist->set_saved;
                 push @uniq_history, $hist;
             }
@@ -232,10 +235,11 @@ sub init {
     my $time_zone
         = exists $config->{time_zone} ? $config->{time_zone} : 'floating';
     $self->time_zone($time_zone);
+    $self->history_class( $config->{history_class} );
 
     # other properties go into 'param'...
     while ( my ( $key, $value ) = each %{$config} ) {
-        next if ( $key =~ /^(type|description)$/ );
+        next if ( $key =~ /^(type|description|history_class)$/ );
         next if ( ref $value );
         $self->log->debug("Assigning parameter '$key' -> '$value'");
         $self->param( $key, $value );
@@ -398,6 +402,7 @@ This documentation describes version 1.56 of Workflow
      <type>myworkflow</type>
      <time_zone>local</time_zone>                    <!-- optional -->
      <description>This is my workflow.</description> <!-- optional -->
+     <history_class>My::Workflow::History</history_class> <!-- optional -->
 
      <state name="INITIAL">
          <action name="upload file" resulting_state="uploaded" />

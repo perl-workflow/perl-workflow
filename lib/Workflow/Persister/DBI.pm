@@ -799,8 +799,6 @@ Returns nothing
 
 =item L<Workflow::Persister>
 
-=item L<Workflow::History>
-
 =item L<DBI>
 
 =back

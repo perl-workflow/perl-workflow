@@ -46,7 +46,6 @@ require Workflow::Condition;
 require Workflow::Condition::Negated;
 require Workflow::Config;
 require Workflow::Context;
-require Workflow::History;
 require Workflow::Persister;
 require Workflow::State;
 require Workflow::Validator;
@@ -250,6 +249,11 @@ sub _add_workflow_config {
             $self->_load_class( $wf_class,
                 q{Cannot require workflow class '%s': %s} );
         }
+
+        $workflow_config->{history_class} ||= 'Workflow::History';
+        $self->_load_class( $workflow_config->{history_class},
+                q{Cannot require workflow history class '%s': %s} );
+
         $self->_load_observers($workflow_config);
 
         $self->log->info( "Added all workflow states..." );
@@ -346,9 +350,7 @@ sub create_workflow {
     my $id        = $persister->create_workflow($wf);
     $wf->id($id);
     $self->log->info("Persisted workflow with ID '$id'; creating history...");
-    $persister->create_history(
-        $wf,
-        Workflow::History->new(
+    $wf->add_history(
             {   workflow_id => $id,
                 action      => $persister->get_create_action($wf),
                 description => $persister->get_create_description($wf),
@@ -357,8 +359,8 @@ sub create_workflow {
                 date        => DateTime->now( time_zone => $wf->time_zone() ),
                 time_zone   => $wf->time_zone(),
             }
-        )
-    );
+        );
+    $persister->create_history( $wf, $wf->get_unsaved_history() );
     $self->log->info( "Created history object ok" );
     $persister->commit_transaction;
 
@@ -988,12 +990,12 @@ Returns: C<$workflow>
 
 =head3 get_workflow_history( $workflow )
 
-Retrieves all L<Workflow::History> objects related to C<$workflow>.
+Retrieves all history related to C<$workflow>.
 
 B<NOTE>: Normal users get the history objects from the L<Workflow>
 object itself. Under the covers it calls this.
 
-Returns: list of L<Workflow::History> objects
+Returns: list of hashes for the Workflow to use to instantiate objects
 
 =head3 get_action( $workflow, $action_name ) [ deprecated ]
 
