@@ -3,7 +3,7 @@ package Workflow::State;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Workflow::Base );
+use parent qw( Workflow::Base );
 use Workflow::Condition;
 use Workflow::Condition::Evaluate;
 use Workflow::Exception qw( workflow_error );

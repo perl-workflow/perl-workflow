@@ -3,7 +3,7 @@ package Workflow::InputField;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Class::Accessor );
+use parent qw( Class::Accessor );
 use Log::Any;
 use Module::Runtime qw( require_module );
 use Workflow::Exception qw( configuration_error );
@@ -209,7 +209,7 @@ extra properties. Just derive your custom fields class like so:
   use warnings;
   use strict;
 
-  use base qw( Workflow::InputField );
+  use parent qw( Workflow::InputField );
   use Workflow::Exception qw( workflow_error );
 
   # extra action class properties
@@ -300,7 +300,7 @@ and 'value' keys.
 
 B<class> (optional)
 
-You may specify a custom InputField class. It should C<use base qw(
+You may specify a custom InputField class. It should C<use parent qw(
 Workflow::Action );> and probably override the new() method which
 should call SUPER::new($params). See L</"new( \%params )"> above for an
 example.

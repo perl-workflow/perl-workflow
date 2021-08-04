@@ -3,7 +3,7 @@ package Workflow::Config::XML;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Workflow::Config );
+use parent qw( Workflow::Config );
 use Log::Any qw( $log );
 use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);

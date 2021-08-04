@@ -3,7 +3,7 @@ package Workflow::Persister::DBI;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Workflow::Persister );
+use parent qw( Workflow::Persister );
 use DateTime;
 use DateTime::Format::Strptime;
 use DBI;
@@ -514,7 +514,7 @@ example.)
  package Workflow::Persister::DBI::OpenInteractHandle;
 
  use strict;
- use base qw( Workflow::Persister::DBI );
+ use parent qw( Workflow::Persister::DBI );
  use OpenInteract2::Context qw( CTX );
 
  my @FIELDS = qw( datasource_name );

@@ -1,7 +1,7 @@
 package TestApp::Action::TicketUpdate;
 
 use strict;
-use base qw( Workflow::Action );
+use parent qw( Workflow::Action );
 use Log::Any qw( $log );
 
 $TestApp::Action::TicketUpdate::VERSION = '1.05';

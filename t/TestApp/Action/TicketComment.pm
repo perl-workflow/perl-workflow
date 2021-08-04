@@ -1,7 +1,7 @@
 package TestApp::Action::TicketComment;
 
 use strict;
-use base qw( Workflow::Action );
+use parent qw( Workflow::Action );
 use Log::Any qw( $log );
 
 $TestApp::Action::TicketComment::VERSION  = '1.02';

@@ -2,7 +2,7 @@ package FactorySubclass;
 
 use strict;
 use vars qw($VERSION);
-use base qw( Workflow::Factory );
+use parent qw( Workflow::Factory );
 
 $VERSION = '0.01';
 

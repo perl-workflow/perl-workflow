@@ -6,7 +6,7 @@ use 5.006;
 
 our $VERSION = '1.56';
 
-use base qw( Workflow::Condition );
+use parent qw( Workflow::Condition );
 use Workflow::Exception qw( configuration_error workflow_error );
 
 __PACKAGE__->mk_accessors( 'condition', 'operator', 'argument' );

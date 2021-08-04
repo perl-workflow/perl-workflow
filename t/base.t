@@ -82,7 +82,7 @@ sub create_subclass {
 package My::Workflow::Base;
 
 use strict;
-use base qw( Workflow::Base );
+use parent qw( Workflow::Base );
 
 sub init {
     my ( $self, $params ) = @_;

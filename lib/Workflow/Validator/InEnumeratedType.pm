@@ -3,7 +3,7 @@ package Workflow::Validator::InEnumeratedType;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Workflow::Validator );
+use parent qw( Workflow::Validator );
 use Workflow::Exception qw( configuration_error validation_error );
 
 $Workflow::Validator::InEnumeratedType::VERSION = '1.56';

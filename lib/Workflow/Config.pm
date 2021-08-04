@@ -3,7 +3,7 @@ package Workflow::Config;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Class::Factory );
+use parent qw( Class::Factory );
 use Data::Dumper qw( Dumper );
 use Workflow::Exception qw( configuration_error );
 
@@ -182,7 +182,7 @@ would do something like:
  use strict;
 
  # Requirement 1: Subclass Workflow::Config
- use base qw( Workflow::Config );
+ use parent qw( Workflow::Config );
 
  # Requirement 2: Implement required methods
  sub parse { ... }

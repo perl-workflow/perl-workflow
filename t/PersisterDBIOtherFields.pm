@@ -2,7 +2,7 @@ package PersisterDBIOtherFields;
 
 use warnings;
 use strict;
-use base qw( Workflow::Persister::DBI );
+use parent qw( Workflow::Persister::DBI );
 
 
 sub get_workflow_fields {

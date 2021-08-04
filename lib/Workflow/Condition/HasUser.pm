@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use 5.006;
 
-use base qw( Workflow::Condition );
+use parent qw( Workflow::Condition );
 
 $Workflow::Condition::HasUser::VERSION = '1.56';
 

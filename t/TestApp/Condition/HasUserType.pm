@@ -3,7 +3,7 @@ package TestApp::Condition::HasUserType;
 
 
 use strict;
-use base qw( Workflow::Condition );
+use parent qw( Workflow::Condition );
 use Log::Any qw( $log );
 
 $TestApp::Condition::HasUserType::VERSION = '0.01';
