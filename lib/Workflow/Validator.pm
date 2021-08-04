@@ -3,7 +3,7 @@ package Workflow::Validator;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Workflow::Base );
+use parent qw( Workflow::Base );
 use Carp qw(croak);
 
 $Workflow::Validator::VERSION = '1.56';

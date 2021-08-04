@@ -1,7 +1,7 @@
 package TestApp::Condition::AlwaysTrue;
 
 use strict;
-use base qw( Workflow::Condition );
+use parent qw( Workflow::Condition );
 use Log::Any qw( $log );
 
 $TestApp::Condition::AlwaysTrue::VERSION = '0.01';

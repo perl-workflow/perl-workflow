@@ -3,7 +3,7 @@ package Workflow::Persister::DBI::ExtraData;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Workflow::Persister::DBI );
+use parent qw( Workflow::Persister::DBI );
 use Workflow::Exception qw( configuration_error persist_error );
 use Syntax::Keyword::Try;
 

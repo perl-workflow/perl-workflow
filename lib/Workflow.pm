@@ -3,7 +3,7 @@ package Workflow;
 use warnings;
 use strict;
 use 5.006; # warnings
-use base qw( Workflow::Base );
+use parent qw( Workflow::Base );
 use Workflow::Context;
 use Workflow::Exception qw( workflow_error );
 use Exception::Class;

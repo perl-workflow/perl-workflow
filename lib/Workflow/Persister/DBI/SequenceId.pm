@@ -3,7 +3,7 @@ package Workflow::Persister::DBI::SequenceId;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Class::Accessor );
+use parent qw( Class::Accessor );
 use DBI;
 use Log::Any;
 use Workflow::Exception qw( persist_error );

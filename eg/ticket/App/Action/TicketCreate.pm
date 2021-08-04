@@ -1,7 +1,7 @@
 package App::Action::TicketCreate;
 
 use strict;
-use base qw( Workflow::Action );
+use parent qw( Workflow::Action );
 use App::Ticket;
 use Log::Any            qw( $log );
 use Workflow::Exception qw( persist_error );

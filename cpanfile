@@ -1,6 +1,7 @@
 #!perl
 
 requires 'perl'                 => '5.014';
+requires 'parent';
 requires 'Carp';
 requires 'Class::Accessor'      => '0.18';
 requires 'Class::Factory'       => '1.00';

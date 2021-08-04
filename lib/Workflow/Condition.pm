@@ -2,7 +2,7 @@ package Workflow::Condition;
 
 use warnings;
 use strict;
-use base qw( Workflow::Base );
+use parent qw( Workflow::Base );
 use 5.006;
 use Carp qw(croak);
 use Log::Any qw( $log );

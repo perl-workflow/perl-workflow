@@ -3,7 +3,7 @@ package Workflow::Persister::DBI;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Workflow::Persister );
+use parent qw( Workflow::Persister );
 use DateTime;
 use DateTime::Format::Strptime;
 use DBI;

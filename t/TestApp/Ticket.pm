@@ -1,7 +1,7 @@
 package TestApp::Ticket;
 
 use strict;
-use base qw( Class::Accessor );
+use parent qw( Class::Accessor );
 use Data::Dumper          qw( Dumper );
 use DateTime::Format::Strptime;
 use File::Spec::Functions qw( catfile );

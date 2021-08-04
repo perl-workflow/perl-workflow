@@ -3,7 +3,7 @@ package Workflow::Config;
 use warnings;
 use strict;
 use 5.006;
-use base qw( Class::Factory );
+use parent qw( Class::Factory );
 use Data::Dumper qw( Dumper );
 use Workflow::Exception qw( configuration_error );
 

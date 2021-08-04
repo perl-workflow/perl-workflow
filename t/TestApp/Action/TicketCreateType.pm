@@ -1,7 +1,7 @@
 package TestApp::Action::TicketCreateType;
 
 use strict;
-use base qw( Workflow::Action );
+use parent qw( Workflow::Action );
 use File::Spec::Functions qw( catdir );
 use Log::Any qw( $log );
 use TestApp::Ticket;

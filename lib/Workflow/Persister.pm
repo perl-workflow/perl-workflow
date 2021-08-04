@@ -3,7 +3,7 @@ package Workflow::Persister;
 use warnings;
 use strict;
 use 5.013002;
-use base qw( Workflow::Base );
+use parent qw( Workflow::Base );
 use Workflow::Exception qw( persist_error );
 use Syntax::Keyword::Try;
 
