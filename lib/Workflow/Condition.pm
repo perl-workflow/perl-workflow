@@ -122,7 +122,7 @@ This documentation describes version 1.56 of this package
  package MyApp::Condition::IsAdminUser;
 
  use strict;
- use base qw( Workflow::Condition );
+ use parent qw( Workflow::Condition );
  use Workflow::Exception qw( configuration_error );
 
  __PACKAGE__->mk_accessors( 'admin_group_id' );

@@ -1170,7 +1170,7 @@ implementation is typical Perl subclassing:
  package My::Cool::Factory;
 
  use strict;
- use base qw( Workflow::Factory );
+ use parent qw( Workflow::Factory );
 
  sub some_cool_method {
      my ( $self ) = @_;

@@ -188,7 +188,7 @@ This documentation describes version 1.56 of this package
 
  package MyApp::Action::CreateUser;
 
- use base qw( Workflow::Action );
+ use parent qw( Workflow::Action );
  use Workflow::Exception qw( workflow_error );
  use Syntax::Keyword::Try;
 
@@ -375,7 +375,7 @@ an example on how you easily do this by overriding new():
   use warnings;
   use strict;
 
-  use base qw( Workflow::Action );
+  use parent qw( Workflow::Action );
   use Workflow::Exception qw( workflow_error );
 
   # extra action class properties
@@ -406,7 +406,7 @@ an example on how you easily do this by overriding new():
   use warnings;
   use strict;
 
-  use base qw( your::base::action::class );
+  use parent qw( your::base::action::class );
   use Workflow::Exception qw( workflow_error );
 
   sub execute {

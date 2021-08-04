@@ -182,7 +182,7 @@ would do something like:
  use strict;
 
  # Requirement 1: Subclass Workflow::Config
- use base qw( Workflow::Config );
+ use parent qw( Workflow::Config );
 
  # Requirement 2: Implement required methods
  sub parse { ... }

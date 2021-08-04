@@ -514,7 +514,7 @@ example.)
  package Workflow::Persister::DBI::OpenInteractHandle;
 
  use strict;
- use base qw( Workflow::Persister::DBI );
+ use parent qw( Workflow::Persister::DBI );
  use OpenInteract2::Context qw( CTX );
 
  my @FIELDS = qw( datasource_name );

@@ -109,7 +109,7 @@ This documentation describes version 1.56 of this package
 =head1 SYNOPSIS
 
  package My::App::Foo;
- use base qw( Workflow::Base );
+ use parent qw( Workflow::Base );
 
 =head1 DESCRIPTION
 
