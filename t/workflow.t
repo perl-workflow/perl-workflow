@@ -11,7 +11,7 @@ eval "require DBI";
 if ( $@ ) {
     plan skip_all => 'DBI not installed';
 } else {
-    plan tests => 36;
+    plan tests => 39;
 }
 
 require_ok( 'Workflow' );
@@ -151,6 +151,23 @@ my @result_data   = ( 'INITIAL', $date );
     like($@, qr/not found/, "expected error string: $@");
 }
 
+
+{
+    my $wf = $factory->create_workflow( 'ObservedTicket' );
+    my @history = $wf->get_history;
+    my $history = shift @history;
+
+    # Test overridden defauts:
+
+    # default: Create workflow
+    is( $history->user, 'me', "Customized user set" );
+
+    # default: n/a
+    is( $history->description, 'New workflow', "Customized description set" );
+
+    # default: Create new workflow
+    is( $history->action, 'Create', "Customized action set" );
+}
 
 
 {

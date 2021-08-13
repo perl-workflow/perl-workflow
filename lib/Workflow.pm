@@ -1181,7 +1181,7 @@ several fields are required.
 
 =head3 get_initial_history_data
 
-This method returns a list of key/value pairs to add in the initial history
+This method returns a I<list> of key/value pairs to add in the initial history
 record. The following defaults are returned:
 
 =over
@@ -1202,7 +1202,16 @@ value: "Create workflow"
 
 =back
 
-Override this method to change the values from their defaults.
+Override this method to change the values from their defaults. E.g.
+
+
+   sub get_initial_history_data {
+      return (
+           user => 1,
+           description => "none",
+           action => "run"
+      );
+   }
 
 
 =head1 CONFIGURATION AND ENVIRONMENT
