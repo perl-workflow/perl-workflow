@@ -70,12 +70,12 @@ sub execute {
     $log->info( "Link table record inserted correctly" );
 
     $wf->add_history(
-        Workflow::History->new({
+        {
             action      => 'Create ticket',
             description => sprintf( "New ticket created of type '%s' and subject '%s'",
                                     $self->param( 'type' ), $self->param( 'subject' ) ),
             user        => $creator,
-        })
+        }
     );
     $log->info( "History record added to workflow ok" );
 }
