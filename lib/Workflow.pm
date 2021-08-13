@@ -158,7 +158,7 @@ sub add_history {
             push @to_add, $item;
             $self->log->debug("Adding history object directly");
         } else {
-            workflow_error "I don't know how to add a history of ", "type '",
+            workflow_error "I don't know how to add a history of type '",
                 ref($item), "'";
         }
 
@@ -400,8 +400,8 @@ This documentation describes version 1.56 of Workflow
 
  <workflow>
      <type>myworkflow</type>
-     <time_zone>local</time_zone>                    <!-- optional -->
-     <description>This is my workflow.</description> <!-- optional -->
+     <time_zone>local</time_zone>                         <!-- optional -->
+     <description>This is my workflow.</description>      <!-- optional -->
      <history_class>My::Workflow::History</history_class> <!-- optional -->
 
      <state name="INITIAL">
