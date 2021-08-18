@@ -130,21 +130,6 @@ sub fetch_history {
         "'fetch_history()'";
 }
 
-sub get_create_user {
-    my ( $self, $wf ) = @_;
-    return 'n/a';
-}
-
-sub get_create_description {
-    my ( $self, $wf ) = @_;
-    return 'Create new workflow';
-}
-
-sub get_create_action {
-    my ( $self, $wf ) = @_;
-    return 'Create workflow';
-}
-
 # Only required for DBI persisters.
 sub commit_transaction {
     return;
@@ -248,29 +233,6 @@ Persister. Since this is a SUPER class.
 The derived class method should return a list of hashes containing at least
 the `id` key. The hashes will be used by the workflow object to instantiate
 L<Workflow::History> objects (or a derived class).
-
-
-=head3 get_create_user( $workflow )
-
-When creating an initial L<Workflow::History> record to insert into the database,
-the return value of this method is used for the value of the "user" field.
-
-Override this method to change the value from the default, "n/a".
-
-=head3 get_create_description( $workflow )
-
-When creating an initial L<Workflow::History> record to insert into the database,
-the return value of this method is used for the value of the "description" field.
-
-Override this method to change the value from the default, "Create new workflow".
-
-
-=head3 get_create_action( $workflow )
-
-When creating an initial L<Workflow::History> record to insert into the database,
-the return value of this method is used for the value of the "action" field.
-
-Override this method to change the value from the default, "Create workflow".
 
 
 =head3 assign_generators( \%params )

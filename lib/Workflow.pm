@@ -43,6 +43,16 @@ sub notify_observers {
     return;
 }
 
+sub get_initial_history_data {
+    my ( $self ) = @_;
+    return (
+        description => 'Create new workflow',
+        user        => 'n/a',
+        action      => 'Create workflow',
+        );
+}
+
+
 ########################################
 # PUBLIC METHODS
 
@@ -1162,6 +1172,47 @@ Assign the L<Workflow::State> object C<$wf_state> to the workflow.
 Returns the name of the next state given the action
 C<$action_name>. Throws an exception if C<$action_name> not contained
 in the current state.
+
+
+=head2 Initial workflow history
+
+When creating an initial L<Workflow::History> record when creating a workflow,
+several fields are required.
+
+=head3 get_initial_history_data
+
+This method returns a I<list> of key/value pairs to add in the initial history
+record. The following defaults are returned:
+
+=over
+
+=item * C<user>
+
+value: "n/a"
+
+
+=item * C<description>
+
+value: "Create new workflow"
+
+=item * C<action>
+
+value: "Create workflow"
+
+
+=back
+
+Override this method to change the values from their defaults. E.g.
+
+
+   sub get_initial_history_data {
+      return (
+           user => 1,
+           description => "none",
+           action => "run"
+      );
+   }
+
 
 =head1 CONFIGURATION AND ENVIRONMENT
 
