@@ -5,12 +5,13 @@ use lib qw(t);
 use TestUtil;
 use Test::More;
 use Test::Exception;
+use TestApp::CustomWorkflowHistory;
 
 eval "require DBI";
 if ( $@ ) {
     plan skip_all => 'DBI not installed';
 } else {
-    plan tests => 33;
+    plan tests => 36;
 }
 
 require_ok( 'Workflow' );
@@ -148,4 +149,28 @@ my @result_data   = ( 'INITIAL', $date );
         )
     } 'Workflow::Exception', "subroutine i_dont_exist causes exception";
     like($@, qr/not found/, "expected error string: $@");
+}
+
+
+
+{
+    $factory->add_config_from_file( workflow => 't/workflow.xml' );
+    my $wf = $factory->create_workflow( 'Ticket' );
+    my @history = $wf->get_history();
+    for my $history (@history) {
+        is( ref $history, 'TestApp::CustomWorkflowHistory',
+            'History item is a TestApp::CustomWorkflowHistory' );
+    }
+    throws_ok {
+        $wf->add_history(
+            Workflow::History->new(
+                {
+                    action      => 'action',
+                    description => 'description',
+                    user        => 'me',
+                })
+            );
+    } 'Workflow::Exception', "Adding the wrong history type fails";
+    like($@, qr{I don't know how to add a history of type 'Workflow::History'},
+         "expected error string, found: $@");
 }

@@ -108,17 +108,18 @@ C<\%params>.
 =head3 set_new_state( $new_state )
 
 Assigns the new state C<$new_state> to the history if the state is not
-already assigned. This is used when you generate a history request in
+already assigned. This is used when you
+L<generate a history request|Workflow/add_history> in
 a L<Workflow::Action> since the workflow state will change once the
-action has successfully completed. So in the action you create a
-history object without the state:
+action has successfully completed. So in the action you create
+history without the state:
 
   $wf->add_history(
-      Workflow::History->new({
+      {
           action      => "Cocoa Puffs",
           description => "They're magically delicious",
           user        => "Count Chocula",
-      })
+      }
   );
 
 And then after the new state has been set but before the history

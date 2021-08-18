@@ -21,11 +21,11 @@ sub execute {
     $log->info( "Entering comment for workflow ", $wf->id );
 
     $wf->add_history(
-        Workflow::History->new({
+        {
             action      => "Ticket comment",
             description => $wf->context->param( 'comment' ),
             user        => $wf->context->param( 'current_user' ),
-        })
+        }
     );
 }
 

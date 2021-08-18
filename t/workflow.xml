@@ -1,5 +1,6 @@
 <workflow>
  <type>Ticket</type>
+ <history_class>TestApp::CustomWorkflowHistory</history_class>
  <description>This is the workflow for sample application Ticket</description>
  <persister>TestPersister</persister>
  <state name="INITIAL">
