@@ -24,15 +24,12 @@ sub import {
     $class = ref $class || $class;    # just in case
     my $package = caller;
     if ( defined $_[0] && $_[0] eq 'FACTORY' ) {
-        $log->debug( "Trying to import 'FACTORY' of type '$class' to '$package'" );
         shift;
         my $instance = _initialize_instance($class);
 
         my $import_target = $package . '::FACTORY';
         no strict 'refs';
         unless ( defined &{$import_target} ) {
-            $log->debug( "Target '$import_target' not yet defined, ",
-                         "creating subroutine on the fly" );
             *{$import_target} = sub { return $instance };
         }
         return $instance;
