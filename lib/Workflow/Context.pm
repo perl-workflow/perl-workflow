@@ -7,6 +7,15 @@ use parent qw( Workflow::Base );
 
 $Workflow::Context::VERSION = '1.56';
 
+
+sub init {
+    my ( $self, %params) = @_;
+
+    for my $key (keys %params) {
+        $self->param( $key => $params{$key} );
+    }
+}
+
 sub merge {
     my ( $self, $other ) = @_;
     my $other_params = $other->param();
@@ -37,7 +46,15 @@ This documentation describes version 1.56 of this package
  my $context = Workflow::Context->new();
  $context->param( foo => 'bar' );
  $context->param( current_user => User->fetch( 'foo@bar.com' ) );
- $wf->context( $context );
+ my $wf = FACTORY()->create_workflow( 'w/f', $context );
+
+ # The above is the same as:
+ $context = Workflow::Context->new(
+      foo   => 'bar',
+      current_user => User->fetch( 'foo@bar.com' ),
+ );
+ $wf = FACTORY()->create_workflow( 'w/f', $context );
+
 
  # In a Condition get the 'current_user' back out of the workflow's context
 
@@ -59,7 +76,11 @@ including its Actions, Conditions and Validators.
 
 =head1 OBJECT METHODS
 
-=head3 merge( $other_context )
+=head2 init( %params )
+
+Adds C<%params> to the context at instantiation.
+
+=head2 merge( $other_context )
 
 Merges the values from C<$other_context> into this object. If there
 are duplicate keys in this object and C<$other_context>,
