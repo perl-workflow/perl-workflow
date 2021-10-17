@@ -6,6 +6,14 @@
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
+## 1.57 2021-10-17 Bug fix release, update recommended
+
+- PR [#170](https://github.com/jonasbn/perl-workflow/pull/170) addresses an issue where Workflow tries to log during the execution of `use` statements, at which time it's highly unlikely that the logger has already been initialized, resulting in warnings being printed on the console
+
+- PR [#171](https://github.com/jonasbn/perl-workflow/pull/171) adds initialization of context parameters passed at instantiation; currently, parameters need to be added explicily and individually after instantiation
+
+- PR [#173](https://github.com/jonasbn/perl-workflow/pull/173) addresses issue [#172](https://github.com/jonasbn/perl-workflow/pull/172), fixing failure to autorun actions from the INITIAL state
+
 ## 1.56 2021-07-28 Bug fix release, update recommended
 
 - PR [#139](https://github.com/jonasbn/perl-workflow/pull/139) addresses an issue introduced in 1.55, where action configurations would contain unnecessary information

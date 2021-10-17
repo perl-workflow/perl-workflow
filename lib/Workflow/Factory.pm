@@ -11,7 +11,7 @@ use Carp qw(croak);
 use Syntax::Keyword::Try;
 use Module::Runtime qw( require_module );
 
-$Workflow::Factory::VERSION = '1.56';
+$Workflow::Factory::VERSION = '1.57';
 
 # Extra action attribute validation is off by default for compatibility.
 our $VALIDATE_ACTION_CONFIG = 0;
@@ -819,7 +819,7 @@ Workflow::Factory - Generates new workflow and supporting objects
 
 =head1 VERSION
 
-This documentation describes version 1.56 of this package
+This documentation describes version 1.57 of this package
 
 =head1 SYNOPSIS
 

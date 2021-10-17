@@ -9,7 +9,7 @@ use Log::Any qw( $log );
 use Workflow::Exception qw( workflow_error );
 
 $Workflow::Condition::CACHE_RESULTS = 1;
-$Workflow::Condition::VERSION = '1.56';
+$Workflow::Condition::VERSION = '1.57';
 
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -82,7 +82,7 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
 
 =head1 VERSION
 
-This documentation describes version 1.56 of this package
+This documentation describes version 1.57 of this package
 
 =head1 SYNOPSIS
 

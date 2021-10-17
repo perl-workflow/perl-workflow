@@ -6,7 +6,7 @@ use 5.006;
 use parent qw( Workflow::Validator );
 use Workflow::Exception qw( validation_error );
 
-$Workflow::Validator::HasRequiredField::VERSION = '1.56';
+$Workflow::Validator::HasRequiredField::VERSION = '1.57';
 
 sub validate {
     my ( $self, $wf, @required_fields ) = @_;
@@ -35,7 +35,7 @@ Workflow::Validator::HasRequiredField - Validator to ensure certain data are in 
 
 =head1 VERSION
 
-This documentation describes version 1.56 of this package
+This documentation describes version 1.57 of this package
 
 =head1 SYNOPSIS
 

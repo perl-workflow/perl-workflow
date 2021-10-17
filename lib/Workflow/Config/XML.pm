@@ -9,7 +9,7 @@ use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use Syntax::Keyword::Try;
 
-$Workflow::Config::XML::VERSION = '1.56';
+$Workflow::Config::XML::VERSION = '1.57';
 
 my %XML_OPTIONS = (
     action => {
@@ -111,7 +111,7 @@ Workflow::Config::XML - Parse workflow configurations from XML content
 
 =head1 VERSION
 
-This documentation describes version 1.56 of this package
+This documentation describes version 1.57 of this package
 
 =head1 SYNOPSIS
 
