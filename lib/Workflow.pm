@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.56';
+$Workflow::VERSION = '1.57';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -377,7 +377,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 1.56 of Workflow
+This documentation describes version 1.57 of Workflow
 
 =head1 SYNOPSIS
 

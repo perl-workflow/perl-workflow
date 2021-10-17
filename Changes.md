@@ -6,7 +6,7 @@
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
-## 1.57 (To be released) Bug fix release, update recommended
+## 1.57 2021-10-17 Bug fix release, update recommended
 
 - PR [#170](https://github.com/jonasbn/perl-workflow/pull/170) addresses an issue where Workflow tries to log during the execution of `use` statements, at which time it's highly unlikely that the logger has already been initialized, resulting in warnings being printed on the console
 
