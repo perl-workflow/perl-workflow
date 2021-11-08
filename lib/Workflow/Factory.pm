@@ -23,14 +23,17 @@ sub import {
     my $log = get_logger(__PACKAGE__);
     if ( defined $_[0] && $_[0] eq 'FACTORY' ) {
         shift;
-        my $instance = _initialize_instance($class);
+        my $instance;
 
         my $import_target = $package . '::FACTORY';
         no strict 'refs';
         unless ( defined &{$import_target} ) {
-            *{$import_target} = sub { return $instance };
+            *{$import_target} = sub {
+                return $instance if $instance;
+                $instance = _initialize_instance($class);
+                return $instance;
+            };
         }
-        return $instance;
     }
     $class->SUPER::import(@_);
 }
