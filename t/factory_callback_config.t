@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use TestUtil;
 use Test::More tests => 7;
 use Test::Exception;
@@ -22,9 +22,9 @@ can_ok( $factory, 'config_callback' );
 lives_ok { $factory->config_callback( sub {
                                         my $type = shift;
                                         if ($type eq 'CallbackTest') {
-                                          return { workflow => 'workflow_callback.xml',
-                                                   action => 'workflow_action_callback.xml',
-                                                   condition => 'workflow_condition_callback.xml' };
+                                          return { workflow => 't/workflow_callback.xml',
+                                                   action => 't/workflow_action_callback.xml',
+                                                   condition => 't/workflow_condition_callback.xml' };
                                         }
                                         return {};
                                       } ) }

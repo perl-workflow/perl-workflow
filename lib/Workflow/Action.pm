@@ -5,9 +5,9 @@ package Workflow::Action;
 
 use warnings;
 use strict;
-use base qw( Workflow::Base );
-use Log::Log4perl qw( get_logger );
-use Workflow::Action::InputField;
+use 5.006;
+use parent qw( Workflow::Base );
+use Workflow::InputField;
 use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak);
@@ -120,7 +120,7 @@ sub init {
         } else {
             $self->log->debug("Using standard field class");
             $self->add_fields(
-                Workflow::Action::InputField->new($field_info) );
+                Workflow::InputField->new($field_info) );
         }
     }
 
@@ -188,8 +188,9 @@ This documentation describes version 1.57 of this package
 
  package MyApp::Action::CreateUser;
 
- use base qw( Workflow::Action );
+ use parent qw( Workflow::Action );
  use Workflow::Exception qw( workflow_error );
+ use Syntax::Keyword::Try;
 
  sub execute {
      my ( $self, $wf ) = @_;
@@ -198,16 +199,15 @@ This documentation describes version 1.57 of this package
      # Since 'username' and 'email' have already been validated we
      # don't need to check them for uniqueness, well-formedness, etc.
 
-     my $user = eval {
-         User->create({ username => $context->param( 'username' ),
-                        email    => $context->param( 'email' ) })
-     };
-
-     # Wrap all errors returned...
-
-     if ( $@ ) {
+     my $user;
+     try {
+         $user = User->create({ username => $context->param( 'username' ),
+                                email    => $context->param( 'email' ) })
+     }
+     catch ($error) {
+        # Wrap all errors returned...
          workflow_error
-             "Cannot create new user with name '", $context->param( 'username' ), "': $EVAL_ERROR";
+             "Cannot create new user with name '", $context->param( 'username' ), "': $error";
      }
 
      # Set the created user in the context for the application and/or
@@ -247,7 +247,10 @@ to all types. For example:
     <type>Ticket</type>
     <description>Actions for the Ticket workflow only.</description>
     <action name="TIX_NEW"
-           class="TestApp::Action::TicketCreate">
+            group="some_action_group"
+            class="TestApp::Action::TicketCreate">
+       <description>My action description</description> <!-- optional -->
+       <!-- the 'group' attribute is optional -->
   ...Addtional configuration...
 
 The type must match an existing workflow type or the action will never
@@ -259,24 +262,24 @@ Each action supports the following attributes:
 
 =over
 
-=item * C<class>
+=item * C<class> (required)
 
 The Perl class which provides the behaviour of the action.
 
-=item * C<description>
+=item * C<description> (optional)
 
 A free text field describing the action.
 
-=item * C<group>
+=item * C<group> (optional)
 
 The group for use with the L<Workflow::State/get_available_action_names>
 C<$group> filter.
 
-=item * C<name>
+=item * C<name> (required)
 
 The name by which workflows can reference the action.
 
-=item * C<type>
+=item * C<type> (optional)
 
 Associates the action with workflows of the same type, when set. When
 not set, the action is available to all workflows.
@@ -375,7 +378,7 @@ an example on how you easily do this by overriding new():
   use warnings;
   use strict;
 
-  use base qw( Workflow::Action );
+  use parent qw( Workflow::Action );
   use Workflow::Exception qw( workflow_error );
 
   # extra action class properties
@@ -406,7 +409,7 @@ an example on how you easily do this by overriding new():
   use warnings;
   use strict;
 
-  use base qw( your::base::action::class );
+  use parent qw( your::base::action::class );
   use Workflow::Exception qw( workflow_error );
 
   sub execute {
@@ -418,15 +421,15 @@ an example on how you easily do this by overriding new():
 
 =head3 required_fields()
 
-Return a list of L<Workflow::Action::InputField> objects that are required.
+Return a list of L<Workflow::InputField> objects that are required.
 
 =head3 optional_fields()
 
-Return a list of L<Workflow::Action::InputField> objects that are optional.
+Return a list of L<Workflow::InputField> objects that are optional.
 
 =head3 fields()
 
-Return a list of all L<Workflow::Action::InputField> objects
+Return a list of all L<Workflow::InputField> objects
 associated with this action.
 
 
@@ -440,7 +443,7 @@ It sets up the necessary validators based on the on configured actions, input fi
 
 =head3 add_field( @fields )
 
-Add one or more L<Workflow::Action::InputField>s to the action.
+Add one or more L<Workflow::InputField>s to the action.
 
 =head3 add_validators( @validator_config )
 

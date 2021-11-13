@@ -2,7 +2,8 @@ package Workflow::Persister::RandomId;
 
 use warnings;
 use strict;
-use base qw( Class::Accessor );
+use 5.006;
+use parent qw( Class::Accessor );
 
 use constant DEFAULT_ID_LENGTH  => 8;
 use constant RANDOM_SEED        => 26;

@@ -1,13 +1,13 @@
 package Workflow::Condition::LazyAND;
 
-use strict;
 use warnings;
+use strict;
+use 5.006;
 
 our $VERSION = '1.57';
 
-use base qw( Workflow::Condition::Nested );
-use Workflow::Exception qw( condition_error configuration_error );
-use English qw( -no_match_vars );
+use parent qw( Workflow::Condition );
+use Workflow::Exception qw( configuration_error );
 
 __PACKAGE__->mk_accessors('conditions');
 
@@ -36,13 +36,12 @@ sub evaluate {
     foreach my $cond ( @{$conditions} ) {
         my $result = $self->evaluate_condition( $wf, $cond );
         if ( not $result ) {
-            condition_error("Condition '$cond' returned 'false'");
+            return $result; # return false
         }
         $total++;
     }
 
-    return $total
-        || condition_error("No condition seems to have been run in LazyAND");
+    return $total; # returns false if no conditions ran: the contract
 }
 
 1;

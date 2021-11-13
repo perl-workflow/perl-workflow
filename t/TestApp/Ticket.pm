@@ -1,11 +1,11 @@
 package TestApp::Ticket;
 
 use strict;
-use base qw( Class::Accessor );
+use parent qw( Class::Accessor );
 use Data::Dumper          qw( Dumper );
 use DateTime::Format::Strptime;
 use File::Spec::Functions qw( catfile );
-use Log::Log4perl         qw( get_logger );
+use Log::Any qw( $log );
 use Workflow::Factory     qw( FACTORY );
 use Workflow::Persister::RandomId;
 use vars qw($VERSION);
@@ -23,7 +23,7 @@ my $update_parser = DateTime::Format::Strptime->new( pattern => '%Y-%m-%d %H:%M'
 
 sub new {
     my ( $class, $params ) = @_;
-    my $log = get_logger();
+
     $log->info( "Instantiating new $class" );
     my $self = bless( {}, $class );
     for ( @FIELDS ) {
@@ -42,7 +42,7 @@ sub id {
 
 sub fetch {
     my ( $class, $id ) = @_;
-    my $log = get_logger();
+
     $log->info( "Fetching existing ticket with ID '$id'" );
 
     my $persister = FACTORY->get_persister( 'TestPersister' );
@@ -76,23 +76,6 @@ sub fetch {
             last_update => $update_parser->parse_datetime( $row->[6] )
         });
     }
-    elsif ( $persister->isa( 'Workflow::Persister::SPOPS' ) ) {
-        my $p_ticket = eval { My::Persist::Ticket->fetch( $id  ) };
-        if ( $@ ) {
-            $log->error( "Error fetching ticket: $@" );
-            die "Failed to retrieve ticket: $@";
-        }
-        return $class->new({
-            ticket_id   => $p_ticket->id,
-            type        => $p_ticket->type,
-            subject     => $p_ticket->subject,
-            description => $p_ticket->description,
-            creator     => $p_ticket->creator,
-            status      => $p_ticket->status,
-            due_date    => $p_ticket->due_date,
-            last_update => $p_ticket->last_update,
-        });
-    }
     elsif ( $persister->isa( 'Workflow::Persister::File' ) ) {
         my $ticket_path = catfile( $persister->path, "${id}_ticket" );
         return $persister->constitute_object( $ticket_path );
@@ -101,7 +84,6 @@ sub fetch {
 
 sub create {
     my ( $self ) = @_;
-    my $log = get_logger();
 
     my $id = $generator->pre_fetch_id();
     $log->info( "Creating new ticket with ID '$id'" );
@@ -134,24 +116,6 @@ sub create {
             die "Failed to create ticket: $@";
         }
     }
-    elsif ( $persister->isa( 'Workflow::Persister::SPOPS' ) ) {
-        my $ticket = eval {
-            My::Persist::Ticket->new({
-                ticket_id   => $id,
-                type        => $self->type,
-                subject     => $self->subject,
-                description => $self->description,
-                creator     => $self->creator,
-                status      => $self->status,
-                due_date    => $self->due_date,
-                last_update => $self->last_update,
-            })->save()
-        };
-        if ( $@ ) {
-            $log->error( "Error creating ticket: $@" );
-            die "Failed to create ticket: $@";
-        }
-    }
     elsif ( $persister->isa( 'Workflow::Persister::File' ) ) {
         my $ticket_path = catfile( $persister->path, "${id}_ticket" );
         $persister->serialize_object( $ticket_path, $self );
@@ -163,7 +127,6 @@ sub create {
 
 sub update {
     my ( $self ) = @_;
-    my $log = get_logger();
 
     my $persister = FACTORY->get_persister( 'TestPersister' );
     if ( $persister->isa( 'Workflow::Persister::DBI' ) ) {
@@ -183,19 +146,6 @@ sub update {
             $sth = $dbh->prepare( $sql );
             $sth->execute( @values );
         };
-        if ( $@ ) {
-            die "Failed to update ticket: $@";
-        }
-    }
-    elsif ( $persister->isa( 'Workflow::Persister::SPOPS' ) ) {
-        my $p_ticket = eval { My::Persist::Ticket->fetch( $self->id ) };
-        if ( $@ ) {
-            die "Failed to fetch ticket '", $self->id, "' for update: $@\n";
-        }
-        $p_ticket->status( $self->status );
-        $p_ticket->due_date( $self->due_date );
-        $p_ticket->last_update( $self->last_update );
-        eval { $p_ticket->save };
         if ( $@ ) {
             die "Failed to update ticket: $@";
         }

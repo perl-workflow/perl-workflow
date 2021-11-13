@@ -1,11 +1,9 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use Test::More;
 
-use Log::Log4perl qw(:easy);
-Log::Log4perl->easy_init($OFF);
 
 eval "require DBI";
 if ( $@ ) {

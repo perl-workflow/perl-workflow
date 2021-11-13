@@ -2,7 +2,8 @@ package Workflow::Validator::HasRequiredField;
 
 use warnings;
 use strict;
-use base qw( Workflow::Validator );
+use 5.006;
+use parent qw( Workflow::Validator );
 use Workflow::Exception qw( validation_error );
 
 $Workflow::Validator::HasRequiredField::VERSION = '1.57';

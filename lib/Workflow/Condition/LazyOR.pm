@@ -1,13 +1,13 @@
 package Workflow::Condition::LazyOR;
 
-use strict;
 use warnings;
+use strict;
+use 5.006;
 
 our $VERSION = '1.57';
 
-use base qw( Workflow::Condition::Nested );
-use Workflow::Exception qw( condition_error configuration_error );
-use English qw( -no_match_vars );
+use parent qw( Workflow::Condition );
+use Workflow::Exception qw( configuration_error );
 
 __PACKAGE__->mk_accessors('conditions');
 
@@ -40,7 +40,7 @@ sub evaluate {
             return $result;
         }
     }
-    condition_error("All nested conditions returned 'false'");
+    return ''; # false
 }
 
 1;

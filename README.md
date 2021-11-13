@@ -1,5 +1,5 @@
 [![CPAN version](https://badge.fury.io/pl/Workflow.svg)](http://badge.fury.io/pl/Workflow)
-[![Build Status](https://travis-ci.org/jonasbn/perl-workflow.svg?branch=master)](https://travis-ci.org/jonasbn/perl-workflow)
+[![Build status](https://github.com/jonasbn/perl-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/jonasbn/perl-workflow/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/jonasbn/perl-workflow/badge.svg?branch=master)](https://coveralls.io/github/jonasbn/perl-workflow?branch=master)
 
 # NAME
@@ -405,6 +405,11 @@ in the workflow lifecycle; these are the events fired:
 
     No additional parameters.
 
+- **rollback** - Issued after a workflow is rolled back, e.g. due to failed
+action execution.
+
+    No additional parameters.
+
 - **save** - Issued after a workflow is successfully saved.
 
     No additional parameters.
@@ -530,11 +535,11 @@ initialization time, so it should not happen.)
 
 ### get\_action\_fields( $action\_name )
 
-Return a list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow%3A%3AAction%3A%3AInputField) objects for the given
+Return a list of [Workflow::InputField](https://metacpan.org/pod/Workflow%3A%3AInputField) objects for the given
 `$action_name`. If `$action_name` not in the current state or not
 accessible by the environment an exception is thrown.
 
-Returns: list of [Workflow::Action::InputField](https://metacpan.org/pod/Workflow%3A%3AAction%3A%3AInputField) objects
+Returns: list of [Workflow::InputField](https://metacpan.org/pod/Workflow%3A%3AInputField) objects
 
 ### add\_history( @( \\%params | $wf\_history\_object ) )
 
@@ -583,18 +588,18 @@ Unless otherwise noted, properties are **read-only**.
 Some properties are set in the configuration file for each
 workflow. These remain static once the workflow is instantiated.
 
-**type**
+#### **type**
 
 Type of workflow this is. You may have many individual workflows
 associated with a type or you may have many different types
 running in a single workflow engine.
 
-**description**
+#### **description**
 
 Description (usually brief, hopefully with a URL...)  of this
 workflow.
 
-**time\_zone**
+#### **time\_zone**
 
 Workflow uses the DateTime module to create all date objects. The time\_zone
 parameter allows you to pass a time zone value directly to the DateTime
@@ -605,17 +610,17 @@ See the DateTime module for acceptable values.
 
 You can get the following properties from any workflow object.
 
-**id**
+#### **id**
 
 ID of this workflow. This will **always** be defined, since when the
 [Workflow::Factory](https://metacpan.org/pod/Workflow%3A%3AFactory) creates a new workflow it first saves it to
 long-term storage.
 
-**state**
+#### **state**
 
 The current state of the workflow.
 
-**last\_update** (read-write)
+#### **last\_update** (read-write)
 
 Date of the workflow's last update.
 
@@ -690,40 +695,33 @@ instance related events.
 # CONFIGURATION AND ENVIRONMENT
 
 The configuration of Workflow is done using the format of your choice, currently
-XML and Perl is implemented, but additional formats can be added, please refer
+XML and Perl are implemented, but additional formats can be added. Please refer
 to [Workflow::Config](https://metacpan.org/pod/Workflow%3A%3AConfig), for implementation details.
+
+## Logging
+
+As of version 2.0, Workflow allows application developers to select their own
+logging solution of preference: The library is a [Log::Any](https://metacpan.org/pod/Log%3A%3AAny) log producer. See
+[Log::Any::Adapter](https://metacpan.org/pod/Log%3A%3AAny%3A%3AAdapter) for examples on how to configure logging. For those
+wanting to keep running their [Log::Log4perl](https://metacpan.org/pod/Log%3A%3ALog4perl) configuration, please install
+[Log::Any::Adapter::Log4perl](https://metacpan.org/pod/Log%3A%3AAny%3A%3AAdapter%3A%3ALog4perl) and add one `use` statement and one line after
+the initialization of `Log::Log4perl`:
+
+    use Log::Log4perl;
+    use Log::Any::Adapter;   # Add this additional use-statement
+
+    Log::Log4perl::init('/etc/log4perl.conf');
+    Log::Any::Adapter->set( 'Log4perl' ); # Additional: Log::Any initialization
 
 # DEPENDENCIES
 
-- [Class::Accessor](https://metacpan.org/pod/Class%3A%3AAccessor)
-- [Class::Factory](https://metacpan.org/pod/Class%3A%3AFactory)
-- [DateTime](https://metacpan.org/pod/DateTime)
-- [DateTime::Format::Strptime](https://metacpan.org/pod/DateTime%3A%3AFormat%3A%3AStrptime)
-- [Exception::Class](https://metacpan.org/pod/Exception%3A%3AClass)
-- [Log::Log4perl](https://metacpan.org/pod/Log%3A%3ALog4perl)
-- [Safe](https://metacpan.org/pod/Safe)
-- [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple)
-- [DBI](https://metacpan.org/pod/DBI)
-- [Data::Dumper](https://metacpan.org/pod/Data%3A%3ADumper)
-- [Carp](https://metacpan.org/pod/Carp)
-- [File::Slurp](https://metacpan.org/pod/File%3A%3ASlurp)
-- [Data::UUID](https://metacpan.org/pod/Data%3A%3AUUID)
+The full list of dependencies is specified in the cpanfile in the distribution
+archive. Additional dependencies are listed by feature. The following features
+are currently supported by this distribution:
 
-## DEPENDENCIES FOR THE EXAMPLE APPLICATION
+- `examples`
 
-- [CGI](https://metacpan.org/pod/CGI)
-- [CGI::Cookie](https://metacpan.org/pod/CGI%3A%3ACookie)
-- [DBD::SQLite](https://metacpan.org/pod/DBD%3A%3ASQLite)
-- [HTTP::Daemon](https://metacpan.org/pod/HTTP%3A%3ADaemon)
-- [HTTP::Request](https://metacpan.org/pod/HTTP%3A%3ARequest)
-- [HTTP::Response](https://metacpan.org/pod/HTTP%3A%3AResponse)
-- [HTTP::Status](https://metacpan.org/pod/HTTP%3A%3AStatus)
-- [Template](https://metacpan.org/pod/Template) (Template Toolkit)
-
-For Win32 systems you can get the Template Toolkit and DBD::SQLite
-PPDs from TheoryX:
-
-- [http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58](http://theoryx5.uwinnipeg.ca/cgi-bin/ppmserver?urn:/PPMServer58)
+    The additional dependencies required to run the example applications.
 
 # INCOMPATIBILITIES
 
@@ -734,8 +732,8 @@ dependencies of Workflow, namely [XML::Simple](https://metacpan.org/pod/XML%3A%3
 
 The [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple) makes use of [Lib::XML::SAX](https://metacpan.org/pod/Lib%3A%3AXML%3A%3ASAX) or [XML::Parser](https://metacpan.org/pod/XML%3A%3AParser), the default.
 
-In addition an [XML::Parser](https://metacpan.org/pod/XML%3A%3AParser) can makes use of plugin parser and some of these
-might not be able to parse the XML utilized in Workflow. The problem have been
+In addition [XML::Parser](https://metacpan.org/pod/XML%3A%3AParser) can make use of plugin parsers and some of these
+might not be able to parse the XML utilized in Workflow. This problem has been
 observed with [XML::SAX::RTF](https://metacpan.org/pod/XML%3A%3ASAX%3A%3ARTF).
 
 The following diagnostic points to the problem:
@@ -764,91 +762,18 @@ A list of currently known issues can be seen via the same URL.
 
 # TEST
 
-The test suite can be run using, [Module::Build](https://metacpan.org/pod/Module%3A%3ABuild)
+The test suite can be run using [prove](https://metacpan.org/pod/prove)
 
-        % ./Build test
+    % prove --lib
 
 Some of the tests are reserved for the developers and are only run of the
-environment variable TEST\_AUTHOR is set to true.
+environment variable TEST\_AUTHOR is set to true. Requirements for these tests
+will only be installed through [Dist::Zilla](https://metacpan.org/pod/Dist%3A%3AZilla)'s `authordeps` command:
 
-# TEST COVERAGE
+    % dzil authordeps --missing | cpanm --notest
 
-This is the current test coverage of Workflow version 1.32, with the TEST\_AUTHOR
-flag enabled.
-
-        ---------------------------- ------ ------ ------ ------ ------ ------ ------
-        File                           stmt   bran   cond    sub    pod   time  total
-        ---------------------------- ------ ------ ------ ------ ------ ------ ------
-        blib/lib/Workflow.pm           79.8   50.0   50.0   87.5  100.0    9.9   71.6
-        blib/lib/Workflow/Action.pm    90.8   66.7    n/a   88.2  100.0    4.1   89.9
-        ...flow/Action/InputField.pm   97.0   92.9   87.5  100.0  100.0    5.9   95.8
-        ...Workflow/Action/Mailer.pm  100.0    n/a    n/a  100.0  100.0    0.1  100.0
-        ...b/Workflow/Action/Null.pm  100.0    n/a    n/a  100.0  100.0    0.2  100.0
-        blib/lib/Workflow/Base.pm      96.6   86.4  100.0  100.0  100.0    9.6   95.0
-        ...lib/Workflow/Condition.pm  100.0    n/a    n/a  100.0  100.0    0.8  100.0
-        ...low/Condition/Evaluate.pm   59.0   16.7   33.3   87.5  100.0    0.9   53.0
-        ...flow/Condition/HasUser.pm   57.7    0.0    0.0   71.4  100.0    0.1   51.2
-        blib/lib/Workflow/Config.pm    96.2   81.2   33.3  100.0  100.0    6.1   92.2
-        ...b/Workflow/Config/Perl.pm   96.8   75.0   66.7  100.0  100.0    4.1   91.0
-        ...ib/Workflow/Config/XML.pm   92.3   50.0   60.0  100.0  100.0    4.9   81.4
-        blib/lib/Workflow/Context.pm  100.0    n/a    n/a  100.0  100.0    0.4  100.0
-        ...lib/Workflow/Exception.pm   89.2   50.0    n/a   91.7  100.0    3.1   89.5
-        blib/lib/Workflow/Factory.pm   86.3   61.2   37.5   92.3  100.0   19.6   75.4
-        blib/lib/Workflow/History.pm  100.0   87.5    n/a  100.0  100.0    1.8   98.1
-        ...lib/Workflow/Persister.pm   90.5   75.0   57.1   88.9  100.0    1.9   87.5
-        ...Workflow/Persister/DBI.pm   75.3   51.2   25.0   83.3  100.0    7.4   67.5
-        ...er/DBI/AutoGeneratedId.pm   77.8   40.0    n/a  100.0  100.0    0.4   70.1
-        ...ersister/DBI/ExtraData.pm   25.9    0.0    0.0   71.4  100.0    0.1   22.9
-        ...rsister/DBI/SequenceId.pm   56.2    0.0    0.0   75.0  100.0    0.3   53.1
-        ...orkflow/Persister/File.pm   94.4   48.0   33.3  100.0  100.0    2.1   83.1
-        ...low/Persister/RandomId.pm  100.0    n/a  100.0  100.0  100.0    1.8  100.0
-        ...rkflow/Persister/SPOPS.pm   89.6   50.0    n/a  100.0  100.0    0.3   85.0
-        ...orkflow/Persister/UUID.pm  100.0    n/a    n/a  100.0  100.0    0.2  100.0
-        blib/lib/Workflow/State.pm     74.4   44.2   25.0   91.7  100.0   11.0   64.3
-        ...lib/Workflow/Validator.pm  100.0  100.0    n/a  100.0  100.0    1.1  100.0
-        ...dator/HasRequiredField.pm   90.0   50.0    n/a  100.0  100.0    0.6   86.7
-        ...dator/InEnumeratedType.pm  100.0  100.0    n/a  100.0  100.0    0.4  100.0
-        ...ator/MatchesDateFormat.pm   93.3   70.0   66.7  100.0  100.0    0.8   88.2
-        Total                          83.9   54.7   39.7   93.0  100.0  100.0   76.8
-        ---------------------------- ------ ------ ------ ------ ------ ------ ------
-
-Activities to get improved coverage are ongoing.
-
-# QUALITY ASSURANCE
-
-The Workflow project utilizes [Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) in an attempt to avoid common
-pitfalls and programming mistakes.
-
-The static analysis performed by [Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) is integrated into the ["TEST"](#test)
-tool chain and is performed either by running the test suite.
-
-        % ./Build test
-
-Or by running the test file containing the [Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) tests explicitly.
-
-        % ./Build test --verbose 1 --test_files t/04_critic.t
-
-Or
-
-        % perl t/critic.t
-
-The test does however require that the TEST\_AUTHOR flag is set since this is
-regarded as a part of the developer tool chain and we do not want to disturb
-users and CPAN testers with this.
-
-The following policies are disabled
-
-- [Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3AValuesAndExpressions%3A%3AProhibitMagicNumbers)
-- [Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3ASubroutines%3A%3AProhibitExplicitReturnUndef)
-- [Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3ANamingConventions%3A%3AProhibitAmbiguousNames)
-- [Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma](https://metacpan.org/pod/Perl%3A%3ACritic%3A%3APolicy%3A%3AValuesAndExpressions%3A%3AProhibitConstantPragma)
-
-The complete policy configuration can be found in t/perlcriticrc.
-
-Currently a large number other policies are disabled, but these are being
-addressed as ongoing work and they will either be listed here or changes will
-be applied, which will address the Workflow code's problematic areas from
-[Perl::Critic](https://metacpan.org/pod/Perl%3A%3ACritic) perspective.
+The test to verify the (http/https) links in the POD documentation will only
+run when the variable POD\_LINKS is set.
 
 # CODING STYLE
 
@@ -871,20 +796,9 @@ The code is kept under revision control using Git:
 
 ## OTHER RESOURCES
 
-- CPAN Ratings
-
-    [http://cpanratings.perl.org/d/Workflow](http://cpanratings.perl.org/d/Workflow)
-
 - MetaCPAN
 
     [https://metacpan.org/release/Workflow](https://metacpan.org/release/Workflow)
-
-# SEE ALSO
-
-- November 2010 talk 'Workflow' given at Nordic Perl Workshop 2010 in Reykjavik, Iceland by jonasbn
-[http://www.slideshare.net/jonasbn/workflow-npw2010](http://www.slideshare.net/jonasbn/workflow-npw2010)
-- August 2010 talk 'Workflow' given at YAPC::Europe 2010 in Pisa, Italy by jonasbn
-[http://www.slideshare.net/jonasbn/workflow-yapceu2010](http://www.slideshare.net/jonasbn/workflow-yapceu2010)
 
 # COPYRIGHT
 
@@ -974,7 +888,7 @@ able to attach event listeners (observers) to the process.
 
 Michael Roberts <michael@vivtek.com> graciously released the
 'Workflow' namespace on CPAN; check out his Workflow toolkit at
-[http://www.vivtek.com/wftk.html](http://www.vivtek.com/wftk.html).
+[http://www.vivtek.com/wftk/](http://www.vivtek.com/wftk/).
 
 Michael Schwern <schwern@pobox.org> barked via RT about a
 dependency problem and CPAN naming issue.

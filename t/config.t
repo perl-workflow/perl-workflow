@@ -1,10 +1,13 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use TestUtil;
 use Test::More  tests => 50;
 use Test::Exception;
+
+no warnings 'once';
+
 
 my ($parser);
 
@@ -23,11 +26,11 @@ is( $validtypes[0], 'action', 'Got array with valid types and action is first.')
 isa_ok($parser, 'Workflow::Config');
 
 my %config_xml = (
-                  'workflow' => ['workflow.xml', 'workflow_type.xml'],
-                  'action' => ['workflow_action.xml', 'workflow_action_type.xml'],
-                  'condition' => ['workflow_condition.xml', 'workflow_condition_type.xml'],
-                  'validator' => ['workflow_validator.xml'],
-                  'persister' => ['workflow_persister.xml'],
+                  'workflow' => ['t/workflow.xml', 't/workflow_type.xml'],
+                  'action' => ['t/workflow_action.xml', 't/workflow_action_type.xml'],
+                  'condition' => ['t/workflow_condition.xml', 't/workflow_condition_type.xml'],
+                  'validator' => ['t/workflow_validator.xml'],
+                  'persister' => ['t/workflow_persister.xml'],
                  );
 
 for my $type ( sort keys %config_xml ){
@@ -40,15 +43,15 @@ for my $type ( sort keys %config_xml ){
 }
 
 $parser = Workflow::Config->new( 'xml' );
-ok($parser->parse( 'workflow', 'workflow.xml', 'workflow_type.xml', 'workflow_action.xml', 'workflow_action_type.xml', 'workflow_condition.xml', 'workflow_condition_type.xml', 'workflow_validator.xml' ));
+ok($parser->parse( 'workflow', 't/workflow.xml', 't/workflow_type.xml', 't/workflow_action.xml', 't/workflow_action_type.xml', 't/workflow_condition.xml', 't/workflow_condition_type.xml', 't/workflow_validator.xml' ));
 
 #testing good config language Perl
 ok($parser = Workflow::Config->new( 'perl' ));
 isa_ok($parser, 'Workflow::Config');
 
-dies_ok { $parser->parse( 'workflow', 'workflow_errorprone.perl' ) };
-dies_ok { $parser->parse( 'workflow', 'no_such_file.perl' ) };
-dies_ok { $parser->parse( '123_NOSUCHTYPE', 'workflow_errorprone.perl' ) };
+dies_ok { $parser->parse( 'workflow', 't/workflow_errorprone.perl' ) };
+dies_ok { $parser->parse( 'workflow', 't/no_such_file.perl' ) };
+dies_ok { $parser->parse( '123_NOSUCHTYPE', 't/workflow_errorprone.perl' ) };
 
 dies_ok { Workflow::Config->parse() };
 
@@ -56,11 +59,11 @@ my @config = $parser->parse( 'workflow' );
 is(scalar(@config), 0, 'forgotten file, asserting length of array returned');
 
 my %config_perl = (
-                   'workflow' => ['workflow.perl', 'workflow_type.perl', 'workflow_type_alternate_initial.perl'],
-                   'action' => ['workflow_action.perl'],
-                   'condition' => ['workflow_condition.perl', 'workflow_condition_type.perl'],
-                   'validator' => ['workflow_validator.perl'],
-                   'persister' => ['workflow_persister.perl'],
+                   'workflow' => ['t/workflow.perl', 't/workflow_type.perl', 't/workflow_type_alternate_initial.perl'],
+                   'action' => ['t/workflow_action.perl'],
+                   'condition' => ['t/workflow_condition.perl', 't/workflow_condition_type.perl'],
+                   'validator' => ['t/workflow_validator.perl'],
+                   'persister' => ['t/workflow_persister.perl'],
                  );
 
 for my $type ( sort keys %config_perl ){
@@ -73,12 +76,12 @@ for my $type ( sort keys %config_perl ){
 }
 
 $parser = Workflow::Config->new( 'perl' );
-ok($parser->parse( 'workflow', 'workflow.perl', 'workflow_action.perl', 'workflow_condition.perl', 'workflow_validator.perl' ));
+ok($parser->parse( 'workflow', 't/workflow.perl', 't/workflow_action.perl', 't/workflow_condition.perl', 't/workflow_validator.perl' ));
 
 #testing class method parse_all_files
 my @array = Workflow::Config->parse_all_files();
 is(scalar @array, 0, 'asserting return value');
 
-dies_ok { Workflow::Config->parse_all_files( '123_NOSUCHTYPE', 'workflow_condition.prl' ) };
+dies_ok { Workflow::Config->parse_all_files( '123_NOSUCHTYPE', 't/workflow_condition.prl' ) };
 
-ok(Workflow::Config->parse_all_files( 'workflow', 'workflow_condition.perl', 'workflow_validator.perl' ));
+ok(Workflow::Config->parse_all_files( 'workflow', 't/workflow_condition.perl', 't/workflow_validator.perl' ));

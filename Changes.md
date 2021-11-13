@@ -8,74 +8,74 @@ SPOPS was developed by the original author of Workflow and the two have worked i
 
 ## 1.57 2021-10-17 Bug fix release, update recommended
 
-- PR [#170](https://github.com/jonasbn/perl-workflow/pull/170) addresses an issue where Workflow tries to log during the execution of `use` statements, at which time it's highly unlikely that the logger has already been initialized, resulting in warnings being printed on the console
+- PR [#170](https://github.com/jonasbn/perl-workflow/pull/170) by @ehuelsmann addresses an issue where Workflow tries to log during the execution of `use` statements, at which time it's highly unlikely that the logger has already been initialized, resulting in warnings being printed on the console
 
-- PR [#171](https://github.com/jonasbn/perl-workflow/pull/171) adds initialization of context parameters passed at instantiation; currently, parameters need to be added explicily and individually after instantiation
+- PR [#171](https://github.com/jonasbn/perl-workflow/pull/171) by @ehuelsmann adds initialization of context parameters passed at instantiation; currently, parameters need to be added explicitly and individually after instantiation
 
-- PR [#173](https://github.com/jonasbn/perl-workflow/pull/173) addresses issue [#172](https://github.com/jonasbn/perl-workflow/pull/172), fixing failure to autorun actions from the INITIAL state
+- PR [#173](https://github.com/jonasbn/perl-workflow/pull/173) by @ehuelsmann addresses issue [#172](https://github.com/jonasbn/perl-workflow/pull/172), fixing failure to automatically run actions from the `INITIAL` state
 
 ## 1.56 2021-07-28 Bug fix release, update recommended
 
-- PR [#139](https://github.com/jonasbn/perl-workflow/pull/139) addresses an issue introduced in 1.55, where action configurations would contain unnecessary information
+- PR [#139](https://github.com/jonasbn/perl-workflow/pull/139) by @ehuelsmann addresses an issue introduced in 1.55, where action configurations would contain unnecessary information
 
-- Elimination of global state, with improved abstraction the complexity could be removed via PR [#140](https://github.com/jonasbn/perl-workflow/pull/140)
+- Elimination of global state, with improved abstraction the complexity could be removed via PR [#140](https://github.com/jonasbn/perl-workflow/pull/140) by @ehuelsmann
 
-- PR [#141](https://github.com/jonasbn/perl-workflow/pull/141) improves test suite, following up on PR [#131](https://github.com/jonasbn/perl-workflow/pull/131)
+- PR [#141](https://github.com/jonasbn/perl-workflow/pull/141) improves test suite, following up on PR [#131](https://github.com/jonasbn/perl-workflow/pull/131) by @ehuelsmann
 
-- PR [#132](https://github.com/jonasbn/perl-workflow/pull/132) follows up on issue [#129](https://github.com/jonasbn/perl-workflow/issues/129) by improving documentation on group property of Workflow::Action
+- PR [#132](https://github.com/jonasbn/perl-workflow/pull/132) by @ehuelsmann follows up on issue [#129](https://github.com/jonasbn/perl-workflow/issues/129) by improving documentation on group property of Workflow::Action
 
-- Elimination of warning about undefined value, which surfaced with release 1.55, adressed with PR [#135](https://github.com/jonasbn/perl-workflow/pull/135)
+- Elimination of warning about undefined value, which surfaced with release 1.55, adressed with PR [#135](https://github.com/jonasbn/perl-workflow/pull/135) by @ehuelsmann
 
-- PR [#131](https://github.com/jonasbn/perl-workflow/pull/131) documents the importance of overriding `init` for processing of parameters and not using `new`
+- PR [#131](https://github.com/jonasbn/perl-workflow/pull/131) by @ehuelsmann documents the importance of overriding `init` for processing of parameters and not using `new` 
 
-- PR [#130](https://github.com/jonasbn/perl-workflow/pull/130) addresses issue [#129](https://github.com/jonasbn/perl-workflow/issues/129), respects encapsulation by adhering to the API
+- PR [#130](https://github.com/jonasbn/perl-workflow/pull/130) bu @ehuelsmann addresses issue [#129](https://github.com/jonasbn/perl-workflow/issues/129), respects encapsulation by adhering to the API
 
-- Improves some error and log messages via PR [#128](https://github.com/jonasbn/perl-workflow/pull/128)
+- Improves some error and log messages via PR [#128](https://github.com/jonasbn/perl-workflow/pull/128) by @ehuelsmann
 
 ## 1.55 2021-07-09 Minor feature release, update not required
 
-- PR [#119](https://github.com/jonasbn/perl-workflow/pull/119) adds capability of configuring custom workflow classes addressing issue [#107](https://github.com/jonasbn/perl-workflow/issues/107)
+- PR [#119](https://github.com/jonasbn/perl-workflow/pull/119) by @ehuelsmann adds capability of configuring custom workflow classes addressing issue [#107](https://github.com/jonasbn/perl-workflow/issues/107)
 
-- Simplified logging handing in code base via PR [#108](https://github.com/jonasbn/perl-workflow/pull/108) investigation into possible performance issue described in [#89](https://github.com/jonasbn/perl-workflow/issues/89) determined penalty to be insignificant
+- Simplified logging handing in code base via PR [#108](https://github.com/jonasbn/perl-workflow/pull/108) by @ehuelsmann. Investigation into possible performance issue described in [#89](https://github.com/jonasbn/perl-workflow/issues/89) determined penalty to be insignificant
 
-- `Workflow::State->get_conditions()` now returns all conditions, fixed via PR [#122](https://github.com/jonasbn/perl-workflow/pull/122) addressing issue [#121](https://github.com/jonasbn/perl-workflow/issues/121), This fix actually implements, what is documented, but if you rely on previously undocumented behaviour, you might need to evaluate this fix
+- `Workflow::State->get_conditions()` now returns all conditions, fixed via PR [#122](https://github.com/jonasbn/perl-workflow/pull/122) by @ehuelsmann addressing issue [#121](https://github.com/jonasbn/perl-workflow/issues/121), This fix actually implements, what is documented, but if you rely on previously undocumented behaviour, you might need to evaluate this fix
 
-- Issue with broken support action attribute specified in the state config has been addressed via PR [#123](https://github.com/jonasbn/perl-workflow/pull/123) described in issue [#113](https://github.com/jonasbn/perl-workflow/issues/113)
+- Issue with broken support action attribute specified in the state config has been addressed via PR [#123](https://github.com/jonasbn/perl-workflow/pull/123) by @ehuelsmann described in issue [#113](https://github.com/jonasbn/perl-workflow/issues/113)
 
-- A warning emitted from the test suite has been addressed via PR [#115](https://github.com/jonasbn/perl-workflow/pull/115)
+- A warning emitted from the test suite has been addressed via PR [#115](https://github.com/jonasbn/perl-workflow/pull/115) by @ehuelsmann
 
-- A timing issue observed with the Travis CI setup have been addressed in PR [#112](https://github.com/jonasbn/perl-workflow/pull/112)
+- A timing issue observed with the Travis CI setup have been addressed in PR [#112](https://github.com/jonasbn/perl-workflow/pull/112) by @ehuelsmann
 
 ## 1.54 2021-04-25 Minor feature release, update not required
 
-- The existing private API: `Workflow->_get_action()` has been made public as: `get_action()` via PR [#56](https://github.com/jonasbn/perl-workflow/pull/56) addressing issue [#54](https://github.com/jonasbn/perl-workflow/issues/54), a private version is still available as `_get_action()` ensuring backwards compatibility. The change should improve and ease implementations where actions are consumed
+- The existing private API: `Workflow->_get_action()` has been made public as: `get_action()` via PR [#56](https://github.com/jonasbn/perl-workflow/pull/56) by @ehuelsmann addressing issue [#54](https://github.com/jonasbn/perl-workflow/issues/54), a private version is still available as `_get_action()` ensuring backwards compatibility. The change should improve and ease implementations where actions are consumed
 
-- The existing methods: `fields()`, `optional_fields()` and `required_fields` have all been made public PR [#57](https://github.com/jonasbn/perl-workflow/pull/57) addressing issue [#55](https://github.com/jonasbn/perl-workflow/issues/55) these methods provide information a UI or other consumer of the workflow could use for user interaction as for issue [#54](https://github.com/jonasbn/perl-workflow/issues/54) and PR: [#56](https://github.com/jonasbn/perl-workflow/pull/56) mentioned above
+- The existing methods: `fields()`, `optional_fields()` and `required_fields` have all been made public PR [#57](https://github.com/jonasbn/perl-workflow/pull/57) by @ehuelsmann addressing issue [#55](https://github.com/jonasbn/perl-workflow/issues/55) these methods provide information a UI or other consumer of the workflow could use for user interaction as for issue [#54](https://github.com/jonasbn/perl-workflow/issues/54) and PR: [#56](https://github.com/jonasbn/perl-workflow/pull/56) mentioned above
 
-- The implementation of caching for evaluation of nested has been revisted and improved via PR [#90](https://github.com/jonasbn/perl-workflow/pull/90)
+- The implementation of caching for evaluation of nested has been revisted and improved via PR [#90](https://github.com/jonasbn/perl-workflow/pull/90) by @ehuelsmann
 
-- A minor issue has been corrected in the documentation was corrected via PR [#111](https://github.com/jonasbn/perl-workflow/pull/111), it seems some design ideas had snuck into the documentation a long time ago, without ever being implemented
+- A minor issue has been corrected in the documentation was corrected via PR [#111](https://github.com/jonasbn/perl-workflow/pull/111) by @ehuelsmann, it seems some design ideas had snuck into the documentation a long time ago, without ever being implemented
 
 ## 1.53 2021-04-09 Minor feature release, update not required
 
 - This release changes logging granularity: instead of using the Log::Log4perl root logger for all logging output, use the instance class for logging in object methods as recommended [in the Log4perl documentation](https://metacpan.org/pod/Log::Log4perl#Pitfalls-with-Categories). This change allows logging from workflow to be suppressed in your application by changing the logging level for the `Workflow` category by setting `log4perl.category.Workflow = OFF` in your logging configuration. Please note that if you created classes derived from Workflow, the logger will use those class names as categories. To suppress output entirely, those categories need their own logging configuration.  
-  **NOTE** This change adds a `log()` accessor to the "Workflow::Base" class. If you implement your own `log()` accessor or method, please take care to make it return a valid logger instance before calling `SUPER::new()` so the logger is immediately available for logging.
+  **NOTE** This change adds a `log()` accessor to the "Workflow::Base" class. If you implement your own `log()` accessor or method, please take care to make it return a valid logger instance before calling `SUPER::new()` so the logger is immediately available for logging. Please see PR: [#69](https://github.com/jonasbn/perl-workflow/pull/69) by @ehuelsmann
 
-- PR [#101](https://github.com/jonasbn/perl-workflow/pull/101) changing confusing logging statements regarding observers having been added when none specified
+- PR [#101](https://github.com/jonasbn/perl-workflow/pull/101) by @jonasbn, changing confusing logging statements regarding observers having been added when none specified
 
-- Added test cases covering Workflow::Exception [#102](https://github.com/jonasbn/perl-workflow/pull/102)
+- Added test cases covering Workflow::Exception [#102](https://github.com/jonasbn/perl-workflow/pull/102) by @jonasbn
 
 ## 1.52 2021-02-11 Bug fix release, update recommended
 
-- Addressed bug/issue [#95](https://github.com/jonasbn/perl-workflow/issues/95) via PR [#96](https://github.com/jonasbn/perl-workflow/pull/96), the issue was introduced with PR [#85](https://github.com/jonasbn/perl-workflow/pull/85) in release 1.51
+- Addressed bug/issue [#95](https://github.com/jonasbn/perl-workflow/issues/95) via PR [#96](https://github.com/jonasbn/perl-workflow/pull/96) by @ehuelsmann, the issue was introduced with PR [#85](https://github.com/jonasbn/perl-workflow/pull/85) by @ehuelsmann included in release 1.51
 
-- Improvements to Dist::Zilla config, only ExtUtils::MakeMaker supported via Dist::Zilla now. Module::Build support having been removed. See the [article by Neil Bowers](https://neilb.org/2015/05/18/two-build-files-considered-harmful.html) (NEILB) on the topic. Thanks to Karen Etheridge (ETHER) for information and link to the above-mentioned article (issue [#93](https://github.com/jonasbn/perl-workflow/issues/95), resolved via PR [#98](https://github.com/jonasbn/perl-workflow/pull/98))
+- Improvements to Dist::Zilla config, only ExtUtils::MakeMaker supported via Dist::Zilla now. Module::Build support having been removed. See the [article by Neil Bowers](https://neilb.org/2015/05/18/two-build-files-considered-harmful.html) (NEILB) on the topic. Thanks to Karen Etheridge (ETHER) for information and link to the above-mentioned article (issue [#93](https://github.com/jonasbn/perl-workflow/issues/95), resolved via PR [#98](https://github.com/jonasbn/perl-workflow/pull/98) by @jonasbn)
 
-- Documentation in `INSTALL` file updated, the information was somewhat scarce and outdated (issue [#92](https://github.com/jonasbn/perl-workflow/issues/92), resolved via PR [#99](https://github.com/jonasbn/perl-workflow/pull/99))
+- Documentation in `INSTALL` file updated, the information was somewhat scarce and outdated (issue [#92](https://github.com/jonasbn/perl-workflow/issues/92), resolved via PR [#99](https://github.com/jonasbn/perl-workflow/pull/99) by @jonasbn)
 
-- Some URLs fixed via PR [#97](https://github.com/jonasbn/perl-workflow/pull/97), thanks to Michiel W. Beijen for the contribution
+- Some URLs fixed via PR [#97](https://github.com/jonasbn/perl-workflow/pull/97), thanks to Michiel W. Beijen (@mbeijen) for the contribution
 
-- More unit-tests added via PR [#94](https://github.com/jonasbn/perl-workflow/pull/94), continued work on issue [#36](https://github.com/jonasbn/perl-workflow/pull/94) improving test coverage
+- More unit-tests added via PR [#94](https://github.com/jonasbn/perl-workflow/pull/94), continued work on issue [#36](https://github.com/jonasbn/perl-workflow/pull/94) by @jonasbn improving test coverage
 
 ## 1.51 2021-01-31 Bug fix release, update recommended
 

@@ -2,8 +2,10 @@ package Workflow::Base;
 
 use warnings;
 use strict;
-use base qw( Class::Accessor );
-use Log::Log4perl;
+use 5.006;
+use parent qw( Class::Accessor );
+use Log::Any;
+
 $Workflow::Base::VERSION = '1.57';
 
 sub new {
@@ -23,7 +25,7 @@ sub new {
 sub init {return};
 
 sub log {
-    return ( $_[0]->{log} ||=  Log::Log4perl->get_logger(ref $_[0]) );
+    return ( $_[0]->{log} ||=  Log::Any->get_logger( category => ref $_[0] ) );
 }
 
 sub param {
@@ -107,7 +109,7 @@ This documentation describes version 1.57 of this package
 =head1 SYNOPSIS
 
  package My::App::Foo;
- use base qw( Workflow::Base );
+ use parent qw( Workflow::Base );
 
 =head1 DESCRIPTION
 

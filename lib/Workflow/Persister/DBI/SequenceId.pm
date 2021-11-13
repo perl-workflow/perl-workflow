@@ -2,11 +2,12 @@ package Workflow::Persister::DBI::SequenceId;
 
 use warnings;
 use strict;
-use base qw( Class::Accessor );
+use 5.006;
+use parent qw( Class::Accessor );
 use DBI;
-use Log::Log4perl qw( get_logger );
+use Log::Any;
 use Workflow::Exception qw( persist_error );
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
 
 $Workflow::Persister::DBI::SequenceId::VERSION = '1.57';
 
@@ -17,9 +18,9 @@ __PACKAGE__->mk_accessors(@FIELDS);
 sub new {
     my ( $class, $params ) = @_;
     $params ||= {};
-    $params->{log} = get_logger( $class );
+    $params->{log} = Log::Any->get_logger( category => $class );
 
-    return bless { %$params }, $class;
+    return bless { %{$params} }, $class;
 }
 
 sub pre_fetch_id {
@@ -27,14 +28,14 @@ sub pre_fetch_id {
     my $full_select = sprintf $self->sequence_select, $self->sequence_name;
     $self->log->debug("SQL to fetch sequence: ", $full_select);
     my ($row);
-    eval {
+    try {
         my $sth = $dbh->prepare($full_select);
         $sth->execute;
         $row = $sth->fetchrow_arrayref;
         $sth->finish;
-    };
-    if ($EVAL_ERROR) {
-        persist_error "Failed to retrieve sequence: $EVAL_ERROR";
+    }
+    catch ($error) {
+        persist_error "Failed to retrieve sequence: $error";
     }
     return $row->[0];
 }

@@ -1,9 +1,12 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use TestUtil;
 use Test::More  tests => 4;
+
+no warnings 'once';
+
 
 require_ok( 'FactorySubclass' );
 my $factory = FactorySubclass->instance();

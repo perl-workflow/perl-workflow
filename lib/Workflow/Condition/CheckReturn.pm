@@ -1,13 +1,13 @@
 package Workflow::Condition::CheckReturn;
 
-use strict;
 use warnings;
+use strict;
+use 5.006;
 
 our $VERSION = '1.57';
 
-use base qw( Workflow::Condition::Nested );
-use Workflow::Exception qw( condition_error configuration_error );
-use English qw( -no_match_vars );
+use parent qw( Workflow::Condition );
+use Workflow::Exception qw( configuration_error workflow_error );
 
 __PACKAGE__->mk_accessors( 'condition', 'operator', 'argument' );
 
@@ -63,19 +63,23 @@ sub evaluate {
     } elsif ( $arg =~ /^[a-zA-Z0-9_]+$/ ) {    # alpha-numeric, plus '_'
         $argval = $wf->context->param($arg);
     } else {
-        $argval = eval $arg;
+        my $error;
+        my $success = do {
+            local $@;
+            my $rv = eval "\$argval = do { $arg }; 1;";
+            $error = $@;
+            $rv;
+        };
+        if (not $success) {
+            workflow_error
+                "Unable to evaluate condition expression '$arg': $error";
+        }
     }
 
     my $condval = $self->evaluate_condition( $wf, $cond );
 
-    if ( eval "\$condval $op \$argval" ) {
-        return 1;
-    } else {
-        condition_error "Condition failed: '$condval' $op '$argval'";
-    }
-
-    configuration_error
-        "Unknown error in CheckReturn.pm: cond=$cond, op=$op, arg=$arg";
+    local $@;
+    return eval "\$condval $op \$argval";
 }
 
 1;

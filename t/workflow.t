@@ -1,16 +1,17 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use TestUtil;
 use Test::More;
 use Test::Exception;
+use TestApp::CustomWorkflowHistory;
 
 eval "require DBI";
 if ( $@ ) {
     plan skip_all => 'DBI not installed';
 } else {
-    plan tests => 38;
+    plan tests => 39;
 }
 
 require_ok( 'Workflow' );
@@ -24,7 +25,7 @@ my $handle = $persister->handle;
 # add a separate configuration for the observed workflow
 
 eval {
-    $factory->add_config_from_file( workflow => 'workflow_observer.xml' )
+    $factory->add_config_from_file( workflow => 't/workflow_observer.xml' )
 };
 $@ && diag( "Error: $@" );
 ok( ! $@, "Added configuration for workflow with observer" );
@@ -95,27 +96,6 @@ my @result_data   = ( 'INITIAL', $date );
     $handle->{mock_add_resultset} = [ \@result_fields, \@result_data ];
     my $wf = $factory->fetch_workflow( 'ObservedTicket', 1 );
     SomeObserver->clear_observations;
-
-    $factory->save_workflow( $wf );
-    my @observations = SomeObserver->get_observations;
-    is( scalar @observations, 2,
-        'One observation sent on workflow store to two observers' );
-
-    is( $observations[0]->[0], 'class',
-        'Observation sent to configured class observer first' );
-    is( $observations[0]->[2], 'save',
-        'Class observer sent the correct save action' );
-
-    is( $observations[1]->[0], 'sub',
-        'Observation sent to configured subroutine observer second' );
-    is( $observations[1]->[2], 'save',
-        'Subroutine observer sent the correct save action' );
-}
-
-{
-    $handle->{mock_add_resultset} = [ \@result_fields, \@result_data ];
-    my $wf = $factory->fetch_workflow( 'ObservedTicket', 1 );
-    SomeObserver->clear_observations;
     $wf->execute_action( 'null' );
     my @observations = SomeObserver->get_observations;
     is( scalar @observations, 6,
@@ -169,4 +149,45 @@ my @result_data   = ( 'INITIAL', $date );
         )
     } 'Workflow::Exception', "subroutine i_dont_exist causes exception";
     like($@, qr/not found/, "expected error string: $@");
+}
+
+
+{
+    my $wf = $factory->create_workflow( 'ObservedTicket' );
+    my @history = $wf->get_history;
+    my $history = shift @history;
+
+    # Test overridden defauts:
+
+    # default: Create workflow
+    is( $history->user, 'me', "Customized user set" );
+
+    # default: n/a
+    is( $history->description, 'New workflow', "Customized description set" );
+
+    # default: Create new workflow
+    is( $history->action, 'Create', "Customized action set" );
+}
+
+
+{
+    $factory->add_config_from_file( workflow => 't/workflow.xml' );
+    my $wf = $factory->create_workflow( 'Ticket' );
+    my @history = $wf->get_history();
+    for my $history (@history) {
+        is( ref $history, 'TestApp::CustomWorkflowHistory',
+            'History item is a TestApp::CustomWorkflowHistory' );
+    }
+    throws_ok {
+        $wf->add_history(
+            Workflow::History->new(
+                {
+                    action      => 'action',
+                    description => 'description',
+                    user        => 'me',
+                })
+            );
+    } 'Workflow::Exception', "Adding the wrong history type fails";
+    like($@, qr{I don't know how to add a history of type 'Workflow::History'},
+         "expected error string, found: $@");
 }

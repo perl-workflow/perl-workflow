@@ -2,7 +2,8 @@ package Workflow::Validator;
 
 use warnings;
 use strict;
-use base qw( Workflow::Base );
+use 5.006;
+use parent qw( Workflow::Base );
 use Carp qw(croak);
 
 $Workflow::Validator::VERSION = '1.57';
@@ -75,7 +76,7 @@ This documentation describes version 1.57 of this package
  package MyApp::Validator::Date;
 
  use strict;
- use base qw( Workflow::Validator );
+ use parent qw( Workflow::Validator );
  use DateTime::Format::Strptime;
  use Workflow::Exception qw( configuration_error );
 

@@ -2,8 +2,9 @@ package Workflow::Config::Perl;
 
 use warnings;
 use strict;
-use base qw( Workflow::Config );
-use Log::Log4perl qw( get_logger );
+use 5.006;
+use parent qw( Workflow::Config );
+use Log::Any qw( $log );
 use Workflow::Exception qw( configuration_error );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );
@@ -12,7 +13,6 @@ $Workflow::Config::Perl::VERSION = '1.57';
 
 sub parse {
     my ( $self, $type, @items ) = @_;
-    my $log ||= get_logger();
 
     $self->_check_config_type($type);
 
@@ -67,7 +67,6 @@ sub parse {
 
 sub _translate_perl_file {
     my ( $class, $type, $file ) = @_;
-    my $log = get_logger();
 
     local $INPUT_RECORD_SEPARATOR = undef;
     open( CONF, '<', $file )
@@ -81,13 +80,26 @@ sub _translate_perl_file {
 
 sub _translate_perl {
     my ( $class, $type, $config, $file ) = @_;
-    my $log = get_logger();
 
     no strict 'vars';
-    my $data = eval $config;
-    if ($EVAL_ERROR) {
+    my $data;
+    my $error;
+    my $warnings = '';
+    my $success = do {
+        local $@;
+
+        local $SIG{__WARN__} = sub { $warnings .= $_[0] };
+        my $rv = eval "\$data = do { $config }; 1;";
+        $error = $EVAL_ERROR;
+        $rv;
+    };
+    if ($warnings) {
+        $warnings =~ s/\r?\n/\\n/g; # don't log line-endings
+        $log->warn( 'Config evaluation warned: ', $warnings );
+    }
+    if (not $success) {
         configuration_error "Cannot evaluate perl data structure ",
-            "in '$file': $EVAL_ERROR";
+            "in '$file': $error";
     }
     return $data;
 }

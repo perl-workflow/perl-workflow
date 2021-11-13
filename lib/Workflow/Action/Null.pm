@@ -2,7 +2,8 @@ package Workflow::Action::Null;
 
 use warnings;
 use strict;
-use base qw( Workflow::Action );
+use 5.006;
+use parent qw( Workflow::Action );
 
 $Workflow::Action::Null::VERSION = '1.57';
 

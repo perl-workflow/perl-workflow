@@ -1,14 +1,13 @@
 package App::Action::TicketComment;
 
 use strict;
-use base qw( Workflow::Action );
-use Log::Log4perl qw( get_logger );
+use parent qw( Workflow::Action );
+use Log::Any qw( $log );
 
 $App::Action::TicketComment::VERSION = '1.03';
 
 sub execute {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
 
     $log->info( "Entering comment for workflow ", $wf->id );
 

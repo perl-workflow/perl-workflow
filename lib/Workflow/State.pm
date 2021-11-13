@@ -2,14 +2,13 @@ package Workflow::State;
 
 use warnings;
 use strict;
-use base qw( Workflow::Base );
-use Log::Log4perl qw( get_logger );
+use 5.006;
+use parent qw( Workflow::Base );
 use Workflow::Condition;
 use Workflow::Condition::Evaluate;
-use Workflow::Exception qw( workflow_error condition_error );
+use Workflow::Exception qw( workflow_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
-use English qw( -no_match_vars );
 
 $Workflow::State::VERSION = '1.57';
 
@@ -78,17 +77,7 @@ sub get_available_action_names {
 
 sub is_action_available {
     my ( $self, $wf, $action_name ) = @_;
-    eval { $self->evaluate_action( $wf, $action_name ) };
-
-    # Everything is fine
-    return 1 unless( $EVAL_ERROR );
-
-    # We got an exception, check if it is a Workflow::Exception
-    return 0 if (Exception::Class->caught('Workflow::Exception'));
-
-    $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR);
-
-    croak $EVAL_ERROR;
+    return $self->evaluate_action( $wf, $action_name );
 }
 
 sub clear_condition_cache {
@@ -106,31 +95,19 @@ sub evaluate_action {
     my @conditions = $self->get_conditions($action_name);
     foreach my $condition (@conditions) {
         my $condition_name = $condition->name;
+        my $rv = Workflow::Condition->evaluate_condition($wf, $condition_name);
+        if (! $rv) {
 
-        my $rv;
-        eval {
-            $rv = Workflow::Condition->evaluate_condition($wf, $condition_name);
-        };
-        if ($EVAL_ERROR) {
-            if (Exception::Class->caught('Workflow::Exception::Condition')) {
-                condition_error "No access to action '$action_name' in ",
-                    "state '$state' because $EVAL_ERROR ";
-            }
-            else {
-                $EVAL_ERROR->rethrow() if (ref $EVAL_ERROR ne '');
-                # For briefness, we just send back the first line of EVAL
-                my @t = split /\n/, $EVAL_ERROR;
-                my $ee = shift @t;
-                Exception::Class::Base->throw(
-                    error
-                    => "Got unknown exception while handling condition '$condition_name' / " . $ee );
-            }
-        }
-        elsif (! $rv) {
-            condition_error "No access to action '$action_name' in ",
-                "state '$state' because condition '$condition_name' failed";
+            $self->log->is_debug
+                && $self->log->debug(
+                "No access to action '$action_name' in ",
+                "state '$state' because condition '$condition_name' failed");
+
+            return $rv;
         }
     }
+
+    return 1;
 }
 
 sub get_next_state {
@@ -360,6 +337,7 @@ This documentation describes version 1.57 of this package
  # This is an internal object...
  <workflow...>
    <state name="Start">
+     <description>My state documentation</description> <!-- optional -->
      <action ... resulting_state="Progress" />
    </state>
       ...
@@ -410,12 +388,28 @@ returns. For instance we might have something like:
          <resulting_state return="helpdesk" state="Assign as Helpdesk" />
          <resulting_state return="*"        state="Assign as Luser" />
      </action>
-   </state>
+  </state>
 
 So if we execute 'create' the workflow will be in one of three states:
 'Assign as Admin' if the return value of the 'create' action is
 'admin', 'Assign as Helpdesk' if the return is 'helpdesk', and 'Assign
 as Luser' if the return is anything else.
+
+=head2 Action availability
+
+A state can have multiple actions associated with it, demonstrated in the
+first example under L</Resulting State>. The set of I<available> actions is
+a subset of all I<associated> actions: those actions for which none of the
+associated conditions fail their check.
+
+  <state name="create user">
+     <action name="create">
+         ... (resulting_states) ...
+         <condition name="can_create_users" />
+     </action>
+  </state>
+
+
 
 =head2 Autorun State
 
@@ -423,21 +417,29 @@ You can also indicate that the state should be automatically executed
 when the workflow enters it using the 'autorun' property. Note the
 slight change in terminology -- typically we talk about executing an
 action, not a state. But we can use both here because an automatically
-run state requires that one and only one action is available for
+run state requires that one and only one action is I<available> for
 running. That doesn't mean a state contains only one action. It just
-means that only one action is available when the state is entered. For
+means that only one action is I<available> when the state is entered. For
 example, you might have two actions with mutually exclusive conditions
 within the autorun state.
 
-If no action or more than one action is available at the time the
-workflow enters an autorun state, Workflow will throw an error. There
-are some conditions where this might not be what you want. For example
-when you have a state which contains an action that depends on some
-condition. If it is true, you might be happy to move on to the next
-state, but if it is not, you are fine to come back and try again later
-if the action is available. This behaviour can be achived by setting the
-'may_stop' property to yes, which will cause Workflow to just quietly
-stop automatic execution if it does not have a single action to execute.
+=head3 Stoppable autorun states
+
+If no action or more than one action is I<available> at the time the
+workflow enters an autorun state, Workflow can't continue execution.
+If this is isn't a problem, a state may be marked with C<may_stop="yes">:
+
+
+   <state name="Approved" autorun="yes" may_stop="yes">
+     <action name="Archive" resulting_state="Completed" />
+        <condition name="allowed_automatic_archival" />
+     </action>
+  </state>
+
+
+However, in case the state isn't marked C<may_stop="yes">, Workflow will
+throw a C<workflow_error> indicating an autorun problem.
+
 
 =head1 PUBLIC METHODS
 

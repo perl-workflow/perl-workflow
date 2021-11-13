@@ -2,9 +2,9 @@ package Workflow::Config;
 
 use warnings;
 use strict;
-use base qw( Class::Factory );
+use 5.006;
+use parent qw( Class::Factory );
 use Data::Dumper qw( Dumper );
-use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
 $Workflow::Config::VERSION = '1.57';
@@ -182,7 +182,7 @@ would do something like:
  use strict;
 
  # Requirement 1: Subclass Workflow::Config
- use base qw( Workflow::Config );
+ use parent qw( Workflow::Config );
 
  # Requirement 2: Implement required methods
  sub parse { ... }

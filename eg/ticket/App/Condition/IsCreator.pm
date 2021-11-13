@@ -3,20 +3,18 @@ package App::Condition::IsCreator;
 
 
 use strict;
-use base qw( Workflow::Condition );
-use Log::Log4perl       qw( get_logger );
+use parent qw( Workflow::Condition );
+use Log::Any qw( $log );
 use Workflow::Exception qw( condition_error );
 use Workflow::Factory   qw( FACTORY );
 
 $App::Condition::IsCreator::VERSION = '1.02';
 
-my ( $log );
-
 my ( $FACTORY );
 
 sub evaluate {
     my ( $self, $wf ) = @_;
-    $log ||= get_logger();
+
     $log->debug( "Trying to execute condition ", ref( $self ) );
 
     # First see that we have both a user and ticket...

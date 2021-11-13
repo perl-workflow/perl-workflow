@@ -3,18 +3,16 @@ package App::Condition::IsWorker;
 
 
 use strict;
-use base qw( Workflow::Condition );
-use Log::Log4perl       qw( get_logger );
+use parent qw( Workflow::Condition );
+use Log::Any            qw( $log );
 use Workflow::Exception qw( condition_error );
 use Workflow::Factory   qw( FACTORY );
 
 $App::Condition::IsWorker::VERSION = '1.02';
 
-my ( $log );
-
 sub evaluate {
     my ( $self, $wf ) = @_;
-    $log ||= get_logger();
+
     $log->debug( "Trying to execute condition ", ref( $self ) );
     my $cond_has_info = FACTORY->get_condition( 'HasUserAndTicket' );
     $cond_has_info->evaluate( $wf );

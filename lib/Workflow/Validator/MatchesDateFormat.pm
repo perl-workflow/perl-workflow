@@ -2,11 +2,11 @@ package Workflow::Validator::MatchesDateFormat;
 
 use warnings;
 use strict;
-use base qw( Workflow::Validator );
+use 5.006;
+use parent qw( Workflow::Validator );
 use DateTime::Format::Strptime;
 use Workflow::Exception qw( configuration_error validation_error );
-use English qw( -no_match_vars );
-use Carp qw(carp);
+use Scalar::Util qw( blessed );
 
 $Workflow::Validator::MatchesDateFormat::VERSION = '1.57';
 
@@ -34,13 +34,9 @@ sub validate {
     my ( $self, $wf, $date_string ) = @_;
     return unless ($date_string);
 
-    # already converted!
-    if ( ref $date_string and eval { $date_string->isa('DateTime'); } ) {
+    if ( blessed $date_string and $date_string->isa('DateTime') ) {
+        # already converted!
         return;
-    }
-
-    if ($EVAL_ERROR) {
-        carp 'Unable to assert DateTime or similar object';
     }
 
     my $fmt         = $self->formatter;

@@ -2,10 +2,10 @@ package Workflow::Persister;
 
 use warnings;
 use strict;
-use base qw( Workflow::Base );
-use English qw( -no_match_vars );
-use Log::Log4perl qw( get_logger );
+use 5.013002;
+use parent qw( Workflow::Base );
 use Workflow::Exception qw( persist_error );
+use Syntax::Keyword::Try;
 
 use constant DEFAULT_ID_LENGTH => 8;
 
@@ -53,11 +53,14 @@ sub assign_generators {
 
 sub init_random_generators {
     my ( $self, $params ) = @_;
-    my $length = $params->{id_length} || DEFAULT_ID_LENGTH;
-    eval { require Workflow::Persister::RandomId };
-    if (my $msg = $EVAL_ERROR) {
-        $msg =~ s/\\n/ /g;
-        $self->log->error($msg);
+    my $length  = $params->{id_length} || DEFAULT_ID_LENGTH;
+    try {
+        require Workflow::Persister::RandomId;
+    }
+    catch ($msg) {
+        my $logmsg = ($msg =~ s/\\n/ /gr);
+        $self->log->error($logmsg);
+        die $msg;
     }
     my $generator
         = Workflow::Persister::RandomId->new( { id_length => $length } );
@@ -67,10 +70,13 @@ sub init_random_generators {
 sub init_uuid_generators {
     my ( $self, $params ) = @_;
 
-    eval { require Workflow::Persister::UUID };
-    if (my $msg = $EVAL_ERROR) {
-        $msg =~ s/\\n/ /g;
-        $self->log->error($msg);
+    try {
+        require Workflow::Persister::UUID
+    }
+    catch ($msg) {
+        my $logmsg = ($msg =~ s/\\n/ /gr);
+        $self->log->error($logmsg);
+        die $msg;
     }
     my $generator = Workflow::Persister::UUID->new();
     return ( $generator, $generator );
@@ -122,21 +128,6 @@ sub fetch_history {
     my ( $self, $wf ) = @_;
     persist_error "Persister '", ref($self), "' must implement ",
         "'fetch_history()'";
-}
-
-sub get_create_user {
-    my ( $self, $wf ) = @_;
-    return 'n/a';
-}
-
-sub get_create_description {
-    my ( $self, $wf ) = @_;
-    return 'Create new workflow';
-}
-
-sub get_create_action {
-    my ( $self, $wf ) = @_;
-    return 'Create workflow';
 }
 
 # Only required for DBI persisters.
@@ -239,30 +230,9 @@ C<id> and C<saved> values set according to the saved results.
 Stub that warns that the method should be overwritten in the derived
 Persister. Since this is a SUPER class.
 
-The derived class method should return a list of L<Workflow::History> objects.
-
-
-=head3 get_create_user( $workflow )
-
-When creating an initial L<Workflow::History> record to insert into the database,
-the return value of this method is used for the value of the "user" field.
-
-Override this method to change the value from the default, "n/a".
-
-=head3 get_create_description( $workflow )
-
-When creating an initial L<Workflow::History> record to insert into the database,
-the return value of this method is used for the value of the "description" field.
-
-Override this method to change the value from the default, "Create new workflow".
-
-
-=head3 get_create_action( $workflow )
-
-When creating an initial L<Workflow::History> record to insert into the database,
-the return value of this method is used for the value of the "action" field.
-
-Override this method to change the value from the default, "Create workflow".
+The derived class method should return a list of hashes containing at least
+the `id` key. The hashes will be used by the workflow object to instantiate
+L<Workflow::History> objects (or a derived class).
 
 
 =head3 assign_generators( \%params )

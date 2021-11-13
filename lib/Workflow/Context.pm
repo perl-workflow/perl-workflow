@@ -2,9 +2,19 @@ package Workflow::Context;
 
 use warnings;
 use strict;
-use base qw( Workflow::Base );
+use 5.006;
+use parent qw( Workflow::Base );
 
 $Workflow::Context::VERSION = '1.57';
+
+
+sub init {
+    my ( $self, %params) = @_;
+
+    for my $key (keys %params) {
+        $self->param( $key => $params{$key} );
+    }
+}
 
 
 sub init {

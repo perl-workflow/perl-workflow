@@ -1,9 +1,9 @@
 package App::Action::TicketCreate;
 
 use strict;
-use base qw( Workflow::Action );
+use parent qw( Workflow::Action );
 use App::Ticket;
-use Log::Log4perl       qw( get_logger );
+use Log::Any            qw( $log );
 use Workflow::Exception qw( persist_error );
 use Workflow::Factory   qw( FACTORY );
 
@@ -11,7 +11,7 @@ $App::Action::TicketCreate::VERSION = '1.06';
 
 sub execute {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
+
     $log->debug( "Action '", $self->name, "' with class ",
                  "'", ref( $self ), "' executing..." );
 

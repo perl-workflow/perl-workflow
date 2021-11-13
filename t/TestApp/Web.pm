@@ -2,20 +2,18 @@ package App::Web;
 
 use strict;
 use vars qw($VERSION);
-use Log::Log4perl     qw( get_logger );
+use Log::Any          qw( $log );
 use Workflow::Factory qw( FACTORY );
 use XML::Simple       qw( :strict );
 
 $VERSION = '0.01';
-
-my ( $log );
 
 my %ACTION_DATA = ();
 my %DISPATCH    = ();
 
 sub initialize_mappings {
     my ( $class, $mapping_file ) = @_;
-    $log ||= get_logger();
+
     my %options = (
         ForceArray => [ 'url-mapping', 'action-display' ],
         KeyAttr    => [],
@@ -134,7 +132,7 @@ sub login {
 sub _get_workflow {
     my ( $params, $cookies_in ) = @_;
     return $params->{workflow} if ( $params->{workflow} );
-    my $log = get_logger();
+
     my $wf_id = $params->{workflow_id} || $cookies_in->{workflow_id};
     unless ( $wf_id ) {
         die "No workflow ID given! Please fetch a workflow or create ",

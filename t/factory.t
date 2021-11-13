@@ -1,10 +1,13 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use TestUtil;
 use Test::More  tests => 6;
 use Test::Exception;
+
+no warnings 'once';
+
 
 require_ok( 'Workflow::Factory' );
 
@@ -18,12 +21,12 @@ my $factory_new = eval { Workflow::Factory->new() };
 is( ref( $@ ), 'Workflow::Exception',
     'Call to new() throws proper exception' );
 
-lives_ok { $factory->add_config_from_file( workflow  => 'workflow.xml',
-                                    action    => [ 'workflow_action.xml', 'workflow_action_type.xml', 'workflow_action.perl',  ],
-                                    validator => [ 'workflow_validator.xml', 'workflow_validator.perl' ],
-                                    condition => 'workflow_condition.xml') };
+lives_ok { $factory->add_config_from_file( workflow  => 't/workflow.xml',
+                                    action    => [ 't/workflow_action.xml', 't/workflow_action_type.xml', 't/workflow_action.perl',  ],
+                                    validator => [ 't/workflow_validator.xml', 't/workflow_validator.perl' ],
+                                    condition => 't/workflow_condition.xml') };
 
-lives_ok { $factory->add_config_from_file( workflow  =>  [ 'workflow.xml', 'workflow.perl' ],
-                                    action    => 'workflow_action.xml',
-                                    validator => 'workflow_validator.xml',
-                                    condition => [ 'workflow_condition.xml', 'workflow_condition.perl' ]) };
+lives_ok { $factory->add_config_from_file( workflow  =>  [ 't/workflow.xml', 't/workflow.perl' ],
+                                    action    => 't/workflow_action.xml',
+                                    validator => 't/workflow_validator.xml',
+                                    condition => [ 't/workflow_condition.xml', 't/workflow_condition.perl' ]) };

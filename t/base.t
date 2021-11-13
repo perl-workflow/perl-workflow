@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(../lib lib ../t t);
+use lib qw(t);
 use TestUtil;
 use Test::More  tests => 26;
 
@@ -82,7 +82,7 @@ sub create_subclass {
 package My::Workflow::Base;
 
 use strict;
-use base qw( Workflow::Base );
+use parent qw( Workflow::Base );
 
 sub init {
     my ( $self, $params ) = @_;

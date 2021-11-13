@@ -1,9 +1,9 @@
 package TestApp::Action::TicketCreate;
 
 use strict;
-use base qw( Workflow::Action );
+use parent qw( Workflow::Action );
 use File::Spec::Functions qw( catdir );
-use Log::Log4perl         qw( get_logger );
+use Log::Any qw( $log );
 use TestApp::Ticket;
 use Workflow::Exception   qw( persist_error );
 use Workflow::Factory     qw( FACTORY );
@@ -12,7 +12,6 @@ $TestApp::Action::TicketCreate::VERSION = '1.06';
 
 sub execute {
     my ( $self, $wf ) = @_;
-    my $log = get_logger();
     $log->debug( "Action '", $self->name, "' with class '", ref( $self ), "' executing..." );
 
     my $context = $wf->context;
@@ -59,17 +58,6 @@ sub execute {
             die "Failed to save additional ticket info: $@\n";
         }
     }
-    elsif ( $persister->isa( 'Workflow::Persister::SPOPS' ) ) {
-        my $wf_ticket = eval {
-            My::Persist::WorkflowTicket->new({
-                workflow_id => $wf->id,
-                ticket_id   => $ticket->id,
-            })->save()
-        };
-        if ( $@ ) {
-            die "Failed to save additional ticket info: $@\n";
-        }
-    }
     elsif ( $persister->isa( 'Workflow::Persister::File' ) ) {
         my %wf_ticket = (
             workflow_id => $wf->id,
@@ -82,12 +70,12 @@ sub execute {
     $log->info( "Link table record inserted correctly" );
 
     $wf->add_history(
-        Workflow::History->new({
+        {
             action      => 'Create ticket',
             description => sprintf( "New ticket created of type '%s' and subject '%s'",
                                     $self->param( 'type' ), $self->param( 'subject' ) ),
             user        => $creator,
-        })
+        }
     );
     $log->info( "History record added to workflow ok" );
 }

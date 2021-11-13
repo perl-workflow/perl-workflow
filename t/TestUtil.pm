@@ -3,19 +3,16 @@ package TestUtil;
 use strict;
 use vars qw($VERSION);
 use DateTime;
+use Log::Any::Adapter;
 use Test::More;
 use List::MoreUtils qw(all);
 
 $VERSION = '0.02';
 
-my ( $original_dir );
 
-END {
-    chdir( $original_dir );
+if ($ENV{DEBUG}) {
+    Log::Any::Adapter->set('Stderr');
 }
-
-my $LOG_FILE  = 'workflow_tests.log';
-my $CONF_FILE = 'log4perl.conf';
 
 ########################################
 # TICKET INFO
@@ -79,10 +76,10 @@ sub init_factory {
     require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     $factory->add_config_from_file(
-        workflow  => [ 'workflow.xml', 'workflow_type.xml', 'workflow_evaluate_condition.xml' ],
-        action    => [ 'workflow_action.xml', 'workflow_action_type.xml' ],
-        condition => [ 'workflow_condition.xml', 'workflow_condition_type.xml'],
-        validator => "workflow_validator.xml"
+        workflow  => [ 't/workflow.xml', 't/workflow_type.xml', 't/workflow_evaluate_condition.xml' ],
+        action    => [ 't/workflow_action.xml', 't/workflow_action_type.xml' ],
+        condition => [ 't/workflow_condition.xml', 't/workflow_condition_type.xml'],
+        validator => "t/workflow_validator.xml"
     );
     return $factory;
 }
@@ -93,10 +90,10 @@ sub init_factory_perl_config {
     require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     $factory->add_config_from_file(
-        workflow  => [ 'workflow.perl', 'workflow_type.perl' ],
-        action    => [ 'workflow_action.perl', 'workflow_action_type.perl' ],
-        condition => [ 'workflow_condition.perl', 'workflow_condition_type.perl' ],
-        validator => 'workflow_validator.perl'
+        workflow  => [ 't/workflow.perl', 't/workflow_type.perl' ],
+        action    => [ 't/workflow_action.perl', 't/workflow_action_type.perl' ],
+        condition => [ 't/workflow_condition.perl', 't/workflow_condition_type.perl' ],
+        validator => 't/workflow_validator.perl'
     );
     return $factory;
 }
@@ -115,28 +112,6 @@ sub init_mock_persister {
 }
 
 
-
-# Initialize the logger and other resources; called when module
-# required by test
-
-sub init {
-    if ( -f $LOG_FILE ) {
-        unlink( $LOG_FILE );
-    }
-    elsif ( -f "t/$LOG_FILE" ) {
-        unlink( "t/$LOG_FILE" );
-    }
-
-    require Cwd;
-    $original_dir = Cwd::cwd();
-    chdir( 't' )  if ( -d 't' );
-
-    require Log::Log4perl;
-    Log::Log4perl::init( $CONF_FILE );
-
-}
-
-init();
 
 # Used with state tests with various configs.
 sub run_state_tests{

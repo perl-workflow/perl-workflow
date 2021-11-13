@@ -1,11 +1,13 @@
-package Workflow::Action::InputField;
+package Workflow::InputField;
 
 use warnings;
 use strict;
-use base qw( Class::Accessor );
-use Log::Log4perl qw( get_logger );
+use 5.006;
+use parent qw( Class::Accessor );
+use Log::Any;
+use Module::Runtime qw( require_module );
 use Workflow::Exception qw( configuration_error );
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
 
 $Workflow::Action::InputField::VERSION = '1.57';
 
@@ -17,7 +19,7 @@ my %INCLUDED = ();
 
 sub new {
     my ( $class, $params ) = @_;
-    my $log = get_logger($class);
+    my $log = Log::Any->get_logger( category => $class );
     $log->debug("Instantiating new field '$params->{name}'")
         if $params->{name};
 
@@ -51,10 +53,12 @@ sub new {
     if ( my $source_class = $self->source_class ) {
         $log->debug("Possible values for '$name' from '$source_class'");
         unless ( $INCLUDED{$source_class} ) {
-            eval "require $source_class";
-            if ($EVAL_ERROR) {
+            try {
+                require_module( $source_class );
+            }
+            catch ($error) {
                 configuration_error "Failed to include source class ",
-                    "'$source_class' used in field '$name'";
+                    "'$source_class' used in field '$name': $error";
             }
             $INCLUDED{$source_class}++;
         }
@@ -117,7 +121,7 @@ __END__
 
 =head1 NAME
 
-Workflow::Action::InputField - Metadata about information required by an Action
+Workflow::InputField - Metadata about information required by an Action
 
 =head1 VERSION
 
@@ -205,7 +209,7 @@ extra properties. Just derive your custom fields class like so:
   use warnings;
   use strict;
 
-  use base qw( Workflow::Action::InputField );
+  use parent qw( Workflow::InputField );
   use Workflow::Exception qw( workflow_error );
 
   # extra action class properties
@@ -296,7 +300,7 @@ and 'value' keys.
 
 B<class> (optional)
 
-You may specify a custom InputField class. It should C<use base qw(
+You may specify a custom InputField class. It should C<use parent qw(
 Workflow::Action );> and probably override the new() method which
 should call SUPER::new($params). See L</"new( \%params )"> above for an
 example.

@@ -2,14 +2,15 @@ package Workflow::Persister::File;
 
 use warnings;
 use strict;
-use base qw( Workflow::Persister );
+use 5.006;
+use parent qw( Workflow::Persister );
 use Data::Dumper qw( Dumper );
+use English qw( -no_match_vars );
 use File::Spec::Functions qw( catdir catfile );
-use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
-use English qw( -no_match_vars );
+use Syntax::Keyword::Try;
 
 $Workflow::Persister::File::VERSION = '1.57';
 
@@ -60,10 +61,13 @@ sub fetch_workflow {
         persist_error "No workflow with ID '$wf_id' is available";
     }
     $self->log->debug("File exists, reconstituting workflow");
-    my $wf_info = eval { $self->constitute_object($full_path) };
-    if ($EVAL_ERROR) {
+    my $wf_info;
+    try {
+        $wf_info = $self->constitute_object($full_path);
+    }
+    catch ($error) {
         persist_error "Cannot reconstitute data from file for ",
-            "workflow '$wf_id': $EVAL_ERROR";
+            "workflow '$wf_id': $error";
     }
     return $wf_info;
 }
@@ -87,7 +91,9 @@ sub create_history {
         my $history_id = $generator->pre_fetch_id();
         $history->id($history_id);
         my $history_file = catfile( $history_dir, $history_id );
-        $self->serialize_object( $history_file, $history );
+        # Serialize as hash so reconstituting the object returns a hash again
+        # we need to return a list of hashes when returning the history list.
+        $self->serialize_object( $history_file, { %$history } );
         $self->log->info("Created history object '$history_id' ok");
         $history->set_saved();
     }
@@ -107,7 +113,6 @@ sub fetch_history {
     foreach my $history_file (@history_files) {
         $self->log->debug("Reading history from file '$history_file'");
         my $history = $self->constitute_object($history_file);
-        $history->set_saved();
         push @histories, $history;
     }
     return @histories;
@@ -148,10 +153,18 @@ sub constitute_object {
     my $content = slurp($object_path);
 
     no strict;
-    my $object = eval $content;
-    croak $EVAL_ERROR if ($EVAL_ERROR);
+    my $object;
+    my $error;
+    my $success = do {
+        local $@;
+        my $rv = eval "\$object = do { $content }; 1;";
+        $error = $EVAL_ERROR;
+        $rv;
+    };
+    if (not $success) {
+        die $error;
+    }
     return $object;
-
 }
 
 sub _get_workflow_path {
