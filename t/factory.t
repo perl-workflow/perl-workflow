@@ -3,7 +3,7 @@
 use strict;
 use lib qw(t);
 use TestUtil;
-use Test::More  tests => 7;
+use Test::More  tests => 6;
 use Test::Exception;
 
 no warnings 'once';
@@ -20,10 +20,6 @@ is( $other_factory, $factory,
 my $factory_new = eval { Workflow::Factory->new() };
 is( ref( $@ ), 'Workflow::Exception',
     'Call to new() throws proper exception' );
-
-my $i_factory = Workflow::Factory->import( 'FACTORY' );
-is( $i_factory, $factory,
-    'Imported factory returns the same object' );
 
 lives_ok { $factory->add_config_from_file( workflow  => 't/workflow.xml',
                                     action    => [ 't/workflow_action.xml', 't/workflow_action_type.xml', 't/workflow_action.perl',  ],

@@ -3,7 +3,7 @@
 use strict;
 use lib qw(t);
 use TestUtil;
-use Test::More  tests => 5;
+use Test::More  tests => 4;
 
 no warnings 'once';
 
@@ -18,8 +18,4 @@ is( $other_factory, $factory,
 my $factory_new = eval { FactorySubclass->new() };
 is( ref( $@ ), 'Workflow::Exception',
     'Call to new() throws proper exception' );
-
-my $i_factory = FactorySubclass->import( 'FACTORY' );
-is( $i_factory, $factory,
-    'Imported factory returns the same object' );
 
