@@ -796,11 +796,11 @@ sub get_validators {
     return @validators;
 }
 
-1;
-
 sub _validate_action_config {
     return $VALIDATE_ACTION_CONFIG;
 }
+
+1;
 
 __END__
 
