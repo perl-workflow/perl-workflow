@@ -21,8 +21,9 @@ This documentation describes version 1.57 of Workflow
 
     <workflow>
         <type>myworkflow</type>
-        <time_zone>local</time_zone>
-        <description>This is my workflow.</description>
+        <time_zone>local</time_zone>                         <!-- optional -->
+        <description>This is my workflow.</description>      <!-- optional -->
+        <history_class>My::Workflow::History</history_class> <!-- optional -->
 
         <state name="INITIAL">
             <action name="upload file" resulting_state="uploaded" />
@@ -579,6 +580,27 @@ properties caller has to be a [Workflow](https://metacpan.org/pod/Workflow) name
 
 Sets property to value or throws [Workflow::Exception](https://metacpan.org/pod/Workflow%3A%3AException)
 
+## Observer methods
+
+### add\_observer( @observers )
+
+Adds one or more observers to a `Workflow` instance. An observer is a
+function. See ["notify\_observers"](#notify_observers) for its calling convention.
+
+This function is used internally by `Workflow::Factory` to implement
+observability as documented in the section ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable)
+
+### notify\_observers( @arguments )
+
+Calls all observer functions registered through `add_observer` with
+the workflow as the first argument and `@arguments` as the remaining
+arguments:
+
+    $observer->( $wf, @arguments );
+
+Used by various parts of the library to notify observers of workflow
+instance related events.
+
 ## Properties
 
 Unless otherwise noted, properties are **read-only**.
@@ -673,30 +695,70 @@ Returns the name of the next state given the action
 `$action_name`. Throws an exception if `$action_name` not contained
 in the current state.
 
-### add\_observer( @observers )
+## Initial workflow history
 
-Adds one or more observers to a `Workflow` instance. An observer is a
-function. See ["notify\_observers"](#notify_observers) for its calling convention.
+When creating an initial [Workflow::History](https://metacpan.org/pod/Workflow%3A%3AHistory) record when creating a workflow,
+several fields are required.
 
-This function is used internally by `Workflow::Factory` to implement
-observability as documented in the section ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable)
+### get\_initial\_history\_data
 
-### notify\_observers( @arguments )
+This method returns a _list_ of key/value pairs to add in the initial history
+record. The following defaults are returned:
 
-Calls all observer functions registered through `add_observer` with
-the workflow as the first argument and `@arguments` as the remaining
-arguments:
+- `user`
 
-    $observer->( $wf, @arguments );
+    value: "n/a"
 
-Used by various parts of the library to notify observers of workflow
-instance related events.
+- `description`
+
+    value: "Create new workflow"
+
+- `action`
+
+    value: "Create workflow"
+
+Override this method to change the values from their defaults. E.g.
+
+    sub get_initial_history_data {
+       return (
+            user => 1,
+            description => "none",
+            action => "run"
+       );
+    }
 
 # CONFIGURATION AND ENVIRONMENT
 
 The configuration of Workflow is done using the format of your choice, currently
 XML and Perl are implemented, but additional formats can be added. Please refer
 to [Workflow::Config](https://metacpan.org/pod/Workflow%3A%3AConfig), for implementation details.
+
+## Configuration examples
+
+### XML configuration
+
+    <workflow>
+        <type>myworkflow</type>
+        <class>My::Workflow</class>                     <!-- optional -->
+        <initial_state>INITIAL</initial_state>          <!-- optional -->
+        <time_zone>local</time_zone>                    <!-- optional -->
+        <description>This is my workflow.</description> <!-- optional -->
+
+        <!-- List one or more states -->
+        <state name="INITIAL">
+            <action name="upload file" resulting_state="uploaded" />
+            <action name="cancel upload" resulting_state="finished" />
+        </state>
+
+        <state name="uploaded">
+            <action name="verify file">
+               <resulting_state return="redo"     state="INITIAL" />
+               <resulting_state return="finished" state="finished"/>
+            </action>
+        </state>
+
+        <state name="finished" />
+    </workflow>
 
 ## Logging
 
