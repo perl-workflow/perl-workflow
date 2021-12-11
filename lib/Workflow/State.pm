@@ -219,7 +219,7 @@ sub _assign_next_state_from_array {
     my @errors        = ();
     my %new_resulting = ();
     foreach my $map ( @{$resulting} ) {
-        if ( !$map->{state} or !defined $map->{return} ) {
+        if ( not $map->{state} or not defined $map->{return} ) {
             push @errors,
                 "Must have both 'state' ($map->{state}) and 'return' "
                 . "($map->{return}) keys defined.";
