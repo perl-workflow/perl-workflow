@@ -18,8 +18,8 @@ requires 'Safe';
 requires 'Scalar::Util';
 requires 'Syntax::Keyword::Try' => '0.25';
 requires 'XML::Simple'          => '2.00';
-
-
+requires 'Readonly';
+ 
 feature examples =>
     ("The example ticketing application" =>
      sub {

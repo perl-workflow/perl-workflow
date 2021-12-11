@@ -46,6 +46,7 @@ sub create_workflow {
     $self->log->debug("Generated workflow ID '$wf_id'");
     $self->_serialize_workflow($wf);
     my $full_history_path = $self->_get_history_path($wf);
+    ## no critic (ProhibitMagicNumbers)
     mkdir( $full_history_path, 0777 )
         || persist_error "Cannot create history dir '$full_history_path': $!";
 

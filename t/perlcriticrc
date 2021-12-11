@@ -1,41 +1,72 @@
 
-# $Id$
-
 severity = 5
-verbose  = 8
+verbose  = 3
 
 #------------------------------------------------------------------------------
 
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::Documentation::RequirePodSections
 [Documentation::RequirePodSections]
 lib_sections    = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::TestingAndDebugging::RequireUseWarnings
 [TestingAndDebugging::RequireUseWarnings]
+
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers
 [ValuesAndExpressions::ProhibitMagicNumbers]
 
-#Might be to late to address
-[-Subroutines::ProhibitExplicitReturnUndef]
+# Might be to late to address, so it is disabled at various places in the code, could perhaps be 
+# revisited with a major release, since it would break backwards compatibility, the recommeded 
+# solution is bare return
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef
+[Subroutines::ProhibitExplicitReturnUndef]
 
-#The violater of this is an overwrite for Class::Accessor
+# The violater of this is an overwrite for Class::Accessor
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames
 [-NamingConventions::ProhibitAmbiguousNames]
 
-#We are using Constants
+# We are using Constants
+# Perhaps exchange this for Readonly?
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitConstantPragma
 [-ValuesAndExpressions::ProhibitConstantPragma]
 
-#We currently utilize a package variable deliberately, should be addressed
-#again
+# We currently utilize a package variable deliberately, should be addressed again
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::Variables::ProhibitPackageVars
 [-Variables::ProhibitPackageVars]
 
-#For embedded SQL this is perfectly ok
+# For embedded SQL this is perfectly ok
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitImplicitNewlines
 [-ValuesAndExpressions::ProhibitImplicitNewlines]
 
-#Exchange for Module::Load?
+# Exchange for Module::Load?
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::BuiltinFunctions::ProhibitStringyEval
 [-BuiltinFunctions::ProhibitStringyEval]
+
+# We use log
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::ProhibitBuiltinHomonyms
+[-Subroutines::ProhibitBuiltinHomonyms]
 
 #------------------------------------------------------------------------------
 
 # TODO
 
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::TestingAndDebugging::ProhibitNoStrict
 [-TestingAndDebugging::ProhibitNoStrict]
 
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::TestingAndDebugging::ProhibitProlongedStrictureOverride
+[-TestingAndDebugging::ProhibitProlongedStrictureOverride]
+
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::InputOutput::ProhibitBarewordFileHandles
 [-InputOutput::ProhibitBarewordFileHandles]
+
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::RequireFinalReturn
+[-Subroutines::RequireFinalReturn]
+
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::RequireArgUnpacking
+[-Subroutines::RequireArgUnpacking]
+
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::InputOutput::RequireBriefOpen
+[-InputOutput::RequireBriefOpen]
+
+# REF: https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitCommaSeparatedStatements
+[-ValuesAndExpressions::ProhibitCommaSeparatedStatements]
