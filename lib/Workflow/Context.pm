@@ -16,15 +16,6 @@ sub init {
     }
 }
 
-
-sub init {
-    my ( $self, %params) = @_;
-
-    for my $key (keys %params) {
-        $self->param( $key => $params{$key} );
-    }
-}
-
 sub merge {
     my ( $self, $other ) = @_;
     my $other_params = $other->param();
