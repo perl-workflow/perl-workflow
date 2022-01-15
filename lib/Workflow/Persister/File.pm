@@ -128,8 +128,7 @@ sub _serialize_workflow {
         state       => $wf->state,
         last_update => $wf->last_update,
         type        => $wf->type,
-        context     => $wf->context,
-
+        context     => { %{$wf->context->{PARAMS} } },
     );
     $self->serialize_object( $full_path, \%wf_info );
     $self->log->debug("Wrote workflow ok");
