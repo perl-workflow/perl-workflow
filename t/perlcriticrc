@@ -36,7 +36,8 @@ script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 
 # For embedded SQL this is perfectly ok
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitImplicitNewlines
-[-ValuesAndExpressions::ProhibitImplicitNewlines]
+[ValuesAndExpressions::ProhibitImplicitNewlines]
+allowed_values = 0 1 2 3 4 5 6
 
 # Exchange for Module::Load?
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::BuiltinFunctions::ProhibitStringyEval
