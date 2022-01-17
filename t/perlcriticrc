@@ -39,7 +39,7 @@ script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 [ValuesAndExpressions::ProhibitImplicitNewlines]
 allowed_values = 0 1 2 3 4 5 6
 
-# Exchange for Module::Load?
+# Exchange for Module::Load or Module::Runtime?
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::BuiltinFunctions::ProhibitStringyEval
 [-BuiltinFunctions::ProhibitStringyEval]
 
