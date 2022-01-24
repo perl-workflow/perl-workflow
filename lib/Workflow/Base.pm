@@ -47,7 +47,7 @@ sub param {
         if ( exists $self->{PARAMS}{$name} ) {
             return $self->{PARAMS}{$name};
         }
-        return undef;
+        return;
     }
     return $self->{PARAMS}{$name} = $value;
 }
@@ -55,8 +55,7 @@ sub param {
 sub delete_param {
     my ( $self, $name ) = @_;
     unless ( defined $name ) {
-        ## this is an error - perhaps an exception is too radical
-        return undef;
+        return;
     }
 
     # Allow multiple parameters to be deleted at once...
@@ -76,9 +75,7 @@ sub delete_param {
         delete $self->{PARAMS}{$name};
         return $value;
     }
-
-    ## this is an error - perhaps an exception is too radical
-    return undef;
+    return;
 }
 
 sub clear_params {

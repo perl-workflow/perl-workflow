@@ -388,7 +388,8 @@ sub fetch_workflow {
     my $wf_info   = $persister->fetch_workflow($wf_id);
     $wf_class     = $wf_config->{class} || 'Workflow' unless ($wf_class);
 
-    return undef unless ($wf_info);
+    return unless ($wf_info);
+
     $wf_info->{last_update} ||= '';
     $self->log->debug(
         "Fetched data for workflow '$wf_id' ok: ",

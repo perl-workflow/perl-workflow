@@ -9,7 +9,7 @@ $Workflow::Action::Null::VERSION = '1.57';
 
 sub execute {
     my ($self) = @_;
-    return undef;
+    return;
 }
 
 1;
