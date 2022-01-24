@@ -399,7 +399,7 @@ sub fetch_workflow {
     my $wf = $wf_class->new( $wf_id, $wf_info->{state}, $wf_config,
         $self->{_workflow_state}{$wf_type}, $self );
 
-    $wf->context( $wf_info->{context} || Workflow::Context->new ); #if ( not $wf->context() );
+    $wf->context( Workflow::Context->new(%{ $wf_info->{context} // {} }) );
     $wf->last_update( $wf_info->{last_update} );
 
     $persister->fetch_extra_workflow_data($wf);

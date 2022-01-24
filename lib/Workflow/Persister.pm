@@ -202,7 +202,8 @@ Returns the ID for the workflow.
 Stub that warns that the method should be overwritten in the derived
 Persister. Since this is a SUPER class.
 
-Update the workflow state.
+Update the workflow state including serialization of the workflow
+context.
 
 Returns nothing.
 
@@ -214,6 +215,11 @@ Persister. Since this is a SUPER class.
 Retrieve the workflow data corresponding to C<$workflow_id>. It not
 found return undef, if found return a hashref with at least the keys
 C<state> and C<last_update> (a L<DateTime> instance).
+
+If the workflow has associated serialized context, return the
+deserialized hash value in the C<context> key.  The keys in the hash
+will be made available through the C<param> method in the workflow's
+context (accessible through the C<context> method).
 
 =head3 create_history( $workflow, @history )
 
