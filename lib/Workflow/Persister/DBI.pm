@@ -190,7 +190,7 @@ sub create_workflow {
 
     $self->_init_fields();
     my @wf_fields = @{ $self->_wf_fields };
-    my @fields    = @wf_fields[ $WORKFLOW_TYPE_FIELD_POS, $WORKFLOW_STATE_FIELD_POS, $WORKFLOW_LAST_UPDATE_FIELD_POS ];
+    my @fields    = @wf_fields[ 1, 2, 3 ];
     my @values    = (
         $wf->type,
         $wf->state,
@@ -201,7 +201,7 @@ sub create_workflow {
 
     my $id = $self->workflow_id_generator->pre_fetch_id($dbh);
     if ($id) {
-        push @fields, $wf_fields[$WORKFLOW_ID_FIELD_POS];
+        push @fields, $wf_fields[0];
         push @values, $id;
         $self->log->debug("Got ID from pre_fetch_id: $id");
     }
@@ -244,9 +244,9 @@ sub fetch_workflow {
     my $sql = q{SELECT %s, %s FROM %s WHERE %s = ?};
     my @wf_fields = @{ $self->_wf_fields };
     $sql = sprintf $sql,
-        $wf_fields[$WORKFLOW_STATE_FIELD_POS], $wf_fields[$WORKFLOW_LAST_UPDATE_FIELD_POS],
+        $wf_fields[2], $wf_fields[3],
         $self->handle->quote_identifier( $self->workflow_table ),
-        $wf_fields[$WORKFLOW_ID_FIELD_POS];
+        $wf_fields[0];
 
     if ( $self->log->is_debug ) {
         $self->log->debug("Will use SQL: $sql");
@@ -277,7 +277,7 @@ sub update_workflow {
     my @wf_fields = @{ $self->_wf_fields };
     $sql          = sprintf $sql,
         $self->handle->quote_identifier( $self->workflow_table ),
-        $wf_fields[$WORKFLOW_STATE_FIELD_POS], $wf_fields[$WORKFLOW_LAST_UPDATE_FIELD_POS], $wf_fields[$WORKFLOW_ID_FIELD_POS];
+        $wf_fields[2], $wf_fields[3], $wf_fields[0];
     my $update_date = DateTime->now( time_zone => $wf->time_zone() )
         ->strftime( $self->date_format() );
 
@@ -308,7 +308,7 @@ sub create_history {
         next if ( $h->is_saved );
         my $id     = $generator->pre_fetch_id($dbh);
         my @hist_fields = @{ $self->_hist_fields };
-        my @fields      = @hist_fields[ $WORKFLOW_ID_HIST_FIELD_POS .. $WORKFLOW_DATE_HIST_FIELD_POS ];
+        my @fields      = @hist_fields[ 1 .. 6 ];
         my @values      = (
             $wf->id, $h->action, $h->description, $h->state, $h->user,
             $h->date->strftime( $self->date_format() ),
@@ -357,7 +357,7 @@ sub fetch_history {
     my $history_fields = join ', ', @hist_fields;
     $sql = sprintf $sql, $history_fields,
         $self->handle->quote_identifier($self->history_table),
-        $hist_fields[$WORKFLOW_ID_HIST_FIELD_POS], $hist_fields[$WORKFLOW_DATE_HIST_FIELD_POS];
+        $hist_fields[1], $hist_fields[6];
 
     if ( $self->log->is_debug ) {
         $self->log->debug("Will use SQL: $sql");
@@ -388,20 +388,8 @@ sub fetch_history {
             }
         );
         $self->log->debug("Fetched history object '$row->[0]'");
-<<<<<<< HEAD
         $hist->set_saved();
         push @history, $hist;
-=======
-        push @history, {
-            id          => $row->[$WORKFLOW_HIST_ID_FIELD_POS],
-            workflow_id => $row->[$WORKFLOW_ID_HIST_FIELD_POS],
-            action      => $row->[$WORKFLOW_ACTION_HIST_FIELD_POS],
-            description => $row->[$WORKFLOW_DESC_HIST_FIELD_POS],
-            state       => $row->[$WORKFLOW_STATE_HIST_FIELD_POS],
-            user        => $row->[$WORKFLOW_USER_HIST_FIELD_POS],
-            date        => $self->parser->parse_datetime( $row->[$WORKFLOW_DATE_HIST_FIELD_POS] ),
-        };
->>>>>>> 03f6d57 (Addressed several Perl::Critic violation, several disabled project scope in rc file other locally, more work to be done, but this addresses somewhat issue #43 (closes #43))
     }
     $sth->finish;
     return @history;
