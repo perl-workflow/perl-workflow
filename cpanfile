@@ -12,8 +12,7 @@ requires 'DateTime'             => '0.15';
 requires 'DateTime::Format::Strptime' => '1.00';
 requires 'Exception::Class'     => '1.10';
 requires 'File::Slurp';
-requires 'Log::Any'             => '1.050'; # added structural and contextual logging
-requires 'Module::Runtime';
+requires 'Log::Log4perl'        => '0.34';requires 'Module::Runtime';
 requires 'Safe';
 requires 'Scalar::Util';
 requires 'Syntax::Keyword::Try' => '0.25';
