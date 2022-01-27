@@ -378,8 +378,8 @@ sub fetch_history {
     my @history = ();
     while ( my $row = $sth->fetchrow_arrayref ) {
         $self->log->debug("Fetched history object '$row->[0]'");
-        
-        push @history, {
+
+        my $hist = Workflow::History->new({
             id          => $row->[0],
             workflow_id => $row->[1],
             action      => $row->[2],
@@ -387,7 +387,9 @@ sub fetch_history {
             state       => $row->[4],
             user        => $row->[5],
             date        => $self->parser->parse_datetime( $row->[6] ),
-        };
+        });
+        $hist->set_saved();
+        push @history, $hist;
     }
     $sth->finish;
     return @history;
