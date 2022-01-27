@@ -5,7 +5,7 @@ package Workflow::Action;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 use parent qw( Workflow::Base );
 use Workflow::InputField;
 use Workflow::Validator::HasRequiredField;

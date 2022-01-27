@@ -2,7 +2,7 @@ package Workflow::Exception;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 
 # Declare some of our exceptions...
 

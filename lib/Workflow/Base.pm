@@ -2,7 +2,7 @@ package Workflow::Base;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 use parent qw( Class::Accessor );
 use Log::Any;
 

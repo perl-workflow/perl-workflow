@@ -2,7 +2,7 @@ package Workflow::Condition::Negated;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 
 our $VERSION = '1.57';
 

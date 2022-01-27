@@ -2,7 +2,7 @@ package Workflow::Factory;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 use parent qw( Workflow::Base );
 use DateTime;
 use Log::Any qw( $log );
