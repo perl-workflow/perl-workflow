@@ -2,7 +2,7 @@ package Workflow;
 
 use warnings;
 use strict;
-use 5.006; # warnings
+use v5.14.0; # warnings
 use base qw( Workflow::Base );
 use Log::Log4perl qw( get_logger );
 use Workflow::Context;
