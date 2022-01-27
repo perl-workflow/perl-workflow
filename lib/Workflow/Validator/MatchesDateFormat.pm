@@ -2,7 +2,7 @@ package Workflow::Validator::MatchesDateFormat;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 use parent qw( Workflow::Validator );
 use DateTime::Format::Strptime;
 use Workflow::Exception qw( configuration_error validation_error );

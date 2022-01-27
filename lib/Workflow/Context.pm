@@ -2,7 +2,7 @@ package Workflow::Context;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 use parent qw( Workflow::Base );
 
 $Workflow::Context::VERSION = '1.57';

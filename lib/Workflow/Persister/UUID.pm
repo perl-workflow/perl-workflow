@@ -2,7 +2,7 @@ package Workflow::Persister::UUID;
 
 use warnings;
 use strict;
-use 5.006;
+use v5.14.0;
 use Data::UUID;
 
 $Workflow::Persister::UUID::VERSION = '1.57';
