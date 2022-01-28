@@ -14,6 +14,7 @@ script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitMagicNumbers
 [ValuesAndExpressions::ProhibitMagicNumbers]
+allowed_values = 0 1 2 3 4 5 6
 
 # Might be to late to address, so it is disabled at various places in the code, could perhaps be 
 # revisited with a major release, since it would break backwards compatibility, the recommeded 
@@ -37,7 +38,6 @@ script_sections = NAME|DESCRIPTION|SYNOPSIS|AUTHORS|COPYRIGHT
 # For embedded SQL this is perfectly ok
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitImplicitNewlines
 [ValuesAndExpressions::ProhibitImplicitNewlines]
-allowed_values = 0 1 2 3 4 5 6
 
 # Exchange for Module::Load or Module::Runtime?
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::BuiltinFunctions::ProhibitStringyEval
