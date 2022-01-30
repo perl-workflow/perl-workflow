@@ -12,7 +12,7 @@ use Carp qw(croak carp);
 use Syntax::Keyword::Try;
 
 my @FIELDS   = qw( id type description state last_update time_zone
-    history_class );
+    history_class autorun );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
@@ -237,6 +237,7 @@ sub init {
     );
 
     $self->id($id) if ($id);
+    $self->autorun(''); # initialize to false
     $self->_factory($factory);
 
     $self->state($current_state);
@@ -283,6 +284,7 @@ sub _execute_single_action {
 
     # This checks the conditions behind the scenes, so there's no
     # explicit 'check conditions' step here
+    local $self->{autorun} = $autorun;
     my $action = $self->get_action($action_name);
 
     # Need this in case we encounter an exception after we store the

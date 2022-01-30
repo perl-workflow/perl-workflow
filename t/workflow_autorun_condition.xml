@@ -1,0 +1,4 @@
+<conditions>
+  <condition name="is_autorun"
+             class="Workflow::Condition::Autorun" />
+</conditions>

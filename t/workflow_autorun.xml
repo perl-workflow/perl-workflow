@@ -6,7 +6,12 @@
    <action name="enter" resulting_state="ENTERED"/>
  </state>
  <state name="ENTERED" autorun="yes">
-   <action name="progress" resulting_state="IN PROGRESS" />
+   <action name="progress" resulting_state="IN PROGRESS">
+     <condition name="!is_autorun" />
+   </action>
+   <action name="finish" resulting_state="FINISHED">
+     <condition name="!is_autorun" />
+   </action>
  </state>
  <state name="IN PROGRESS">
    <action name="finish" resulting_state="FINISHED" />
