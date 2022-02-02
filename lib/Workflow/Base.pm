@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Class::Accessor );
 use Log::Log4perl;
-$Workflow::Base::VERSION = '1.57';
+$Workflow::Base::VERSION = '1.58';
 
 sub new {
     my ( $class, @params ) = @_;
@@ -99,7 +99,7 @@ Workflow::Base - Base class with constructor
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 1.58 of this package
 
 =head1 SYNOPSIS
 
