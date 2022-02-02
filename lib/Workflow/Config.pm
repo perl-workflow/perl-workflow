@@ -7,7 +7,7 @@ use Data::Dumper qw( Dumper );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::VERSION = '1.57';
+$Workflow::Config::VERSION = '1.58';
 
 # Map the valid type to the top-level XML tag or data
 # structure to look for.
@@ -114,7 +114,7 @@ Workflow::Config - Parse configuration files for the workflow components
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 1.58 of this package
 
 =head1 SYNOPSIS
 
@@ -493,7 +493,7 @@ For documentation of the other keys, please refer to the respective classes.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2021 Chris Winters. All rights reserved.
+Copyright (c) 2003-2022 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
