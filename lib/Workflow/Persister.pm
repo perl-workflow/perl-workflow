@@ -9,7 +9,7 @@ use Workflow::Exception qw( persist_error );
 
 use constant DEFAULT_ID_LENGTH => 8;
 
-$Workflow::Persister::VERSION = '1.57';
+$Workflow::Persister::VERSION = '1.58';
 
 my @FIELDS = qw( name class
     use_random use_uuid
@@ -160,7 +160,7 @@ Workflow::Persister - Base class for workflow persistence
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 1.58 of this package
 
 =head1 SYNOPSIS
 
@@ -333,7 +333,7 @@ we shift parameters in?
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2021 Chris Winters. All rights reserved.
+Copyright (c) 2003-2022 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

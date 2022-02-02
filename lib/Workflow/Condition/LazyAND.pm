@@ -3,7 +3,7 @@ package Workflow::Condition::LazyAND;
 use strict;
 use warnings;
 
-our $VERSION = '1.57';
+our $VERSION = '1.58';
 
 use base qw( Workflow::Condition::Nested );
 use Workflow::Exception qw( condition_error configuration_error );
@@ -57,7 +57,7 @@ Workflow::Condition::LazyAND
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 1.58 of this package
 
 =head1 DESCRIPTION
 
@@ -113,7 +113,7 @@ B<or>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2021 Chris Winters. All rights reserved.
+Copyright (c) 2003-2022 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

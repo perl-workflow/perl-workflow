@@ -9,7 +9,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( workflow_error condition_error );
 
 $Workflow::Condition::CACHE_RESULTS = 1;
-$Workflow::Condition::VERSION = '1.57';
+$Workflow::Condition::VERSION = '1.58';
 
 my $log;
 my @FIELDS = qw( name class );
@@ -118,7 +118,7 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 1.58 of this package
 
 =head1 SYNOPSIS
 
@@ -319,7 +319,7 @@ consider it to be the value returned.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2021 Chris Winters. All rights reserved.
+Copyright (c) 2003-2022 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

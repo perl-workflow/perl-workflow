@@ -3,7 +3,7 @@ package Workflow::Condition::Negated;
 use strict;
 use warnings;
 
-our $VERSION = '1.57';
+our $VERSION = '1.58';
 
 use base qw( Workflow::Condition );
 
@@ -36,7 +36,7 @@ Workflow::Condition::Negated - Negate workflow condition result
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 1.58 of this package
 
 =head1 DESCRIPTION
 
@@ -73,7 +73,7 @@ See L<Workflow>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2004-2021 Chris Winters. All rights reserved.
+Copyright (c) 2004-2022 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
