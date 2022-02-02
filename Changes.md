@@ -6,6 +6,20 @@
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
+## 1.58 2022-02-02 Maintenance release, update not required
+
+- Addressed violations of [Perl::Critic](https://metacpan.org/pod/Perl::Critic) policies:
+  - [Subroutines::ProhibitExplicitReturnUndef](https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef)
+  - [ValuesAndExpressions::ProhibitMixedBooleanOperators](https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitMixedBooleanOperators)
+
+  Adjustments to Perl::Critic resourcefile (`t/perlcriticrc`), this somewhat addresses issue [#43](https://github.com/jonasbn/perl-workflow/issues/43), there is more work to be done in this area, this will be adressed eventually
+
+  By Jonas Brømsø (@jonasbn)
+
+- Requirement for Perl 5.14 has been made more explicit, see also PR [#185](https://github.com/jonasbn/perl-workflow/pull/185) by Erik Huelsmann (@ehuelsmann)
+
+- Delay of instantation, prevents additional loggings attempts, this makes logging less noisy when running tests. Via PR [#174](https://github.com/jonasbn/perl-workflow/pull/174) from Erik Huelsmann (@ehuelsmann)
+
 ## 1.57 2021-10-17 Bug fix release, update recommended
 
 - PR [#170](https://github.com/jonasbn/perl-workflow/pull/170) addresses an issue where Workflow tries to log during the execution of `use` statements, at which time it's highly unlikely that the logger has already been initialized, resulting in warnings being printed on the console
