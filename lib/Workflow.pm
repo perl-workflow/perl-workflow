@@ -16,7 +16,7 @@ my @FIELDS   = qw( id type description state last_update time_zone );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
-$Workflow::VERSION = '1.58';
+$Workflow::VERSION = '1.59';
 
 use constant NO_CHANGE_VALUE => 'NOCHANGE';
 
@@ -377,7 +377,7 @@ Workflow - Simple, flexible system to implement workflows
 
 =head1 VERSION
 
-This documentation describes version 1.58 of Workflow
+This documentation describes version 1.59 of Workflow
 
 =head1 SYNOPSIS
 
@@ -1263,7 +1263,7 @@ environment variable C<TEST_AUTHOR> is set to true.
 This is the current test coverage of Workflow version 1.58, with the C<TEST_AUTHOR>
 flag enabled
 
-    TEST_AUTHOR=1 dzil cover 
+    TEST_AUTHOR=1 dzil cover
 
     ---------------------------- ------ ------ ------ ------ ------ ------ ------
     File                           stmt   bran   cond    sub    pod   time  total
