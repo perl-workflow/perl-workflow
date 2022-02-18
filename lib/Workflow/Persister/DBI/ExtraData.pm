@@ -213,12 +213,10 @@ Initializes persister for extra workflow data.
 
 Throws L<Workflow::Exception> if initialization is not successful.
 
-=head3 fetch_extra_workflow_data ( $wf )
+=head3 fetch_workflow ( $wf_id )
 
-Fetches extra data from database and feeds this to context of given workflow.
-
-Takes a single parameter, a workflow object to which extra data are feed if
-retrieved successfully.
+Fetches extra data from database and adds it to the restored workflow
+context data returned with the fetched workflow.
 
 Throws L<Workflow::Exception> if retrieval is not successful.
 

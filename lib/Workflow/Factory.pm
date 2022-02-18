@@ -402,8 +402,6 @@ sub fetch_workflow {
     $wf->context( Workflow::Context->new(%{ $wf_info->{context} // {} }) );
     $wf->last_update( $wf_info->{last_update} );
 
-    $persister->fetch_extra_workflow_data($wf);
-
     $self->associate_observers_with_workflow($wf);
     $self->_associate_transaction_observer_with_workflow($wf, $persister);
     $wf->notify_observers('fetch');
