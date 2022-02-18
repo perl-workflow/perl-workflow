@@ -12,8 +12,9 @@ $Workflow::Validator::MatchesDateFormat::VERSION = '1.57';
 
 __PACKAGE__->mk_accessors('formatter');
 
-sub _init {
+sub init {
     my ( $self, $params ) = @_;
+    $self->SUPER::init( $params );
     unless ( $params->{date_format} ) {
         configuration_error "You must define a value for 'date_format' in ",
             "declaration of validator ", $self->name;
