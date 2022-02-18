@@ -47,10 +47,12 @@ sub init {
                               ? $self->context_key : '' ) ) );
 }
 
-sub fetch_extra_workflow_data {
-    my ( $self, $wf ) = @_;
+sub fetch_workflow {
+    my ( $self, $wf_id ) = @_;
+    my $wf_info = $self->SUPER::fetch_workflow( $wf_id );
+    my $context = $wf_info->{context} // {};
 
-    $self->log->debug( "Fetching extra workflow data for '", $wf->id, "'" );
+    $self->log->debug( "Fetching extra workflow data for '", $wf_id, "'" );
 
     my $sql = q{SELECT %s FROM %s WHERE workflow_id = ?};
     my $data_field = $self->data_field;
@@ -62,12 +64,12 @@ sub fetch_extra_workflow_data {
     $sql = sprintf $sql, $select_data_fields,
         $self->handle->quote_identifier( $self->table );
     $self->log->debug( "Using SQL: ", $sql);
-    $self->log->debug( "Bind parameters: ", $wf->id );
+    $self->log->debug( "Bind parameters: ", $wf_id );
 
     my ($sth);
     try {
         $sth = $self->handle->prepare($sql);
-        $sth->execute( $wf->id );
+        $sth->execute( $wf_id );
     }
     catch ($error) {
         persist_error "Failed to retrieve extra data from table ",
@@ -78,7 +80,7 @@ sub fetch_extra_workflow_data {
     my $row = $sth->fetchrow_arrayref;
     if ( ref $data_field ) {
         foreach my $i ( 0 .. $#{$data_field} ) {
-            $wf->context->param( $data_field->[$i], $row->[$i] );
+            $context->{$data_field->[$i]} = $row->[$i];
             $self->log->info(
                 sub { sprintf "Set data from %s.%s into context key %s ok",
                           $self->table, $data_field->[$i],
@@ -86,12 +88,14 @@ sub fetch_extra_workflow_data {
         }
     } else {
         my $value = $row->[0];
-        $wf->context->param( $self->context_key, $value );
+        $context->{ $self->context_key } = $value;
         $self->log->info(
             sub { sprintf "Set data from %s.%s into context key %s ok",
                       $self->table, $self->data_field,
                       $self->context_key } );
     }
+
+    return $wf_info;
 }
 
 1;
