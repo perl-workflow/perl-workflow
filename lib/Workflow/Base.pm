@@ -42,10 +42,7 @@ sub param {
     }
 
     unless ( defined $value ) {
-        if ( exists $self->{PARAMS}{$name} ) {
-            return $self->{PARAMS}{$name};
-        }
-        return;
+        return $self->{PARAMS}{$name};
     }
     return $self->{PARAMS}{$name} = $value;
 }
