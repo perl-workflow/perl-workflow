@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 
-$Workflow::Context::VERSION = '1.59';
+$Workflow::Context::VERSION = '1.60';
 
 
 sub init {
@@ -35,7 +35,7 @@ Workflow::Context - Data blackboard for Workflows, Actions, Conditions and Valid
 
 =head1 VERSION
 
-This documentation describes version 1.59 of this package
+This documentation describes version 1.60 of this package
 
 =head1 SYNOPSIS
 

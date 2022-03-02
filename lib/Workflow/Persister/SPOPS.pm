@@ -8,7 +8,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::SPOPS::VERSION = '1.59';
+$Workflow::Persister::SPOPS::VERSION = '1.60';
 
 my @FIELDS = qw( workflow_class history_class );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -143,7 +143,7 @@ Workflow::Persister::SPOPS - Persist workflows using SPOPS
 
 =head1 VERSION
 
-This documentation describes version 1.59 of this package
+This documentation describes version 1.60 of this package
 
 =head1 SYNOPSIS
 

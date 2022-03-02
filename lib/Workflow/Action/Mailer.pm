@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Action );
 
-$Workflow::Action::Mailer::VERSION = '1.59';
+$Workflow::Action::Mailer::VERSION = '1.60';
 
 sub execute {
     my ($self) = @_;
@@ -23,7 +23,7 @@ Workflow::Action::Mailer - a stub for a SMTP capable action
 
 =head1 VERSION
 
-This documentation describes version 1.59 of this package
+This documentation describes version 1.60 of this package
 
 =head1 SYNOPSIS
 

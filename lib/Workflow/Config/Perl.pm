@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Data::Dumper qw( Dumper );
 use English qw( -no_match_vars );
 
-$Workflow::Config::Perl::VERSION = '1.59';
+$Workflow::Config::Perl::VERSION = '1.60';
 
 sub parse {
     my ( $self, $type, @items ) = @_;
@@ -104,7 +104,7 @@ Workflow::Config::Perl - Parse workflow configurations as Perl data structures
 
 =head1 VERSION
 
-This documentation describes version 1.59 of this package
+This documentation describes version 1.60 of this package
 
 =head1 SYNOPSIS
 

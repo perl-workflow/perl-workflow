@@ -3,7 +3,7 @@ package Workflow::Condition::CheckReturn;
 use strict;
 use warnings;
 
-our $VERSION = '1.59';
+our $VERSION = '1.60';
 
 use base qw( Workflow::Condition::Nested );
 use Workflow::Exception qw( condition_error configuration_error );
@@ -90,7 +90,7 @@ Workflow::Condition::CheckReturn
 
 =head1 VERSION
 
-This documentation describes version 1.59 of this package
+This documentation describes version 1.60 of this package
 
 =head1 DESCRIPTION
 

@@ -8,7 +8,7 @@ use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use English qw( -no_match_vars );
 
-$Workflow::Config::XML::VERSION = '1.59';
+$Workflow::Config::XML::VERSION = '1.60';
 
 my ($log);
 
@@ -107,7 +107,7 @@ Workflow::Config::XML - Parse workflow configurations from XML content
 
 =head1 VERSION
 
-This documentation describes version 1.59 of this package
+This documentation describes version 1.60 of this package
 
 =head1 SYNOPSIS
 
