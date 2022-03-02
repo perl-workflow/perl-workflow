@@ -28,3 +28,5 @@ t/workflow_tests.log
 local/
 eg/ticket/db/
 eg/ticket/workflow.log
+perl-workflow.code-workspace
+db/workflow.db
