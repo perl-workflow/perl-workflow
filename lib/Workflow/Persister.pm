@@ -103,21 +103,6 @@ sub fetch_workflow {
         "'fetch_workflow()'";
 }
 
-# This is the only one that isn't required...
-sub fetch_extra_workflow_data {
-    my ( $self, $wf ) = @_;
-
-    $self->log->info("Called empty 'fetch_extra_workflow_data()' (ok)");
-    $self->log->debug(
-        "An empty implementation is not an error as you may ",
-        "not need this extra functionality. If you do you ",
-        "should use a persister for this purpose (e.g., ",
-        "Workflow::Persister::DBI::ExtraData) or ",
-        "create your own and just implement this method."
-    );
-    return;
-}
-
 sub create_history {
     my ( $self, $wf, @history ) = @_;
     persist_error "Persister '", ref($self), "' must implement ",
@@ -244,11 +229,6 @@ L<Workflow::History> objects (or a derived class).
 =head3 assign_generators( \%params )
 
 Assigns proper generators based on intialization, see L</init>
-
-=head3 fetch_extra_workflow_data ( $workflow )
-
-A stub that warns that the method should be overwritten in the derived
-Persister. Since this is a SUPER class.
 
 =head3 commit_transaction
 
