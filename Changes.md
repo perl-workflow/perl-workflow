@@ -6,6 +6,14 @@
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
+## 1.60 2022-03-02 bug fix release, update recommended
+
+- We have discovered a minor regression, founded in our eager to implement more clean code. This has been addressed via PR [#195](https://github.com/jonasbn/perl-workflow/pull/195) by Erik Huelsmann (@ehuelsmann).
+
+  It was followed up by PR [#196](https://github.com/jonasbn/perl-workflow/pull/196/files) by Oliver Welter (@oliwell).
+
+  We are now setting the bar a bit lower for the 1.x releases in regard to best practices and code quality and focus on improving the code for 2.x, so we do not experience any more regressions.
+
 ## 1.59 2022-02-02 bug fix release, update required
 
 - Unfortunately we discovered a minor mishap, where a dependency was referenced without being properly declared as a dependency, which could result in inability for the distribution to work in a clean environment. This has now been addressed via PR [#190](https://github.com/jonasbn/perl-workflow/pull/190)
