@@ -80,7 +80,7 @@ sub validate {
         my @runtime_args = ($wf);
         foreach my $arg ( @{$args} ) {
             if ( $arg =~ /^\$(.*)$/ ) {
-                push @runtime_args, $context->param($1);
+                push @runtime_args, scalar $context->param($1);
             } else {
                 push @runtime_args, $arg;
             }
