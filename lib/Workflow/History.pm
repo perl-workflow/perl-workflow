@@ -76,9 +76,12 @@ This documentation describes version 1.57 of this package
      my ( $self, $wf ) = @_;
      my $current_user = $wf->context->param( 'current_user' );
      # ... do your work with $ticket
-     $wf->add_history( action => 'create ticket',
-                       user   => $current_user->full_name,
-                       description => "Ticket $ticket->{subject} successfully created" );
+     $wf->add_history(
+         {
+            action => 'create ticket',
+            user   => $current_user->full_name,
+            description => "Ticket $ticket->{subject} successfully created"
+         });
  }
 
  # in your view (using TT2)
