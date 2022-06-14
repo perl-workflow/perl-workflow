@@ -113,11 +113,12 @@ sub get_action_fields {
 }
 
 sub execute_action {
-    my ( $self, $action_name ) = @_;
+    my ( $self, $action_name, $action_args ) = @_;
 
     while ( $action_name ) {
         my $wf_state =
-            $self->_execute_single_action( $action_name );
+            $self->_execute_single_action( $action_name, $action_args );
+        $action_args = undef;
 
         if ( not $wf_state->autorun ) {
             last;
@@ -279,7 +280,7 @@ sub set {
 
 
 sub _execute_single_action {
-    my ( $self, $action_name ) = @_;
+    my ( $self, $action_name, $action_args ) = @_;
 
     # This checks the conditions behind the scenes, so there's no
     # explicit 'check conditions' step here
@@ -291,8 +292,15 @@ sub _execute_single_action {
     my ( $new_state, $action_return );
 
     try {
-        $action->validate($self);
+        $action->validate($self, $action_args);
         $self->log->is_debug && $self->log->debug("Action validated ok");
+        if ($action_args) {
+            # Merge the action args into the context
+            my $ctx = $self->context;
+            while (my ($k, $v) = each %{$action_args}) {
+                $ctx->param( $k, $v );
+            }
+        }
         $action_return = $action->execute($self);
         $self->log->is_debug && $self->log->debug("Action executed ok");
 
@@ -517,10 +525,10 @@ This documentation describes version 1.57 of Workflow
  my $context = $workflow->context;
  $context->param( current_user => $user );
  $context->param( sections => \@sections );
- $context->param( path => $path_to_file );
 
  # Execute one of them
- $workflow->execute_action( 'upload file' );
+ $workflow->execute_action( 'upload file',
+                            { path => $path_to_file });
 
  print "New state: ", $workflow->state, "\n";
 
@@ -931,12 +939,16 @@ than the entire system.
 
 =head2 Object Methods
 
-=head3 execute_action( $action_name )
+=head3 execute_action( $action_name, $args )
 
 Execute the action C<$action_name>. Typically this changes the state
 of the workflow. If C<$action_name> is not in the current state, fails
 one of the conditions on the action, or fails one of the validators on
 the action an exception is thrown.
+
+The C<$args> provided, are checked against the validators to ensure the
+context remains in a valid state; upon successful validation, the C<$args>
+are merged into the context and the action is executed as described above.
 
 After the action has been successfully executed and the workflow saved
 we issue a 'execute' observation with the old state, action name and

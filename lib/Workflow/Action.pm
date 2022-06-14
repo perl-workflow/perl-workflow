@@ -66,7 +66,7 @@ sub get_validators {
 }
 
 sub validate {
-    my ( $self, $wf ) = @_;
+    my ( $self, $wf, $action_args ) = @_;
     my @validators = $self->get_validators;
     return unless ( scalar @validators );
 
@@ -75,17 +75,15 @@ sub validate {
         my $validator    = $validator_info->{validator};
         my $args         = $validator_info->{args};
 
-        # TODO: Revisit this statement it does not look right
-        # runtime_args becomes the WF object??
-        my @runtime_args = ($wf);
+        my @runtime_args = ();
         foreach my $arg ( @{$args} ) {
             if ( $arg =~ /^\$(.*)$/ ) {
-                push @runtime_args, $context->param($1);
+                push @runtime_args, $action_args->{$1};
             } else {
                 push @runtime_args, $arg;
             }
         }
-        $validator->validate(@runtime_args);
+        $validator->validate($wf, @runtime_args);
     }
 }
 
@@ -460,9 +458,10 @@ L<Workflow::Validator> object, while 'args' contains an arrayref of
 arguments to pass to the validator, some of which may need to be
 evaluated at runtime.
 
-=head3 validate( $workflow )
+=head3 validate( $workflow, $action_args )
 
-Run through all validators for this action. If any fail they will
+Run through all validators for this action, using the arguments
+provided with the C<execute_action> call. If any fail they will
 throw a L<Workflow::Exception>, the validation subclass.
 
 =head3 execute( $workflow )
