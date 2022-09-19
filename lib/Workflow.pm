@@ -171,7 +171,6 @@ sub add_history {
             workflow_error "I don't know how to add a history of type '",
                 ref($item), "'";
         }
-
     }
     push @{ $self->{_histories} }, @to_add;
     $self->notify_observers( 'add history', \@to_add );
