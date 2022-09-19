@@ -208,10 +208,6 @@ sub add_history {
             workflow_error "I don't know how to add a history of ", "type '",
                 ref($item), "'";
         }
-
-        if ($EVAL_ERROR) {
-            workflow_error "Unable to assert history object";
-        }
     }
     push @{ $self->{_histories} }, @to_add;
     $self->notify_observers( 'add history', \@to_add );
