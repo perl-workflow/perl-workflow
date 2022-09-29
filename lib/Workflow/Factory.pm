@@ -100,6 +100,31 @@ sub _delete_instance {
 
 my %CONFIG = ( 'Workflow::Config' => 1 );
 
+sub _add_config_from_files {
+    my ($self, $method, $type, $config) = @_;
+
+    foreach my $item ( @{ $config } ) {
+        $self->$method(
+            Workflow::Config->parse_all_files( $type, $item )
+            );
+    }
+
+    return;
+}
+
+sub _add_config_from_file {
+    my ($self, $method, $type, $config) = @_;
+
+    if ( ref $config eq 'ARRAY' ) {
+        $self->_add_config_from_files( $method, $type, $config );
+    }
+    else {
+        $self->_add_config_from_files( $method, $type, [ $config ] );
+    }
+
+    return;
+}
+
 sub add_config_from_file {
     my ( $self, %params ) = @_;
     return unless ( scalar keys %params );
@@ -113,79 +138,24 @@ sub add_config_from_file {
     }
 
     $self->log->debug( "Adding condition configurations..." );
-
-    if ( ref $params{condition} eq 'ARRAY' ) {
-        foreach my $condition ( @{ $params{condition} } ) {
-            $self->_add_condition_config(
-                Workflow::Config->parse_all_files( 'condition', $condition )
-            );
-        }
-    } else {
-        $self->_add_condition_config(
-            Workflow::Config->parse_all_files(
-                'condition', $params{condition}
-            )
-        );
-    }
+    $self->_add_config_from_file( \&_add_condition_config,
+                                  'condition', $params{condition});
 
     $self->log->debug( "Adding validator configurations..." );
-
-    if ( ref $params{validator} eq 'ARRAY' ) {
-        foreach my $validator ( @{ $params{validator} } ) {
-            $self->_add_validator_config(
-                Workflow::Config->parse_all_files( 'validator', $validator )
-            );
-        }
-    } else {
-        $self->_add_validator_config(
-            Workflow::Config->parse_all_files(
-                'validator', $params{validator}
-            )
-        );
-    }
+    $self->_add_config_from_file( \&_add_validator_config,
+                                  'validator', $params{validator});
 
     $self->log->debug( "Adding persister configurations..." );
-
-    if ( ref $params{persister} eq 'ARRAY' ) {
-        foreach my $persister ( @{ $params{persister} } ) {
-            $self->_add_persister_config(
-                Workflow::Config->parse_all_files( 'persister', $persister )
-            );
-        }
-    } else {
-        $self->_add_persister_config(
-            Workflow::Config->parse_all_files(
-                'persister', $params{persister}
-            )
-        );
-    }
+    $self->_add_config_from_file( \&_add_persister_config,
+                                  'persister', $params{persister});
 
     $self->log->debug( "Adding action configurations..." );
-
-    if ( ref $params{action} eq 'ARRAY' ) {
-        foreach my $action ( @{ $params{action} } ) {
-            $self->_add_action_config(
-                Workflow::Config->parse_all_files( 'action', $action ) );
-        }
-    } else {
-        $self->_add_action_config(
-            Workflow::Config->parse_all_files( 'action', $params{action} ) );
-    }
+    $self->_add_config_from_file( \&_add_action_config,
+                                  'action', $params{action});
 
     $self->log->debug( "Adding workflow configurations..." );
-
-    if ( ref $params{workflow} eq 'ARRAY' ) {
-        foreach my $workflow ( @{ $params{workflow} } ) {
-            $self->_add_workflow_config(
-                Workflow::Config->parse_all_files( 'workflow', $workflow ) );
-        }
-    } else {
-        $self->_add_workflow_config(
-            Workflow::Config->parse_all_files(
-                'workflow', $params{workflow}
-            )
-        );
-    }
+    $self->_add_config_from_file( \&_add_workflow_config,
+                                  'workflow', $params{workflow});
 
     return;
 }
