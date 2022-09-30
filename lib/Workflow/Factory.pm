@@ -157,6 +157,10 @@ sub add_config_from_file {
     $self->_add_config_from_file( \&_add_workflow_config,
                                   'workflow', $params{workflow});
 
+    $self->log->debug( "Adding independent observer configurations..." );
+    $self->_add_config_from_file( \&_add_observer_config,
+                                  'observer', $params{observer});
+
     return;
 }
 
@@ -169,6 +173,7 @@ sub add_config {
     $self->_add_persister_config( _flatten( $params{persister} ) );
     $self->_add_action_config( _flatten( $params{action} ) );
     $self->_add_workflow_config( _flatten( $params{workflow} ) );
+    $self->_add_observer_config( _flatten( $params{observer} ) );
     return;
 }
 
@@ -224,7 +229,8 @@ sub _add_workflow_config {
         $self->_load_class( $workflow_config->{history_class},
                 q{Cannot require workflow history class '%s': %s} );
 
-        $self->_load_observers($workflow_config);
+        $self->_load_observers($workflow_config->{type},
+                               $workflow_config->{observer} );
 
         $self->log->info( "Added all workflow states..." );
     }
@@ -236,11 +242,9 @@ sub _add_workflow_config {
 # workflow
 
 sub _load_observers {
-    my ( $self, $workflow_config ) = @_;
-    my $wf_type        = $workflow_config->{type};
-    my $observer_specs = $workflow_config->{observer} || [];
-    my @observers      = ();
-    foreach my $observer_info ( @{$observer_specs} ) {
+    my ( $self, $wf_type, $observer_specs ) = @_;
+    my @observers = ();
+    foreach my $observer_info ( @{$observer_specs || []} ) {
         if ( my $observer_class = $observer_info->{class} ) {
             $self->_load_class( $observer_class,
                       "Cannot require observer '%s' to watch observer "
@@ -272,7 +276,8 @@ sub _load_observers {
     my $observers_num = scalar @observers;
 
     if (@observers) {
-        $self->{_workflow_observers}{$wf_type} = \@observers;
+        $self->{_workflow_observers}{$wf_type} ||= [];
+        push @{ $self->{_workflow_observers}{$wf_type} }, @observers;
 
         $self->log->info(
             sub { "Added $observers_num to '$wf_type': " .
@@ -777,6 +782,31 @@ sub get_validators {
 
 sub _validate_action_config {
     return $VALIDATE_ACTION_CONFIG;
+}
+
+########################################
+# Independent Observers
+
+sub _add_observer_config {
+    my ( $self, @all_observer_config ) = @_;
+
+    return unless (@all_observer_config);
+
+    foreach my $observers (@all_observer_config) {
+        next unless ( ref $observers eq 'HASH' );
+
+        my $v = exists $observers->{observer} ?
+            $observers->{observer} : [ $observers->{observer} ];
+
+        for my $observer_config ( @{$v} ) {
+            my $name = $observer_config->{name};
+            my $type = $observer_config->{type};
+
+            $self->_load_observers( $type, [ $observer_config ] );
+        }
+    }
+
+    return;
 }
 
 1;
