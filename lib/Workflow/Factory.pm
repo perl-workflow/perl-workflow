@@ -100,6 +100,31 @@ sub _delete_instance {
 
 my %CONFIG = ( 'Workflow::Config' => 1 );
 
+sub _add_config_from_files {
+    my ($self, $method, $type, $config) = @_;
+
+    foreach my $item ( @{ $config } ) {
+        $self->$method(
+            Workflow::Config->parse_all_files( $type, $item )
+            );
+    }
+
+    return;
+}
+
+sub _add_config_from_file {
+    my ($self, $method, $type, $config) = @_;
+
+    if ( ref $config eq 'ARRAY' ) {
+        $self->_add_config_from_files( $method, $type, $config );
+    }
+    else {
+        $self->_add_config_from_files( $method, $type, [ $config ] );
+    }
+
+    return;
+}
+
 sub add_config_from_file {
     my ( $self, %params ) = @_;
     return unless ( scalar keys %params );
@@ -113,79 +138,28 @@ sub add_config_from_file {
     }
 
     $self->log->debug( "Adding condition configurations..." );
-
-    if ( ref $params{condition} eq 'ARRAY' ) {
-        foreach my $condition ( @{ $params{condition} } ) {
-            $self->_add_condition_config(
-                Workflow::Config->parse_all_files( 'condition', $condition )
-            );
-        }
-    } else {
-        $self->_add_condition_config(
-            Workflow::Config->parse_all_files(
-                'condition', $params{condition}
-            )
-        );
-    }
+    $self->_add_config_from_file( \&_add_condition_config,
+                                  'condition', $params{condition});
 
     $self->log->debug( "Adding validator configurations..." );
-
-    if ( ref $params{validator} eq 'ARRAY' ) {
-        foreach my $validator ( @{ $params{validator} } ) {
-            $self->_add_validator_config(
-                Workflow::Config->parse_all_files( 'validator', $validator )
-            );
-        }
-    } else {
-        $self->_add_validator_config(
-            Workflow::Config->parse_all_files(
-                'validator', $params{validator}
-            )
-        );
-    }
+    $self->_add_config_from_file( \&_add_validator_config,
+                                  'validator', $params{validator});
 
     $self->log->debug( "Adding persister configurations..." );
-
-    if ( ref $params{persister} eq 'ARRAY' ) {
-        foreach my $persister ( @{ $params{persister} } ) {
-            $self->_add_persister_config(
-                Workflow::Config->parse_all_files( 'persister', $persister )
-            );
-        }
-    } else {
-        $self->_add_persister_config(
-            Workflow::Config->parse_all_files(
-                'persister', $params{persister}
-            )
-        );
-    }
+    $self->_add_config_from_file( \&_add_persister_config,
+                                  'persister', $params{persister});
 
     $self->log->debug( "Adding action configurations..." );
-
-    if ( ref $params{action} eq 'ARRAY' ) {
-        foreach my $action ( @{ $params{action} } ) {
-            $self->_add_action_config(
-                Workflow::Config->parse_all_files( 'action', $action ) );
-        }
-    } else {
-        $self->_add_action_config(
-            Workflow::Config->parse_all_files( 'action', $params{action} ) );
-    }
+    $self->_add_config_from_file( \&_add_action_config,
+                                  'action', $params{action});
 
     $self->log->debug( "Adding workflow configurations..." );
+    $self->_add_config_from_file( \&_add_workflow_config,
+                                  'workflow', $params{workflow});
 
-    if ( ref $params{workflow} eq 'ARRAY' ) {
-        foreach my $workflow ( @{ $params{workflow} } ) {
-            $self->_add_workflow_config(
-                Workflow::Config->parse_all_files( 'workflow', $workflow ) );
-        }
-    } else {
-        $self->_add_workflow_config(
-            Workflow::Config->parse_all_files(
-                'workflow', $params{workflow}
-            )
-        );
-    }
+    $self->log->debug( "Adding independent observer configurations..." );
+    $self->_add_config_from_file( \&_add_observer_config,
+                                  'observer', $params{observer});
 
     return;
 }
@@ -199,6 +173,7 @@ sub add_config {
     $self->_add_persister_config( _flatten( $params{persister} ) );
     $self->_add_action_config( _flatten( $params{action} ) );
     $self->_add_workflow_config( _flatten( $params{workflow} ) );
+    $self->_add_observer_config( _flatten( $params{observer} ) );
     return;
 }
 
@@ -254,7 +229,8 @@ sub _add_workflow_config {
         $self->_load_class( $workflow_config->{history_class},
                 q{Cannot require workflow history class '%s': %s} );
 
-        $self->_load_observers($workflow_config);
+        $self->_load_observers($workflow_config->{type},
+                               $workflow_config->{observer} );
 
         $self->log->info( "Added all workflow states..." );
     }
@@ -266,11 +242,9 @@ sub _add_workflow_config {
 # workflow
 
 sub _load_observers {
-    my ( $self, $workflow_config ) = @_;
-    my $wf_type        = $workflow_config->{type};
-    my $observer_specs = $workflow_config->{observer} || [];
-    my @observers      = ();
-    foreach my $observer_info ( @{$observer_specs} ) {
+    my ( $self, $wf_type, $observer_specs ) = @_;
+    my @observers = ();
+    foreach my $observer_info ( @{$observer_specs || []} ) {
         if ( my $observer_class = $observer_info->{class} ) {
             $self->_load_class( $observer_class,
                       "Cannot require observer '%s' to watch observer "
@@ -302,7 +276,8 @@ sub _load_observers {
     my $observers_num = scalar @observers;
 
     if (@observers) {
-        $self->{_workflow_observers}{$wf_type} = \@observers;
+        $self->{_workflow_observers}{$wf_type} ||= [];
+        push @{ $self->{_workflow_observers}{$wf_type} }, @observers;
 
         $self->log->info(
             sub { "Added $observers_num to '$wf_type': " .
@@ -807,6 +782,31 @@ sub get_validators {
 
 sub _validate_action_config {
     return $VALIDATE_ACTION_CONFIG;
+}
+
+########################################
+# Independent Observers
+
+sub _add_observer_config {
+    my ( $self, @all_observer_config ) = @_;
+
+    return unless (@all_observer_config);
+
+    foreach my $observers (@all_observer_config) {
+        next unless ( ref $observers eq 'HASH' );
+
+        my $v = exists $observers->{observer} ?
+            $observers->{observer} : [ $observers->{observer} ];
+
+        for my $observer_config ( @{$v} ) {
+            my $name = $observer_config->{name};
+            my $type = $observer_config->{type};
+
+            $self->_load_observers( $type, [ $observer_config ] );
+        }
+    }
+
+    return;
 }
 
 1;

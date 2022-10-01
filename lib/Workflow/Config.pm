@@ -14,6 +14,7 @@ $Workflow::Config::VERSION = '1.57';
 my %VALID_TYPES = (
     action    => 'actions',
     condition => 'conditions',
+    observer => 'observers',
     persister => 'persister',
     validator => 'validators',
     workflow  => 'workflow',
@@ -346,6 +347,12 @@ multiple 'action' declarations
 each 'action' declaration holds 'name' and 'resulting_state' keys and
 may hold a 'condition' key with one or more named conditions
 
+=item *
+
+each 'observer' names either a C<sub> or a C<class>. The C<sub> should
+have a package prefix (C<Package::subname>). When a C<class> name is
+given, the C<update> sub is called as a class method in the given C<class>.
+
 =back
 
 =head2 condition
@@ -490,6 +497,35 @@ take preference over random IDs
 =back
 
 For documentation of the other keys, please refer to the respective classes.
+
+=head2 observer
+
+ observers:
+
+   observer \@
+     name       $
+     type       $
+     sub        $
+     class      $
+
+=over 4
+
+=item *
+
+C<name> specifies the name of the observer for debugging purposes.
+
+=item *
+
+C<type> names the type of workflow to apply the observer to. The default
+value is C<default>.
+
+=item *
+
+The C<sub> and C<class> values have the same specification as given for
+the workflow observer keys.
+
+=back
+
 
 =head1 COPYRIGHT
 

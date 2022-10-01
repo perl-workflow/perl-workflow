@@ -37,6 +37,10 @@ my %XML_OPTIONS = (
         ],
         KeyAttr => [],
     },
+    observer => {
+        ForceArray => [ 'observer' ],
+        KeyAttr => [],
+    }
 );
 
 my $XML_REQUIRED = 0;
