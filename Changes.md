@@ -6,6 +6,38 @@
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
+## 1.61 2022-10-01 bug fix release, update recommended
+
+- We have removed some code, which was no longer used, which was causing some grievance see PR [#203](https://github.com/jonasbn/perl-workflow/pull/203) from by Oliver Welter (@oliwell)
+
+## 1.60 2022-03-02 bug fix release, update recommended
+
+- We have discovered a minor regression, founded in our eager to implement more clean code. This has been addressed via PR [#195](https://github.com/jonasbn/perl-workflow/pull/195) by Erik Huelsmann (@ehuelsmann).
+
+  It was followed up by PR [#196](https://github.com/jonasbn/perl-workflow/pull/196/files) by Oliver Welter (@oliwell).
+
+  We are now setting the bar a bit lower for the 1.x releases in regard to best practices and code quality and focus on improving the code for 2.x, so we do not experience any more regressions.
+
+## 1.59 2022-02-02 bug fix release, update required
+
+- Unfortunately we discovered a minor mishap, where a dependency was referenced without being properly declared as a dependency, which could result in inability for the distribution to work in a clean environment. This has now been addressed via PR [#190](https://github.com/jonasbn/perl-workflow/pull/190)
+
+We are sorry about any inconvenience this might have caused
+
+## 1.58 2022-02-02 Maintenance release, update not required
+
+- Addressed violations of [Perl::Critic](https://metacpan.org/pod/Perl::Critic) policies:
+  - [Subroutines::ProhibitExplicitReturnUndef](https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef)
+  - [ValuesAndExpressions::ProhibitMixedBooleanOperators](https://metacpan.org/pod/Perl::Critic::Policy::ValuesAndExpressions::ProhibitMixedBooleanOperators)
+
+  Adjustments to Perl::Critic resourcefile (`t/perlcriticrc`), this somewhat addresses issue [#43](https://github.com/jonasbn/perl-workflow/issues/43), there is more work to be done in this area, this will be adressed eventually
+
+  By Jonas Brømsø (@jonasbn)
+
+- Requirement for Perl 5.14 has been made more explicit, see also PR [#185](https://github.com/jonasbn/perl-workflow/pull/185) by Erik Huelsmann (@ehuelsmann)
+
+- Delay of instantation, prevents additional loggings attempts, this makes logging less noisy when running tests. Via PR [#174](https://github.com/jonasbn/perl-workflow/pull/174) from Erik Huelsmann (@ehuelsmann)
+
 ## 1.57 2021-10-17 Bug fix release, update recommended
 
 - PR [#170](https://github.com/jonasbn/perl-workflow/pull/170) by @ehuelsmann addresses an issue where Workflow tries to log during the execution of `use` statements, at which time it's highly unlikely that the logger has already been initialized, resulting in warnings being printed on the console
