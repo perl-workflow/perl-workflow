@@ -26,7 +26,7 @@ SPOPS was developed by the original author of Workflow and the two have worked i
 
 - Elimination of warning about undefined value, which surfaced with release 1.55, adressed with PR [#135](https://github.com/jonasbn/perl-workflow/pull/135) by @ehuelsmann
 
-- PR [#131](https://github.com/jonasbn/perl-workflow/pull/131) by @ehuelsmann documents the importance of overriding `init` for processing of parameters and not using `new` 
+- PR [#131](https://github.com/jonasbn/perl-workflow/pull/131) by @ehuelsmann documents the importance of overriding `init` for processing of parameters and not using `new`
 
 - PR [#130](https://github.com/jonasbn/perl-workflow/pull/130) bu @ehuelsmann addresses issue [#129](https://github.com/jonasbn/perl-workflow/issues/129), respects encapsulation by adhering to the API
 
