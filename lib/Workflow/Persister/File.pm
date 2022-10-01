@@ -11,7 +11,7 @@ use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
 use English qw( -no_match_vars );
 
-$Workflow::Persister::File::VERSION = '1.60';
+$Workflow::Persister::File::VERSION = '1.61';
 
 my @FIELDS = qw( path );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -179,7 +179,7 @@ Workflow::Persister::File - Persist workflow and history to the filesystem
 
 =head1 VERSION
 
-This documentation describes version 1.60 of this package
+This documentation describes version 1.61 of this package
 
 =head1 SYNOPSIS
 

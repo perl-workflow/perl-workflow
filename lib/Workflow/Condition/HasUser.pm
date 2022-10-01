@@ -6,7 +6,7 @@ use base qw( Workflow::Condition );
 use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( condition_error );
 
-$Workflow::Condition::HasUser::VERSION = '1.60';
+$Workflow::Condition::HasUser::VERSION = '1.61';
 
 my $DEFAULT_USER_KEY = 'current_user';
 
@@ -41,7 +41,7 @@ Workflow::Condition::HasUser - Condition to determine if a user is available
 
 =head1 VERSION
 
-This documentation describes version 1.60 of this package
+This documentation describes version 1.61 of this package
 
 =head1 SYNOPSIS
 

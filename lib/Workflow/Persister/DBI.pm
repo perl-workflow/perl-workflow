@@ -19,7 +19,7 @@ use Readonly;
 Readonly::Scalar my $TRUE => 1;
 Readonly::Scalar my $FALSE => 0;
 
-$Workflow::Persister::DBI::VERSION = '1.60';
+$Workflow::Persister::DBI::VERSION = '1.61';
 
 my @FIELDS = qw( _wf_fields _hist_fields handle dsn user password driver
     workflow_table history_table date_format parser autocommit);
@@ -463,7 +463,7 @@ Workflow::Persister::DBI - Persist workflow and history to DBI database
 
 =head1 VERSION
 
-This documentation describes version 1.60 of this package
+This documentation describes version 1.61 of this package
 
 =head1 SYNOPSIS
 

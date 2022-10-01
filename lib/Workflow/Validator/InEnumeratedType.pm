@@ -5,7 +5,7 @@ use strict;
 use base qw( Workflow::Validator );
 use Workflow::Exception qw( configuration_error validation_error );
 
-$Workflow::Validator::InEnumeratedType::VERSION = '1.60';
+$Workflow::Validator::InEnumeratedType::VERSION = '1.61';
 
 sub _init {
     my ( $self, $params ) = @_;
@@ -59,7 +59,7 @@ Workflow::Validator::InEnumeratedType - Ensure a value is one of a declared set 
 
 =head1 VERSION
 
-This documentation describes version 1.60 of this package
+This documentation describes version 1.61 of this package
 
 =head1 SYNOPSIS
 

@@ -3,7 +3,7 @@ package Workflow::Condition::Nested;
 use strict;
 use warnings;
 
-our $VERSION = '1.60';
+our $VERSION = '1.61';
 
 use base qw( Workflow::Condition );
 
@@ -19,7 +19,7 @@ Workflow::Condition::Nested - Evaluate nested workflow conditions
 
 =head1 VERSION
 
-This documentation describes version 1.60 of this package
+This documentation describes version 1.61 of this package
 
 =head1 DESCRIPTION
 
