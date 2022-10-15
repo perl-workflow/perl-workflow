@@ -352,6 +352,7 @@ may hold a 'condition' key with one or more named conditions
 
  conditions:
 
+     type      $
      condition \@
         name  $
         class $
@@ -392,11 +393,11 @@ keys
 
  actions:
 
+    type   $
     action \@
        name        $
        class       $
        description $
-       type        $
        field      \@
           name         $
           is_required  yes|no
