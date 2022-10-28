@@ -3,7 +3,7 @@
 use strict;
 use lib qw(t);
 use TestUtil;
-use Test::More  tests => 50;
+use Test::More  tests => 54;
 use Test::Exception;
 
 no warnings 'once';
@@ -31,6 +31,7 @@ my %config_xml = (
                   'condition' => ['t/workflow_condition.xml', 't/workflow_condition_type.xml'],
                   'validator' => ['t/workflow_validator.xml'],
                   'persister' => ['t/workflow_persister.xml'],
+                  'observer' => ['t/workflow_independent_observers.xml'],
                  );
 
 for my $type ( sort keys %config_xml ){
@@ -43,7 +44,7 @@ for my $type ( sort keys %config_xml ){
 }
 
 $parser = Workflow::Config->new( 'xml' );
-ok($parser->parse( 'workflow', 't/workflow.xml', 't/workflow_type.xml', 't/workflow_action.xml', 't/workflow_action_type.xml', 't/workflow_condition.xml', 't/workflow_condition_type.xml', 't/workflow_validator.xml' ));
+ok($parser->parse( 'workflow', 't/workflow.xml', 't/workflow_type.xml', 't/workflow_action.xml', 't/workflow_action_type.xml', 't/workflow_condition.xml', 't/workflow_condition_type.xml', 't/workflow_validator.xml', 't/workflow_independent_observers.xml' ));
 
 #testing good config language Perl
 ok($parser = Workflow::Config->new( 'perl' ));
@@ -64,6 +65,7 @@ my %config_perl = (
                    'condition' => ['t/workflow_condition.perl', 't/workflow_condition_type.perl'],
                    'validator' => ['t/workflow_validator.perl'],
                    'persister' => ['t/workflow_persister.perl'],
+                   'observer' => ['t/workflow_independent_observers.perl'],
                  );
 
 for my $type ( sort keys %config_perl ){
