@@ -39,6 +39,7 @@ sub evaluate {
     my $safe = Safe->new();
 
     $safe->share('$context');
+    local $@;
     my $rv = $safe->reval($to_eval);
 
     $self->log->debug( "Safe eval ran ok, returned: '",
