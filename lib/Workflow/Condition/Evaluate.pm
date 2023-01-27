@@ -40,6 +40,7 @@ sub evaluate {
     my $safe = Safe->new();
 
     $safe->share('$context');
+    local $EVAL_ERROR = undef;
     my $rv = $safe->reval($to_eval);
     if ($EVAL_ERROR) {
         condition_error

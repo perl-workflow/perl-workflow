@@ -35,6 +35,7 @@ sub validate {
     return unless ($date_string);
 
     # already converted!
+    local $EVAL_ERROR = undef;
     if ( ref $date_string and eval { $date_string->isa('DateTime'); } ) {
         return;
     }

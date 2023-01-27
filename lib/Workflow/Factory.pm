@@ -315,6 +315,8 @@ sub _load_observers {
 
 sub _load_class {
     my ( $self, $class_to_load, $msg ) = @_;
+
+    local $EVAL_ERROR = undef;
     eval "require $class_to_load";
     if ($EVAL_ERROR) {
         my $full_msg = sprintf $msg, $class_to_load, $EVAL_ERROR;
@@ -450,6 +452,8 @@ sub save_workflow {
 
     my $wf_config = $self->_get_workflow_config( $wf->type );
     my $persister = $self->get_persister( $wf_config->{persister} );
+
+    local $EVAL_ERROR = undef;
     eval {
         $persister->update_workflow($wf);
         $self->log->info( "Workflow '", $wf->id, "' updated ok" );
@@ -538,6 +542,8 @@ sub _add_action_config {
             }
             $self->log->debug(
                 "Trying to include action class '$action_class'...");
+
+            local $EVAL_ERROR = undef;
             eval "require $action_class";
             if ($EVAL_ERROR) {
                 my $msg = $EVAL_ERROR;
@@ -599,6 +605,8 @@ sub _add_persister_config {
         }
         $self->log->debug(
             "Trying to include persister class '$persister_class'...");
+
+        local $EVAL_ERROR = undef;
         eval "require $persister_class";
         if ($EVAL_ERROR) {
             configuration_error "Cannot include persister class ",
@@ -607,6 +615,8 @@ sub _add_persister_config {
         $self->log->debug(
             "Included persister '$name' class '$persister_class' ",
             "ok; now try to instantiate persister..." );
+
+        # $EVAL_ERROR already localized above
         my $persister = eval { $persister_class->new($persister_config) };
         if ($EVAL_ERROR) {
             configuration_error "Failed to create instance of persister ",
@@ -678,6 +688,8 @@ sub _add_condition_config {
             }
             $self->log->debug(
                 "Trying to include condition class '$condition_class'");
+
+            local $EVAL_ERROR = undef;
             eval "require $condition_class";
             if ($EVAL_ERROR) {
                 configuration_error "Cannot include condition class ",
@@ -686,6 +698,8 @@ sub _add_condition_config {
             $self->log->debug(
                 "Included condition '$name' class '$condition_class' ",
                 "ok; now try to instantiate condition..." );
+
+            # $EVAL_ERROR already localized above
             my $condition = eval { $condition_class->new($condition_config) };
             if ($EVAL_ERROR) {
                 configuration_error
@@ -764,6 +778,8 @@ sub _add_validator_config {
             }
             $self->log->debug(
                 "Trying to include validator class '$validator_class'");
+
+            local $EVAL_ERROR = undef;
             eval "require $validator_class";
             if ($EVAL_ERROR) {
                 workflow_error
@@ -773,6 +789,8 @@ sub _add_validator_config {
                 "Included validator '$name' class '$validator_class' ",
                 " ok; now try to instantiate validator..."
                 );
+
+            # $EVAL_ERROR already localized above
             my $validator = eval { $validator_class->new($validator_config) };
             if ($EVAL_ERROR) {
                 workflow_error "Cannot create validator '$name': $EVAL_ERROR";

@@ -51,6 +51,7 @@ sub new {
     if ( my $source_class = $self->source_class ) {
         $log->debug("Possible values for '$name' from '$source_class'");
         unless ( $INCLUDED{$source_class} ) {
+            local $EVAL_ERROR = undef;
             eval "require $source_class";
             if ($EVAL_ERROR) {
                 configuration_error "Failed to include source class ",

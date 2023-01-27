@@ -78,6 +78,7 @@ sub get_available_action_names {
 
 sub is_action_available {
     my ( $self, $wf, $action_name ) = @_;
+    local $EVAL_ERROR = undef;
     eval { $self->evaluate_action( $wf, $action_name ) };
 
     # Everything is fine
@@ -108,6 +109,7 @@ sub evaluate_action {
         my $condition_name = $condition->name;
 
         my $rv;
+        local $EVAL_ERROR = undef;
         eval {
             $rv = Workflow::Condition->evaluate_condition($wf, $condition_name);
         };

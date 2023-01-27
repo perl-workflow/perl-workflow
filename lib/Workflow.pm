@@ -116,6 +116,7 @@ sub execute_action {
     my $old_state = $self->state;
     my ( $new_state, $action_return );
 
+    local $EVAL_ERROR = undef;
     eval {
         $action->validate($self);
         $self->log->debug("Action validated ok");
@@ -332,6 +333,8 @@ sub _get_next_state {
 sub _auto_execute_state {
     my ( $self, $wf_state ) = @_;
     my $action_name;
+
+    local $EVAL_ERROR = undef;
     eval { $action_name = $wf_state->get_autorun_action_name($self); };
     if ($EVAL_ERROR)
     {    # we found an error, possibly more than one or none action

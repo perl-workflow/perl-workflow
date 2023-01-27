@@ -84,6 +84,7 @@ sub _translate_perl {
     my $log = get_logger();
 
     no strict 'vars';
+    local $EVAL_ERROR = undef;
     my $data = eval $config;
     if ($EVAL_ERROR) {
         configuration_error "Cannot evaluate perl data structure ",

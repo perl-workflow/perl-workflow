@@ -54,6 +54,8 @@ sub assign_generators {
 sub init_random_generators {
     my ( $self, $params ) = @_;
     my $length = $params->{id_length} || DEFAULT_ID_LENGTH;
+
+    local $EVAL_ERROR = undef;
     eval { require Workflow::Persister::RandomId };
     if (my $msg = $EVAL_ERROR) {
         $msg =~ s/\\n/ /g;
@@ -67,6 +69,7 @@ sub init_random_generators {
 sub init_uuid_generators {
     my ( $self, $params ) = @_;
 
+    local $EVAL_ERROR = undef;
     eval { require Workflow::Persister::UUID };
     if (my $msg = $EVAL_ERROR) {
         $msg =~ s/\\n/ /g;

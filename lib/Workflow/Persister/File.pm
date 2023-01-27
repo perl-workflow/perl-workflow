@@ -61,6 +61,8 @@ sub fetch_workflow {
         persist_error "No workflow with ID '$wf_id' is available";
     }
     $self->log->debug("File exists, reconstituting workflow");
+
+    local $EVAL_ERROR = undef;
     my $wf_info = eval { $self->constitute_object($full_path) };
     if ($EVAL_ERROR) {
         persist_error "Cannot reconstitute data from file for ",
@@ -149,6 +151,7 @@ sub constitute_object {
     my $content = slurp($object_path);
 
     no strict;
+    local $EVAL_ERROR = undef;
     my $object = eval $content;
     croak $EVAL_ERROR if ($EVAL_ERROR);
     return $object;

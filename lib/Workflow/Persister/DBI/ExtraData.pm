@@ -65,6 +65,7 @@ sub fetch_extra_workflow_data {
     $self->log->debug( "Bind parameters: ", $wf->id );
 
     my ($sth);
+    local $EVAL_ERROR = undef;
     eval {
         $sth = $self->handle->prepare($sql);
         $sth->execute( $wf->id );
