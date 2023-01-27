@@ -98,11 +98,11 @@ sub fetch_history {
     my ( $self, $wf ) = @_;
     my $history_dir = $self->_get_history_path($wf);
     $self->log->debug("Trying to read history files from dir '$history_dir'");
-    opendir( HISTORY, $history_dir )
+    opendir( my $hist, $history_dir )
         || persist_error "Cannot read history from '$history_dir': $!";
     my @history_files = grep { -f $_ }
-        map { catfile( $history_dir, $_ ) } readdir HISTORY;
-    closedir HISTORY;
+        map { catfile( $history_dir, $_ ) } readdir $hist;
+    closedir $hist;
     my @histories = ();
 
     foreach my $history_file (@history_files) {
