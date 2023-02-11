@@ -63,6 +63,8 @@ sub evaluate_condition {
             ->get_condition( $orig_condition, $wf->type );
         $log->debug( "Evaluating condition '$orig_condition'" );
         my $return_value;
+
+        local $EVAL_ERROR = undef;
         eval { $return_value = $condition->evaluate($wf) };
         if ($EVAL_ERROR) {
 

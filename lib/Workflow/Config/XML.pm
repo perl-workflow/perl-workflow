@@ -55,6 +55,8 @@ sub parse {
         my $file_name = ( ref $item ) ? '[scalar ref]' : $item;
         $log->info("Will parse '$type' XML config file '$file_name'");
         my $this_config;
+
+        local $EVAL_ERROR = undef;
         eval { $this_config = $self->_translate_xml( $type, $item ); };
 
         # If processing multiple config files, this makes it much easier
@@ -81,6 +83,7 @@ sub parse {
 sub _translate_xml {
     my ( $self, $type, $config ) = @_;
     unless ($XML_REQUIRED) {
+        local $EVAL_ERROR = undef;
         eval { require XML::Simple };
         if ($EVAL_ERROR) {
             configuration_error "XML::Simple must be installed to parse ",
