@@ -359,6 +359,7 @@ given, the C<update> sub is called as a class method in the given C<class>.
 
  conditions:
 
+     type      $
      condition \@
         name  $
         class $
@@ -399,11 +400,11 @@ keys
 
  actions:
 
+    type   $
     action \@
        name        $
        class       $
        description $
-       type        $
        field      \@
           name         $
           is_required  yes|no
