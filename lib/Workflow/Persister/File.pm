@@ -11,7 +11,7 @@ use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
 use English qw( -no_match_vars );
 
-$Workflow::Persister::File::VERSION = '1.61';
+$Workflow::Persister::File::VERSION = '1.62';
 
 my @FIELDS = qw( path );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -182,7 +182,7 @@ Workflow::Persister::File - Persist workflow and history to the filesystem
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 
@@ -294,7 +294,7 @@ to deserialization attempt.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2022 Chris Winters. All rights reserved.
+Copyright (c) 2003-2023 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

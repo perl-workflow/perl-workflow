@@ -5,7 +5,7 @@ use strict;
 use base qw( Class::Accessor );
 use DateTime;
 
-$Workflow::History::VERSION = '1.61';
+$Workflow::History::VERSION = '1.62';
 
 my @FIELDS
     = qw( id workflow_id action description date user state time_zone );
@@ -66,7 +66,7 @@ Workflow::History - Recorded work on a workflow action or workflow itself
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 
@@ -185,7 +185,7 @@ Sets saved state to true and returns 1
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2022 Chris Winters. All rights reserved.
+Copyright (c) 2003-2023 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

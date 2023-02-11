@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Workflow::Base );
 
-$Workflow::Context::VERSION = '1.61';
+$Workflow::Context::VERSION = '1.62';
 
 
 sub init {
@@ -35,7 +35,7 @@ Workflow::Context - Data blackboard for Workflows, Actions, Conditions and Valid
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 
@@ -95,7 +95,7 @@ C<$other_context> wins.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2022 Chris Winters. All rights reserved.
+Copyright (c) 2003-2023 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

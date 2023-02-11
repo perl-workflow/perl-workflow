@@ -6,6 +6,12 @@
 
 SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
 
+## 1.62 2023-02-11 bug fix/maintenance release, update recommended
+
+- Minor correction to documentation via PR [#208](https://github.com/jonasbn/perl-workflow/pull/208) from @ehuelsmann
+
+- Improvement to the overall codebase by localizing `$EVAL_ERROR` in conjunction with `eval` structures, via PR [#211](https://github.com/jonasbn/perl-workflow/pull/211) from @ehuelsmann
+
 ## 1.61 2022-10-01 bug fix release, update recommended
 
 - We have removed some code, which was no longer used, which was causing some grievance see PR [#203](https://github.com/jonasbn/perl-workflow/pull/203) from by Oliver Welter (@oliwell)

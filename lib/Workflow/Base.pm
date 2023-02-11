@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use base qw( Class::Accessor );
 use Log::Log4perl;
-$Workflow::Base::VERSION = '1.61';
+$Workflow::Base::VERSION = '1.62';
 
 sub new {
     my ( $class, @params ) = @_;
@@ -96,7 +96,7 @@ Workflow::Base - Base class with constructor
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 
@@ -196,7 +196,7 @@ it in a list. If given neither return an empty list.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2022 Chris Winters. All rights reserved.
+Copyright (c) 2003-2023 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

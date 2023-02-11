@@ -44,7 +44,7 @@ my %TYPE_LOGGING = (
 );
 
 
-$Workflow::Exception::VERSION   = '1.61';
+$Workflow::Exception::VERSION   = '1.62';
 @Workflow::Exception::ISA       = qw( Exporter Exception::Class::Base );
 @Workflow::Exception::EXPORT_OK = keys %TYPE_CLASSES;
 
@@ -129,7 +129,7 @@ Workflow::Exception - Base class for workflow exceptions
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 
@@ -246,7 +246,7 @@ This exception is thrown via </mythrow> when input data or similar of a workflow
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2022 Chris Winters. All rights reserved.
+Copyright (c) 2003-2023 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
