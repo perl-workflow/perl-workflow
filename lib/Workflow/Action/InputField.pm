@@ -7,7 +7,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error );
 use English qw( -no_match_vars );
 
-$Workflow::Action::InputField::VERSION = '1.61';
+$Workflow::Action::InputField::VERSION = '1.62';
 
 my @PROPS = qw( name label description type requirement
     source_class source_list class );
@@ -122,7 +122,7 @@ Workflow::Action::InputField - Metadata about information required by an Action
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 

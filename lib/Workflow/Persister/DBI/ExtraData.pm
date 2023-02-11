@@ -7,7 +7,7 @@ use Log::Log4perl qw( get_logger );
 use Workflow::Exception qw( configuration_error persist_error );
 use English qw( -no_match_vars );
 
-$Workflow::Persister::DBI::ExtraData::VERSION = '1.61';
+$Workflow::Persister::DBI::ExtraData::VERSION = '1.62';
 
 my @FIELDS = qw( table data_field context_key );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -107,7 +107,7 @@ Workflow::Persister::DBI::ExtraData - Fetch extra data with each workflow and pu
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 

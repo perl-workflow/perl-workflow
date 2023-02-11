@@ -5,7 +5,7 @@ use strict;
 use base qw( Workflow::Base );
 use Carp qw(croak);
 
-$Workflow::Validator::VERSION = '1.61';
+$Workflow::Validator::VERSION = '1.62';
 
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -43,7 +43,7 @@ Workflow::Validator - Ensure data are valid
 
 =head1 VERSION
 
-This documentation describes version 1.61 of this package
+This documentation describes version 1.62 of this package
 
 =head1 SYNOPSIS
 
