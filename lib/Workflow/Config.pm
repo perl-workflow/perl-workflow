@@ -494,7 +494,7 @@ For documentation of the other keys, please refer to the respective classes.
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2022 Chris Winters. All rights reserved.
+Copyright (c) 2003-2023 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
