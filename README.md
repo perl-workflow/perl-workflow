@@ -511,14 +511,14 @@ If you want to divide actions in groups (for example state change group,
 approval group, which have to be shown at different places on the page) add group property
 to your action
 
-&lt;action name="terminate request"  group="state change"  class="MyApp::Action::Terminate" />
-&lt;action name="approve request"  group="approval"  class="MyApp::Action::Approve" />
+    <action name="terminate request"  group="state change"  class="MyApp::Action::Terminate" />
+    <action name="approve request"  group="approval"  class="MyApp::Action::Approve" />
 
-my @actions = $wf->get\_current\_actions("approval");
+    my @actions = $wf->get_current_actions("approval");
 
-$group should be string that reperesents desired group name. In @actions you will get
+`$group` should be string that reperesents desired group name. In @actions you will get
 list of action names available from the current state for the given environment limited by group.
-$group is optional parameter.
+`$group` is optional parameter.
 
 Returns: list of strings representing available actions
 
