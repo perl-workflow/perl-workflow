@@ -70,7 +70,11 @@ sub validate {
     my @validators = $self->get_validators;
     return unless ( scalar @validators );
 
-    my $context = $wf->context;
+    $action_args //= {};
+    my %all_args = (
+        %{ $wf->context->param() },
+        %{$action_args}
+        );
     foreach my $validator_info (@validators) {
         my $validator    = $validator_info->{validator};
         my $args         = $validator_info->{args};
@@ -78,7 +82,7 @@ sub validate {
         my @runtime_args = ();
         foreach my $arg ( @{$args} ) {
             if ( $arg =~ /^\$(.*)$/ ) {
-                push @runtime_args, $action_args->{$1};
+                push @runtime_args, $all_args{$1};
             } else {
                 push @runtime_args, $arg;
             }
