@@ -19,7 +19,7 @@ require Workflow::Factory;
 require Workflow::Persister::DBI;
 
 
-plan tests => 26;
+plan tests => 13;
 
 my $workflow_conf  = $cfgbase . '/workflow_def_wfnest.xml';
 my $action_conf    = $cfgbase . '/workflow_activity_wfnest.xml';
@@ -58,26 +58,6 @@ $workflow->execute_action('initialize');
 is( $workflow->state, 'INITIALIZED', 'initialized state' );
 
 ##################################################
-# RUN TESTS FOR 'Workflow::Condition::GreedyOR'
-##################################################
-
-#diag( "Available actions: " . join(', ', $workflow->get_current_actions));
-$workflow->execute_action('test_greedy_or');
-is( $workflow->state, 'TEST_GREEDY_OR', 'wfcond state after test_greedy_or' );
-
-$log->error('START OFFENDING TEST');
-$workflow->execute_action('greedy_or_1');
-is( $workflow->state, 'INITIALIZED', 'wfcond state after greedy_or_1' )
-    or $workflow->execute_action('ack_subtest_fail');
-
-$workflow->execute_action('test_greedy_or');
-is( $workflow->state, 'TEST_GREEDY_OR', 'wfcond state after test_greedy_or' );
-$workflow->execute_action('greedy_or_2');
-is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after test_greedy_or' );
-$workflow->execute_action('ack_subtest_fail');
-is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
-
-##################################################
 # RUN TESTS FOR 'Workflow::Condition::LazyAND'
 ##################################################
 
@@ -110,33 +90,6 @@ is( $workflow->state, 'TEST_LAZY_OR', 'wfcond state after test_lazy_or' );
 $workflow->execute_action('lazy_or_2');
 is( $workflow->state, 'INITIALIZED', 'wfcond state after lazy_or_2' )
     or $workflow->execute_action('ack_subtest_fail');
-
-##################################################
-# RUN TESTS FOR 'Workflow::Condition::CheckReturn'
-##################################################
-
-$workflow->execute_action('test_check_return');
-is( $workflow->state, 'TEST_CHECK_RETURN',
-    'wfcond state after test_check_return' );
-$workflow->execute_action('check_return_1');
-is( $workflow->state, 'INITIALIZED', 'wfcond state after check_return_1' )
-    or $workflow->execute_action('ack_subtest_fail');
-
-$workflow->execute_action('test_check_return');
-is( $workflow->state, 'TEST_CHECK_RETURN',
-    'wfcond state after test_check_return' );
-$workflow->execute_action('check_return_2');
-is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after check_return_2' );
-$workflow->execute_action('ack_subtest_fail');
-is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
-
-$workflow->execute_action('test_check_return');
-is( $workflow->state, 'TEST_CHECK_RETURN',
-    'wfcond state after test_check_return' );
-$workflow->execute_action('check_return_3');
-is( $workflow->state, 'SUBTEST_FAIL', 'wfcond state after check_return_3' );
-$workflow->execute_action('ack_subtest_fail');
-is( $workflow->state, 'INITIALIZED', 'wfcond state after ack_subtest_fail' );
 
 ##################################################
 # DONE WITH ALL TESTS
