@@ -38,7 +38,12 @@ sub param {
 
     if ( ref $name eq 'HASH' ) {
         foreach my $param_name ( keys %{$name} ) {
-            $self->{PARAMS}{$param_name} = $name->{$param_name};
+            if (defined $name->{$param_name}) {
+                $self->{PARAMS}{$param_name} = $name->{$param_name};
+            }
+            else {
+                delete $self->{PARAMS}->{$param_name};
+            }
         }
         return { %{ $self->{PARAMS} } };
     }
