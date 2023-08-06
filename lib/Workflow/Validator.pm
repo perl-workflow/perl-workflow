@@ -4,32 +4,21 @@ use warnings;
 use strict;
 use v5.14.0;
 use parent qw( Workflow::Base );
-use Carp qw(croak);
 
 $Workflow::Validator::VERSION = '1.57';
 
-my @FIELDS = qw( name class );
+my @FIELDS = qw( description name );
 __PACKAGE__->mk_accessors(@FIELDS);
 
 sub init {
     my ( $self, $params ) = @_;
 
-    $params->{class} = ref $self unless ( $params->{class} );
-
+    $self->description( $params->{description} );
     if ( $params->{name} ) {
         $self->name( $params->{name} );
     } else {
         $self->name((ref $self ? ref $self : $self) . " (init in Action)");
     }
-    $self->class( $params->{class} );
-    $self->_init($params);
-}
-
-sub _init {return}
-
-sub validate {
-    my ($self) = @_;
-    croak "Class ", ref($self), " must implement 'validate()'!\n";
 }
 
 1;
@@ -40,7 +29,7 @@ __END__
 
 =head1 NAME
 
-Workflow::Validator - Ensure data are valid
+Workflow::Validator - Interface definition for data validation
 
 =head1 VERSION
 
@@ -71,33 +60,44 @@ This documentation describes version 1.57 of this package
     </validator>
  </action>
 
- # Then implement the logic
+ # Then implement the logic using your favorite object system; e.g. Moo
 
  package MyApp::Validator::Date;
 
  use strict;
- use parent qw( Workflow::Validator );
  use DateTime::Format::Strptime;
- use Workflow::Exception qw( configuration_error );
+ use Workflow::Exception qw( validation_error );
 
- __PACKAGE__->mk_accessors( 'formatter' );
+ use Moo;
 
- sub _init {
-     my ( $self, $params ) = @_;
-     unless ( $params->{date_format} ) {
-         configuration_error
-             "You must define a value for 'date_format' in ",
-             "declaration of validator ", $self->name;
-     }
-     if ( ref $params->{date_format} ) {
-         configuration_error
-             "The value for 'date_format' must be a simple scalar in ",
-             "declaration of validator ", $self->name;
-     }
-     my $formatter = DateTime::Format::Strptime->new(
-                              pattern => $params->{date_format},
-                              on_error => 'undef' );
-     $self->formatter( $formatter );
+ has description => (is => 'ro', required => 0);
+
+ has name => (is => 'ro', required => 1);
+
+ has date_format => (is => 'ro', required => 1);
+
+ has formatter => (is => 'ro', builder => '_build_formatter');
+
+ around BUILDARGS => sub {
+     my ( $orig, $class, @args ) = @_;
+
+     # Note: When you derive from Workflow::Base, this mapping is done for you
+     @args = (%{$args[0]},
+              map {
+                  $_ => $args[0]->{param}->{$_}
+              } keys %{$args[0]->{param} // {}}
+             )
+        if scalar(@args) == 1 and ref $args[0] eq 'HASH';
+     return $class->$orig(@args);
+ }
+
+ sub _build_formatter {
+     my ( $self ) = @_;
+
+     return DateTime::Format::Strptime->new(
+               pattern => $self->date_format,
+               on_error => 'undef'
+     );
  }
 
  sub validate {
@@ -111,6 +111,47 @@ This documentation describes version 1.57 of this package
      }
  }
 
+
+ # Or, implement the same, based on Workflow::Base
+
+ package MyApp::Validator::Date::Alternative;
+
+ use warnings;
+ use strict;
+ use base qw( Workflow::Base );
+
+ use DateTime::Format::Strptime;
+ use Workflow::Exception qw( configuration_error validation_error );
+
+ my @FIELDS = qw( name date_format formatter );
+ __PACKAGE__->mk_accessors(@FIELDS);
+
+ sub init {
+     my ( $self, $params ) = @_;
+
+     $self->name( $params->{name} );
+     $self->date_format( $params->{date_format});
+     $self->formatter( DateTime::Format::Strptime->new(
+               pattern => $self->date_format,
+               on_error => 'undef'));
+ }
+
+
+ sub validate {
+     my ( $self, $wf, $date_string ) = @_;
+     my $fmt = $self->formatter;
+     my $date_object = $fmt->parse_datetime( $date_string );
+     unless ( $date_object ) {
+         validation_error
+             "Date '$date_string' does not match pattern '", $fmt->pattern, "' ",
+             "due to error '", $fmt->errstr, "'";
+     }
+ }
+
+ 1;
+
+
+
 =head1 DESCRIPTION
 
 Validators specified by 'validator_name' are looked up in the
@@ -120,31 +161,35 @@ but it is not required.)
 
 Validators are objects with a single public method, 'validate()' that
 take as arguments a workflow object and a list of parameters. The
-parameters are filled in by the workflow engine according to the
-instantiation declaration in the Action.
+parameters are filled in by the workflow engine in the order of
+declaration in the Action.
 
 The idea behind a validator is that it validates data but does not
 care where it comes from.
 
 =head1 SUBCLASSING
 
-=head2 Strategy
+The validator is an interface definition, meaning that the validator
+does not want or need to be subclassed. Any class can act as a
+validator, as long as it adheres to the interface definition below.
 
-=head2 Methods
 
-=head3 init( \%params )
+=head1 INTERFACE
 
-Called when the validator is first initialized. If you do not have
-sufficient information in C<\%params> you should throw an exception.
+=head2 validate( $workflow, $data )
 
-=head3 _init
+Throws a L<Workflow::ValidationError> when C<$workflow> doesn't comply
+with the requirements of the validator. Returns successfully when it
+does. In order to assess the state of the workflow, the validator can
+directly use the workflow context as well as the mapped data.
 
-This is a I<dummy> method, please see L</init>.
+When an action definition maps data into the validator, the validator may
+or may not choose to use it to determine the validity of the workflow state.
 
-=head3 validate( $workflow, $data )
-
-Determine whether your C<$data> is true or false. If necessary you can
-get the application context information from the C<$workflow> object.
+Please note that the workflow engine currently has no means to detect the
+number of data elements expected to be mapped into the validator; failure
+to map the correct number in the configuration, should be detected at run
+time (and can't be prevented with a configuration error).
 
 =head1 COPYRIGHT
 

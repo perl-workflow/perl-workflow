@@ -8,8 +8,9 @@ use Workflow::Exception qw( configuration_error validation_error );
 
 $Workflow::Validator::InEnumeratedType::VERSION = '1.57';
 
-sub _init {
+sub init {
     my ( $self, $params ) = @_;
+    $self->SUPER::init( $params );
     $self->{_enum}       = [];
     $self->{_enum_match} = {};
     unless ( $params->{value} ) {
