@@ -46,7 +46,9 @@ sub evaluate {
                        ( defined $rv ? $rv : '<undef>' ),
                        "'" );
 
-    return $rv;
+    return $rv ?
+        Workflow::Condition::IsTrue->new() :
+        Workflow::Condition::IsFalse->new();
 }
 
 1;

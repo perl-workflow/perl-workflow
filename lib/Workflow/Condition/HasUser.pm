@@ -23,7 +23,9 @@ sub evaluate {
     my $current_user = $wf->context->param($user_key);
     $self->log->debug( "Current user in the context is '$current_user' retrieved ",
         "using parameter key '$user_key'" );
-    return $current_user;
+
+    return Workflow::Condition::IsTrue->new() if($current_user);
+    return Workflow::Condition::IsFalse->new();
 }
 
 1;

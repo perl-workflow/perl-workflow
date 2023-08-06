@@ -21,7 +21,11 @@ sub _init {
 
 sub evaluate {
     my ($self, $wf) = @_;
-    return not $self->evaluate_condition($wf, $self->negated);
+    if ($self->evaluate_condition($wf, $self->negated)) {
+        return Workflow::Condition::IsFalse->new();
+    } else {
+        return Workflow::Condition::IsTrue->new();
+    }
 }
 
 

@@ -33,15 +33,17 @@ sub evaluate {
 
     my $total = 0;
 
+    return Workflow::Condition::IsFalse->new("No conditions were defined") unless(@{$conditions});
+
     foreach my $cond ( @{$conditions} ) {
         my $result = $self->evaluate_condition( $wf, $cond );
         if ( not $result ) {
-            return $result; # return false
+            return Workflow::Condition::IsFalse->new("Stopped after checking $total conditions");
         }
         $total++;
     }
 
-    return $total; # returns false if no conditions ran: the contract
+    return Workflow::Condition::IsTrue->new("Matched a total of $total conditions");
 }
 
 1;

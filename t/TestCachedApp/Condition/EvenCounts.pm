@@ -17,10 +17,12 @@ sub evaluate {
         #  the same result twice: the first time on 'get_current_actions'
         #  and the second time on 'execute_action'
         $log->debug(__PACKAGE__, '::evaluate(', $count, '): fail');
-        return 0;
+        return Workflow::Condition::IsFalse->new();
     }
     $log->debug(__PACKAGE__, '::evaluate(', $count, '): success');
-    return 1;
+
+    return Workflow::Condition::IsTrue->new();
+
 }
 
 1;

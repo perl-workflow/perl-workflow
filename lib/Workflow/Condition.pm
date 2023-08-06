@@ -5,6 +5,7 @@ use strict;
 use parent qw( Workflow::Base );
 use v5.14.0;
 use Carp qw(croak);
+use Data::Dumper;
 use Log::Any qw( $log );
 use Workflow::Exception qw( workflow_error );
 
@@ -61,14 +62,51 @@ sub evaluate_condition {
         $condition = $wf->_factory()
             ->get_condition( $orig_condition, $wf->type );
         $log->debug( "Evaluating condition '$orig_condition'" );
-        my $return_value = $condition->evaluate($wf);
+
+        my $return_value;
+        my $result = $condition->evaluate($wf);
+        if (ref $result eq 'Workflow::Condition::IsTrue') {
+            $log->info( "Got true result with '$result' on '$orig_condition'");
+            $return_value = 1;
+        } elsif (ref $result eq 'Workflow::Condition::IsFalse') {
+            $log->info( "Got false result with '$result' on '$orig_condition'");
+            $return_value = 0;
+        } else {
+            $log->fatal( "Evaluate on '$orig_condition' did not return a valid result object" );
+            $log->trace( 'Eval result was ' . Dumper $result );
+            croak "Evaluate on '$orig_condition' did not return a valid result object";
+        }
+
         $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
 
         return $return_value;
     }
 }
 
+package Workflow::Condition::Result;
+use parent qw( Class::Accessor );
 
+use overload '""' => 'to_string';
+
+__PACKAGE__->mk_accessors('message');
+
+sub new {
+    my ( $class, @params ) = @_;
+    my $self = bless { }, $class;
+    $self->message( shift @params ) if (@params);
+    return $self;
+}
+
+sub to_string {
+    my $self = shift;
+    return $self->message() || '<no message>';
+}
+
+package Workflow::Condition::IsTrue;
+use base 'Workflow::Condition::Result';
+
+package Workflow::Condition::IsFalse;
+use base 'Workflow::Condition::Result';
 
 1;
 
