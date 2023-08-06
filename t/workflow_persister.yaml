@@ -1,0 +1,10 @@
+persister:
+  - class: Workflow::Persister::DBI
+    dsn: DBI:Pg:dbname=workflows
+    history_sequence: wf_history_seq
+    history_table: wf_history
+    name: BackupDatabase
+    password: mypass
+    user: wf
+    workflow_sequence: wf_seq
+    workflow_table: wf

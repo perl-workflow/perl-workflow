@@ -101,7 +101,9 @@ sub _expand_refs {
 
 __PACKAGE__->register_factory_type( perl => 'Workflow::Config::Perl' );
 __PACKAGE__->register_factory_type( pl   => 'Workflow::Config::Perl' );
-__PACKAGE__->register_factory_type( xml  => 'Workflow::Config::XML' );
+__PACKAGE__->register_factory_type( xml  => 'Workflow::Config::XML'  );
+__PACKAGE__->register_factory_type( yaml => 'Workflow::Config::YAML' );
+__PACKAGE__->register_factory_type( yml  => 'Workflow::Config::YAML' );
 
 1;
 

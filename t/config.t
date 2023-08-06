@@ -3,7 +3,7 @@
 use strict;
 use lib qw(t);
 use TestUtil;
-use Test::More  tests => 54;
+use Test::More  tests => 55;
 use Test::Exception;
 
 no warnings 'once';
@@ -79,6 +79,9 @@ for my $type ( sort keys %config_perl ){
 
 $parser = Workflow::Config->new( 'perl' );
 ok($parser->parse( 'workflow', 't/workflow.perl', 't/workflow_action.perl', 't/workflow_condition.perl', 't/workflow_validator.perl' ));
+
+$parser = Workflow::Config->new( 'yaml' );
+ok($parser->parse( 'workflow', 't/workflow.yaml', 't/workflow_action.yaml', 't/workflow_condition.yaml', 't/workflow_validator.yaml' ));
 
 #testing class method parse_all_files
 my @array = Workflow::Config->parse_all_files();

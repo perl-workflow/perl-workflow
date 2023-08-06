@@ -1,0 +1,73 @@
+action:
+  - class: TestApp::Action::TicketCreate
+    description: Create a new ticket
+    field:
+      - description: Subject of ticket
+        is_required: yes
+        label: Subject
+        name: subject
+      - description: 'Text describing the problem and any details to reproduce, if possible'
+        is_required: yes
+        label: Description
+        name: description
+      - description: Name of user who is creating the ticket
+        is_required: yes
+        label: Creator
+        name: creator
+        source_class: TestApp::User
+      - description: Type of ticket
+        is_required: yes
+        label: Type
+        name: type
+        source_list: 'Bug,Feature,Improvement,Task'
+      - description: 'Date ticket is due (format: yyyy-mm-dd hh:mm)'
+        label: Due Date
+        name: due_date
+    name: TIX_NEW
+    validator:
+      - arg:
+          - $due_date
+        name: DateValidator
+  - class: TestApp::Action::TicketComment
+    field:
+      - description: Ticket to comment on
+        is_required: yes
+        name: ticket_id
+      - description: Comment to add
+        is_required: yes
+        name: comment
+      - description: User doing the commenting
+        is_required: yes
+        name: current_user
+    name: TIX_COMMENT
+  - class: TestApp::Action::TicketUpdate
+    field:
+      - description: Ticket to edit
+        is_required: yes
+        name: ticket_id
+      - description: User working on the ticket
+        is_required: yes
+        name: current_user
+    name: TIX_EDIT
+  - class: TestApp::Action::TicketUpdate
+    field:
+      - description: Ticket to close
+        is_required: yes
+        name: ticket_id
+      - description: User closing the ticket
+        is_required: yes
+        name: current_user
+    name: TIX_CLOSE
+  - class: TestApp::Action::TicketUpdate
+    field:
+      - description: Ticket to reopen
+        is_required: yes
+        name: ticket_id
+      - description: User reopening the ticket
+        is_required: yes
+        name: current_user
+    name: TIX_REOPEN
+  - class: Workflow::Action::Null
+    name: null
+  - class: Workflow::Action::Null
+    name: null2

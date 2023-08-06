@@ -1,0 +1,36 @@
+description: This is the workflow for sample application Ticket
+persister: TestPersister
+state:
+  - action:
+      - name: TIX_NEW
+        resulting_state: TIX_CREATED
+    description: |-
+      This is the state the workflow enters when
+              instantiated. It's like a 'state zero' but since we're
+              using names rather than IDs we cannot assume
+    name: INITIAL
+  - action:
+      - index: 42
+        name: TIX_COMMENT
+        resulting_state: NOCHANGE
+      - condition:
+          - name: HasUser
+        name: TIX_EDIT
+        resulting_state: TIX_IN_PROGRESS
+    description: State of ticket after it has been created
+    name: TIX_CREATED
+  - action:
+      - condition:
+          - name: HasUser
+        name: TIX_CLOSE
+        resulting_state: TIX_CLOSED
+    description: State of ticket after developers start work
+    name: TIX_IN_PROGRESS
+  - action:
+      - condition:
+          - name: HasUser
+        name: TIX_REOPEN
+        resulting_state: TIX_CREATED
+    description: State of ticket after creator approves the work done
+    name: TIX_CLOSED
+type: Ticket
