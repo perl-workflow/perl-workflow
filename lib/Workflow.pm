@@ -296,10 +296,7 @@ sub _execute_single_action {
         $self->log->is_debug && $self->log->debug("Action validated ok");
         if ($action_args) {
             # Merge the action args into the context
-            my $ctx = $self->context;
-            while (my ($k, $v) = each %{$action_args}) {
-                $ctx->param( $k, $v );
-            }
+            $self->context->param( $action_args );
         }
         $action_return = $action->execute($self);
         $self->log->is_debug && $self->log->debug("Action executed ok");
