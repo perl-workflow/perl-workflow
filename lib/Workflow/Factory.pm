@@ -8,6 +8,7 @@ use DateTime;
 use Log::Any qw( $log );
 use Workflow::Exception qw( configuration_error workflow_error );
 use Carp qw(croak);
+use Scalar::Util 'blessed';
 use Syntax::Keyword::Try;
 use Module::Runtime qw( require_module );
 
@@ -374,7 +375,14 @@ sub fetch_workflow {
     my $wf = $wf_class->new( $wf_id, $wf_info->{state}, $wf_config,
         $self->{_workflow_state}{$wf_type}, $self );
 
-    $wf->context( Workflow::Context->new(%{ $wf_info->{context} // {} }) );
+    if ($wf_info->{context} && blessed( $wf_info->{context} ) ) {
+        $context = $wf_info->{context};
+    } else {
+        $context ||= Workflow::Context->new;
+        $context->init( %{ $wf_info->{context} }) if (ref $wf_info->{context} eq 'HASH');
+    }
+
+    $wf->context( $context );
     $wf->last_update( $wf_info->{last_update} );
 
     $self->associate_observers_with_workflow($wf);
