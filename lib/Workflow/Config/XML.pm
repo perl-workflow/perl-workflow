@@ -63,8 +63,7 @@ sub parse {
         catch ($error) {
             # If processing multiple config files, this makes it much easier
             # to find a problem.
-            $log->error("Processing $file_name: ", $error);
-            croak "Processing $file_name: $error";
+            croak $log->error("Processing $file_name: ", $error);
         }
         $log->info("Parsed XML '$file_name' ok");
 
