@@ -21,7 +21,7 @@ Readonly::Scalar my $FALSE => 0;
 $Workflow::Persister::DBI::VERSION = '1.57';
 
 my @FIELDS = qw( _wf_fields _hist_fields handle dsn user password driver
-    workflow_table history_table date_format parser autocommit);
+    workflow_table history_table date_format parser autocommit options);
 __PACKAGE__->mk_accessors(@FIELDS);
 
 
@@ -39,6 +39,13 @@ sub init {
     for (qw( dsn user password date_format autocommit )) {
         $self->$_( $params->{$_} ) if ( defined $params->{$_} );
     }
+    my %options = ();
+    if ( defined $params->{options} ) {
+        for my $option ( @{ $params->{options} } ) {
+            $options{$option->{name}} = $option->{value};
+        }
+    }
+    $self->options( \%options );
     $self->handle($self->create_handle);
     my $driver
         = $self->handle ? $self->handle->{Driver}->{Name} : ($params->{driver} || '');
@@ -74,7 +81,12 @@ sub create_handle {
     }
     my $dbh;
     try {
-        $dbh = DBI->connect( $self->dsn, $self->user, $self->password )
+        $dbh = DBI->connect(
+            $self->dsn,
+            $self->user,
+            $self->password,
+            $self->options
+            )
             or croak "Cannot connect to database: $DBI::errstr";
     }
     catch ($error) {

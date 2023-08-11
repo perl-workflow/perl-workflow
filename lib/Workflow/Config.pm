@@ -459,6 +459,9 @@ each 'action' may have any number of 'validator' hashrefs, each with a
    use_uuid       yes|no   # all persister classes
 
    driver         $   # DBI persisters
+   options        \@  # DBI persisters
+      name        $   # DBI persisters
+      value       $   # DBI persisters
    dsn            $   # DBI persisters
    user           $   # DBI persisters
    password       $   # DBI persisters
