@@ -519,42 +519,30 @@ records to a DBI-accessible datasource.
 =head2 Subclassing: Getting handle from elsewhere
 
 A common need to create a subclass is to use a database handle created
-with other means. For instance, OpenInteract has a central
-configuration file for defining datasources, and the datasource will
-be available in a predictable manner. So we can create a subclass to
-provide the database handle on demand from the C<CTX> object available
-from everywhere. A sample implementation is below. (Note that in real
-life we would just use SPOPS for this, but it is still a good
-example.)
+with other means. For instance, L<https://ledgersmb.org|LedgerSMB> has
+a centrally managed database connection. So we can create a subclass to
+provide the database handle from the central storage location
+C<LedgerSMB::App_State>. A sample implementation is below.
 
- package Workflow::Persister::DBI::OpenInteractHandle;
+ package Workflow::Persister::DBI::LedgerSMB_Handle;
 
  use strict;
  use parent qw( Workflow::Persister::DBI );
- use OpenInteract2::Context qw( CTX );
-
- my @FIELDS = qw( datasource_name );
- __PACKAGE__->mk_accessors( @FIELDS );
+ use LedgerSMB::App_State;
 
  # override parent method, assuming that we set the 'datasource'
  # parameter in the persister declaration
 
  sub init {
-    my ( $self, $params ) = @_;
-    $self->datasource_name( $params->{datasource} );
-    my $ds_config = CTX->lookup_datasource_config( $self->datasource_name );
-
-    # delegate the other assignment tasks to the parent class
-    $params->{driver} = $ds_config->{driver_name};
-    $self->SUPER::init( $params );
+    # expressly don't call the parent; we don't want to set
+    # connection parameters...
  }
 
  # suppress the parent from trying to connect to the database
  sub create_handle { return undef; }
 
  sub handle {
-     my ( $self ) = @_;
-     return CTX->datasource( $self->datasource_name );
+     return LedgerSMB::App_State::DBH();
  }
 
 =head2 Subclassing: Changing fieldnames
