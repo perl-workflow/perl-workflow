@@ -11,6 +11,8 @@ use Workflow::Exception qw( workflow_error );
 $Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '1.57';
 
+$Workflow::Condition::STRICT_BOOLEANS = 1;
+
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
 
@@ -64,10 +66,12 @@ sub evaluate_condition {
 
         my $return_value;
         my $result = $condition->evaluate($wf);
-        if (ref $result eq 'Workflow::Condition::IsTrue') {
+        if (ref $result eq 'Workflow::Condition::IsTrue'
+            or (not $Workflow::Condition::STRICT_BOOLEANS and $result)) {
             $log->info( "Got true result with '$result' on '$orig_condition'");
             $return_value = 1;
-        } elsif (ref $result eq 'Workflow::Condition::IsFalse') {
+        } elsif (ref $result eq 'Workflow::Condition::IsFalse'
+                 or not $Workflow::Condition::STRICT_BOOLEANS) {
             $log->info( "Got false result with '$result' on '$orig_condition'");
             $return_value = 0;
         } else {
