@@ -5,7 +5,6 @@ use strict;
 use parent qw( Workflow::Base );
 use v5.14.0;
 use Carp qw(croak);
-use Data::Dumper;
 use Log::Any qw( $log );
 use Workflow::Exception qw( workflow_error );
 
@@ -73,7 +72,7 @@ sub evaluate_condition {
             $return_value = 0;
         } else {
             $log->fatal( "Evaluate on '$orig_condition' did not return a valid result object" );
-            $log->trace( 'Eval result was ' . Dumper $result );
+            $log->trace( 'Eval result', { result => $result } );
             croak "Evaluate on '$orig_condition' did not return a valid result object";
         }
 
