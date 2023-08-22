@@ -15,14 +15,6 @@
 
     <action name="null2" class="Workflow::Action::Null"/>
 
-    <!-- Actions for Workflow::Condition::GreedyOR -->
-
-    <action name="test_greedy_or" class="Workflow::Action::Null"/>
-
-    <action name="greedy_or_1" class="Workflow::Action::Null"/>
-
-    <action name="greedy_or_2" class="Workflow::Action::Null"/>
-
     <!-- Actions for Workflow::Condition::LazyAND -->
 
     <action name="test_lazy_and" class="Workflow::Action::Null"/>
@@ -39,14 +31,5 @@
 
     <action name="lazy_or_2" class="Workflow::Action::Null"/>
 
-    <!-- Actions for Workflow::Condition::CheckReturn -->
-
-    <action name="test_check_return" class="Workflow::Action::Null"/>
-
-    <action name="check_return_1" class="Workflow::Action::Null"/>
-
-    <action name="check_return_2" class="Workflow::Action::Null"/>
-
-    <action name="check_return_3" class="Workflow::Action::Null"/>
 
 </actions>

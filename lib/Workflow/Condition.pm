@@ -11,6 +11,8 @@ use Workflow::Exception qw( workflow_error );
 $Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '1.57';
 
+$Workflow::Condition::STRICT_BOOLEANS = 1;
+
 my @FIELDS = qw( name class );
 __PACKAGE__->mk_accessors(@FIELDS);
 
@@ -61,14 +63,53 @@ sub evaluate_condition {
         $condition = $wf->_factory()
             ->get_condition( $orig_condition, $wf->type );
         $log->debug( "Evaluating condition '$orig_condition'" );
-        my $return_value = $condition->evaluate($wf);
+
+        my $return_value;
+        my $result = $condition->evaluate($wf);
+        if (ref $result eq 'Workflow::Condition::IsTrue'
+            or (not $Workflow::Condition::STRICT_BOOLEANS and $result)) {
+            $log->info( "Got true result with '$result' on '$orig_condition'");
+            $return_value = 1;
+        } elsif (ref $result eq 'Workflow::Condition::IsFalse'
+                 or not $Workflow::Condition::STRICT_BOOLEANS) {
+            $log->info( "Got false result with '$result' on '$orig_condition'");
+            $return_value = 0;
+        } else {
+            $log->fatal( "Evaluate on '$orig_condition' did not return a valid result object" );
+            $log->trace( 'Eval result', { result => $result } );
+            croak "Evaluate on '$orig_condition' did not return a valid result object";
+        }
+
         $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
 
         return $return_value;
     }
 }
 
+package Workflow::Condition::Result;
+use parent qw( Class::Accessor );
 
+use overload '""' => 'to_string';
+
+__PACKAGE__->mk_accessors('message');
+
+sub new {
+    my ( $class, @params ) = @_;
+    my $self = bless { }, $class;
+    $self->message( shift @params ) if (@params);
+    return $self;
+}
+
+sub to_string {
+    my $self = shift;
+    return $self->message() || '<no message>';
+}
+
+package Workflow::Condition::IsTrue;
+use base 'Workflow::Condition::Result';
+
+package Workflow::Condition::IsFalse;
+use base 'Workflow::Condition::Result';
 
 1;
 

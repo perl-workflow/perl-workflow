@@ -37,10 +37,10 @@ sub evaluate {
     foreach my $cond ( @{$conditions} ) {
         my $result = $self->evaluate_condition( $wf, $cond );
         if ($result) {
-            return $result;
+            return Workflow::Condition::IsTrue->new("Got match in " . $cond );
         }
     }
-    return ''; # false
+    return Workflow::Condition::IsFalse->new();
 }
 
 1;

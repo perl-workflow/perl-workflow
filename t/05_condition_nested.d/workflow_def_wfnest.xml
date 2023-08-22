@@ -21,8 +21,6 @@
         </action>
         <action name="test_lazy_or" resulting_state="TEST_LAZY_OR">
         </action>
-        <action name="test_check_return" resulting_state="TEST_CHECK_RETURN">
-        </action>
         <action name="tests_done" resulting_state="SUCCESS">
         </action>
     </state>
@@ -39,40 +37,6 @@
 
     <state name="SUCCESS">
         <description>Success</description>
-    </state>
-
-    <!-- Test set for Workflow::Condition::GreedyOR (test_greedy_or) -->
-
-    <state name="TEST_GREEDY_OR">
-        <description>TEST_GREEDY_OR</description>
-        <action name="greedy_or_1" resulting_state="TEST_GREEDY_OR_1_PREP">
-        </action>
-        <action name="greedy_or_2" resulting_state="TEST_GREEDY_OR_2_PREP">
-        </action>
-        <action name="subtests_done" resulting_state="INITIALIZED">
-        </action>
-    </state>
-
-    <state name="TEST_GREEDY_OR_1_PREP"
-            autorun="yes">
-        <description>TEST_GREEDY_OR_1_PREP</description>
-        <action name="null1" resulting_state="INITIALIZED">
-            <condition name="greedy_or_1"/>
-        </action>
-        <action name="null2" resulting_state="SUBTEST_FAIL">
-            <condition name="!greedy_or_1"/>
-        </action>
-    </state>
-
-    <state name="TEST_GREEDY_OR_2_PREP"
-            autorun="yes">
-        <description>TEST_GREEDY_OR_2_PREP</description>
-        <action name="null1" resulting_state="INITIALIZED">
-            <condition name="greedy_or_2"/>
-        </action>
-        <action name="null2" resulting_state="SUBTEST_FAIL">
-            <condition name="!greedy_or_2"/>
-        </action>
     </state>
 
     <!-- Test set for Workflow::Condition::LazyAND -->
@@ -140,53 +104,6 @@
         </action>
         <action name="null2" resulting_state="SUBTEST_FAIL">
             <condition name="!lazy_or_2"/>
-        </action>
-    </state>
-
-    <!-- Test set for Workflow::Condition::CheckReturn -->
-
-    <state name="TEST_CHECK_RETURN">
-        <description>TEST_CHECK_RETURN</description>
-        <action name="check_return_1" resulting_state="TEST_CHECK_RETURN_1_PREP">
-        </action>
-        <action name="check_return_2" resulting_state="TEST_CHECK_RETURN_2_PREP">
-        </action>
-        <action name="check_return_3" resulting_state="TEST_CHECK_RETURN_3_PREP">
-        </action>
-        <action name="subtests_done" resulting_state="INITIALIZED">
-        </action>
-    </state>
-
-    <state name="TEST_CHECK_RETURN_1_PREP"
-            autorun="yes">
-        <description>TEST_CHECK_RETURN_1_PREP</description>
-        <action name="null1" resulting_state="INITIALIZED">
-            <condition name="check_ret_1"/>
-        </action>
-        <action name="null2" resulting_state="SUBTEST_FAIL">
-            <condition name="!check_ret_1"/>
-        </action>
-    </state>
-
-    <state name="TEST_CHECK_RETURN_2_PREP"
-            autorun="yes">
-        <description>TEST_CHECK_RETURN_2_PREP</description>
-        <action name="null1" resulting_state="INITIALIZED">
-            <condition name="check_ret_2"/>
-        </action>
-        <action name="null2" resulting_state="SUBTEST_FAIL">
-            <condition name="!check_ret_2"/>
-        </action>
-    </state>
-
-    <state name="TEST_CHECK_RETURN_3_PREP"
-            autorun="yes">
-        <description>TEST_CHECK_RETURN_3_PREP</description>
-        <action name="null1" resulting_state="INITIALIZED">
-            <condition name="check_ret_3"/>
-        </action>
-        <action name="null2" resulting_state="SUBTEST_FAIL">
-            <condition name="!check_ret_3"/>
         </action>
     </state>
 

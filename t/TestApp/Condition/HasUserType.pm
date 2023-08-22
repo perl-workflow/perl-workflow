@@ -15,7 +15,8 @@ sub evaluate {
         return 0;
     }
     $log->debug( 'Condition met ok' );
-    return 1;
+
+    return Workflow::Condition::IsTrue->new();
 }
 
 1;
