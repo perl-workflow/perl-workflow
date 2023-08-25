@@ -1,10 +1,56 @@
 # Revision history for the Workflow Perl Distribution
 
-## DEPRECATION NOTICE
+## 2.0 YYYY-MM-DD  TO BE RELEASED
 
-- With release 2.00 Workflow::Persister::SPOPS will no longer be included in the distribution, it will possibly be made available as a separate distribution, but with decreased maintenance efforts. [SPOPS](https://metacpan.org/pod/SPOPS) does no longer seem to be actively supported and [issues with Perls versions from 5.11.1 and onwards](http://matrix.cpantesters.org/?dist=SPOPS+0.87) underline this fact.
+### Added
 
-SPOPS was developed by the original author of Workflow and the two have worked in parallel for a long time. The Workflow developers have come to a crossroad and focus of resources and efforts are aimed at modernizing workflow.
+- Support for configurable history classes other than `Workflow::History`
+- Support for configuration of observers through a separate configuration file;
+  i.e. independently of `Workflow` configuration
+- Support for configuration of content of the first history item of a workflow
+  through `Workflow` (instead of through the persister)
+- New persister `Workflow::Persister::DBI::ExtraData` to load data from a database
+  when loading a workflow instance
+
+### Changed
+
+- Clarification that `Workflow::Validator` defines an interface, not a class
+- Conditions return `Workflow::Condition::IsTrue`/`Workflow::Condition::IsFalse` on success/
+  failure instead of throwing a condition error
+- `Workflow::Persister->fetch_history` returns constructor arguments instead of
+  `Workflow::History` objects, moving the responsibility of instantiating history instances
+  to the factory
+- Logging library changed from `Log::Log4perl` to [Log::Any](https://metacpan.org/pod/Log::Any);
+  to get logging, install a [Log::Any::Adapter](https://metacpan.org/pod/Log::Any::Adapter)
+- Moved `add_observer` and `notify_observers` from private to public API of `Workflow`
+- `$wf->context->param( $key => undef )` removes `$key` from the context instead of setting
+  it to `undef`
+- Autorunning now loops through executed actions instead of recursing; preventing stack
+  overflows on very large execution chains
+- `Workflow` no longer calls `{commit,rollback}_transaction`; the factory has assumed this
+  responsibility as it's the factory which is in charge of serializing workflows
+
+### Removed
+
+- `Workflow::Persister->fetch_extra_workflow_data` replaced by
+  `Workflow::Persister::DBI::ExtraData`
+- Removed `condition_error` in light of the changed return value of conditions
+- Removed `Workflow::Validator->_init` since the private function does not need to be
+  part of the specified public interface
+- Removed `Workflow::Condition::CheckReturn` and `Workflow::Condition::GreedyOR`
+- Removed empty modules `Workflow::Condition::Nested` and `Workflow::Action::Mailer`
+- Support for [SPOPS](https://metacpan.org/dist/SPOPS) - `Workflow::Persister::SPOPS` -
+  has been removed from the Workflow dist; it has been moved to the
+  [Workflow-Persister-SPOPS](https://metacpan.org/dist/Workflow-Persister-SPOPS) dist for
+  those who still need it.  Reason for removal is that it does not seem to be actively
+  supported and the latest release (0.87; released in 2004) has [failed its cpantesters
+  tests on every released Perl version since 5.11.1](http://matrix.cpantesters.org/?dist=SPOPS+0.87)
+
+### Fixed
+
+- Workaround for Perls between 5.18 and 5.39.2 clobbering %SIG in Safe->reval()
+  which is used internally by `Workflow::Condition::Evaluate`
+
 
 ## 1.62 2023-02-11 bug fix/maintenance release, update recommended
 
