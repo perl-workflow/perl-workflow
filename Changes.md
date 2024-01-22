@@ -8,6 +8,7 @@
 - Support for configuration of observers through a separate configuration file;
   i.e. independently of `Workflow` configuration
 - Added new observer events startup, finalize, run
+- Add new accessor methods `last_action_executed`, `get_all_actions` to `Workflow` object
 - Support for configuration of content of the first history item of a workflow
   through `Workflow` (instead of through the persister)
 - New persister `Workflow::Persister::DBI::ExtraData` to load data from a database

@@ -12,7 +12,7 @@ use Carp qw(croak carp);
 use Syntax::Keyword::Try;
 
 my @FIELDS   = qw( id type description state last_update time_zone
-    history_class );
+    history_class last_action_executed );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
@@ -83,6 +83,13 @@ sub get_current_actions {
     $self->log->debug( "Getting current actions for wf '", $self->id, "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_available_action_names( $self, $group );
+}
+
+sub get_all_actions {
+    my ( $self ) = @_;
+    $self->log->debug( "Getting all actions for wf '", $self->id, "'" );
+    my $wf_state = $self->_get_workflow_state;
+    return $wf_state->get_all_action_names( $self );
 }
 
 sub get_action {
@@ -293,9 +300,11 @@ sub _execute_single_action {
     # Need this in case we encounter an exception after we store the
     # new state
     my $old_state = $self->state;
-    my ( $new_state, $action_return );
 
     try {
+
+        $self->last_action_executed($action_name);
+
         $action->validate($self, $action_args);
 
         $self->notify_observers( 'run' );
@@ -308,7 +317,11 @@ sub _execute_single_action {
         $action_return = $action->execute($self);
         $self->log->is_debug && $self->log->debug("Action executed ok");
 
-        $new_state = $self->_get_next_state( $action_name, $action_return );
+        # In case the state has a map defined, this returns the next state based
+        # on $action_return. It will throw an error if the value is not part of
+        # the map and there is no default route defined
+        my $new_state = $self->_get_next_state( $action_name, $action_return );
+
         if ( $new_state ne NO_CHANGE_VALUE ) {
             $self->log->is_info
                 && $self->log->info(
@@ -1013,6 +1026,13 @@ C<$group> is optional parameter.
 
 Returns: list of strings representing available actions
 
+=head3 get_all_actions
+
+Returns a list of ALL action names defined for the current state, weather or not
+they are available from the current environment.
+
+Returns: list of strings representing available actions
+
 =head3 get_action( $action_name )
 
 Retrieves the action object associated with C<$action_name> in the
@@ -1153,6 +1173,13 @@ The current state of the workflow.
 =head4 B<last_update> (read-write)
 
 Date of the workflow's last update.
+
+=head4 B<last_action_executed> (read)
+
+Contains the name of the action that was tried to be executed last, even if
+the execution could not be completed due to e.g. failed parameter validation,
+execption on code execution. Useful to find the step that failed when using
+autorun sequences, as C<state> will return the state from which it was called.
 
 =head3 context (read-write, see below)
 
