@@ -106,44 +106,44 @@ my @result_data   = ( 'INITIAL', $date );
         );
     $wf->execute_action( 'TIX_NEW' );
     my @observations = SomeObserver->get_observations;
-    is( scalar @observations, 8,
-        'Four observations sent on workflow execute to two observers' );
+    is( scalar @observations, 14,
+        'Seven observations sent on workflow execute to two observers' );
 
-    is( $observations[0]->[2], 'add history',
+    is( $observations[4]->[2], 'add history',
         'History observation generated first to first observer' );
-    is( $observations[1]->[2], 'add history',
+    is( $observations[5]->[2], 'add history',
         'History observation generated first to second observer' );
 
-    is( $observations[2]->[2], 'save',
+    is( $observations[6]->[2], 'save',
         'Save observation generated first to first observer' );
-    is( $observations[3]->[2], 'save',
+    is( $observations[7]->[2], 'save',
         'Save observation generated first to second observer' );
 
-    is( $observations[4]->[0], 'class',
+    is( $observations[8]->[0], 'class',
         'Observation sent to configured class observer first' );
-    is( $observations[4]->[2], 'execute',
+    is( $observations[8]->[2], 'completed',
         'Class observer sent the correct execute action' );
-    is( $observations[4]->[3], 'INITIAL',
+    is( $observations[8]->[3]->{state}, 'INITIAL',
         'Class observer sent the correct old state for execute' );
 
-    is( $observations[5]->[0], 'sub',
+    is( $observations[9]->[0], 'sub',
         'Observation sent to configured subroutine observer second' );
-    is( $observations[5]->[2], 'execute',
+    is( $observations[9]->[2], 'completed',
         'Subroutine observer sent the correct execute action' );
-    is( $observations[5]->[3], 'INITIAL',
+    is( $observations[9]->[3]->{state}, 'INITIAL',
         'Subroutine observer sent the correct old state for execute' );
 
-    is( $observations[6]->[0], 'class',
+    is( $observations[10]->[0], 'class',
         'Observation sent to configured class observer first' );
-    is( $observations[6]->[2], 'state change',
+    is( $observations[10]->[2], 'state change',
         'Class observer sent the correct state change action' );
-    is( $observations[6]->[3], 'INITIAL',
+    is( $observations[10]->[3]->{from}, 'INITIAL',
         'Class observer sent the correct old state for state change' );
 
-    is( $observations[7]->[0], 'sub',
+    is( $observations[11]->[0], 'sub',
         'Observation sent to configured subroutine observer second' );
-    is( $observations[7]->[2], 'state change',
+    is( $observations[11]->[2], 'state change',
         'Subroutine observer sent the correct state change action' );
-    is( $observations[7]->[3], 'INITIAL',
+    is( $observations[11]->[3]->{from}, 'INITIAL',
         'Subroutine observer sent the correct old state for state change' );
 }

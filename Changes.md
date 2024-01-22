@@ -7,6 +7,7 @@
 - Support for configurable history classes other than `Workflow::History`
 - Support for configuration of observers through a separate configuration file;
   i.e. independently of `Workflow` configuration
+- Added new observer events startup, finalize, run
 - Support for configuration of content of the first history item of a workflow
   through `Workflow` (instead of through the persister)
 - New persister `Workflow::Persister::DBI::ExtraData` to load data from a database
@@ -29,6 +30,9 @@
   overflows on very large execution chains
 - `Workflow` no longer calls `{commit,rollback}_transaction`; the factory has assumed this
   responsibility as it's the factory which is in charge of serializing workflows
+- Renamed observer event `complete` to `executed`, changed arguments for `state change` an `executed`
+  observer events to be a hash a not positional arguments.
+
 
 ### Removed
 
