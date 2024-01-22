@@ -314,7 +314,7 @@ sub _execute_single_action {
             # Merge the action args into the context
             $self->context->param( $action_args );
         }
-        $action_return = $action->execute($self);
+        my $action_return = $action->execute($self) // '';
         $self->log->is_debug && $self->log->debug("Action executed ok");
 
         # In case the state has a map defined, this returns the next state based

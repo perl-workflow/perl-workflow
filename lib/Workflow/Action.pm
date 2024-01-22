@@ -471,9 +471,10 @@ throw a L<Workflow::Exception>, the validation subclass.
 =head3 execute( $workflow )
 
 Subclasses B<must> implement -- this will perform the actual
-work. It's not required that you return anything, but if the action
-may be used in a L<Workflow::State> object that has multiple resulting
-states you should return a simple scalar for a return value.
+work. Must B<not> return a non-scalar reference or blessed object but
+can return undef. If the action may be used in a L<Workflow::State> object
+that has multiple resulting states you should return a simple scalar.
+
 
 =head3 add_fields
 

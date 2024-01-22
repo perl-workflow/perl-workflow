@@ -31,6 +31,7 @@
   overflows on very large execution chains
 - `Workflow` no longer calls `{commit,rollback}_transaction`; the factory has assumed this
   responsibility as it's the factory which is in charge of serializing workflows
+- `Workflow::Action->execute` must return a scalar value or undef (no references)
 - Renamed observer event `complete` to `executed`, changed arguments for `state change` an `executed`
   observer events to be a hash a not positional arguments.
 
