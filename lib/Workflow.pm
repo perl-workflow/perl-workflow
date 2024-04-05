@@ -344,7 +344,7 @@ sub _execute_single_action {
             $self->notify_observers( 'state change', { from => $old_state, action => $action_name, to => $new_state } );
         }
 
-        return $self->_get_workflow_state;;
+        return $self->_get_workflow_state;
 
     }
     catch ($error) {
