@@ -992,7 +992,7 @@ if everything executes successfully and roll back if something fails.
 Note that you need to manage any L<Workflow::Persister::DBI::ExtraData>
 transactions yourself.
 
-If anything goes well, will inform all observers with the event C<save>
+If everything goes well, will inform all observers with the event C<save>
 with no additional parameters.
 
 Returns: C<$workflow>
