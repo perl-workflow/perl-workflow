@@ -15,8 +15,9 @@ __PACKAGE__->mk_accessors(@FIELDS);
 # These get put into the safe compartment...
 $Workflow::Condition::Evaluate::context = undef;
 
-sub _init {
+sub init {
     my ( $self, $params ) = @_;
+    $self->SUPER::init( $params );
 
     $self->test( $params->{test} );
     unless ( $self->test ) {

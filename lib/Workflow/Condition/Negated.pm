@@ -11,12 +11,13 @@ use parent qw( Workflow::Condition );
 my @FIELDS = qw( name class negated );
 __PACKAGE__->mk_accessors(@FIELDS);
 
-sub _init {
+sub init {
     my ( $self, $params ) = @_;
     my $negated = $params->{name};
+    $self->SUPER::init( $params );
+
     $negated =~ s/ \A ! //gx;
     $self->negated( $negated );
-    $self->SUPER::_init($params);
 }
 
 sub evaluate {

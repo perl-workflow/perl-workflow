@@ -10,9 +10,11 @@ $Workflow::Condition::HasUser::VERSION = '1.57';
 
 my $DEFAULT_USER_KEY = 'current_user';
 
-sub _init {
+sub init {
     my ( $self, $params ) = @_;
     my $key_name = $params->{user_key} || $DEFAULT_USER_KEY;
+    $self->SUPER::init( $params );
+
     $self->param( user_key => $key_name );
 }
 

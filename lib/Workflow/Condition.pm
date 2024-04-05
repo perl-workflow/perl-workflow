@@ -20,10 +20,7 @@ sub init {
     my ( $self, $params ) = @_;
     $self->name( $params->{name} );
     $self->class( $params->{class} );
-    $self->_init($params);
 }
-
-sub _init {return}
 
 sub evaluate {
     my ($self) = @_;
@@ -168,8 +165,9 @@ This documentation describes version 1.57 of this package
 
  __PACKAGE__->mk_accessors( 'admin_group_id' );
 
- sub _init {
+ sub init {
      my ( $self, $params ) = @_;
+     $self->SUPER::init( $params );
      unless ( $params->{admin_group_id} ) {
          configuration_error
              "You must define one or more values for 'admin_group_id' in ",
@@ -234,7 +232,11 @@ first. If it doesn't find one, it will look for non-typed conditions.
 
 =head2 Strategy
 
-The idea behind conditions is that they can be stateless. So when the
+The methods below specify an interface. Classes used as conditions need
+to implement these methods.  The easiest way to achieve that is by
+inheriting from C< Workflow::Condition >.  This is not required, though.
+
+The idea behind conditions is that they are be stateless. So when the
 L<Workflow::Factory> object reads in the condition configuration it
 creates the condition objects and initializes them with whatever
 information is passed in.
@@ -246,9 +248,28 @@ condition may be called many, many times during a workflow lifecycle
 the current state of the workflow for things like menu options. So
 keep it short!
 
-=head2 Methods
 
-To create your own condition you should implement the following:
+=head2 Interface methods
+
+When implementing a condition in a class that doesn't have this class
+as a super-class, you must implement these methods.  If you implement
+a condition that I< does > have this class as a super-class, you I< may >
+need to override these methods.
+
+=head3 evaluate( $workflow )
+
+Determine whether your condition fails by returning a false value or
+a true value upon success. You can get the application context information
+necessary to process your condition from the C<$workflow> object.
+
+B<NOTE> Callers wanting to evaluate a condition, should not call
+this method directly, but rather use the
+C<< Workflow::Condition->evaluate_condition >> class method described below.
+
+=head2 Other methods
+
+To create your own condition based on this class, these methods are available
+and can be overridden to do specific tasks.
 
 =head3 init( \%params )
 
@@ -263,20 +284,6 @@ database and store it in the class or object, whatever you need.
 If you do not have sufficient information in C<\%params> you should
 throw an exception (preferably 'configuration_error' imported from
 L<Workflow::Exception>).
-
-=head3 evaluate( $workflow )
-
-Determine whether your condition fails by returning a false value or
-a true value upon success. You can get the application context information
-necessary to process your condition from the C<$workflow> object.
-
-B<NOTE> Callers wanting to evaluate a condition, should not call
-this method directly, but rather use the C<< $class->evaluate_condition >>
-class method described below.
-
-=head3 _init
-
-This is a I<dummy>, please refer to L</init>
 
 =head2 Caching and inverting the result
 
