@@ -16,7 +16,7 @@
 
 ### Changed
 
-- Clarification that `Workflow::Validator` defines an interface, not a class
+- Clarification that `Workflow::Validator` and `Workflow::Condition` define interfaces, not classes
 - Conditions return `Workflow::Condition::IsTrue`/`Workflow::Condition::IsFalse` on success/
   failure instead of throwing a condition error
 - `Workflow::Persister->fetch_history` returns constructor arguments instead of
