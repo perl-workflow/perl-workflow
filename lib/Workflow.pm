@@ -927,7 +927,7 @@ saved and results in a state change. The event will not be fired if
 you executed an action that did not result in a state change.
 
 Receives a hashref as second parameter. The key C<from> holds the name
-of the state before the transaction, C<action> is the name of the action
+of the state before the action, C<action> is the name of the action
 that was executed and C<to> holding the name of the target (current) state.
 
 =item *
