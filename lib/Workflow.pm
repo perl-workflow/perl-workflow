@@ -922,7 +922,7 @@ was executed, C<$action> is the action name that was executed.
 
 =item *
 
-B<state change> - Issued after a workflow is successfully executed,
+B<state change> - Issued after a single action is successfully executed,
 saved and results in a state change. The event will not be fired if
 you executed an action that did not result in a state change.
 
