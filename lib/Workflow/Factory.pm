@@ -462,6 +462,7 @@ sub save_workflow {
         $wf->last_update($old_update);
         die $error;
     }
+    $wf->notify_observers( 'save' );
 
     return $wf;
 }
@@ -990,6 +991,9 @@ Currently, the DBI-based persisters will commit the workflow transaction
 if everything executes successfully and roll back if something fails.
 Note that you need to manage any L<Workflow::Persister::DBI::ExtraData>
 transactions yourself.
+
+If everything goes well, will inform all observers with the event C<save>
+with no additional parameters.
 
 Returns: C<$workflow>
 

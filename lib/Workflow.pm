@@ -12,7 +12,7 @@ use Carp qw(croak carp);
 use Syntax::Keyword::Try;
 
 my @FIELDS   = qw( id type description state last_update time_zone
-    history_class );
+    history_class last_action_executed );
 my @INTERNAL = qw( _factory _observers );
 __PACKAGE__->mk_accessors( @FIELDS, @INTERNAL );
 
@@ -85,6 +85,13 @@ sub get_current_actions {
     return $wf_state->get_available_action_names( $self, $group );
 }
 
+sub get_all_actions {
+    my ( $self ) = @_;
+    $self->log->debug( "Getting all actions for wf '", $self->id, "'" );
+    my $wf_state = $self->_get_workflow_state;
+    return $wf_state->get_all_action_names( $self );
+}
+
 sub get_action {
     my ( $self, $action_name ) = @_;
 
@@ -114,6 +121,8 @@ sub get_action_fields {
 
 sub execute_action {
     my ( $self, $action_name, $action_args ) = @_;
+
+    $self->notify_observers( 'startup' );
 
     while ( $action_name ) {
         my $wf_state =
@@ -149,6 +158,8 @@ sub execute_action {
             }
         }
     }
+
+    $self->notify_observers( 'finalize' );
 
     return $self->state;
 }
@@ -289,19 +300,28 @@ sub _execute_single_action {
     # Need this in case we encounter an exception after we store the
     # new state
     my $old_state = $self->state;
-    my ( $new_state, $action_return );
 
     try {
+
+        $self->last_action_executed($action_name);
+
         $action->validate($self, $action_args);
+
+        $self->notify_observers( 'run' );
+
         $self->log->is_debug && $self->log->debug("Action validated ok");
         if ($action_args) {
             # Merge the action args into the context
             $self->context->param( $action_args );
         }
-        $action_return = $action->execute($self);
+        my $action_return = $action->execute($self) // '';
         $self->log->is_debug && $self->log->debug("Action executed ok");
 
-        $new_state = $self->_get_next_state( $action_name, $action_return );
+        # In case the state has a map defined, this returns the next state based
+        # on $action_return. It will throw an error if the value is not part of
+        # the map and there is no default route defined
+        my $new_state = $self->_get_next_state( $action_name, $action_return );
+
         if ( $new_state ne NO_CHANGE_VALUE ) {
             $self->log->is_info
                 && $self->log->info(
@@ -313,13 +333,20 @@ sub _execute_single_action {
         # state of the workflow history to reflect the NEW state of
         # the workflow; if it fails we should have some means for the
         # factory to rollback other transactions...
-
         $self->_factory()->save_workflow( $self );
-        $self->notify_observers( 'save' );
 
         $self->log->is_info
             && $self->log->info("Saved workflow with possible new state ok");
-     }
+
+        $self->notify_observers( 'completed', { state => $old_state, action => $action_name });
+
+        if ( $old_state ne $new_state ) {
+            $self->notify_observers( 'state change', { from => $old_state, action => $action_name, to => $new_state } );
+        }
+
+        return $self->_get_workflow_state;
+
+    }
     catch ($error) {
         $self->log->error(
             "Caught exception from action: $error; reset ",
@@ -341,14 +368,6 @@ sub _execute_single_action {
         croak $error;
     }
 
-    $self->notify_observers( 'execute', $old_state, $action_name );
-
-    my $new_state_obj = $self->_get_workflow_state;
-    if ( $old_state ne $new_state ) {
-        $self->notify_observers( 'state change', $old_state, $action_name );
-    }
-
-    return $new_state_obj;
 }
 
 sub _get_action { # for backward compatibility with 1.49 and before
@@ -816,9 +835,9 @@ like:
  package FindSinead;
 
  sub update {
-     my ( $class, $wf, $event, $new_state ) = @_;
+     my ( $class, $wf, $event, $event_args ) = @_;
      return unless ( $event eq 'state change' );
-     return unless ( $new_state eq 'CREATED' );
+     return unless ( $event_args->{to} eq 'CREATED' );
      my $context = $wf->context;
      return unless ( $context->param( 'first_name' ) eq 'Sinead' );
 
@@ -861,40 +880,60 @@ No additional parameters.
 
 =item *
 
-B<rollback> - Issued after a workflow is rolled back, e.g. due to failed
-action execution.
+B<startup> - Issued at the beginning of the execute loop, before the
+first action is called.
 
 No additional parameters.
 
 =item *
 
-B<save> - Issued after a workflow is successfully saved.
+B<finalize> - Issued at the end of the execute loop, after all action
+are handled.
 
 No additional parameters.
 
 =item *
 
-B<execute> - Issued after a workflow is successfully executed and
+B<run> - Issued before a single action is executed. Will be followed by
+either a C<save> or C<rollback> event.
+
+No additional parameters.
+
+=item *
+
+B<save> - Issued after the workflow was saved after running a single action.
+
+No additional parameters.
+
+=item *
+
+B<rollback> - Issued after the execution of a single action failed.
+
+No additional parameters.
+
+=item *
+
+B<completed> - Issued after a single action was successfully executed and
 saved.
 
-Adds the parameters C<$old_state>, and C<$action_name>.
-C<$old_state> includes the state of the workflow before the action
-was executed, C<$action_name> is the action name that was executed.
-
-=item *
-
-B<state change> - Issued after a workflow is successfully executed,
-saved and results in a state change. The event will not be fired if
-you executed an action that did not result in a state change.
-
-Adds the parameters C<$old_state>, and C<$action>.
-C<$old_state> includes the state of the workflow before the action
+Receives a hashref as second parameter holding the keys C<state> and
+C<action>. C<$state> includes the state of the workflow before the action
 was executed, C<$action> is the action name that was executed.
 
 =item *
 
-B<add history> - Issued after one or more history objects added to a
-workflow object.
+B<state change> - Issued after a single action is successfully executed,
+saved and results in a state change. The event will not be fired if
+you executed an action that did not result in a state change.
+
+Receives a hashref as second parameter. The key C<from> holds the name
+of the state before the action, C<action> is the name of the action
+that was executed and C<to> holding the name of the target (current) state.
+
+=item *
+
+B<add history> - Issued after one or more history objects were added to
+a workflow object.
 
 The additional argument is an arrayref of all L<Workflow::History>
 objects added to the workflow. (Note that these will not be persisted
@@ -984,6 +1023,13 @@ to your action
 C<$group> should be string that reperesents desired group name. In @actions you will get
 list of action names available from the current state for the given environment limited by group.
 C<$group> is optional parameter.
+
+Returns: list of strings representing available actions
+
+=head3 get_all_actions
+
+Returns a list of ALL action names defined for the current state, weather or not
+they are available from the current environment.
 
 Returns: list of strings representing available actions
 
@@ -1127,6 +1173,13 @@ The current state of the workflow.
 =head4 B<last_update> (read-write)
 
 Date of the workflow's last update.
+
+=head4 B<last_action_executed> (read)
+
+Contains the name of the action that was tried to be executed last, even if
+the execution could not be completed due to e.g. failed parameter validation,
+execption on code execution. Useful to find the step that failed when using
+autorun sequences, as C<state> will return the state from which it was called.
 
 =head3 context (read-write, see below)
 

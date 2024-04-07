@@ -116,13 +116,20 @@ sub get_next_state {
     my $resulting_state = $self->_next_state->{$action_name};
     return $resulting_state unless ( ref($resulting_state) eq 'HASH' );
 
-    if ( defined $action_return ) {
+    return %{$resulting_state} unless(defined $action_return);
 
-       # TODO: Throw exception if $action_return not found and no '*' defined?
-        return $resulting_state->{$action_return} || $resulting_state->{'*'};
-    } else {
-        return %{$resulting_state};
-    }
+    my $state = $self->state;
+    workflow_error "State->get_next_state was called with a non-scalar ",
+        "return value in state '$state' on action '$action_name'" if (ref $action_return ne '');
+
+    return $resulting_state->{$action_return} if ($resulting_state->{$action_return});
+
+    return $resulting_state->{'*'} if ($resulting_state->{'*'});
+
+    workflow_error "State '$state' does not define a next state ",
+        "for a return value of '$action_return' and there is ",
+        "also no default state set.";
+
 }
 
 sub get_autorun_action_name {
