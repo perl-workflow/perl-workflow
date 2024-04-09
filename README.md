@@ -129,10 +129,10 @@ This documentation describes version 1.57 of Workflow
     my $context = $workflow->context;
     $context->param( current_user => $user );
     $context->param( sections => \@sections );
-    $context->param( path => $path_to_file );
 
     # Execute one of them
-    $workflow->execute_action( 'upload file' );
+    $workflow->execute_action( 'upload file',
+                               { path => $path_to_file });
 
     print "New state: ", $workflow->state, "\n";
 
@@ -369,9 +369,9 @@ like:
     package FindSinead;
 
     sub update {
-        my ( $class, $wf, $event, $new_state ) = @_;
+        my ( $class, $wf, $event, $event_args ) = @_;
         return unless ( $event eq 'state change' );
-        return unless ( $new_state eq 'CREATED' );
+        return unless ( $event_args->{to} eq 'CREATED' );
         my $context = $wf->context;
         return unless ( $context->param( 'first_name' ) eq 'Sinead' );
 
@@ -406,35 +406,46 @@ in the workflow lifecycle; these are the events fired:
 
     No additional parameters.
 
-- **rollback** - Issued after a workflow is rolled back, e.g. due to failed
-action execution.
+- **startup** - Issued at the beginning of the execute loop, before the
+first action is called.
 
     No additional parameters.
 
-- **save** - Issued after a workflow is successfully saved.
+- **finalize** - Issued at the end of the execute loop, after all action
+are handled.
 
     No additional parameters.
 
-- **execute** - Issued after a workflow is successfully executed and
+- **run** - Issued before a single action is executed. Will be followed by
+either a `save` or `rollback` event.
+
+    No additional parameters.
+
+- **save** - Issued after the workflow was saved after running a single action.
+
+    No additional parameters.
+
+- **rollback** - Issued after the execution of a single action failed.
+
+    No additional parameters.
+
+- **completed** - Issued after a single action was successfully executed and
 saved.
 
-    Adds the parameters `$old_state`, `$action_name` and `$autorun`.
-    `$old_state` includes the state of the workflow before the action
-    was executed, `$action_name` is the action name that was executed and
-    `$autorun` is set to 1 if the action just executed was started
-    using autorun.
+    Receives a hashref as second parameter holding the keys `state` and
+    `action`. `$state` includes the state of the workflow before the action
+    was executed, `$action` is the action name that was executed.
 
-- **state change** - Issued after a workflow is successfully executed,
+- **state change** - Issued after a single action is successfully executed,
 saved and results in a state change. The event will not be fired if
 you executed an action that did not result in a state change.
 
-    Adds the parameters `$old_state`, `$action` and `$autorun`.
-    `$old_state` includes the state of the workflow before the action
-    was executed, `$action` is the action name that was executed and
-    `$autorun` is set to 1 if the action just executed was autorun.
+    Receives a hashref as second parameter. The key `from` holds the name
+    of the state before the action, `action` is the name of the action
+    that was executed and `to` holding the name of the target (current) state.
 
-- **add history** - Issued after one or more history objects added to a
-workflow object.
+- **add history** - Issued after one or more history objects were added to
+a workflow object.
 
     The additional argument is an arrayref of all [Workflow::History](https://metacpan.org/pod/Workflow%3A%3AHistory)
     objects added to the workflow. (Note that these will not be persisted
@@ -474,13 +485,16 @@ than the entire system.
 
 ## Object Methods
 
-### execute\_action( $action\_name, $autorun )
+### execute\_action( $action\_name, $args )
 
 Execute the action `$action_name`. Typically this changes the state
 of the workflow. If `$action_name` is not in the current state, fails
 one of the conditions on the action, or fails one of the validators on
-the action an exception is thrown. $autorun is used internally and
-is set to 1 if the action was executed using autorun.
+the action an exception is thrown.
+
+The `$args` provided, are checked against the validators to ensure the
+context remains in a valid state; upon successful validation, the `$args`
+are merged into the context and the action is executed as described above.
 
 After the action has been successfully executed and the workflow saved
 we issue a 'execute' observation with the old state, action name and
@@ -489,7 +503,7 @@ So if you wanted to write an observer you could create a
 method with the signature:
 
     sub update {
-        my ( $class, $workflow, $action, $old_state, $action_name, $autorun )
+        my ( $class, $workflow, $action, $old_state, $action_name )
            = @_;
         if ( $action eq 'execute' ) { .... }
     }
@@ -519,6 +533,13 @@ to your action
 `$group` should be string that reperesents desired group name. In @actions you will get
 list of action names available from the current state for the given environment limited by group.
 `$group` is optional parameter.
+
+Returns: list of strings representing available actions
+
+### get\_all\_actions
+
+Returns a list of ALL action names defined for the current state, weather or not
+they are available from the current environment.
 
 Returns: list of strings representing available actions
 
@@ -645,6 +666,13 @@ The current state of the workflow.
 #### **last\_update** (read-write)
 
 Date of the workflow's last update.
+
+#### **last\_action\_executed** (read)
+
+Contains the name of the action that was tried to be executed last, even if
+the execution could not be completed due to e.g. failed parameter validation,
+execption on code execution. Useful to find the step that failed when using
+autorun sequences, as `state` will return the state from which it was called.
 
 ### context (read-write, see below)
 
