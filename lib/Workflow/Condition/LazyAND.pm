@@ -11,8 +11,9 @@ use Workflow::Exception qw( configuration_error );
 
 __PACKAGE__->mk_accessors('conditions');
 
-sub _init {
+sub init {
     my ( $self, $params ) = @_;
+    $self->SUPER::init( $params );
 
     # This is a tricky one. The admin may have configured this by repeating
     # the param name "condition" or by using unique names (e.g.: "condition1",
@@ -24,7 +25,6 @@ sub _init {
         push @conditions, $self->normalize_array( $params->{$key} );
     }
     $self->conditions( [@conditions] );
-
 }
 
 sub evaluate {
