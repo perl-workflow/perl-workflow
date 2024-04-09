@@ -12,7 +12,7 @@ use Workflow::Validator::HasRequiredField;
 use Workflow::Factory qw( FACTORY );
 use Carp qw(croak);
 
-$Workflow::Action::VERSION = '1.57';
+$Workflow::Action::VERSION = '2.00';
 
 my @PROPS    = qw( name class description group );
 my @INTERNAL = qw( _factory );
@@ -169,7 +169,7 @@ Workflow::Action - Base class for Workflow actions
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 2.00 of this package
 
 =head1 SYNOPSIS
 

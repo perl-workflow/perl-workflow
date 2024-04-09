@@ -6,7 +6,7 @@ use v5.14.0;
 use parent qw( Class::Accessor );
 use Log::Any;
 
-$Workflow::Base::VERSION = '1.57';
+$Workflow::Base::VERSION = '2.00';
 
 sub new {
     my ( $class, @params ) = @_;
@@ -106,7 +106,7 @@ Workflow::Base - Base class with constructor
 
 =head1 VERSION
 
-This documentation describes version 1.57 of this package
+This documentation describes version 2.00 of this package
 
 =head1 SYNOPSIS
 
