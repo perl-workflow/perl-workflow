@@ -42,7 +42,7 @@ feature examples =>
 
 
 on test => sub {
-    requires 'DBD::Mock'             => '0.10';
+    requires 'DBD::Mock'             => '1.59'; # 1.45 is broken; 1.59 is not (and >3yrs old)
     requires 'List::MoreUtils';
     requires 'Mock::MonkeyPatch';
     requires 'Test::Exception';
