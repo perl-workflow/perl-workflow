@@ -57,6 +57,14 @@
 - Workaround for Perls between 5.18 and 5.39.2 clobbering %SIG in Safe->reval()
   which is used internally by `Workflow::Condition::Evaluate`
 
+## 2.01-TRIAL 2024-04-30 TRIAL release, update not required
+
+- See above for changes for version 2.0
+- Specified requirement for functioning DBD::Mock
+
+## 2.00-TRIAL 2024-04-09 TRIAL release, update not required
+
+- See above for changes 2.0
 
 ## 1.62 2023-02-11 bug fix/maintenance release, update recommended
 
