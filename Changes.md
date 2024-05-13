@@ -1,6 +1,6 @@
 # Revision history for the Workflow Perl Distribution
 
-## 2.0 YYYY-MM-DD  TO BE RELEASED
+## 2.0X, see below trial releases
 
 ### Added
 
@@ -35,7 +35,6 @@
 - Renamed observer event `complete` to `executed`, changed arguments for `state change` an `executed`
   observer events to be a hash a not positional arguments.
 
-
 ### Removed
 
 - `Workflow::Persister->fetch_extra_workflow_data` replaced by
@@ -62,7 +61,7 @@
 - See above for changes for version 2.0
 - Specified requirement for functioning DBD::Mock
 
-## 2.00-TRIAL 2024-04-09 TRIAL release, update not required
+## 2.00-TRIAL 2024-05-13 TRIAL release, update not required
 
 - See above for changes 2.0
 
