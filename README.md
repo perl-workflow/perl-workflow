@@ -8,7 +8,7 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 2.00 of Workflow
+This documentation describes version 2.01 of Workflow
 
 # SYNOPSIS
 
