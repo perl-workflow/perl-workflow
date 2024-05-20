@@ -48,6 +48,7 @@ on test => sub {
     requires 'Test::Exception';
     requires 'Test::More'            => '0.88';
     requires 'Test::Without::Module' => '0.20';
+    requires 'Perl::Critic::Community';
 };
 
 on develop => sub {
