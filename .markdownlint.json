@@ -2,5 +2,6 @@
     "default": true,
     "first-line-heading": false,
     "line-length": false,
-    "link-fragments": false
+    "link-fragments": false,
+    "no-bare-urls": false
 }
