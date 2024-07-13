@@ -56,6 +56,15 @@
 - Workaround for Perls between 5.18 and 5.39.2 clobbering %SIG in Safe->reval()
   which is used internally by `Workflow::Condition::Evaluate`
 
+## 2.02-TRIAL 2024-07-13 TRIAL release, update not required
+
+- Separation of the following classes into separate files, for proper meta-data indexing:
+  - `Workflow::Condition::Result`
+  - `Workflow::Condition::IsTrue`
+  - `Workflow::Condition::IsFalse`
+
+- Added contributors to meta-data (`dist.ini`)
+
 ## 2.01-TRIAL 2024-05-17 TRIAL release, update not required
 
 - See above for changes for version 2.0
