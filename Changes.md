@@ -63,8 +63,6 @@
   - `Workflow::Condition::IsTrue`
   - `Workflow::Condition::IsFalse`
 
-- Added contributors to meta-data (`dist.ini`)
-
 ## 2.01-TRIAL 2024-05-17 TRIAL release, update not required
 
 - See above for changes for version 2.0

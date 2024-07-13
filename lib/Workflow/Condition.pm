@@ -8,6 +8,8 @@ use v5.14.0;
 use Carp qw(croak);
 use Log::Any qw( $log );
 use Workflow::Exception qw( workflow_error );
+use Workflow::Condition::IsFalse;
+use Workflow::Condition::IsTrue;
 
 $Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '2.01';

@@ -47,6 +47,14 @@ This documentation describes version 2.01 of this package
 
 Base class for condition results L<Workflow::Condition::IsTrue> and L<Workflow::Condition::IsFalse>.
 
+=head1 METHODS
+
+=head2 Class Methods
+
+=head3 to_string
+
+Returns the message of the result object or the string '<no message>' if no message is set.
+
 =head1 SEE ALSO
 
 =over
