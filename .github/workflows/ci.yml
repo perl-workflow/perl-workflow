@@ -40,7 +40,7 @@ jobs:
       - name: Build dist
         run: dzil build --no-tgz --in build
       - name: Install dependencies
-        run: cd build && cpanm Carton && carton install --deployment
+        run: cd build && cpm install --verbose --with-all
       - name: Run tests
         run: |
           cd build
@@ -81,9 +81,9 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpanm Carton && carton install --deployment
+        run: cd build && cpm install --verbose --with-all
       - name: Run tests
-        run: cd build && carton exec -- prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
   macos:
     needs: build
@@ -101,9 +101,9 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpanm Carton && carton install --deployment
+        run: cd build && cpm install --verbose --with-all
       - name: Run tests
-        run: cd build && carton exec -- prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
+        run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
 
   windows:
     needs: build
@@ -123,7 +123,7 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpanm Carton && carton install --deployment
+        run: cd build && cpm install --verbose --with-all
       - name: Run tests
-        run: cd build && carton exec -- prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
