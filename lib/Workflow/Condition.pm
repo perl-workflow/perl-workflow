@@ -2,11 +2,14 @@ package Workflow::Condition;
 
 use warnings;
 use strict;
+
 use parent qw( Workflow::Base );
 use v5.14.0;
 use Carp qw(croak);
 use Log::Any qw( $log );
 use Workflow::Exception qw( workflow_error );
+use Workflow::Condition::IsFalse;
+use Workflow::Condition::IsTrue;
 
 $Workflow::Condition::CACHE_RESULTS = 1;
 $Workflow::Condition::VERSION = '2.01';
@@ -26,7 +29,6 @@ sub evaluate {
     my ($self) = @_;
     croak "Class ", ref($self), " must implement 'evaluate()'!\n";
 }
-
 
 sub evaluate_condition {
     my ( $class, $wf, $condition_name) = @_;
@@ -82,31 +84,6 @@ sub evaluate_condition {
         return $return_value;
     }
 }
-
-package Workflow::Condition::Result;
-use parent qw( Class::Accessor );
-
-use overload '""' => 'to_string';
-
-__PACKAGE__->mk_accessors('message');
-
-sub new {
-    my ( $class, @params ) = @_;
-    my $self = bless { }, $class;
-    $self->message( shift @params ) if (@params);
-    return $self;
-}
-
-sub to_string {
-    my $self = shift;
-    return $self->message() || '<no message>';
-}
-
-package Workflow::Condition::IsTrue;
-use base 'Workflow::Condition::Result';
-
-package Workflow::Condition::IsFalse;
-use base 'Workflow::Condition::Result';
 
 1;
 
@@ -331,11 +308,21 @@ value here. If a condition returns zero or an undefined value, but
 did not throw an exception, we consider it to be '1'. Otherwise, we
 consider it to be the value returned.
 
+=head1 SEE ALSO
 
+=over
+
+=item * L<Workflow::Base>
+
+=item * L<Log::Any>
+
+=item * L<Workflow::Exception>
+
+=back
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2021 Chris Winters. All rights reserved.
+Copyright (c) 2003-2024 Chris Winters. All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
