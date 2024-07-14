@@ -519,7 +519,7 @@ records to a DBI-accessible datasource.
 =head2 Subclassing: Getting handle from elsewhere
 
 A common need to create a subclass is to use a database handle created
-with other means. For instance, L<https://ledgersmb.org|LedgerSMB> has
+with other means. For instance, L<LedgerSMB|https://ledgersmb.org/> has
 a centrally managed database connection. So we can create a subclass to
 provide the database handle from the central storage location
 C<LedgerSMB::App_State>. A sample implementation is below.
