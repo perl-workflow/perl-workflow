@@ -32,15 +32,15 @@ jobs:
       - name: Log perl version
         run: perl -V
       - name: Install Dist::Zilla & Devel::Cover::Report::Coveralls
-        run: cpm install -g Dist::Zilla Devel::Cover::Report::Coveralls
+        run: cpm install --global Dist::Zilla Devel::Cover::Report::Coveralls
       - name: Install author dependencies
-        run: dzil authordeps | cpm install -g -
+        run: dzil authordeps | cpm install --global -
       - name: Install dependencies
         run: dzil listdeps --develop | cpanm
       - name: Build dist
         run: dzil build --no-tgz --in build
       - name: Install dependencies
-        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --with-all
       - name: Run tests
         run: |
           cd build
@@ -81,7 +81,7 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
@@ -101,7 +101,7 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
 
@@ -123,6 +123,6 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
