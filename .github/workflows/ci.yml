@@ -40,7 +40,7 @@ jobs:
       - name: Build dist
         run: dzil build --no-tgz --in build
       - name: Install dependencies
-        run: cd build && cpm -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
       - name: Run tests
         run: |
           cd build
@@ -81,7 +81,7 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
@@ -101,7 +101,7 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
 
@@ -123,6 +123,6 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm -g Carton::Snapshot && cpm install --verbose --with-all
+        run: cd build && cpm install -g Carton::Snapshot && cpm install --verbose --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
