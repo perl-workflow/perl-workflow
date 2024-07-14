@@ -44,7 +44,7 @@ jobs:
       - name: Run tests
         run: |
           cd build
-          [ -d xt ] && prove --timer --lib --recurse --jobs $(nproc) --shuffle xt/
+          [ -d xt ] && carton exec -- prove --timer --lib --recurse --jobs $(nproc) --shuffle xt/
           HARNESS_PERL_SWITCHES="-MDevel::Cover=+ignore,^t/ -MSyntax::Keyword::Try::Deparse" prove --timer --lib --recurse --jobs $(nproc) --shuffle t/
       - name: Report coverage info to Coveralls
         run: |
@@ -83,7 +83,7 @@ jobs:
       - name: Install dependencies
         run: cd build && cpanm Carton && carton install --deployment
       - name: Run tests
-        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: cd build && carton exec -- prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
   macos:
     needs: build
@@ -103,7 +103,7 @@ jobs:
       - name: Install dependencies
         run: cd build && cpanm Carton && carton install --deployment
       - name: Run tests
-        run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
+        run: cd build && carton exec -- prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
 
   windows:
     needs: build
@@ -125,5 +125,5 @@ jobs:
       - name: Install dependencies
         run: cd build && cpanm Carton && carton install --deployment
       - name: Run tests
-        run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
+        run: cd build && carton exec -- prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
