@@ -42,7 +42,8 @@ jobs:
       - name: Install dependencies
         run: |
           cd build
-          cpanm --installdeps --local-lib ${GITHUB_WORKSPACE}/local --with-all-features --with-develop --with-suggests .
+          cpanm Carton
+          carton install --deployment
       - name: Run tests
         run: |
           cd build
