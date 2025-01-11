@@ -1,6 +1,6 @@
 # Revision history for the Workflow Perl Distribution
 
-## 2.0X, see below trial releases
+## 2.02 2025-01-11 Major release, update recommended
 
 ### Added
 
