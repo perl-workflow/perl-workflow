@@ -65,14 +65,14 @@ sub evaluate_condition {
 
         my $return_value;
         my $result = $condition->evaluate($wf);
-        if (ref $result eq 'Workflow::Condition::IsTrue'
+        if (ref $result eq 'Workflow::Condition::IsFalse'
+                 or (not $Workflow::Condition::STRICT_BOOLEANS and not $result)) {
+            $log->info( "Got false result with '$result' on '$orig_condition'");
+            $return_value = 0;
+        } elsif (ref $result eq 'Workflow::Condition::IsTrue'
             or (not $Workflow::Condition::STRICT_BOOLEANS and $result)) {
             $log->info( "Got true result with '$result' on '$orig_condition'");
             $return_value = 1;
-        } elsif (ref $result eq 'Workflow::Condition::IsFalse'
-                 or not $Workflow::Condition::STRICT_BOOLEANS) {
-            $log->info( "Got false result with '$result' on '$orig_condition'");
-            $return_value = 0;
         } else {
             $log->fatal( "Evaluate on '$orig_condition' did not return a valid result object" );
             $log->trace( 'Eval result', { result => $result } );
