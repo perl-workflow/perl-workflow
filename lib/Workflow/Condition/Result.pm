@@ -9,7 +9,7 @@ use overload '""' => 'to_string';
 
 __PACKAGE__->mk_accessors('message');
 
-$Workflow::Condition::Result = '2.02';
+$Workflow::Condition::Result = '2.03';
 
 sub new {
     my ( $class, @params ) = @_;
@@ -35,7 +35,7 @@ Workflow::Condition::Result - Base class for condition results isTrue and isFals
 
 =head1 VERSION
 
-This documentation describes version 2.02 of this package
+This documentation describes version 2.03 of this package
 
 =head1 SYNOPSIS
 

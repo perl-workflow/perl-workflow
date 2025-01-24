@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use v5.14.0;
 
-our $VERSION = '2.02';
+our $VERSION = '2.03';
 
 use parent qw( Workflow::Condition );
 use Workflow::Exception qw( configuration_error );
@@ -55,7 +55,7 @@ Workflow::Condition::LazyOR
 
 =head1 VERSION
 
-This documentation describes version 2.02 of this package
+This documentation describes version 2.03 of this package
 
 =head1 DESCRIPTION
 

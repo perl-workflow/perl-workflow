@@ -5,7 +5,7 @@ use strict;
 use v5.14.0;
 use parent qw( Workflow::Base );
 
-$Workflow::Validator::VERSION = '2.02';
+$Workflow::Validator::VERSION = '2.03';
 
 my @FIELDS = qw( description name );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -33,7 +33,7 @@ Workflow::Validator - Interface definition for data validation
 
 =head1 VERSION
 
-This documentation describes version 2.02 of this package
+This documentation describes version 2.03 of this package
 
 =head1 SYNOPSIS
 
