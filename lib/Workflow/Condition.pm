@@ -12,7 +12,7 @@ use Workflow::Condition::IsFalse;
 use Workflow::Condition::IsTrue;
 
 $Workflow::Condition::CACHE_RESULTS = 1;
-$Workflow::Condition::VERSION = '2.02';
+$Workflow::Condition::VERSION = '2.03';
 
 $Workflow::Condition::STRICT_BOOLEANS = 1;
 
@@ -97,7 +97,7 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
 
 =head1 VERSION
 
-This documentation describes version 2.02 of this package
+This documentation describes version 2.03 of this package
 
 =head1 SYNOPSIS
 

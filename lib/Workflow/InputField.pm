@@ -9,7 +9,7 @@ use Module::Runtime qw( require_module );
 use Workflow::Exception qw( configuration_error );
 use Syntax::Keyword::Try;
 
-$Workflow::Action::InputField::VERSION = '2.02';
+$Workflow::Action::InputField::VERSION = '2.03';
 
 my @PROPS = qw( name label description type requirement
     source_class source_list class );
@@ -125,7 +125,7 @@ Workflow::InputField - Metadata about information required by an Action
 
 =head1 VERSION
 
-This documentation describes version 2.02 of this package
+This documentation describes version 2.03 of this package
 
 =head1 SYNOPSIS
 

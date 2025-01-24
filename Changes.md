@@ -2,6 +2,8 @@
 
 ## TO BE RELEASED
 
+## 2.03 2025-01-24 BUg fix release, update recommended
+
 ### Fixed
 
 - Instances of Workflow::Condition::IsFalse interpreted as `true` return values

@@ -10,7 +10,7 @@ use Workflow::Exception qw( workflow_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 
-$Workflow::State::VERSION = '2.02';
+$Workflow::State::VERSION = '2.03';
 
 my @FIELDS   = qw( state description type );
 my @INTERNAL = qw( _test_condition_count _factory _actions _conditions
@@ -337,7 +337,7 @@ Workflow::State - Information about an individual state in a workflow
 
 =head1 VERSION
 
-This documentation describes version 2.02 of this package
+This documentation describes version 2.03 of this package
 
 =head1 SYNOPSIS
 
@@ -512,7 +512,7 @@ Returns name of action to be used for autorunning the state.
 
 =head3 clear_condition_cache ( )
 
-Deprecated, kept for 2.02 compatibility.
+Deprecated, kept for 2.03 compatibility.
 
 Used to empties the condition result cache for a given state.
 
