@@ -9,7 +9,6 @@ use File::Spec::Functions;
 use HTTP::Daemon;
 use HTTP::Status;
 use Log::Any          qw( $log );
-use Workflow::Factory qw( FACTORY );
 
 App::Web->init_logger();
 

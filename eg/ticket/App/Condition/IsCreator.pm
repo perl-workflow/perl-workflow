@@ -5,7 +5,8 @@ package App::Condition::IsCreator;
 use strict;
 use parent qw( Workflow::Condition );
 use Log::Any qw( $log );
-use Workflow::Exception qw( condition_error );
+use Workflow::Condition::IsFalse;
+use Workflow::Condition::IsTrue;
 use Workflow::Factory   qw( FACTORY );
 
 $App::Condition::IsCreator::VERSION = '1.02';
@@ -27,8 +28,9 @@ sub evaluate {
     $log->debug( "Current user in the context is '", $current_user, "' ",
                  "ticket creator is '", $ticket->creator, "'" );
     unless ( $ticket->creator eq $current_user ) {
-        condition_error "User is not the creator of the ticket";
+        return Workflow::Condition::IsFalse->new();
     }
+    return Workflow::Condition::IsTrue->new();
 }
 
 1;
