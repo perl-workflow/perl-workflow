@@ -1,6 +1,6 @@
 [![CPAN version](https://badge.fury.io/pl/Workflow.svg)](http://badge.fury.io/pl/Workflow)
-[![Build status](https://github.com/jonasbn/perl-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/jonasbn/perl-workflow/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/jonasbn/perl-workflow/badge.svg?branch=master)](https://coveralls.io/github/jonasbn/perl-workflow?branch=master)
+[![Build status](https://github.com/perl-workflow/perl-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/perl-workflow/perl-workflow/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/perl-workflow/perl-workflow/badge.svg?branch=master)](https://coveralls.io/github/perl-workflow/perl-workflow?branch=master)
 
 # NAME
 
@@ -840,13 +840,13 @@ Your [XML::SAX](https://metacpan.org/pod/XML%3A%3ASAX) configuration is located 
 
 Known bugs and limitations can be seen in the Github issue tracker:
 
-[https://github.com/jonasbn/perl-workflow/issues](https://github.com/jonasbn/perl-workflow/issues)
+[https://github.com/perl-workflow/perl-workflow/issues](https://github.com/perl-workflow/perl-workflow/issues)
 
 # BUG REPORTING
 
 Bug reporting should be done either via Github issues
 
-[https://github.com/jonasbn/perl-workflow/issues](https://github.com/jonasbn/perl-workflow/issues)
+[https://github.com/perl-workflow/perl-workflow/issues](https://github.com/perl-workflow/perl-workflow/issues)
 
 A list of currently known issues can be seen via the same URL.
 
@@ -876,13 +876,13 @@ downloaded from the central repository.
 
 The Workflow project is currently hosted on GitHub
 
-- GitHub: [https://github.com/jonasbn/perl-workflow](https://github.com/jonasbn/perl-workflow)
+- GitHub: [https://github.com/perl-workflow/perl-workflow](https://github.com/perl-workflow/perl-workflow)
 
 ## REPOSITORY
 
 The code is kept under revision control using Git:
 
-- [https://github.com/jonasbn/perl-workflow/tree/master/](https://github.com/jonasbn/perl-workflow/tree/master/)
+- [https://github.com/perl-workflow/perl-workflow/tree/master/](https://github.com/perl-workflow/perl-workflow/tree/master/)
 
 ## OTHER RESOURCES
 

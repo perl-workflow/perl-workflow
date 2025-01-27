@@ -409,8 +409,8 @@ __END__
 =begin markdown
 
 [![CPAN version](https://badge.fury.io/pl/Workflow.svg)](http://badge.fury.io/pl/Workflow)
-[![Build status](https://github.com/jonasbn/perl-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/jonasbn/perl-workflow/actions/workflows/ci.yml)
-[![Coverage Status](https://coveralls.io/repos/github/jonasbn/perl-workflow/badge.svg?branch=master)](https://coveralls.io/github/jonasbn/perl-workflow?branch=master)
+[![Build status](https://github.com/perl-workflow/perl-workflow/actions/workflows/ci.yml/badge.svg)](https://github.com/perl-workflow/perl-workflow/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/github/perl-workflow/perl-workflow/badge.svg?branch=master)](https://coveralls.io/github/perl-workflow/perl-workflow?branch=master)
 
 =end markdown
 
@@ -1365,13 +1365,13 @@ Your L<XML::SAX> configuration is located in the file:
 
 Known bugs and limitations can be seen in the Github issue tracker:
 
-L<https://github.com/jonasbn/perl-workflow/issues>
+L<https://github.com/perl-workflow/perl-workflow/issues>
 
 =head1 BUG REPORTING
 
 Bug reporting should be done either via Github issues
 
-L<https://github.com/jonasbn/perl-workflow/issues>
+L<https://github.com/perl-workflow/perl-workflow/issues>
 
 A list of currently known issues can be seen via the same URL.
 
@@ -1403,7 +1403,7 @@ The Workflow project is currently hosted on GitHub
 
 =over
 
-=item GitHub: L<https://github.com/jonasbn/perl-workflow>
+=item GitHub: L<https://github.com/perl-workflow/perl-workflow>
 
 =back
 
@@ -1413,7 +1413,7 @@ The code is kept under revision control using Git:
 
 =over
 
-=item L<https://github.com/jonasbn/perl-workflow/tree/master/>
+=item L<https://github.com/perl-workflow/perl-workflow/tree/master/>
 
 =back
 
