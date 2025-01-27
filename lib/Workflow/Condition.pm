@@ -31,12 +31,13 @@ sub evaluate {
 }
 
 sub evaluate_condition {
-    my ( $class, $wf, $condition_name) = @_;
+    my ( $class, $wf, $condition_or_name) = @_;
     $wf->type;
 
     my $factory = $wf->_factory();
-    my $orig_condition = $condition_name;
-    my $condition;
+    my $condition_name =
+        (ref $condition_or_name) ? $condition_or_name->name : $condition_or_name;
+    my $condition = (ref $condition_or_name) ? $condition_or_name : undef;
 
     $log->debug("Checking condition $condition_name");
 
@@ -44,13 +45,13 @@ sub evaluate_condition {
         $wf->{'_condition_result_cache'} || {};
 
     if ( $Workflow::Condition::CACHE_RESULTS
-         && exists $wf->{'_condition_result_cache'}->{$orig_condition} ) {
+         && exists $wf->{'_condition_result_cache'}->{$condition_name} ) {
 
-        my $cache_value = $wf->{'_condition_result_cache'}->{$orig_condition};
+        my $cache_value = $wf->{'_condition_result_cache'}->{$condition_name};
         # The condition has already been evaluated and the result
         # has been cached
         $log->debug(
-            "Condition has been cached: '$orig_condition', cached result: ",
+            "Condition has been cached: '$condition_name', cached result: ",
             $cache_value || ''
             );
 
@@ -59,27 +60,27 @@ sub evaluate_condition {
 
         # we did not evaluate the condition yet, we have to do
         # it now
-        $condition = $wf->_factory()
-            ->get_condition( $orig_condition, $wf->type );
-        $log->debug( "Evaluating condition '$orig_condition'" );
+        $condition //= $wf->_factory()
+            ->get_condition( $condition_name, $wf->type );
+        $log->debug( "Evaluating condition '$condition_name'" );
 
         my $return_value;
         my $result = $condition->evaluate($wf);
         if (ref $result eq 'Workflow::Condition::IsFalse'
                  or (not $Workflow::Condition::STRICT_BOOLEANS and not $result)) {
-            $log->info( "Got false result with '$result' on '$orig_condition'");
+            $log->info( "Got false result with '$result' on '$condition_name'");
             $return_value = 0;
         } elsif (ref $result eq 'Workflow::Condition::IsTrue'
             or (not $Workflow::Condition::STRICT_BOOLEANS and $result)) {
-            $log->info( "Got true result with '$result' on '$orig_condition'");
+            $log->info( "Got true result with '$result' on '$condition_name'");
             $return_value = 1;
         } else {
-            $log->fatal( "Evaluate on '$orig_condition' did not return a valid result object" );
+            $log->fatal( "Evaluate on '$condition_name' did not return a valid result object" );
             $log->trace( 'Eval result', { result => $result } );
-            croak "Evaluate on '$orig_condition' did not return a valid result object";
+            croak "Evaluate on '$condition_name' did not return a valid result object";
         }
 
-        $wf->{'_condition_result_cache'}->{$orig_condition} = $return_value;
+        $wf->{'_condition_result_cache'}->{$condition_name} = $return_value;
 
         return $return_value;
     }
@@ -290,10 +291,10 @@ state. To address the problems that resulted (see GitHub issues #9 and #7),
 1.49 switched to a new mechanism with a cache per workflow instance.
 
 
-=head3 $class->evaluate_condition( $WORKFLOW, $CONDITION_NAME )
+=head3 $class->evaluate_condition( $WORKFLOW, $CONDITION_OR_NAME )
 
-Users call this method to evaluate a condition; subclasses call this
-method to evaluate a nested condition.
+Users call this method to evaluate a condition by name or by condition
+instance; subclasses call this method to evaluate a nested condition.
 
 If the condition name starts with an '!', the result of the condition
 is negated. Note that a side-effect of this is that the return

@@ -95,7 +95,7 @@ sub evaluate_action {
     my @conditions = $self->get_conditions($action_name);
     foreach my $condition (@conditions) {
         my $condition_name = $condition->name;
-        my $rv = Workflow::Condition->evaluate_condition($wf, $condition_name);
+        my $rv = Workflow::Condition->evaluate_condition($wf, $condition);
         if (! $rv) {
 
             $self->log->is_debug

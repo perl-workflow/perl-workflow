@@ -80,14 +80,14 @@ sub context {
 
 sub get_current_actions {
     my ( $self, $group ) = @_;
-    $self->log->debug( "Getting current actions for wf '", $self->id, "'" );
+    $self->log->debug( "Getting current actions for wf '" . $self->id . "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_available_action_names( $self, $group );
 }
 
 sub get_all_actions {
     my ( $self ) = @_;
-    $self->log->debug( "Getting all actions for wf '", $self->id, "'" );
+    $self->log->debug( "Getting all actions for wf '" . $self->id . "'" );
     my $wf_state = $self->_get_workflow_state;
     return $wf_state->get_all_action_names( $self );
 }
