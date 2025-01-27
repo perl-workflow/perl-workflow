@@ -319,7 +319,15 @@ sub create_workflow {
         = $wf_class->new( undef,
         $wf_config->{initial_state} || $DEFAULT_INITIAL_STATE,
         $wf_config, $self->{_workflow_state}{$wf_type}, $self );
-    $wf->context( $context || Workflow::Context->new );
+
+    if ($context and not blessed $context) {
+        $context = Worfklow::Context->new( %{ $context } );
+    }
+    elsif (not $context) {
+        $context = Workflow::Context->new;
+    }
+    $wf->context( $context );
+
     $wf->last_update( DateTime->now( time_zone => $wf->time_zone() ) );
     $self->log->info( "Instantiated workflow object properly, persisting..." );
     my $persister = $self->get_persister( $wf_config->{persister} );
@@ -378,11 +386,13 @@ sub fetch_workflow {
     if ($wf_info->{context} && blessed( $wf_info->{context} ) ) {
         $context = $wf_info->{context};
     } else {
-        $context ||= Workflow::Context->new;
-        $context->init( %{ $wf_info->{context} }) if (ref $wf_info->{context} eq 'HASH');
+        $context = Workflow::Context->new(
+            %{ $context },
+            %{ $wf_info->{context} // {} }
+            );
     }
-
     $wf->context( $context );
+
     $wf->last_update( $wf_info->{last_update} );
 
     $self->associate_observers_with_workflow($wf);
