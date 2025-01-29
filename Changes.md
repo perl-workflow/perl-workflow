@@ -15,7 +15,7 @@
 - Conditions provided as examples in `eg/` should have been ported to 2.0
 - Broken URLs in documentation
 
-## 2.03 2025-01-24 BUg fix release, update recommended
+## 2.03 2025-01-24 Bug fix release, update recommended
 
 ### Fixed
 
