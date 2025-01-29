@@ -245,7 +245,7 @@ sub _get_workflow {
     my $wf = FACTORY->fetch_workflow( 'Ticket', $wf_id );
     if ( $wf ) {
         $log->is_debug &&
-            $log->debug( "Workflow found; current state: '", $wf->state, "'" );
+            $log->debug( "Workflow found; current state: '" . $wf->state . "'" );
         $self->param( workflow => $wf );
     }
     else {

@@ -5,7 +5,8 @@ package App::Condition::IsWorker;
 use strict;
 use parent qw( Workflow::Condition );
 use Log::Any            qw( $log );
-use Workflow::Exception qw( condition_error );
+use Workflow::Condition::IsFalse;
+use Workflow::Condition::IsTrue;
 use Workflow::Factory   qw( FACTORY );
 
 $App::Condition::IsWorker::VERSION = '1.02';
@@ -19,8 +20,9 @@ sub evaluate {
     my $cond_creator = FACTORY->get_condition( "IsCreator" );
     eval { $cond_creator->evaluate( $wf ) };
     unless ( $@ ) {
-        condition_error "Current user is a creator";
+        return Workflow::Condition::IsFalse->new();
     }
+    return Workflow::Condition::IsTrue->new();
 }
 
 1;
