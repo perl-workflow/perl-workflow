@@ -1,6 +1,6 @@
 # Revision history for the Workflow Perl Distribution
 
-## TO BE RELEASED
+## 2.04 2025-01-29 Feature and bug fix release, update not required
 
 ### Added
 

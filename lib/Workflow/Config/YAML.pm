@@ -9,7 +9,7 @@ use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use Syntax::Keyword::Try;
 
-$Workflow::Config::YAML::VERSION = '2.03';
+$Workflow::Config::YAML::VERSION = '2.04';
 
 my $YAML_REQUIRED = 0;
 
@@ -78,7 +78,7 @@ Workflow::Config::YAML - Parse workflow configurations as YAML data structures
 
 =head1 VERSION
 
-This documentation describes version 2.03 of this package
+This documentation describes version 2.04 of this package
 
 =head1 SYNOPSIS
 
@@ -147,7 +147,7 @@ Workflow::Config::Perl - Parse workflow configurations as Perl data structures
 
 =head1 VERSION
 
-This documentation describes version 2.03 of this package
+This documentation describes version 2.04 of this package
 
 =head1 SYNOPSIS
 
