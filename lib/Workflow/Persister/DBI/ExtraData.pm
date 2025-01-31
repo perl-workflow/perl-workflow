@@ -50,7 +50,7 @@ sub init {
 sub fetch_workflow {
     my ( $self, $wf_id ) = @_;
     my $wf_info = $self->SUPER::fetch_workflow( $wf_id );
-    my $context = $wf_info->{context} // {};
+    my $context = ($wf_info->{context} //= {});
 
     $self->log->debug( "Fetching extra workflow data for '", $wf_id, "'" );
 
