@@ -28,11 +28,20 @@
            class="App::Web"
            method="login"/>
 
+    <url-mapping
+           url="logout"
+           class="App::Web"
+           method="logout"/>
+
 <!-- Each of these entries maps a workflow action name to the template
      name to show the user to provide that action the data it needs -->
 
    <action-display
            name="create issue"
+           template="ticket_form.tmpl"/>
+
+   <action-display
+           name="edit issue"
            template="ticket_form.tmpl"/>
 
    <action-display

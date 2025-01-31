@@ -18,7 +18,7 @@ App::Web->init_factory();
 App::Web->init_url_mappings( 'web_workflow.xml' );
 
 {
-    my $d = HTTP::Daemon->new
+    my $d = HTTP::Daemon->new( LocalPort => 5001, ReuseAddr => 1 )
                 || die "Failed to initialize daemon: $!";
     $log->info( "Initialized daemon at URL '", $d->url, "'" );
     print "Please contact me at [URL: ", $d->url, "]\n";

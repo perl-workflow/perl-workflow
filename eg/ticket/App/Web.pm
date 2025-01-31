@@ -12,6 +12,8 @@ use Template;
 use Workflow::Factory     qw( FACTORY );
 use XML::Simple           qw( :strict );
 
+use App::User;
+
 $VERSION = '0.01';
 
 # Default logfile name; can change with arg to init_logger()
@@ -80,7 +82,7 @@ sub _create_cookies {
 
 sub param {
     my ( $self, $name, $value ) = @_;
-    if ( $name and $value ) {
+    if ( $name and defined $value ) {
         return $self->{params}{ $name } = $value;
     }
     elsif ( $name ) {
@@ -104,7 +106,7 @@ sub cookie_in {
 
 sub cookie_out {
     my ( $self, $name, $value ) = @_;
-    if ( $name and $value ) {
+    if ( $name and defined $value ) {
         $log->is_debug &&
             $log->debug( "Adding outbound cookie: '$name' = '$value'" );
         $self->{cookie_out}{ $name } = $value;
@@ -231,6 +233,14 @@ sub _action_login {
     return 'index.tmpl';
 }
 
+sub _action_logout {
+    my ( $self ) = @_;
+    $self->cookie_out( current_user => '' );
+    $self->cookie_out( workflow_id => '' );
+    $self->param( 'current_user' => '' );
+    return 'index.tmpl';
+}
+
 sub _get_workflow {
     my ( $self ) = @_;
     return $self->param( 'workflow' )  if ( $self->param( 'workflow' ) );
@@ -271,12 +281,21 @@ sub process_template {
     my ( $self, $template_name ) = @_;
     $log->is_debug &&
         $log->debug( "Processing template '$template_name'..." );
+    my $ticket_data;
+    if ( my $wf = $self->_get_workflow ) {
+        if ( my $ticket_id = $wf->context->param( 'ticket_id' ) ) {
+            my $ticket = App::Ticket->fetch( $ticket_id );
+            $ticket_data = { %$ticket };
+        }
+    }
     my ( $content );
     my $t = $self->{template};
     my %template_params = (
+        userlist => [ App::User->get_possible_values ],
         dispatcher => $self,
         cgi        => $self->{cgi},
         %{ $self->param },
+        ticket_data => $ticket_data,
     );
 #    local $Data::Dumper::Indent = 1;
 #    $log->is_debug &&
@@ -307,7 +326,7 @@ sub _init_templating {
 # INITIALIZATION
 
 sub init_logger {
-    my ( $log_file ) = @_;
+    my ( $class, $log_file ) = @_;
     $log_file ||= $DEFAULT_LOG_FILE;
     if ( -f $log_file ) {
         my $log_mod_time = (stat $log_file)[9];

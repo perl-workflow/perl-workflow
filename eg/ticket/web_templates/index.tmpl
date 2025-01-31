@@ -25,16 +25,23 @@ ID: <input type="text" size="8" name="workflow_id"> <input type="submit" value="
 </p>
 </form>
 
+<p><a href="[% base_url %]/logout/">Log out</a></p>
+
 [% ELSE %]
 
 <p>First things first: you need to login!</p>
 
 <form method="GET" action="[% base_url %]/login/">
-<p>Your first name: <input type="text" size="10" name="current_user"> <input type="submit" value="Login">
-</p>
+  <select name="current_user">
+    <option value="">Select a user to log in</option>
+[% FOREACH user IN userlist %]
+    <option value="[% user.value %]">[% user.label %]</option>
+[% END %]
+  </select>
+ <input type="submit" value="Login">
 </form>
 
 [% END %]
 
-</head>
+</body>
 </html>

@@ -6,7 +6,11 @@
 
 [% PROCESS error_message.tmpl %]
 
+[% IF workflow.state == 'INITIAL' %]
 <h1>Create a Ticket</h1>
+[% ELSE %]
+<h1>Edit ticket</h1>
+[% END %]
 
 <p>While this <b>looks</b> like it will be calling some part of the
 Ticket framework, it's actually just executing a workflow action and
@@ -21,19 +25,25 @@ and an error message will be displayed.</p>
  <td><b>[% ACTION_FIELDS.type.label %]</b></td>
  <td>[% ACTION_FIELDS.type.description %]</td>
 <tr>
- <td colspan="2">
+  <td colspan="2">
+[% IF workflow.state == 'INITIAL' %]
    <select name="type">
    <option value="">Select a ticket type...</option>
 [% FOREACH type_info = ACTION_FIELDS.type.get_possible_values %]
    <option value="[% type_info.value %]">[% type_info.label %]</option>
 [% END %]
    </select>
+[% ELSE %]
+   [% ticket_data.type %]
+   <input type="hidden" name="type" value="[% ticket_data.type %]">
+[% END %]
+  </td>
 </tr>
 <tr>
  <td><b>[% ACTION_FIELDS.subject.label %]</b></td>
  <td>[% ACTION_FIELDS.subject.description %]</td>
 <tr>
- <td colspan="2"><input type="text" name="subject" value="[% subject %]" size="40"></td>
+ <td colspan="2"><input type="text" name="subject" value="[% ticket_data.subject %]" size="40"></td>
 </tr>
 <tr>
  <td><b>[% ACTION_FIELDS.description.label %]</b></td>
@@ -42,24 +52,33 @@ and an error message will be displayed.</p>
  <td colspan="2">
     <textarea name="description"
               rows="4" cols="40"
-              wrap="virtual">[% description %]</textarea>
+              wrap="virtual">[% ticket_data.description %]</textarea>
  </td>
 </tr>
 <tr>
  <td><b>[% ACTION_FIELDS.creator.label %]</b></td>
  <td>[% ACTION_FIELDS.creator.description %]</td>
 <tr>
- <td colspan="2">
+  <td colspan="2">
+[% IF workflow.state == 'INITIAL' %]
    <select name="creator">
    <option value="">Select a creator...</option>
 [% FOREACH creator_info = ACTION_FIELDS.creator.get_possible_values %]
    <option value="[% creator_info.value %]">[% creator_info.label %]</option>
 [% END %]
    </select>
- </td>
+[% ELSE %]
+   [% ticket_data.creator %]
+   <input type="hidden" name="creator" value="[% ticket_data.creator %]">
+[% END %]
+  </td>
 </tr>
 <tr>
- <td colspan="2"><input type="submit" value="Create Ticket"></td>
+[% IF workflow.state == 'INITIAL' %]
+  <td colspan="2"><input type="submit" value="Create Ticket"></td>
+[% ELSE %]
+  <td colspan="2"><input type="submit" value="Update Ticket"></td>
+[% END %]
 </tr>
 </table>
 
@@ -76,6 +95,8 @@ and an error message will be displayed.</p>
      from the cookie -->
 
 </form>
+
+<p><a href="[% base_url %]/logout/">Log out</a></p>
 
 </body>
 </html>

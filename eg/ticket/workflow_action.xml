@@ -49,6 +49,30 @@
       <field name="current_user"
              description="User working on the ticket"
              is_required="yes"/>
+      <field name="subject"
+             label="Subject"
+             description="Subject of issue"
+             is_required="yes"/>
+      <field name="description"
+             label="Description"
+             description="Description of issue"
+             is_required="yes" />
+      <field name="creator"
+             label="Creator"
+             description="Name of user who is creating the ticket"
+             is_required="yes"
+             source_class="App::User"/>
+      <field name="type"
+             label="Type"
+             description="Type of ticket"
+             is_required="yes"
+             source_list="Bug,Feature,Improvement,Task"/>
+      <field name="due_date"
+             label="Due Date"
+             description="Date ticket is due (format: yyyy-mm-dd hh:mm)"/>
+      <validator name="DateValidator">
+         <arg>$due_date</arg>
+      </validator>
    </action>
 
    <action name="close issue"
