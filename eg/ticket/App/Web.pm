@@ -281,6 +281,13 @@ sub process_template {
     my ( $self, $template_name ) = @_;
     $log->is_debug &&
         $log->debug( "Processing template '$template_name'..." );
+    my $ticket_data;
+    if ( my $wf = $self->_get_workflow ) {
+        if ( my $ticket_id = $wf->context->param( 'ticket_id' ) ) {
+            my $ticket = App::Ticket->fetch( $ticket_id );
+            $ticket_data = { %$ticket };
+        }
+    }
     my ( $content );
     my $t = $self->{template};
     my %template_params = (
@@ -288,6 +295,7 @@ sub process_template {
         dispatcher => $self,
         cgi        => $self->{cgi},
         %{ $self->param },
+        ticket_data => $ticket_data,
     );
 #    local $Data::Dumper::Indent = 1;
 #    $log->is_debug &&

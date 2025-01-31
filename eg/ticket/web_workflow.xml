@@ -41,6 +41,10 @@
            template="ticket_form.tmpl"/>
 
    <action-display
+           name="edit issue"
+           template="ticket_form.tmpl"/>
+
+   <action-display
            name="add comment"
            template="ticket_comment.tmpl"/>
 
