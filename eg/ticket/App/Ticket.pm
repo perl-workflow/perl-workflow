@@ -4,6 +4,7 @@ use strict;
 use parent qw( Class::Accessor );
 use vars qw($VERSION);
 use Data::Dumper      qw( Dumper );
+use DateTime;
 use DateTime::Format::Strptime;
 use Log::Any          qw( $log );
 use Workflow::Factory qw( FACTORY );
@@ -128,9 +129,10 @@ sub update {
     my $due_date = ( ref $self->due_date )
                      ? $self->due_date->strftime( '%Y-%m-%d' )
                      : undef;
+    my $last_update = DateTime->now->strftime( '%Y-%m-%d %H:%M' );
     my @values = ( $self->status,
                    $due_date,
-                   $self->last_update->strftime( '%Y-%m-%d %H:%M' ),
+                   $last_update,
                    $self->id );
 
     $log->debug( "Will use SQL\n$sql" );
