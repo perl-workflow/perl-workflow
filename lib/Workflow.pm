@@ -1338,29 +1338,6 @@ The additional dependencies required to run the example applications.
 
 =back
 
-=head1 INCOMPATIBILITIES
-
-=head2 XML::Simple
-
-CPAN testers reports however do demonstrate a problem with one of the
-dependencies of Workflow, namely L<XML::Simple>.
-
-The L<XML::Simple> makes use of L<Lib::XML::SAX> or L<XML::Parser>, the default.
-
-In addition L<XML::Parser> can make use of plugin parsers and some of these
-might not be able to parse the XML utilized in Workflow. This problem has been
-observed with L<XML::SAX::RTF>.
-
-The following diagnostic points to the problem:
-
-        No _parse_* routine defined on this driver (If it is a filter, remember to
-        set the Parent property. If you call the parse() method, make sure to set a
-        Source. You may want to call parse_uri, parse_string or parse_file instead.)
-
-Your L<XML::SAX> configuration is located in the file:
-
-        XML/SAX/ParserDetails.ini
-
 =head1 BUGS AND LIMITATIONS
 
 Known bugs and limitations can be seen in the Github issue tracker:
