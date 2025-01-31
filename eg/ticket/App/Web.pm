@@ -318,7 +318,7 @@ sub _init_templating {
 # INITIALIZATION
 
 sub init_logger {
-    my ( $log_file ) = @_;
+    my ( $class, $log_file ) = @_;
     $log_file ||= $DEFAULT_LOG_FILE;
     if ( -f $log_file ) {
         my $log_mod_time = (stat $log_file)[9];
