@@ -12,6 +12,8 @@ use Template;
 use Workflow::Factory     qw( FACTORY );
 use XML::Simple           qw( :strict );
 
+use App::User;
+
 $VERSION = '0.01';
 
 # Default logfile name; can change with arg to init_logger()
@@ -274,6 +276,7 @@ sub process_template {
     my ( $content );
     my $t = $self->{template};
     my %template_params = (
+        userlist => [ App::User->get_possible_values ],
         dispatcher => $self,
         cgi        => $self->{cgi},
         %{ $self->param },
