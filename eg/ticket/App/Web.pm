@@ -82,7 +82,7 @@ sub _create_cookies {
 
 sub param {
     my ( $self, $name, $value ) = @_;
-    if ( $name and $value ) {
+    if ( $name and defined $value ) {
         return $self->{params}{ $name } = $value;
     }
     elsif ( $name ) {
@@ -106,7 +106,7 @@ sub cookie_in {
 
 sub cookie_out {
     my ( $self, $name, $value ) = @_;
-    if ( $name and $value ) {
+    if ( $name and defined $value ) {
         $log->is_debug &&
             $log->debug( "Adding outbound cookie: '$name' = '$value'" );
         $self->{cookie_out}{ $name } = $value;
@@ -230,6 +230,14 @@ sub _action_login {
     else {
         $self->param( error_msg => "Please specify a login name I can use!" );
     }
+    return 'index.tmpl';
+}
+
+sub _action_logout {
+    my ( $self ) = @_;
+    $self->cookie_out( current_user => '' );
+    $self->cookie_out( workflow_id => '' );
+    $self->param( 'current_user' => '' );
     return 'index.tmpl';
 }
 
