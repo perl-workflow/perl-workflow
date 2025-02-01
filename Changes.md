@@ -1,5 +1,18 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.05 2025-02-01 bug fix release, update not required
+
+### Fixed
+
+- Workflow::Persister::DBI::ExtraData fails to return the extra
+  data retrieved, PR [#251](https://github.com/perl-workflow/perl-workflow/pull/251)
+- Logger reports 'CODE(0x...)' instead of actual error message, PR [#252](https://github.com/perl-workflow/perl-workflow/pull/252)
+- Documentation of incompatibilities no longer observed (removed), issue: [#248](https://github.com/perl-workflow/perl-workflow/issues/248)
+- Example web application not compatible with 2.0, issue: [#243](https://github.com/perl-workflow/perl-workflow/issues/243)
+- Example web application throwing errors, isse: [#244](https://github.com/perl-workflow/perl-workflow/issues/244)
+- Removed dead link from CONTRIBUTORS section
+- Links updated to reflect the new repository location, issue: [#242](https://github.com/perl-workflow/perl-workflow/issues/242)
+
 ## 2.04 2025-01-29 Feature and bug fix release, update not required
 
 ### Added
@@ -184,7 +197,7 @@ We are sorry about any inconvenience this might have caused
 
 ## 1.53 2021-04-09 Minor feature release, update not required
 
-- This release changes logging granularity: instead of using the Log::Log4perl root logger for all logging output, use the instance class for logging in object methods as recommended [in the Log4perl documentation](https://metacpan.org/pod/Log::Log4perl#Pitfalls-with-Categories). This change allows logging from workflow to be suppressed in your application by changing the logging level for the `Workflow` category by setting `log4perl.category.Workflow = OFF` in your logging configuration. Please note that if you created classes derived from Workflow, the logger will use those class names as categories. To suppress output entirely, those categories need their own logging configuration.  
+- This release changes logging granularity: instead of using the Log::Log4perl root logger for all logging output, use the instance class for logging in object methods as recommended [in the Log4perl documentation](https://metacpan.org/pod/Log::Log4perl#Pitfalls-with-Categories). This change allows logging from workflow to be suppressed in your application by changing the logging level for the `Workflow` category by setting `log4perl.category.Workflow = OFF` in your logging configuration. Please note that if you created classes derived from Workflow, the logger will use those class names as categories. To suppress output entirely, those categories need their own logging configuration.
   **NOTE** This change adds a `log()` accessor to the "Workflow::Base" class. If you implement your own `log()` accessor or method, please take care to make it return a valid logger instance before calling `SUPER::new()` so the logger is immediately available for logging. Please see PR: [#69](https://github.com/jonasbn/perl-workflow/pull/69) by @ehuelsmann
 
 - PR [#101](https://github.com/jonasbn/perl-workflow/pull/101) by @jonasbn, changing confusing logging statements regarding observers having been added when none specified
@@ -461,7 +474,7 @@ We are sorry about any inconvenience this might have caused
 - Bumped up version for Workflow::State to 1.14 considering patches from action_group and test_condition patches from Ivan Paponov implementing support for a group tag on actions
 
 - Addressing [RT:40750](http://rt.cpan.org/Ticket/Display.html?id=40750)
-  
+
   Removed VERSION file, this has now been obsoleted
 
   We are now resolving the version number for the distribution from Workflow.pm the main module, this mean a jump from 0.31 to 1.32, but it does mean that an installation can be traced back to a given distribution
@@ -554,7 +567,7 @@ We are sorry about any inconvenience this might have caused
 - Implemented conditional tests in `t/00_load.t` for SPOPS and UUID. These are conditional in their own tests, so this should of course be reflected in `t/00_load.t`
 
   This should address the [report on a failing test](http://www.nntp.perl.org/group/perl.cpan.testers/2007/07/msg527994.html)
-  
+
 - Added missing version number to Workflow::Persister (1.09), the PAUSE indexer complained over degrading version number, investigating consequences
 
   No apparent consequences

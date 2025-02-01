@@ -5,7 +5,7 @@ use strict;
 use v5.14.0;
 use parent qw( Workflow::Action );
 
-$Workflow::Action::Null::VERSION = '2.04';
+$Workflow::Action::Null::VERSION = '2.05';
 
 sub execute {
     my ($self) = @_;
@@ -24,7 +24,7 @@ Workflow::Action::Null - Workflow action for the terminally lazy
 
 =head1 VERSION
 
-This documentation describes version 2.04 of this package
+This documentation describes version 2.05 of this package
 
 =head1 SYNOPSIS
 
