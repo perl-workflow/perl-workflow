@@ -1493,8 +1493,7 @@ Tom Moertel E<lt>tmoertel@cpan.orgE<gt> gave me the idea for being
 able to attach event listeners (observers) to the process.
 
 Michael Roberts E<lt>michael@vivtek.comE<gt> graciously released the
-'Workflow' namespace on CPAN; check out his Workflow toolkit at
-L<http://www.vivtek.com/wftk/>.
+'Workflow' namespace on CPAN.
 
 Michael Schwern E<lt>schwern@pobox.orgE<gt> barked via RT about a
 dependency problem and CPAN naming issue.
