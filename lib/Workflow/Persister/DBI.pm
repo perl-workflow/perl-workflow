@@ -487,28 +487,26 @@ This documentation describes version 2.05 of this package
 
 =head1 SYNOPSIS
 
- <persister name="MainDatabase"
-            class="Workflow::Persister::DBI"
-            dsn="DBI:mysql:database=workflows"
-            user="wf"
-            password="mypass"/>
-
- <persister name="BackupDatabase"
-            class="Workflow::Persister::DBI"
-            dsn="DBI:Pg:dbname=workflows"
-            user="wf"
-            password="mypass"
-            date_format="%Y-%m-%d %H:%M"
-            autocommit="0"
-            workflow_table="wf"
-            workflow_sequence="wf_seq"
-            history_table="wf_history"
-            history_sequence="wf_history_seq"/>
-
- <persister name="OtherDatabase"
-            class="My::Persister::DBHFromElsewhere"
-            driver="mysql"
-            />
+ # persister.yaml
+ persister:
+ - name: MainDatabase
+   class: Workflow::Persister::DBI
+   dsn: DBI:mysql:database=workflows
+   user: wf
+   password: mypass
+ - name: BackupDatabase
+   class: Workflow::Persister::DBI
+   user: wf
+   password: mypass
+   date_format: '%Y-%m-%d %H:%M'
+   autocommit: 0
+   workflow_table: wf
+   workflow_sequence: wf_seq
+   history_table: wf_history
+   history_sequence: wf_history_seq
+ - name: OtherDatabase
+   class: My::Persester::DBHFromElsewhere
+   driver: mysql
 
 
 =head1 DESCRIPTION

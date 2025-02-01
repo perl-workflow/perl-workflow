@@ -342,23 +342,27 @@ This documentation describes version 2.05 of this package
 =head1 SYNOPSIS
 
  # This is an internal object...
- <workflow...>
-   <state name="Start">
-     <description>My state documentation</description> <!-- optional -->
-     <action ... resulting_state="Progress" />
-   </state>
-      ...
-   <state name="Progress" description="I am in progress">
-     <action ... >
-        <resulting_state return="0" state="Needs Affirmation" />
-        <resulting_state return="1" state="Approved" />
-        <resulting_state return="*" state="Needs More Info" />
-     </action>
-   </state>
-      ...
-   <state name="Approved" autorun="yes">
-     <action ... resulting_state="Completed" />
-      ...
+ state:
+ - name: Start
+   description: |-                                 # optional
+     My state documentation
+   action:
+   - ...
+     resulting_state: Progress
+ ...
+ - name: Progress
+   description: I am in progress
+   action:
+   - ...
+     resulting_state:
+       0: 'Needs Affirmation'
+       1: 'Approved'
+       *: 'Needs More Info'
+ - name: Approved
+   autorun: yes
+   action:
+   - ...
+     resulting_state: Completed
 
 =head1 DESCRIPTION
 
@@ -374,12 +378,13 @@ The resulting state is action-dependent. For instance, in the
 following example you can perform two actions from the state 'Ticket
 Created' -- 'add comment' and 'edit issue':
 
-  <state name="Ticket Created">
-     <action name="add comment"
-             resulting_state="NOCHANGE" />
-     <action name="edit issue"
-             resulting_state="Ticket In Progress" />
-   </state>
+ state:
+ - name: Ticket Created
+   action:
+   - name: add comment
+     resulting_state: NOCHANGE
+   - name: edit issue
+     resulting_state: Ticket In Progress
 
 If you execute 'add comment' the new state of the workflow will be the
 same ('NOCHANGE' is a special state). But if you execute 'edit issue'
@@ -389,13 +394,14 @@ You can also have multiple return states for a single action. The one
 chosen by the workflow system will depend on what the action
 returns. For instance we might have something like:
 
-  <state name="create user">
-     <action name="create">
-         <resulting_state return="admin"    state="Assign as Admin" />
-         <resulting_state return="helpdesk" state="Assign as Helpdesk" />
-         <resulting_state return="*"        state="Assign as Luser" />
-     </action>
-  </state>
+ state:
+ - name: create user
+   action:
+   - name: create
+     resulting_state:
+       admin: Assign as Admin
+       helpdesk: Assign as Helpdesk
+       *: Assign as Luser
 
 So if we execute 'create' the workflow will be in one of three states:
 'Assign as Admin' if the return value of the 'create' action is
@@ -409,13 +415,12 @@ first example under L</Resulting State>. The set of I<available> actions is
 a subset of all I<associated> actions: those actions for which none of the
 associated conditions fail their check.
 
-  <state name="create user">
-     <action name="create">
-         ... (resulting_states) ...
-         <condition name="can_create_users" />
-     </action>
-  </state>
-
+ state:
+ - name: create
+   resulting_state:
+     ... (resulting states) ...
+   condition:
+   - name: can_create_users
 
 
 =head2 Autorun State
@@ -437,14 +442,18 @@ workflow enters an autorun state, Workflow can't continue execution.
 If this is isn't a problem, a state may be marked with C<may_stop="yes">:
 
 
-   <state name="Approved" autorun="yes" may_stop="yes">
-     <action name="Archive" resulting_state="Completed" />
-        <condition name="allowed_automatic_archival" />
-     </action>
-  </state>
+ state:
+ - name: Approved
+   autorun: yes
+   may_stop: yes
+   action:
+   - name: Archive
+     resulting_state: Completed
+     condition:
+     - name: allowed_automatic_archival
 
 
-However, in case the state isn't marked C<may_stop="yes">, Workflow will
+However, in case the state isn't marked C<may_stop: yes>, Workflow will
 throw a C<workflow_error> indicating an autorun problem.
 
 

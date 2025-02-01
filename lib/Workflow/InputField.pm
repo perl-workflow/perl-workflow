@@ -131,14 +131,16 @@ This documentation describes version 2.05 of this package
 
  # Declare the fields needed by your action in the configuration...
 
- <action name="CreateUser">
-    <field name="username"
-           is_required="yes"
-           source_class="App::Field::ValidUsers" />
-    <field name="email"
-           is_required="yes" />
-    <field name="office"
-           source_list="Pittsburgh,Hong Kong,Moscow,Portland" />
+ action:
+ - name: CreateUser
+   field:
+   - name: username
+     is_required: yes
+     source_class: App::Field::ValidUsers
+   - name: email
+     is_required: yes
+   - name: office
+     source_list: Pittsburgh,Hong Kong,Moscow,Portland
  ...
 
 =head1 DESCRIPTION
@@ -189,17 +191,21 @@ derive your own input field class (see I<class> in L</"Properties">
 below). For example, suppose you need to add extra properties to all
 your fields like "index", "disabled", etc.
 
-In your actions definition XML file, you can just add them and the
+In your actions definition YAML file, you can just add them and the
 parser will pick them up. Pay close attention the custom InputField
 "class" property.
 
-  <actions>
-    <type>foo</type>
-    <action name="Bar"
-      class="your::action::class">
-      <field index="0" name="id" type="integer" disabled="yes"
-        is_required="yes" class="your::custom::inputfieldclass"/>
-    </action>
+  type: foo
+  action:
+  - name: Bar
+    class: your::action::class
+    field:
+    - name: id
+      index: '0'
+      type: integer
+      disabled: yes
+      is_required: yes
+      class: your::custom::inputfieldclass
 
 But you need to give them life by creating the accessors for these
 extra properties. Just derive your custom fields class like so:

@@ -73,9 +73,10 @@ This documentation describes version 2.05 of this package
 
 =head1 SYNOPSIS
 
- <persister name="MyPersister"
-            dsn="DBI:mysql:database=foo"
-            ...
+ persister:
+ - name: MyPersister
+   dsn: DBI:mysql:database=foo
+   ...
 
 =head1 DESCRIPTION
 

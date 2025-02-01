@@ -58,11 +58,11 @@ This documentation describes version 2.05 of this package
 
 =head1 SYNOPSIS
 
- <persister
-     name="MyPersister"
-     workflow_sequence="wf_seq"
-     history_sequence="wf_history_seq"
- ...
+ persister:
+ - name: MyPersister
+   workflow_sequence: wf_seq
+   history_sequence: wf_history_seq
+   ...
 
 =head1 DESCRIPTION
 

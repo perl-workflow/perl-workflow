@@ -67,29 +67,33 @@ This documentation describes version 2.05 of this package
 
  # Inline the enumeration...
 
- <action name="PlayGame">
-   <validator name="InEnumeratedType">
-      <value>Rock</value>
-      <value>Scissors</value>
-      <value>Paper</value>
-      <arg value="$play"/>
-   </validator>
- </action>
+ action:
+ - name: PlayGame
+   validator:
+   - name: InEnumeratedType
+     value:
+     - Rock
+     - Scissors
+     - Paper
+     arg:
+     - '$play'
 
  # Or declare it in the validator to be more readable...
- <validator name="RSP"
-            class="Validator::InEnumeratedType">
-      <value>Rock</value>
-      <value>Scissors</value>
-      <value>Paper</value>
- </validator>
+ validator:
+ - name: RSP
+   class: Workflow::Validator::InEnumeratedType
+   value:
+   - Rock
+   - Scissors
+   - Paper
 
  # ...and use it in your action
- <action name="PlayGame">
-    <validator name="RSP">
-       <arg value="$play"/>
-    </validator>
- </action>
+ action:
+ - name: PlayGame
+   validator:
+   - name: RSP
+     arg:
+     - '$play'
 
 =head1 DESCRIPTION
 
@@ -123,25 +127,29 @@ powerful piece of reflection.
 
 Onto the code. First we declare a field type of 'worker':
 
- <field type="worker"
-        class="MyApp::Field::Worker"/>
+ field:
+ - type: worker
+   class: MyApp::Field::Worker
 
 Next a validator of this enumerated type:
 
- <validator name="IsWorker"
-            class="MyApp::Validator::WorkerEnumeration"/>
+ validator:
+ - name: IsWorker
+   class: MyApp::Validator::WorkerEnumeration
 
 We then associate this field type with a field in the action and the
 validator to ensure the user selects a worker from the right pool:
 
- <action name="AssignTicket">
-    <field name="assignee"
-           type="worker"
-           is_required="yes"/>
-   ...
-   <validator name="IsWorker">
-       <arg value="$assignee"/>
-   </validator>
+ action:
+ - name: AssignTicket
+   field:
+   - name: assignee
+     type: worker
+     is_required: yes
+   validator:
+   - name: IsWorker
+     arg:
+     - '$assignee'
 
 Note that the name of the field and the name used in the validator are
 the same. This allows external applications to query the action for

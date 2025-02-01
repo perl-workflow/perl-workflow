@@ -114,14 +114,15 @@ This documentation describes version 2.05 of this package
 
 =head1 SYNOPSIS
 
- <persister name="MyPersister"
-            class="Workflow::Persister::DBI::ExtraData"
-            dsn="DBI:mysql:database=workflows"
-            user="wf"
-            password="mypass"
-            extra_table="workflow_ticket"
-            extra_data_field="ticket_id"
-            extra_context_key="ticket_id"/>
+ persister:
+ - name: MyPersister
+   class: Workflow::Persister::DBI::ExtraData
+   dsn: DBI:mysql:database=workflows
+   user: wf
+   password: mypass
+   extra_table: workflow_ticket
+   extra_data_field: ticket_id
+   extra_data_context_key: ticket_id
 
 =head1 DESCRIPTION
 
@@ -138,11 +139,11 @@ the 'workflow' table.
  # Specify a single field 'ticket_id' from the table 'workflow_ticket'
  # and store it in the context using the same key:
 
- <persister
-     ...
-     extra_table="workflow_ticket"
-     extra_data_field="ticket_id"
-     ...
+ persister:
+ - name: ...
+   extra_table: workflow_ticket
+   extra_data_field: ticket_id
+   ...
 
  # How you would use this:
  my $wf = FACTORY->fetch_workflow( 'Ticket', 55 );
@@ -152,12 +153,12 @@ the 'workflow' table.
  # Specify a single field 'ticket_id' from the table 'workflow_ticket'
  # and store it in the context using a different key
 
- <persister
-     ...
-     extra_table="workflow_ticket"
-     extra_data_field="ticket_id"
-     extra_context_key="THE_TICKET_ID"
-     ...
+ persister:
+ - name: ...
+   extra_table: workflow_ticket
+   extra_data_field: ticket_id
+   extra_context_key: THE_TICKET_ID
+   ...
 
  # How you would use this:
  my $wf = FACTORY->fetch_workflow( 'Ticket', 55 );
@@ -167,11 +168,11 @@ the 'workflow' table.
  # Specify multiple fields ('ticket_id', 'last_viewer',
  # 'last_view_date') to pull from the 'workflow_ticket' table:
 
- <persister
-     ...
-     extra_table="workflow_ticket"
-     extra_data_field="ticket_id,last_viewer,last_view_date"
-     ...
+ persister:
+ - name: ...
+   extra_table: workflow_ticket
+   extra_data_field: ticket_id,last_viewer,last_view_date
+   ...
 
  # How you would use this:
  my $wf = FACTORY->fetch_workflow( 'Ticket', 55 );
