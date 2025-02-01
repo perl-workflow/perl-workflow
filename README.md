@@ -8,7 +8,7 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 2.04 of Workflow
+This documentation describes version 2.05 of Workflow
 
 # SYNOPSIS
 
@@ -813,29 +813,6 @@ are currently supported by this distribution:
 
     The additional dependencies required to run the example applications.
 
-# INCOMPATIBILITIES
-
-## XML::Simple
-
-CPAN testers reports however do demonstrate a problem with one of the
-dependencies of Workflow, namely [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple).
-
-The [XML::Simple](https://metacpan.org/pod/XML%3A%3ASimple) makes use of [Lib::XML::SAX](https://metacpan.org/pod/Lib%3A%3AXML%3A%3ASAX) or [XML::Parser](https://metacpan.org/pod/XML%3A%3AParser), the default.
-
-In addition [XML::Parser](https://metacpan.org/pod/XML%3A%3AParser) can make use of plugin parsers and some of these
-might not be able to parse the XML utilized in Workflow. This problem has been
-observed with [XML::SAX::RTF](https://metacpan.org/pod/XML%3A%3ASAX%3A%3ARTF).
-
-The following diagnostic points to the problem:
-
-        No _parse_* routine defined on this driver (If it is a filter, remember to
-        set the Parent property. If you call the parse() method, make sure to set a
-        Source. You may want to call parse_uri, parse_string or parse_file instead.)
-
-Your [XML::SAX](https://metacpan.org/pod/XML%3A%3ASAX) configuration is located in the file:
-
-        XML/SAX/ParserDetails.ini
-
 # BUGS AND LIMITATIONS
 
 Known bugs and limitations can be seen in the Github issue tracker:
@@ -977,8 +954,7 @@ Tom Moertel <tmoertel@cpan.org> gave me the idea for being
 able to attach event listeners (observers) to the process.
 
 Michael Roberts <michael@vivtek.com> graciously released the
-'Workflow' namespace on CPAN; check out his Workflow toolkit at
-[http://www.vivtek.com/wftk/](http://www.vivtek.com/wftk/).
+'Workflow' namespace on CPAN.
 
 Michael Schwern <schwern@pobox.org> barked via RT about a
 dependency problem and CPAN naming issue.
