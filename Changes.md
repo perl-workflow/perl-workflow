@@ -1,5 +1,17 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.05 2025-02-01 bug fix release, update not required
+
+### Fixed
+
+- Workflow::Persister::DBI::ExtraData fails to return the extra
+  data retrieved
+- Logger reports 'CODE(0x...)' instead of actual error message
+- Documentation of incompatibilities no longer observed (removed)
+- Example web application not compatible with 2.0
+- Example web application throwing errors
+- Removed dead link from CONTRIBUTORS section
+
 ## 2.04 2025-01-29 Feature and bug fix release, update not required
 
 ### Added
