@@ -173,18 +173,22 @@ This documentation describes version 2.05 of this package
 
 =head1 SYNOPSIS
 
- # Configure the Action...
- <action name="CreateUser"
-         class="MyApp::Action::CreateUser">
-   <field name="username" is_required="yes"/>
-   <field name="email" is_required="yes"/>
-   <validator name="IsUniqueUser">
-       <arg>$username</arg>
-   </validator>
-   <validator name="IsValidEmail">
-       <arg>$email</arg>
-   </validator>
- </action>
+ # Configure the action... (in e.g., 'actions.yaml')
+ action:
+ - name: CreateUser
+   class: MyApp::Action::CreateUser
+   field:
+   - name: username
+     is_required: yes
+   - name: email
+     is_required: yes
+   validator:
+   - name: IsUniqueUser
+     arg:
+     - value: '$username'
+   - name: IsValidEmail
+     arg:
+     - value: '$email'
 
  # Define the action
 
@@ -245,15 +249,15 @@ You can specify a type in your actions configuration to associate that action
 with that workflow type. If you don't provide a type, the action is available
 to all types. For example:
 
-  <actions>
-    <type>Ticket</type>
-    <description>Actions for the Ticket workflow only.</description>
-    <action name="TIX_NEW"
-            group="some_action_group"
-            class="TestApp::Action::TicketCreate">
-       <description>My action description</description> <!-- optional -->
-       <!-- the 'group' attribute is optional -->
-  ...Addtional configuration...
+  type: Ticket                                          <-- here!
+  description: |-
+    Actions for the Ticket workflow only.
+  action:
+  - name: TIX_NEW
+    group: some_action_group                             # optional
+    class: TestApp::Action::TicketCreate
+    description: |-                                      # optional
+      My action description
 
 The type must match an existing workflow type or the action will never
 be called.
@@ -351,27 +355,33 @@ an example on how you easily do this by overriding new():
 
 1) Set the less changing properties in your action definition:
 
-  <actions>
-    <type>foo</type>
-    <action name="Browse"
-      type="menu_button" icon="list_icon"
-      class="actual::action::class">
-    </action>
+  type: foo
+  action:
+  - name: Browse
+    type: menu_button
+    icon: list_icon
+    class: actual::action::class
 
 2) Set the state dependant properties in the state definition:
 
- <state name="INITIAL">
-   <description>
-     Manage Manufaturers
-   </description>
-   <action index="0" name="Browse" resulting_state="BROWSE">
-     <condition name="roleis_oem_mgmt"/>
-   </action>
-   <action index="1" name="Create" resulting_state="CREATE">
-     <condition name="roleis_oem_mgmt"/>
-   </action>
-   <action index="2" name="Back" resulting_state="CLOSED"/>
- </state>
+ state:
+ - name: INITIAL
+   description: |-
+     Manage Manufacturers
+   action:
+   - name: Browse
+     index: '0'
+     resulting_state: BROWSE
+     condition:
+     - name: roleis_oem_mgmt
+   - name: Create
+     index: '1'
+     resulting_state: CREATE
+     condition:
+     - name: roleis_oem_mgmt
+   - name: Back
+     index: '2'
+     resulting_state: CLOSED
 
 3) Craft a custom action base class
 

@@ -306,15 +306,15 @@ workflow pieces:
       description   $
       persister     $
       initial_state $
-      observer    \@
+      observer      \@
           sub           $
           class         $
-      state       \@
+      state         \@
           name          $
           description   $
           action        \@
               name            $
-              resulting_state $
+              resulting_state $ -or- \%
               condition       \@
                   name              $
 
@@ -348,6 +348,11 @@ multiple 'action' declarations
 
 each 'action' declaration holds 'name' and 'resulting_state' keys and
 may hold a 'condition' key with one or more named conditions
+
+The value of the 'resulting_state' key may either be a string (the name
+of the single next state) or a hash mapping return values of the action
+to next states. The C< * > (asterisk) is the catch-all value mapping all
+unspecified values to a single next state.
 
 =item *
 
