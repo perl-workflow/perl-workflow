@@ -119,6 +119,37 @@ sub get_action_fields {
     return $action->fields;
 }
 
+sub _get_autorun_action_name {
+    my ( $self, $wf_state ) = @_;
+
+    my $action_name = '';
+    $self->log->is_info
+        && $self->log->info(
+        "State '", $wf_state->state, "' marked to be run ",
+        "automatically; executing that state/action..."
+        );
+
+    if ( $wf_state->may_stop() ) {
+        try {
+            $action_name = $wf_state->get_autorun_action_name($self);
+        }
+        catch { }
+    }
+    else {
+        $action_name = $wf_state->get_autorun_action_name($self);
+    }
+
+    if ( $action_name ) {
+        $self->log->is_debug
+            && $self->log->debug(
+            "Found action '$action_name' to execute in autorun state ",
+            $wf_state->state
+            );
+    }
+
+    return $action_name;
+}
+
 sub execute_action {
     my ( $self, $action_name, $action_args ) = @_;
 
@@ -133,29 +164,7 @@ sub execute_action {
             last;
         }
         else {
-            $self->log->is_info
-                && $self->log->info(
-                "State '", $wf_state->state, "' marked to be run ",
-                "automatically; executing that state/action..."
-                );
-
-            if ( $wf_state->may_stop() ) {
-                try {
-                    $action_name = $wf_state->get_autorun_action_name($self);
-                }
-                catch { }
-            }
-            else {
-                $action_name = $wf_state->get_autorun_action_name($self);
-            }
-
-            if ( $action_name ) {
-                $self->log->is_debug
-                    && $self->log->debug(
-                    "Found action '$action_name' to execute in autorun state ",
-                    $wf_state->state
-                    );
-            }
+            $action_name = $self->_get_autorun_action_name( $wf_state );
         }
     }
 
