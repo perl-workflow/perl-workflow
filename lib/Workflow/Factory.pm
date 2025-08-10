@@ -346,6 +346,10 @@ sub create_workflow {
     $self->log->info( "Created history object ok" );
     $persister->commit_transaction;
 
+    $self->associate_observers_with_workflow($wf);
+    $self->_associate_transaction_observer_with_workflow($wf, $persister);
+    $wf->notify_observers('create');
+
     my $state = $wf->_get_workflow_state();
     if ( $state->autorun ) {
         my $state_name = $state->state;
@@ -354,10 +358,6 @@ sub create_workflow {
         my $action_name = $wf->_get_autorun_action_name( $state );
         $wf->execute_action($action_name);
     }
-
-    $self->associate_observers_with_workflow($wf);
-    $self->_associate_transaction_observer_with_workflow($wf, $persister);
-    $wf->notify_observers('create');
 
     return $wf;
 }
