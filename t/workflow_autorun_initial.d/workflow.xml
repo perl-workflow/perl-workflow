@@ -1,0 +1,13 @@
+<workflow>
+ <type>AutorunInitial</type>
+ <description>This is the workflow for testing autorunning of the INITIAL state</description>
+ <persister>TestPersister</persister>
+ <state name="INITIAL" autorun="yes">
+     <description>This is the state the workflow enters when
+        instantiated. It's like a 'state zero' but since we're
+        using names rather than IDs we cannot assume</description>
+     <action name="RUN" resulting_state="FINAL"/>
+ </state>
+
+ <state name="FINAL" />
+</workflow>
