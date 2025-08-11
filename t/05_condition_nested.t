@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use lib qw(t);
+use lib 't/lib';
 
 use Test::More;
 use Log::Any qw( $log );

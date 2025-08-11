@@ -76,10 +76,20 @@ sub init_factory {
     require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     $factory->add_config_from_file(
-        workflow  => [ 't/workflow.xml', 't/workflow_type.xml', 't/workflow_evaluate_condition.xml' ],
-        action    => [ 't/workflow_action.xml', 't/workflow_action_type.xml' ],
-        condition => [ 't/workflow_condition.xml', 't/workflow_condition_type.xml'],
-        validator => "t/workflow_validator.xml"
+        workflow  => [
+            't/workflow.d/workflow.xml',
+            't/workflow.d/workflow_evaluate_condition.xml',
+            't/workflow_type.d/workflow_type.xml'
+        ],
+        action    => [
+            't/workflow.d/workflow_action.xml',
+            't/workflow_type.d/workflow_action_type.xml'
+        ],
+        condition => [
+            't/workflow.d/workflow_condition.xml',
+            't/workflow_type.d/workflow_condition_type.xml'
+        ],
+        validator => "t/workflow.d/workflow_validator.xml"
     );
     return $factory;
 }
@@ -90,10 +100,19 @@ sub init_factory_perl_config {
     require Workflow::Factory;
     my $factory = Workflow::Factory->instance;
     $factory->add_config_from_file(
-        workflow  => [ 't/workflow.perl', 't/workflow_type.perl' ],
-        action    => [ 't/workflow_action.perl', 't/workflow_action_type.perl' ],
-        condition => [ 't/workflow_condition.perl', 't/workflow_condition_type.perl' ],
-        validator => 't/workflow_validator.perl'
+        workflow  => [
+            't/workflow.d/workflow.perl',
+            't/workflow_type.d/workflow_type.perl'
+        ],
+        action    => [
+            't/workflow.d/workflow_action.perl',
+            't/workflow_type.d/workflow_action_type.perl'
+        ],
+        condition => [
+            't/workflow.d/workflow_condition.perl',
+            't/workflow_type.d/workflow_condition_type.perl'
+        ],
+        validator => 't/workflow.d/workflow_validator.perl'
     );
     return $factory;
 }

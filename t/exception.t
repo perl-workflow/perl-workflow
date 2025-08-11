@@ -2,7 +2,7 @@
 
 use warnings;
 use strict;
-use lib qw(t);
+use lib 't/lib';
 use Test::More;
 use Test::Exception;
 use English qw(-no_match_vars);

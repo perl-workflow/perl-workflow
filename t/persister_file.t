@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(t);
+use lib 't/lib';
 use TestUtil;
 use File::Path            qw( rmtree );
 use File::Spec::Functions qw( catdir curdir rel2abs );

@@ -2,7 +2,7 @@ use strict;
 use warnings;
 no warnings 'once';
 
-use lib qw(t);
+use lib 't/lib';
 use Test::More;
 use TestUtil;
 use Workflow::Condition;

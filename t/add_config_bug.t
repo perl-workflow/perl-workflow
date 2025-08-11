@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 use strict;
-use lib qw(t);
+use lib 't/lib';
 use TestUtil;
 use constant NUM_TESTS => 4;
 use Test::More;
