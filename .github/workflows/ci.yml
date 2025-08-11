@@ -81,7 +81,7 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --with-all
+        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --show-build-log-on-failure --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
 
@@ -101,7 +101,7 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --with-all
+        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --show-build-log-on-failure --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(sysctl -n hw.logicalcpu) --shuffle t
 
@@ -123,6 +123,6 @@ jobs:
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
-        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --with-all
+        run: cd build && cpm install --global Carton::Snapshot && cpm install --global --verbose --show-build-log-on-failure --with-all
       - name: Run tests
         run: cd build && prove --timer --lib --recurse --jobs $(nproc) --shuffle t
