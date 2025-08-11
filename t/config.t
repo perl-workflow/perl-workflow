@@ -69,9 +69,9 @@ ok($parser->parse(
 ok($parser = Workflow::Config->new( 'perl' ));
 isa_ok($parser, 'Workflow::Config');
 
-dies_ok { $parser->parse( 'workflow', 't/workflow_errorprone.perl' ) };
+dies_ok { $parser->parse( 'workflow', 't/workflow.d/workflow_errorprone.perl' ) };
 dies_ok { $parser->parse( 'workflow', 't/no_such_file.perl' ) };
-dies_ok { $parser->parse( '123_NOSUCHTYPE', 't/workflow_errorprone.perl' ) };
+dies_ok { $parser->parse( '123_NOSUCHTYPE', 't/workflow.d/workflow_errorprone.perl' ) };
 
 dies_ok { Workflow::Config->parse() };
 
@@ -81,7 +81,7 @@ is(scalar(@config), 0, 'forgotten file, asserting length of array returned');
 my %config_perl = (
     'workflow' => [
         't/workflow.d/workflow.perl',
-        't/workflow_type_alternate_initial.perl',
+        't/config.d/workflow_type_alternate_initial.perl',
         't/workflow_type.d/workflow_type.perl'
     ],
     'action'    => ['t/workflow.d/workflow_action.perl'],
