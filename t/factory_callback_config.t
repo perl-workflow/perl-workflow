@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 
 use strict;
-use lib qw(t);
+use lib 't/lib';
 use TestUtil;
 use Test::More tests => 7;
 use Test::Exception;
@@ -19,16 +19,19 @@ dies_ok { $wf = $factory->create_workflow( 'CallbackTest' ) }
 
 can_ok( $factory, 'config_callback' );
 
-lives_ok { $factory->config_callback( sub {
-                                        my $type = shift;
-                                        if ($type eq 'CallbackTest') {
-                                          return { workflow => 't/workflow_callback.xml',
-                                                   action => 't/workflow_action_callback.xml',
-                                                   condition => 't/workflow_condition_callback.xml' };
-                                        }
-                                        return {};
-                                      } ) }
-  'Setting callback function succeeds';
+lives_ok {
+    $factory->config_callback(
+        sub {
+            my $type = shift;
+            if ($type eq 'CallbackTest') {
+                return {
+                    workflow  => 't/workflow_callback.d/workflow_callback.xml',
+                    action    => 't/workflow_callback.d/workflow_action_callback.xml',
+                    condition => 't/workflow_callback.d/workflow_condition_callback.xml' };
+            }
+            return {};
+        } )
+} 'Setting callback function succeeds';
 
 dies_ok { $wf = $factory->create_workflow( 'CallbackTestBogus' ) }
   'Attempt to create unknown workflow still dies';
