@@ -1,5 +1,14 @@
 # Revision history for the Workflow Perl Distribution
 
+
+## 2.06 TO BE RELEASED
+
+### Fixed
+
+- Autorun triggered upon workflow creation invoking non-existent method, PR [#258](https://github.com/perl-workflow/perl-workflow/pull/258)
+- Observers not notified of events triggered by autorun initial actions, issue [#259](https://github.com/perl-workflow/perl-workflow/pull/259)
+- Remove duplicated POD section from YAML config module, PR [#255](https://github.com/perl-workflow/perl-workflow/pull/255)
+
 ## 2.05 2025-02-01 bug fix release, update not required
 
 ### Fixed
