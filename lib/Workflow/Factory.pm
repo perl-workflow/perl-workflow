@@ -351,7 +351,8 @@ sub create_workflow {
         my $state_name = $state->state;
         $self->log->info( "State '$state_name' marked to be run ",
                           "automatically; executing that state/action..." );
-        $wf->_auto_execute_state($state);
+        my $action_name = $wf->_get_autorun_action_name( $state );
+        $wf->execute_action($action_name);
     }
 
     $self->associate_observers_with_workflow($wf);
