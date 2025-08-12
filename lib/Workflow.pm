@@ -150,23 +150,30 @@ sub _get_autorun_action_name {
     return $action_name;
 }
 
+sub _maybe_autorun_state {
+    my ( $self, $wf_state, $running ) = @_;
+
+    my $run_notified = $running;
+    while ( $wf_state->autorun
+            and my $action_name = $self->_get_autorun_action_name( $wf_state ) ) {
+        $self->notify_observers( 'startup' )
+            if not $running;
+
+        $wf_state = $self->_execute_single_action( $action_name, undef, !!1 );
+        $run_notified = !!1;
+    }
+
+    $self->notify_observers( 'finalize' )
+        if not $running and $run_notified;
+}
+
 sub execute_action {
     my ( $self, $action_name, $action_args ) = @_;
 
     $self->notify_observers( 'startup' );
 
-    while ( $action_name ) {
-        my $wf_state =
-            $self->_execute_single_action( $action_name, $action_args );
-        $action_args = undef;
-
-        if ( not $wf_state->autorun ) {
-            last;
-        }
-        else {
-            $action_name = $self->_get_autorun_action_name( $wf_state );
-        }
-    }
+    my $wf_state = $self->_execute_single_action( $action_name, $action_args );
+    $self->_maybe_autorun_state( $wf_state, !!1 );
 
     $self->notify_observers( 'finalize' );
 
@@ -300,7 +307,7 @@ sub set {
 
 
 sub _execute_single_action {
-    my ( $self, $action_name, $action_args ) = @_;
+    my ( $self, $action_name, $action_args, $is_autorun ) = @_;
 
     # This checks the conditions behind the scenes, so there's no
     # explicit 'check conditions' step here
@@ -347,10 +354,22 @@ sub _execute_single_action {
         $self->log->is_info
             && $self->log->info("Saved workflow with possible new state ok");
 
-        $self->notify_observers( 'completed', { state => $old_state, action => $action_name });
+        $self->notify_observers(
+            'completed',
+            {
+                state => $old_state,
+                action => $action_name,
+                autorun => $is_autorun
+            });
 
         if ( $old_state ne $new_state ) {
-            $self->notify_observers( 'state change', { from => $old_state, action => $action_name, to => $new_state } );
+            $self->notify_observers(
+                'state change',
+                {
+                    from => $old_state,
+                    action => $action_name,
+                    to => $new_state
+                });
         }
 
         return $self->_get_workflow_state;

@@ -497,20 +497,18 @@ context remains in a valid state; upon successful validation, the `$args`
 are merged into the context and the action is executed as described above.
 
 After the action has been successfully executed and the workflow saved
-we issue a 'execute' observation with the old state, action name and
-an autorun flag as additional parameters.
-So if you wanted to write an observer you could create a
-method with the signature:
+we issue a 'completed' observable event with an event arguments hash as
+additional parameter. So if you wanted to write an observer you
+could create a method with the signature:
 
     sub update {
-        my ( $class, $workflow, $action, $old_state, $action_name )
-           = @_;
-        if ( $action eq 'execute' ) { .... }
+        my ( $class, $workflow, $event, $event_args ) = @_;
+        if ( event eq 'completed' ) { .... }
     }
 
-We also issue a 'change state' observation if the executed action
-resulted in a new state. See ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable) above for how
-we use and register observers.
+We also issue a 'change state' observable event if the executed action
+resulted in a new state. See ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable)
+above for how we use and register observers.
 
 Returns: new state of workflow
 

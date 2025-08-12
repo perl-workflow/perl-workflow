@@ -351,13 +351,7 @@ sub create_workflow {
     $wf->notify_observers('create');
 
     my $state = $wf->_get_workflow_state();
-    if ( $state->autorun ) {
-        my $state_name = $state->state;
-        $self->log->info( "State '$state_name' marked to be run ",
-                          "automatically; executing that state/action..." );
-        my $action_name = $wf->_get_autorun_action_name( $state );
-        $wf->execute_action($action_name);
-    }
+    $wf->_maybe_autorun_state( $state );
 
     return $wf;
 }
