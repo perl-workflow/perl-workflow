@@ -29,7 +29,7 @@ is_deeply( \@AutorunInitialObserver::events,
             ['startup'],
             ['run'],
             ['save'],
-            ['completed', {'action' => 'RUN', 'state' => 'INITIAL'}],
+            ['completed', {'action' => 'RUN', 'state' => 'INITIAL', 'autorun' => !!1}],
             ['state change', {'from' => 'INITIAL', 'to' => 'FINAL', 'action' => 'RUN'}],
             ['finalize']
            ],
