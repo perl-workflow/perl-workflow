@@ -159,12 +159,14 @@ sub _maybe_autorun_state {
         $self->notify_observers( 'startup' )
             if not $running;
 
-        $wf_state = $self->_execute_single_action( $action_name, undef, !!1 );
+        $wf_state = $self->_execute_single_action( $action_name, !!1 );
         $run_notified = !!1;
     }
 
     $self->notify_observers( 'finalize' )
         if not $running and $run_notified;
+
+    return;
 }
 
 sub execute_action {
@@ -172,7 +174,7 @@ sub execute_action {
 
     $self->notify_observers( 'startup' );
 
-    my $wf_state = $self->_execute_single_action( $action_name, $action_args );
+    my $wf_state = $self->_execute_single_action( $action_name, !!0, $action_args );
     $self->_maybe_autorun_state( $wf_state, !!1 );
 
     $self->notify_observers( 'finalize' );
@@ -307,7 +309,7 @@ sub set {
 
 
 sub _execute_single_action {
-    my ( $self, $action_name, $action_args, $is_autorun ) = @_;
+    my ( $self, $action_name, $is_autorun, $action_args ) = @_;
 
     # This checks the conditions behind the scenes, so there's no
     # explicit 'check conditions' step here
