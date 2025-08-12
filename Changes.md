@@ -8,6 +8,8 @@
 - Autorun triggered upon workflow creation invoking non-existent method, PR [#258](https://github.com/perl-workflow/perl-workflow/pull/258)
 - Observers not notified of events triggered by autorun initial actions, issue [#259](https://github.com/perl-workflow/perl-workflow/pull/259)
 - Remove duplicated POD section from YAML config module, PR [#255](https://github.com/perl-workflow/perl-workflow/pull/255)
+- Missing 'autorun' value in 'completed' event, issue [#257](https://github.com/perl-workflow/perl-workflow/pull/257)
+- Clarified documentation and release notes on event changes between 1.62 and 2.x, issue [#257](https://github.com/perl-workflow/perl-workflow/pull/257)
 
 ## 2.05 2025-02-01 bug fix release, update not required
 
