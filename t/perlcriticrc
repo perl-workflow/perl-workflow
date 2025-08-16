@@ -20,7 +20,15 @@ allowed_values = 0 1 2 3 4 5 6
 # revisited with a major release, since it would break backwards compatibility, the recommeded 
 # solution is bare return
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::Subroutines::ProhibitExplicitReturnUndef
-[Subroutines::ProhibitExplicitReturnUndef]
+#
+# The reverse policy also exists:
+#
+# https://metacpan.org/pod/Perl::Critic::Policy::Community::EmptyReturn
+#
+# vetted by a wide audience of Perl community; see the metacpan url and the commit where this
+# comment was added for why this policy should not be enabled in general
+#
+[-Subroutines::ProhibitExplicitReturnUndef]
 
 # The violater of this is an overwrite for Class::Accessor
 # REF: https://metacpan.org/pod/Perl::Critic::Policy::NamingConventions::ProhibitAmbiguousNames
