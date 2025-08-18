@@ -66,48 +66,65 @@ I<false>, LazyOR also returns I<false>.
 
 =head1 SYNOPSIS
 
-In condition.xml:
+In condition.yaml:
 
-    <condition name="cond1" ... />
-    <condition name="cond2" ... />
-    <condition name="cond3" ... />
+  condition:
+  - name: cond1
+    ...
+  - name: cond2
+    ...
+  - name cond3
+    ...
+  - name: check_prereqs
+    class: Workflow::Condition::LazyOR
+    param:
+    - name: condition
+      value: cond1
+    - name: condition
+      value: cond2
+    - name: condition
+      value: cond3
 
-    <condition name="check_prereqs" class="Workflow::Condition::LazyOR">
-        <param name="condition" value="cond1" />
-        <param name="condition" value="cond2" />
-        <param name="condition" value="cond3" />
-    </condition>
+In workflow.yaml:
 
-In workflow.xml:
-
-    <state name="CHECK_PREREQS" autorun="yes">
-        <action name="null_1" resulting_state="HAVE_PREREQS">
-            <condition name="check_prereqs" />
-        </action>
-        <action name="null_2" resulting_state="FAILURE">
-            <condition name="!check_prereqs" />
-        </action>
-    </state>
+  state:
+  - name: CHECK_PREREQS
+    autorun: yes
+    action:
+    - name: null_1
+      resulting_state: HAVE_PREREQS
+      condition:
+      - name: check_prereqs
+    - name: null_2
+      resulting_state: FAILURE
+      condition:
+      - name: !check_prereqs
 
 =cut
 
 =head1 PARAMETERS
 
 The following parameters may be configured in the C<param> entity of the
-condition in the XML configuration:
+condition in the YAML configuration:
 
 =head2 condition, conditionN
 
 The condition parameter may be specified as either a list of repeating
 entries B<or> with a unique integer appended to the I<condition> string:
 
-    <param name="condition" value="first_condition_to_test" />
-    <param name="condition" value="second_condition_to_test" />
+  param:
+  - name: condition
+    value: first_condition_to_test
+  - name: condition
+    value: second_condition_to_test
 
 B<or>
 
-    <param name="condition1" value="first_condition_to_test" />
-    <param name="condition2" value="second_condition_to_test" />
+  param:
+  - name: condition1
+    value: first_condition_to_test
+  - name: condition2
+    value: second_condition_to_test
 
 =head1 COPYRIGHT
 

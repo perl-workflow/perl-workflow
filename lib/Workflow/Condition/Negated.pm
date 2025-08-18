@@ -55,21 +55,27 @@ while false becomes true).
 
 =head1 SYNOPSIS
 
-In condition.xml:
+In condition.yaml:
 
-    <condition name="check_approvals" class="...">
-    </condition>
+  condition:
+  - name: check_approvals
+    class: ...
 
-In workflow.xml:
+In workflow.yaml:
 
-    <state name="CHECK_APPROVALS" autorun="yes">
-        <action name="null_1" resulting_state="APPROVED">
-            <condition name="check_approvals" />
-        </action>
-        <action name="null_2" resulting_state="REJECTED">
-            <condition name="!check_approvals" />
-        </action>
-    </state>
+
+  state:
+  - name: CHECK_APPROVALS
+    autorun: yes
+    condition:
+    - name: null_1
+      resulting_state: APPROVED
+      condition:
+      - name: check_approvals
+    - name: null_2
+      resulting_state: REJECTED
+      condition:
+      - name: !check_approvals
 
 =cut
 
