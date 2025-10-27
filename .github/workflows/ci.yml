@@ -70,7 +70,7 @@ jobs:
 
     steps:
       - name: Download build results
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build_results
           path: build
@@ -92,7 +92,7 @@ jobs:
 
     steps:
       - name: Download build results
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build_results
           path: build
@@ -112,7 +112,7 @@ jobs:
 
     steps:
       - name: Download build results
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: build_results
           path: build
