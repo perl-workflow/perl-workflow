@@ -1,5 +1,10 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.07 2025-11-08 bug fix release, update not required
+
+### Fixed
+
+- Issue: [#266](https://github.com/perl-workflow/perl-workflow/issues/266) discovered by Erik Huelsmann. A regression introduced with 2.X releases. Fixed via PR: [#267](https://github.com/perl-workflow/perl-workflow/pull/267) also by Erik Huelsmann
 
 ## 2.06 2025-08-12 bug fix release, update not required
 

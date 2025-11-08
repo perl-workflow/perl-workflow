@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use v5.14.0;
 
-our $VERSION = '2.06';
+our $VERSION = '2.07';
 
 use parent qw( Workflow::Condition );
 
@@ -42,7 +42,7 @@ Workflow::Condition::Negated - Negate workflow condition result
 
 =head1 VERSION
 
-This documentation describes version 2.06 of this package
+This documentation describes version 2.07 of this package
 
 =head1 DESCRIPTION
 
