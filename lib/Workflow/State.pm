@@ -512,7 +512,7 @@ Returns name of action to be used for autorunning the state.
 
 =head3 clear_condition_cache ( )
 
-Deprecated, kept for 2.07 compatibility.
+Deprecated, kept for 2.06 compatibility.
 
 Used to empties the condition result cache for a given state.
 
