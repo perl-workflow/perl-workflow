@@ -6,7 +6,7 @@ use v5.14.0;
 
 use parent qw( Workflow::Condition );
 
-$Workflow::Condition::HasUser::VERSION = '2.06';
+$Workflow::Condition::HasUser::VERSION = '2.07';
 
 my $DEFAULT_USER_KEY = 'current_user';
 
@@ -42,7 +42,7 @@ Workflow::Condition::HasUser - Condition to determine if a user is available
 
 =head1 VERSION
 
-This documentation describes version 2.06 of this package
+This documentation describes version 2.07 of this package
 
 =head1 SYNOPSIS
 
