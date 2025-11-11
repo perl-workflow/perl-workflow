@@ -33,7 +33,7 @@ sub initialize_db {
 
   #we are called from the examples directory
   if ($workflow_base =~ m[/eg/ticket]) {
-    $workflow_base =~ s|\A(.*)/eg\/ticket$|$1|;
+    $workflow_base =~ s|\A(.*)/eg/ticket$|$1|;
   } else {
     $workflow_base =~ s|\A(.*)\/t$|$1|;
   }
