@@ -35,7 +35,7 @@ sub initialize_db {
   if ($workflow_base =~ m[/eg/ticket]) {
     $workflow_base =~ s|\A(.*)/eg/ticket$|$1|;
   } else {
-    $workflow_base =~ s|\A(.*)\/t$|$1|;
+    $workflow_base =~ s|\A(.*)/t$|$1|;
   }
 
     my $path = catdir( cwd(), 'db' );
