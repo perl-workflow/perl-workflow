@@ -7,7 +7,7 @@ use parent qw( Workflow::Persister::DBI );
 use Workflow::Exception qw( configuration_error persist_error );
 use Syntax::Keyword::Try;
 
-$Workflow::Persister::DBI::ExtraData::VERSION = '2.07';
+$Workflow::Persister::DBI::ExtraData::VERSION = '2.08';
 
 my @FIELDS = qw( table data_field context_key );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -110,7 +110,7 @@ Workflow::Persister::DBI::ExtraData - Fetch extra data with each workflow and pu
 
 =head1 VERSION
 
-This documentation describes version 2.07 of this package
+This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
