@@ -1,5 +1,12 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.08 2025-11-12 bug fix release, update not required
+
+### Fixed
+
+- Issue: [#271](https://github.com/perl-workflow/perl-workflow/issues/271) reported by [@andk](https://github.com/andk). Fixed via PR: [#272](https://github.com/perl-workflow/perl-workflow/pull/272) by @ehuelsmann
+  This issue was discovered by the CPAN smoke testers, the report can be found on [CPAN Testers](https://www.cpantesters.org/cpan/report/f9442cc8-bccd-11f0-b805-8614eb2737ae)
+
 ## 2.07 2025-11-08 bug fix release, update not required
 
 ### Fixed
