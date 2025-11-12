@@ -7,7 +7,7 @@ use parent qw( Class::Factory );
 use Data::Dumper qw( Dumper );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::VERSION = '2.07';
+$Workflow::Config::VERSION = '2.08';
 
 # Map the valid type to the top-level XML tag or data
 # structure to look for.
@@ -117,7 +117,7 @@ Workflow::Config - Parse configuration files for the workflow components
 
 =head1 VERSION
 
-This documentation describes version 2.07 of this package
+This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 

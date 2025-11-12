@@ -8,7 +8,7 @@ use DateTime::Format::Strptime;
 use Workflow::Exception qw( configuration_error validation_error );
 use Scalar::Util qw( blessed );
 
-$Workflow::Validator::MatchesDateFormat::VERSION = '2.07';
+$Workflow::Validator::MatchesDateFormat::VERSION = '2.08';
 
 __PACKAGE__->mk_accessors('formatter');
 
@@ -61,7 +61,7 @@ Workflow::Validator::MatchesDateFormat - Ensure a stringified date matches a giv
 
 =head1 VERSION
 
-This documentation describes version 2.07 of this package
+This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 

@@ -9,7 +9,7 @@ use Syntax::Keyword::Try;
 
 use constant DEFAULT_ID_LENGTH => 8;
 
-$Workflow::Persister::VERSION = '2.07';
+$Workflow::Persister::VERSION = '2.08';
 
 my @FIELDS = qw( name class
     use_random use_uuid
@@ -136,7 +136,7 @@ Workflow::Persister - Base class for workflow persistence
 
 =head1 VERSION
 
-This documentation describes version 2.07 of this package
+This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 

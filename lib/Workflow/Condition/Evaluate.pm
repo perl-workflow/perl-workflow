@@ -7,7 +7,7 @@ use parent qw( Workflow::Condition );
 use Safe;
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Condition::Evaluate::VERSION = '2.07';
+$Workflow::Condition::Evaluate::VERSION = '2.08';
 
 my @FIELDS = qw( test );
 __PACKAGE__->mk_accessors(@FIELDS);
@@ -64,7 +64,7 @@ Workflow::Condition::Evaluate - Inline condition that evaluates perl code for tr
 
 =head1 VERSION
 
-This documentation describes version 2.07 of this package
+This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
