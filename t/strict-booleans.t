@@ -3,7 +3,8 @@
 use strict;
 use lib 't/lib';
 use File::Path            qw( rmtree );
-use File::Spec::Functions qw( catdir curdir rel2abs );
+use File::Spec::Functions qw( curdir );
+use File::Temp            qw( tempdir );
 use Test::More  tests => 12;
 use Test::Exception;
 
@@ -13,11 +14,7 @@ use Workflow::Persister::File;
 
 $Workflow::Condition::STRICT_BOOLEANS = 0;
 
-
-my $persist_dir = catdir( rel2abs( curdir() ), 'tmp_file' );
-unless ( -d $persist_dir ) {
-    mkdir( $persist_dir, 0777 );
-}
+my $persist_dir = tempdir( 'tmp_test_XXXX', DIR => curdir(), CLEANUP => 1 );
 
 
 FACTORY()->add_config(
