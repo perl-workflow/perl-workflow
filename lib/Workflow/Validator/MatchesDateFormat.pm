@@ -65,12 +65,15 @@ This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
- <action name="CreateNews">
-   <validator name="DateFormat">
-      <param name="date_format" value="%Y-%m-%d"/>
-      <arg value="$news_post_date"/>
-   </validator>
- </action>
+ action:
+ - name: CreateNews
+   validator:
+   - name: DateFormat
+     param:
+     - name: date_format
+       value: '%Y-%m-%d'
+     arg:
+     - '$news_post_date'
 
 =head1 DESCRIPTION
 

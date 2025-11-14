@@ -40,13 +40,15 @@ This documentation describes version 2.08 of this package
 =head1 SYNOPSIS
 
  # Validator is created automatically when you mark a field as
- # 'is_required=yes' in the action, such as:
+ # 'is_required: yes' in the action, such as:
 
- <action name="CreateUser">
-    <field name="username"
-           is_required="yes"
-           source_class="App::Fied::ValidUsers"/>
-    ...
+ action:
+ - name: CreateUser
+   field:
+   - name: username
+     is_required: yes
+     source_class: App::Field::ValidUsers
+   ...
 
 =head1 DESCRIPTION
 
@@ -56,13 +58,14 @@ before the associated action is executed.
 
 for instance, given the configuration:
 
- <action name="CreateUser">
-    <field name="username"
-           is_required="yes"/>
-    <field name="email"
-           is_required="yes"/>
-    <field name="office">
- </action>
+ action:
+ - name: CreateUser
+   field:
+   - name: username
+     is_required: yes
+   - name: email
+     is_required: yes
+   - name: office
 
 An action executed with such a context:
 
@@ -77,14 +80,16 @@ Would fail with a message:
 
 You normally do not need to configure this validator yourself. It gets
 generated automatically when the Action configration is read
-in. However, if you do need to create it yourself:
+in based on the 'is_required: yes' attribute. However, if you do need
+to create it yourself:
 
- <action name='Foo'>
-    <validator name="HasRequiredField">
-       <arg value="fieldOne"/>
-       <arg value="field_two"/>
-    </validator>
- <?action>
+ action:
+ - name: Foo
+   validator:
+   - name: HasRequiredField
+     arg:
+     - fieldOne
+     - field_two
 
 Note that we do not try to match the value in the context against a
 set of known values or algorithm, just see if the value is defined --

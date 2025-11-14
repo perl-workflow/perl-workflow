@@ -36,10 +36,10 @@ This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
- <persister
-     name="MyPersister"
-     use_uuid="yes"
- ...
+ persister:
+ - name: MyPersister
+   use_uuid: yes
+   ...
 
 =head1 DESCRIPTION
 

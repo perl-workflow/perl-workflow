@@ -195,9 +195,10 @@ This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
- <persister name="MainPersister"
-            class="Workflow::Persister::File"
-            path="/home/workflow/storage"/>
+ persister:
+ - name: MainPersister
+   class: Workflow::Persister::File
+   path: /home/workflow/storage
 
 =head1 DESCRIPTION
 

@@ -48,20 +48,22 @@ This documentation describes version 2.08 of this package
 
  # First setup the condition
 
- <conditions>
-   <condition name="HasUser"
-              class="Workflow::Condition::HasUser">
-     <param name="user_key" value="CurrentUser" />
-   </condition>
-   ...
+ condition:
+ - name: HasUser
+   class: Workflow::Condition::HasUser
+   param:
+   - name: user_key
+     value: CurrentUser
 
  # Next, attach it to an action
 
- <state name="INITIAL">
-   <action name="create issue"
-           resulting_state="CREATED">
-       <condition name="CurrentUser" />
-   </action>
+ state:
+ - name: INITIAL
+   action:
+   - name: 'create issue'
+     resulting_state: CREATED
+     condition:
+     - name: CurrentUser
    ...
 
  # Whenever you fetch available actions from state 'INITIAL' you must

@@ -28,13 +28,17 @@ This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
- # in workflow.xml...
- <state name="some state">
-   <action name="null" />
-   ...
+ # in workflow.yaml...
+ state:
+   name: 'some state'
+   action:
+   - name: 'null'
+ ...
 
- # in workflow_action.xml...
- <action name="null" class="Workflow::Action::Null" />
+ # in workflow_action.yaml...
+ action:
+ - name: 'null'
+   class: Workflow::Action::Null
 
 =head1 DESCRIPTION
 
@@ -43,14 +47,18 @@ modules out there, it does nothing with a purpose! For instance, you
 might want some poor slobs to have some action verified but the elite
 masters can skip the work entirely. So you can do:
 
-  <state name="checking" autorun="yes">
-     <action name="verify" resulting_state="verified">
-         <condition name="isPoorSlob" />
-     </action>
-     <action name="null" resulting_state="verified">
-         <condition name="isEliteMaster" />
-     </action>
-  </state>
+  state:
+  - name: checking
+    autorun: yes
+    action:
+    - name: verify
+      resulting_state: verified
+      condition:
+      - name: isPoorSlob
+    - name: 'null'
+      resulting_state: verified
+      condition:
+      - name: isEliteMaster
 
 =head1 OBJECT METHODS
 

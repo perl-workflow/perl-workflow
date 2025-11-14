@@ -47,10 +47,10 @@ This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
- <persister
-     name="MyPersister"
-     id_length="16"
- ...
+ persister:
+ - name: MyPersister
+   id_length: 16
+   ...
 
 =head1 DESCRIPTION
 

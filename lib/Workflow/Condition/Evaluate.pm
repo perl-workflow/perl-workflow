@@ -68,9 +68,12 @@ This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
- <state name="foo">
-     <action name="foo action">
-         <condition test="$context->{foo} =~ /^Pita chips$/" />
+ state:
+ - name: foo
+   action:
+   - name: 'foo action'
+     condition:
+     - test: "$context->{foo} =~ /^Pita chips$/"
 
 =head1 DESCRIPTION
 
@@ -80,15 +83,17 @@ specifying a condition class. We differentiate by the 'test' attribute
 
 While it's easy to abuse something like this with:
 
- <condition>
-   <test><![CDATA[
-     if ( $context->{foo} =~ /^Pita (chips|snacks|bread)$/" ) {
-          return $context->{bar} eq 'hummus';
-     }
-     else { ... }
-     ]]>
-   </test>
- </condition>
+
+ state:
+ - name: foo
+   action:
+   - name: 'foo action'
+     condition:
+     - test: |-
+       if ( $context->{foo} =~ /^Pita (chips|snacks|bread)$/" ) {
+            return $context->{bar} eq 'hummus';
+       }
+       else { ... }
 
 It should provide a good balance.
 
@@ -109,9 +114,12 @@ We use L<Safe> to provide a restricted compartment in which we
 evaluate the text. This should prevent any sneaky bastards from doing
 something like:
 
- <state...>
-     <action...>
-         <condition test="system( 'rm -rf /' )" />
+ state:
+ ...
+ - action:
+   ...
+   - condition:
+     - test: "system( 'rm -rf /' )"
 
 The text has access to one variable, for the moment:
 

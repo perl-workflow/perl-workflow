@@ -44,10 +44,20 @@ my %XML_OPTIONS = (
 );
 
 my $XML_REQUIRED = 0;
+my $warned = 0;
 
 sub parse {
     my ( $self, $type, @items ) = @_;
 
+    unless ($warned) {
+        warn $log->warning(
+            'WARNING: The use of XML configuration is deprecated; it\'s '
+            . 'based on XML::Simple, which itself is deprecated since 2012. '
+            . "Please use YAML instead.\n" );
+
+        # warn once
+        $warned = 1;
+    }
     $self->_check_config_type($type);
     my @config_items = Workflow::Config::_expand_refs(@items);
     return () unless ( scalar @config_items );
@@ -128,9 +138,17 @@ Implementation of configuration parser for XML files/data; requires
 L<XML::Simple> to be installed. See L<Workflow::Config> for C<parse()>
 description.
 
-=head2 METHODS
+=head2 Status of this module
 
-=head3 parse ( $type, @items )
+The use of XML configuration is deprecated and slated for removal in
+Workflow 3.0. Please use L<Workflow::Config::YAML> for YAML-based
+configuration instead, or write your own XML configuration module;
+see L<Workflow::Config/Creating Your Own Parser> for an explanation
+of how.
+
+=head1 METHODS
+
+=head2 parse ( $type, @items )
 
 This method parses the configuration provided it is in XML format.
 

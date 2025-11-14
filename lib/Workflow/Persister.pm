@@ -140,23 +140,26 @@ This documentation describes version 2.08 of this package
 
 =head1 SYNOPSIS
 
- # Associate a workflow with a persister
- <workflow type="Ticket"
-           persister="MainDatabase">
+ # Associate a workflow with a persister in workflow.yaml
+ type: Ticket
+ persister: MainDatabase
+ state:
  ...
 
- # Declare a persister
- <persister name="MainDatabase"
-            class="Workflow::Persister::DBI"
-            driver="MySQL"
-            dsn="DBI:mysql:database=workflows"
-            user="wf"
-            password="mypass"/>
+ # Declare a persister in persister.yaml
+ persister:
+ - name: MainDatabase
+   class: Workflow::Persister::DBI
+   driver: MySQL
+   dsn: DBI:mysql:database=workflows
+   user: wf
+   password: mypass
 
- # Declare a separate persister
- <persister name="FileSystem"
-            class="Workflow::Persister::File"
-            path="/path/to/my/workflow"/>
+ # Declare a separate persister in other_persister.yaml
+ persister:
+ - name: FileSystem
+   class: Workflow::Persister::File
+   path: /path/to/my/workflow
 
 =head1 DESCRIPTION
 
