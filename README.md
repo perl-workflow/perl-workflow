@@ -8,93 +8,111 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 2.08 of Workflow
+This documentation describes version 2.09 of Workflow
 
 # SYNOPSIS
 
     use Workflow::Factory qw( FACTORY );
 
     # Defines a workflow of type 'myworkflow'
-    my $workflow_conf  = 'workflow.xml';
+    my $workflow_conf  = 'workflow.yaml';
 
-    # contents of 'workflow.xml'
+    # contents of 'workflow.yaml'
+    type: myworkflow
+    time_zone: local                                       # optional
+    description: |-                                        # optional
+       This is my workflow.
+    history_class: My::Workflow::History                   # optional
+    state:
+    - name: INITIAL
+      action:
+      - name: "upload file"
+        resulting_state: uploaded
+    - name: uploaded
+      autorun: yes
+      action:
+      - name: "verify file"
+        resulting_state: "verified file"
+        condition:
+        - test: "$context->{user} ne 'CWINTERS'"
+      - name: "null"
+        resulting_state: annotated
+        condition:
+        - test: "$context->{user} eq 'CWINTERS'"
+    - name: "verified file"
+      action:
+      - name: annotate
+        condition:
+        - name: can_annotate
+      - name: "null"
+        condition:
+        - name: "!can_annotate"
+    - name: annotated
+      autorun: yes
+      may_stop: yes
+      action:
+      - name: "null"
+        resulting_state: finished
+        condition:
+        - name: completed
+    - name: completed
 
-    <workflow>
-        <type>myworkflow</type>
-        <time_zone>local</time_zone>                         <!-- optional -->
-        <description>This is my workflow.</description>      <!-- optional -->
-        <history_class>My::Workflow::History</history_class> <!-- optional -->
+    # end of workflow.yaml
 
-        <state name="INITIAL">
-            <action name="upload file" resulting_state="uploaded" />
-        </state>
-        <state name="uploaded" autorun="yes">
-            <action name="verify file" resulting_state="verified file">
-                 <!-- everyone other than 'CWINTERS' must verify -->
-                 <condition test="$context->{user} ne 'CWINTERS'" />
-            </action>
-            <action name="null" resulting_state="annotated">
-                 <condition test="$context->{user} eq 'CWINTERS'" />
-            </action>
-        </state>
-        <state name="verified file">
-            <action name="annotate">
-                <condition name="can_annotate" />
-            </action>
-            <action name="null">
-                <condition name="!can_annotate" />
-            </action>
-        </state>
-        <state name="annotated" autorun="yes" may_stop="yes">
-            <action name="null" resulting_state="finished">
-               <condition name="completed" />
-            </action>
-        </state>
-        <state name="finished" />
-    </workflow>
 
     # Defines actions available to the workflow
-    my $action_conf    = 'action.xml';
+    my $action_conf    = 'action.yaml';
 
-    # contents of 'action.xml'
+    # contents of 'action.yaml'
 
-    <actions>
-        <action name="upload file" class="MyApp::Action::Upload">
-            <field name="path" label="File Path"
-                   description="Path to file" is_required="yes" />
-        </action>
+    action:
+    - name: "upload file"
+      class: MyApp::Action::Upload
+      field:
+      - name: path
+        label: "File Path"
+        is_required: yes
+        description: |-
+          Path to file
+    - name: "verify file"
+      class: MyApp::Action::Verify
+      validator:
+      - name: filesize_cap
+        value: "$file_size"
+    - name: annotate
+      class: MyApp::Action::Annotate
+    - name: "null"
+      class: Workflow::Action::Null
 
-        <action name="verify file" class="MyApp::Action::Verify">
-            <validator name="filesize_cap">
-                <arg>$file_size</arg>
-            </validator>
-        </action>
+    # end of action.yaml
 
-        <action name="annotate"    class="MyApp::Action::Annotate" />
-
-        <action name="null"        class="Workflow::Action::Null" />
-    </actions>
 
     # Defines conditions available to the workflow
-    my $condition_conf = 'condition.xml';
+    my $condition_conf = 'condition.yaml';
 
-    # contents of 'condition.xml'
+    # contents of 'condition.yaml'
 
-    <conditions>
-        <condition name="can_annotate"
-                   class="MyApp::Condition::CanAnnotate" />
-    </conditions>
+    condition:
+    - name: can_annotate
+      class: MyApp::Condition::CanAnnotate
+
+    # end of condition.yaml
+
 
     # Defines validators available to the actions
-    my $validator_conf = 'validator.xml';
+    my $validator_conf = 'validator.yaml';
 
-    # contents of 'validator.xml'
+    # contents of 'validator.yaml'
 
-    <validators>
-        <validator name="filesize_cap" class="MyApp::Validator::FileSizeCap">
-            <param name="max_size" value="20M" />
-        </validator>
-    </validators>
+    validator:
+    - name: filesize_cap
+      class: MyApp::Validator::FileSizeCap
+      param:
+      - name: max_size
+        value: 20M
+
+    # end of 'validator.yaml'
+
 
     # Stock the factory with the configurations; we can add more later if
     # we want
