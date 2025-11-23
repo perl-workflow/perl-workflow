@@ -1,5 +1,12 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.09 2025-11-23 maintenance release, update not required
+
+- Deprecation notice of use of XML configuration files, issue [#125](https://github.com/perl-workflow/perl-workflow/issue/125) and deprecation notices implementation by @ehuelsmann via PR [#256](https://github.com/perl-workflow/perl-workflow/pull/256).
+  - YAML configuration files are now the preferred format for configuration of Workflow instances. The XML implementation was based on [XML::Simple](https://metacpan.org/pod/XML::Simple), which itself has been discouraged for use for several years. The distribution still supports XML configuration files, but this support will be removed in a future unscheduled major release.
+
+- Improvements to test suite, PR [#275](https://github.com/perl-workflow/perl-workflow/pull/275) by @ehuelsmann. This is a follow up on release 2.08, since we spotted the issue in the tests running as part of the CI pipeline on GitHub
+
 ## 2.08 2025-11-12 bug fix release, update not required
 
 ### Fixed
