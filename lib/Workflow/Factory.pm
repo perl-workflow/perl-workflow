@@ -321,7 +321,7 @@ sub create_workflow {
         $wf_config, $self->{_workflow_state}{$wf_type}, $self );
 
     if ($context and not blessed $context) {
-        $context = Worfklow::Context->new( %{ $context } );
+        $context = Workflow::Context->new( %{ $context } );
     }
     elsif (not $context) {
         $context = Workflow::Context->new;
