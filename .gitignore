@@ -29,3 +29,5 @@ local/
 eg/ticket/db/
 eg/ticket/workflow.log
 .carmel
+build
+.claude/settings.local.json
