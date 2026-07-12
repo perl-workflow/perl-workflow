@@ -10,7 +10,7 @@
 
 - CI: added zizmor workflow audit and hardened GitHub Actions security
 - Bumped `actions/checkout`, `actions/upload-artifact`, `actions/download-artifact` to their latest major versions
-- Added `carmel` directory to `.gitignore`
+- Added `.carmel` directory to `.gitignore`
 
 ## 2.09 2025-11-23 maintenance release, update not required
 
