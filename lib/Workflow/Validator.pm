@@ -5,7 +5,7 @@ use strict;
 use v5.14.0;
 use parent qw( Workflow::Base );
 
-$Workflow::Validator::VERSION = '2.09';
+$Workflow::Validator::VERSION = '2.10';
 
 my @FIELDS = qw( description name );
 __PACKAGE__->mk_accessors(@FIELDS);

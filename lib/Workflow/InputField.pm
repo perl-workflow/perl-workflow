@@ -9,7 +9,7 @@ use Module::Runtime qw( require_module );
 use Workflow::Exception qw( configuration_error );
 use Syntax::Keyword::Try;
 
-$Workflow::Action::InputField::VERSION = '2.09';
+$Workflow::Action::InputField::VERSION = '2.10';
 
 my @PROPS = qw( name label description type requirement
     source_class source_list class );

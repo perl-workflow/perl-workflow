@@ -9,7 +9,7 @@ use Workflow::Exception qw( configuration_error );
 use Carp qw(croak);
 use Syntax::Keyword::Try;
 
-$Workflow::Config::YAML::VERSION = '2.09';
+$Workflow::Config::YAML::VERSION = '2.10';
 
 my $YAML_REQUIRED = 0;
 

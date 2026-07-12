@@ -6,7 +6,7 @@ use v5.14.0;
 use parent qw( Class::Accessor );
 use DateTime;
 
-$Workflow::History::VERSION = '2.09';
+$Workflow::History::VERSION = '2.10';
 
 my @FIELDS
     = qw( id workflow_id action description date user state time_zone );

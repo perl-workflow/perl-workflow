@@ -12,7 +12,7 @@ use Scalar::Util 'blessed';
 use Syntax::Keyword::Try;
 use Module::Runtime qw( require_module );
 
-$Workflow::Factory::VERSION = '2.09';
+$Workflow::Factory::VERSION = '2.10';
 
 # Extra action attribute validation is off by default for compatibility.
 our $VALIDATE_ACTION_CONFIG = 0;

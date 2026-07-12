@@ -5,7 +5,7 @@ use strict;
 use v5.14.0;
 use parent qw( Workflow::Action );
 
-$Workflow::Action::Null::VERSION = '2.09';
+$Workflow::Action::Null::VERSION = '2.10';
 
 sub execute {
     my ($self) = @_;

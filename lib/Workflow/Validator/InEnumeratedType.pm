@@ -6,7 +6,7 @@ use v5.14.0;
 use parent qw( Workflow::Validator );
 use Workflow::Exception qw( configuration_error validation_error );
 
-$Workflow::Validator::InEnumeratedType::VERSION = '2.09';
+$Workflow::Validator::InEnumeratedType::VERSION = '2.10';
 
 sub init {
     my ( $self, $params ) = @_;

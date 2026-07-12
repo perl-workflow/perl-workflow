@@ -4,7 +4,7 @@ use warnings;
 use strict;
 use v5.14.0;
 
-our $VERSION = '2.09';
+our $VERSION = '2.10';
 
 use parent qw( Workflow::Condition );
 

@@ -5,7 +5,7 @@ use strict;
 use v5.14.0;
 use Data::UUID;
 
-$Workflow::Persister::UUID::VERSION = '2.09';
+$Workflow::Persister::UUID::VERSION = '2.10';
 
 sub new {
     my ( $class, $params ) = @_;

@@ -8,7 +8,7 @@ use DateTime::Format::Strptime;
 use Workflow::Exception qw( configuration_error validation_error );
 use Scalar::Util qw( blessed );
 
-$Workflow::Validator::MatchesDateFormat::VERSION = '2.09';
+$Workflow::Validator::MatchesDateFormat::VERSION = '2.10';
 
 __PACKAGE__->mk_accessors('formatter');
 

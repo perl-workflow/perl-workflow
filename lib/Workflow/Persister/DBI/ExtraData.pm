@@ -7,7 +7,7 @@ use parent qw( Workflow::Persister::DBI );
 use Workflow::Exception qw( configuration_error persist_error );
 use Syntax::Keyword::Try;
 
-$Workflow::Persister::DBI::ExtraData::VERSION = '2.09';
+$Workflow::Persister::DBI::ExtraData::VERSION = '2.10';
 
 my @FIELDS = qw( table data_field context_key );
 __PACKAGE__->mk_accessors(@FIELDS);

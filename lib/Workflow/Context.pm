@@ -5,7 +5,7 @@ use strict;
 use v5.14.0;
 use parent qw( Workflow::Base );
 
-$Workflow::Context::VERSION = '2.09';
+$Workflow::Context::VERSION = '2.10';
 
 
 sub init {

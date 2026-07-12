@@ -6,7 +6,7 @@ use v5.14.0;
 use parent qw( Class::Accessor );
 use Log::Any;
 
-$Workflow::Base::VERSION = '2.09';
+$Workflow::Base::VERSION = '2.10';
 
 sub new {
     my ( $class, @params ) = @_;

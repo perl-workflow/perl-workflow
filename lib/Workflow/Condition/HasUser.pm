@@ -6,7 +6,7 @@ use v5.14.0;
 
 use parent qw( Workflow::Condition );
 
-$Workflow::Condition::HasUser::VERSION = '2.09';
+$Workflow::Condition::HasUser::VERSION = '2.10';
 
 my $DEFAULT_USER_KEY = 'current_user';
 

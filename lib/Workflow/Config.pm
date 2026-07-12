@@ -7,7 +7,7 @@ use parent qw( Class::Factory );
 use Data::Dumper qw( Dumper );
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Config::VERSION = '2.09';
+$Workflow::Config::VERSION = '2.10';
 
 # Map the valid type to the top-level XML tag or data
 # structure to look for.

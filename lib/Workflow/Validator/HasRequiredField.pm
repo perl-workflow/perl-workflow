@@ -6,7 +6,7 @@ use v5.14.0;
 use parent qw( Workflow::Validator );
 use Workflow::Exception qw( validation_error );
 
-$Workflow::Validator::HasRequiredField::VERSION = '2.09';
+$Workflow::Validator::HasRequiredField::VERSION = '2.10';
 
 sub validate {
     my ( $self, $wf, @required_fields ) = @_;
