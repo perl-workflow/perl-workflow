@@ -1,5 +1,17 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.10 2026-07-12 bug fix release, update recommended
+
+### Fixed
+
+- Typo `Worfklow::Context` in `Workflow::Factory::create_workflow` caused a runtime failure whenever a non-blessed context hashref was passed in. Issue [#285](https://github.com/perl-workflow/perl-workflow/issues/285), fixed via PR [#286](https://github.com/perl-workflow/perl-workflow/pull/286) by @ehuelsmann
+
+### Other
+
+- CI: added zizmor workflow audit and hardened GitHub Actions security
+- Bumped `actions/checkout`, `actions/upload-artifact`, `actions/download-artifact` to their latest major versions
+- Added `.carmel` directory to `.gitignore`
+
 ## 2.09 2025-11-23 maintenance release, update not required
 
 - Deprecation notice of use of XML configuration files, issue [#125](https://github.com/perl-workflow/perl-workflow/issue/125) and deprecation notices implementation by @ehuelsmann via PR [#256](https://github.com/perl-workflow/perl-workflow/pull/256).
