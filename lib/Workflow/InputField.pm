@@ -125,7 +125,7 @@ Workflow::InputField - Metadata about information required by an Action
 
 =head1 VERSION
 
-This documentation describes version 2.09 of this package
+This documentation describes version 2.10 of this package
 
 =head1 SYNOPSIS
 

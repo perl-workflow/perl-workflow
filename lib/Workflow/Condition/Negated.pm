@@ -42,7 +42,7 @@ Workflow::Condition::Negated - Negate workflow condition result
 
 =head1 VERSION
 
-This documentation describes version 2.09 of this package
+This documentation describes version 2.10 of this package
 
 =head1 DESCRIPTION
 

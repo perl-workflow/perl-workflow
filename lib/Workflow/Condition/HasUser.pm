@@ -42,7 +42,7 @@ Workflow::Condition::HasUser - Condition to determine if a user is available
 
 =head1 VERSION
 
-This documentation describes version 2.09 of this package
+This documentation describes version 2.10 of this package
 
 =head1 SYNOPSIS
 

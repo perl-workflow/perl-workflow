@@ -5,7 +5,7 @@ use strict;
 
 use parent qw(Workflow::Condition::Result);
 
-$Workflow::Condition::IsTrue = '2.09';
+$Workflow::Condition::IsTrue = '2.10';
 
 1;
 
@@ -19,7 +19,7 @@ Workflow::Condition::IsTrue - helper class for true conditions
 
 =head1 VERSION
 
-This documentation describes version 2.09 of this package
+This documentation describes version 2.10 of this package
 
 =head1 SYNOPSIS
 

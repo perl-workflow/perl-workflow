@@ -98,7 +98,7 @@ Workflow::Condition - Evaluate a condition depending on the workflow state and e
 
 =head1 VERSION
 
-This documentation describes version 2.09 of this package
+This documentation describes version 2.10 of this package
 
 =head1 SYNOPSIS
 
