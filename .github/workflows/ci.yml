@@ -33,7 +33,7 @@ jobs:
         run: |
           echo AUTHOR_NAME="$(git log -1 ${GITHUB_REF} --pretty='%aN')" >> $GITHUB_ENV
           echo AUTHOR_EMAIL="$(git log -1 ${GITHUB_REF} --pretty='%aE')" >> $GITHUB_ENV
-      - uses: shogo82148/actions-setup-perl@a198315ec4e9244f206879ea7b63078003aec8a6 # v1
+      - uses: shogo82148/actions-setup-perl@3d3cb73ca65d657a809d97eab324d4e4f140bf5e # v1
       - name: Log perl version
         run: perl -V
       - name: Install Dist::Zilla & Devel::Cover::Report::Coveralls
@@ -79,7 +79,7 @@ jobs:
           name: build_results
           path: build
       - name: Setup Perl
-        uses: shogo82148/actions-setup-perl@a198315ec4e9244f206879ea7b63078003aec8a6 # v1
+        uses: shogo82148/actions-setup-perl@3d3cb73ca65d657a809d97eab324d4e4f140bf5e # v1
         with:
           perl-version: ${{ matrix.perl }}
       - name: Log perl information
@@ -101,7 +101,7 @@ jobs:
           name: build_results
           path: build
       - name: Setup Perl
-        uses: shogo82148/actions-setup-perl@a198315ec4e9244f206879ea7b63078003aec8a6 # v1
+        uses: shogo82148/actions-setup-perl@3d3cb73ca65d657a809d97eab324d4e4f140bf5e # v1
       - name: Log perl information
         run: perl -V
       - name: Install dependencies
@@ -121,7 +121,7 @@ jobs:
           name: build_results
           path: build
       - name: Setup Perl
-        uses: shogo82148/actions-setup-perl@a198315ec4e9244f206879ea7b63078003aec8a6 # v1
+        uses: shogo82148/actions-setup-perl@3d3cb73ca65d657a809d97eab324d4e4f140bf5e # v1
         with:
           distribution: strawberry
       - name: Log perl information
