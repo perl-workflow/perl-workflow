@@ -7,7 +7,7 @@ use parent qw( Workflow::Condition );
 use Safe;
 use Workflow::Exception qw( configuration_error );
 
-$Workflow::Condition::Evaluate::VERSION = '2.10';
+$Workflow::Condition::Evaluate::VERSION = '2.11';
 
 my @FIELDS = qw( test );
 __PACKAGE__->mk_accessors(@FIELDS);

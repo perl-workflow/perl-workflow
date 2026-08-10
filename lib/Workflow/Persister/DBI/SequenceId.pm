@@ -9,7 +9,7 @@ use Log::Any;
 use Workflow::Exception qw( persist_error );
 use Syntax::Keyword::Try;
 
-$Workflow::Persister::DBI::SequenceId::VERSION = '2.10';
+$Workflow::Persister::DBI::SequenceId::VERSION = '2.11';
 
 my @FIELDS = qw( log sequence_name sequence_select );
 __PACKAGE__->mk_accessors(@FIELDS);

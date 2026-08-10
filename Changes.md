@@ -1,5 +1,11 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.11 2026-08-10 bug fix release, update recommended
+
+### Fixed
+
+- Release tarball duplicated the whole distribution under `build/` (a leftover local `dzil build --in build` output directory was never excluded via `MANIFEST.SKIP`, so `GatherDir` picked it up and nested a second copy of `lib/`, `t/`, etc. inside the tarball). Issue [#288](https://github.com/perl-workflow/perl-workflow/issues/288) reported by @eseyman, fixed via PR [#293](https://github.com/perl-workflow/perl-workflow/pull/293)
+
 ## 2.10 2026-07-12 bug fix release, update recommended
 
 ### Fixed
