@@ -12,7 +12,7 @@ use Workflow::Persister::RandomId;
 use File::Slurp qw(slurp);
 use Syntax::Keyword::Try;
 
-$Workflow::Persister::File::VERSION = '2.10';
+$Workflow::Persister::File::VERSION = '2.11';
 
 my @FIELDS = qw( path );
 __PACKAGE__->mk_accessors(@FIELDS);

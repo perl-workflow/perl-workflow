@@ -12,7 +12,7 @@ use Workflow::Condition::IsFalse;
 use Workflow::Condition::IsTrue;
 
 $Workflow::Condition::CACHE_RESULTS = 1;
-$Workflow::Condition::VERSION = '2.10';
+$Workflow::Condition::VERSION = '2.11';
 
 $Workflow::Condition::STRICT_BOOLEANS = 1;
 
