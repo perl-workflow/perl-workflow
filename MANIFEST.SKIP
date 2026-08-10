@@ -81,6 +81,10 @@
 \bbuild.com$
 ^MANIFEST\.SKIP
 
+# Avoid the local dzil build output directory (see CLAUDE.md: `dzil build --in build`);
+# left uncleaned, GatherDir picks it up and duplicates the whole dist inside itself (GH #288)
+^build/
+
 # Avoid archives of perl distribution
 -[\d\.\_]+\.tar
 -[\d\.\_]+\.tar\.gz
