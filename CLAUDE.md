@@ -38,6 +38,9 @@ cd build && AUTHOR_TESTING=1 EXTENDED_TESTING=1 RELEASE_TESTING=1 prove --timer 
 perlcritic --profile t/perlcriticrc lib/
 ```
 
+- Before a real release build, remove any stray `build/` or `Workflow-X.XX/` directory left from prior local builds — `GatherDir` ignores `.gitignore` and will duplicate the whole dist into the tarball if one is present (see issue #288, `MANIFEST.SKIP`'s `^build/` rule).
+- Land changes via PR, even version bumps and the maintainer's own fixes — this repo doesn't push directly to `master` (see merge-commit history).
+
 Without a full `dzil build`, you can still run tests directly from the repo root if deps are installed locally:
 
 ```bash
@@ -113,6 +116,6 @@ Persisters are swappable backends. The DBI persister stores workflow + history r
 - `.editorconfig` is present — respect it (spaces, line endings, etc.).
 - All modules require `use strict; use warnings; use v5.14.0;`.
 - Error handling uses `Syntax::Keyword::Try` (`try/catch`) rather than bare `eval`.
-- Version strings are maintained in each module (`$Workflow::VERSION`, `$Workflow::Factory::VERSION`, etc.) and must be kept in sync; `dzil` reads the version from the main `Workflow.pm` via `[VersionFromMainModule]`. Also update the prose version number in `lib/Workflow.pm`'s `=head1 VERSION` POD section — it's not a `$VERSION` string so `grep VERSION = ` won't catch it.
+- Version strings live in *two* places per module: the `$VERSION` scalar AND a `=head1 VERSION` POD line ("This documentation describes version X.XX of this package") — both must be bumped across all of `lib/`. `dzil` only reads `lib/Workflow.pm`'s scalar via `[VersionFromMainModule]`; nothing enforces the rest. Irregular files a naive search misses: `Exception.pm` (extra padding spaces before `=`), `Condition::{IsTrue,IsFalse,Result}.pm` (assign the bare package name, no `::VERSION` suffix — a pre-existing quirk, don't fix in passing). Verify with `grep -rn "OLD_VERSION" lib/` — must return nothing.
 - `dzil build` regenerates root `README.md` from POD via `[MarkdownInRoot]` — expect and commit this diff alongside version bumps.
 - `Changes.md` follows CPAN changelog conventions and must be updated for releases.
