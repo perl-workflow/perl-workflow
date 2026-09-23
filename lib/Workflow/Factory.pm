@@ -79,9 +79,7 @@ sub _initialize_instance {
     unless ( $INSTANCES{$class} ) {
         $log->debug( "Creating empty instance of '$class' factory for ",
                      "singleton use" );
-        my $instance = bless {} => $class;
-        $instance->init();
-        $INSTANCES{$class} = $instance;
+        $INSTANCES{$class} = bless {} => $class;
     }
     return $INSTANCES{$class};
 }
