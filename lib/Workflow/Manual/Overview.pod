@@ -1,6 +1,8 @@
 =pod
 
-=head1 Basics of Workflows
+=head1 Name
+
+Workflow::Manual::Overview - Basics of Workflows
 
 =over
 

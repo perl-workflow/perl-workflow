@@ -54,7 +54,7 @@ __END__
 
 =head1 NAME
 
-Workflow::Condition::LazyAND
+Workflow::Condition::LazyAND - Lazy intersection of conditions
 
 =head1 VERSION
 

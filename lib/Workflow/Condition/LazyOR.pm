@@ -51,7 +51,7 @@ __END__
 
 =head1 NAME
 
-Workflow::Condition::LazyOR
+Workflow::Condition::LazyOR - Lazy union of conditions
 
 =head1 VERSION
 
