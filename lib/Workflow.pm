@@ -1470,6 +1470,9 @@ Chris Winters E<lt>chris@cwinters.comE<gt>, original author.
 
 The following folks have also helped out (listed here in no particular order):
 
+Sean Anderson (sean-anderson-brivo), for adding missing whatis entries to the
+NAME sections of the documentation, PR #302, included in release 2.12
+
 Emmanuel Seyman (eseyman), for reporting the release tarball duplicating the
 whole distribution under build/, issue #288, resulting in release 2.11
 
