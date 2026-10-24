@@ -9,6 +9,7 @@
 ### Documentation
 
 - Added missing whatis entries (the brief description after the hyphen) to the `NAME` sections of `Workflow::Condition::LazyAND`, `Workflow::Condition::LazyOR`, `Workflow::Manual::Configuration` and `Workflow::Manual::Overview`, so they are picked up by `apropos` and `whatis`. PR [#302](https://github.com/perl-workflow/perl-workflow/pull/302) by @sean-anderson-brivo
+- Fixed an unresolved internal POD link in `Workflow`: the `add_observer` documentation linked to `notify_observers`, which did not match the actual heading `notify_observers( @arguments )`. PR [#304](https://github.com/perl-workflow/perl-workflow/pull/304)
 
 ## 2.11 2026-08-10 bug fix release, update recommended
 
