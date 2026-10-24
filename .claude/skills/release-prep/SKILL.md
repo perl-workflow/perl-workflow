@@ -10,6 +10,6 @@ Run the following release preparation checklist in order:
 3. Update `=head1 VERSION` POD section in `lib/Workflow.pm` and all `$Workflow::*::VERSION` strings across `lib/` to match
 4. Verify `Changes.md` has an entry for the new version following the existing format
 5. Run: `dzil build --no-tgz --in build`
-6. Run: `cd build && AUTHOR_TESTING=1 EXTENDED_TESTING=1 RELEASE_TESTING=1 prove --timer --lib --recurse xt/ t/`
+6. Run: `cd build && AUTHOR_TESTING=1 EXTENDED_TESTING=1 RELEASE_TESTING=1 prove --timer --lib --recurse t/` (`dzil build` filters `xt/` into `t/` as `author-*.t` / `release-*.t`, so `build/` has no `xt/` directory)
 7. Report any failures before proceeding
 8. Summarize what changed between the previous version and this one based on `Changes.md`
