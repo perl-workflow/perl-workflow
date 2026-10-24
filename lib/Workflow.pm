@@ -1160,7 +1160,7 @@ Sets property to value or throws L<Workflow::Exception>
 =head3 add_observer( @observers )
 
 Adds one or more observers to a C<Workflow> instance. An observer is a
-function. See L</notify_observers> for its calling convention.
+function. See L</"notify_observers( @arguments )"> for its calling convention.
 
 This function is used internally by C<Workflow::Factory> to implement
 observability as documented in the section L</WORKFLOWS ARE OBSERVABLE>
