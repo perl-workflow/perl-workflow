@@ -1,5 +1,11 @@
 # Revision history for the Workflow Perl Distribution
 
+## 2.12 unreleased
+
+### Changed
+
+- `Workflow::Factory` no longer calls `init()` when constructing its singleton instance. The call was a no-op inherited from `Workflow::Base`, invoked without arguments on an empty instance, and never documented as an extension point. If you subclass `Workflow::Factory` and override `init()`, that method is no longer invoked. Issue [#290](https://github.com/perl-workflow/perl-workflow/issues/290) reported by @ehuelsmann, fixed via PR [#297](https://github.com/perl-workflow/perl-workflow/pull/297)
+
 ## 2.11 2026-08-10 bug fix release, update recommended
 
 ### Fixed
