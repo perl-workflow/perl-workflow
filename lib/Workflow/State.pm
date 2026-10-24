@@ -10,7 +10,7 @@ use Workflow::Exception qw( workflow_error );
 use Exception::Class;
 use Workflow::Factory qw( FACTORY );
 
-$Workflow::State::VERSION = '2.11';
+$Workflow::State::VERSION = '2.12';
 
 my @FIELDS   = qw( state description type );
 my @INTERNAL = qw( _test_condition_count _factory _actions _conditions
@@ -337,7 +337,7 @@ Workflow::State - Information about an individual state in a workflow
 
 =head1 VERSION
 
-This documentation describes version 2.11 of this package
+This documentation describes version 2.12 of this package
 
 =head1 SYNOPSIS
 

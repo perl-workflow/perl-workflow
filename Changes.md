@@ -1,6 +1,6 @@
 # Revision history for the Workflow Perl Distribution
 
-## 2.12 unreleased
+## 2.12 2026-10-24 maintenance release, update not required
 
 ### Changed
 

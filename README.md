@@ -8,7 +8,7 @@ Workflow - Simple, flexible system to implement workflows
 
 # VERSION
 
-This documentation describes version 2.11 of Workflow
+This documentation describes version 2.12 of Workflow
 
 # SYNOPSIS
 
@@ -624,7 +624,7 @@ Sets property to value or throws [Workflow::Exception](https://metacpan.org/pod/
 ### add\_observer( @observers )
 
 Adds one or more observers to a `Workflow` instance. An observer is a
-function. See ["notify\_observers"](#notify_observers) for its calling convention.
+function. See ["notify\_observers( @arguments )"](#notify_observers-arguments) for its calling convention.
 
 This function is used internally by `Workflow::Factory` to implement
 observability as documented in the section ["WORKFLOWS ARE OBSERVABLE"](#workflows-are-observable)
@@ -900,6 +900,9 @@ Jonas B. (jonasbn) <jonasbn@cpan.org>, current maintainer.
 Chris Winters <chris@cwinters.com>, original author.
 
 The following folks have also helped out (listed here in no particular order):
+
+Sean Anderson (sean-anderson-brivo), for adding missing whatis entries to the
+NAME sections of the documentation, PR #302, included in release 2.12
 
 Emmanuel Seyman (eseyman), for reporting the release tarball duplicating the
 whole distribution under build/, issue #288, resulting in release 2.11
