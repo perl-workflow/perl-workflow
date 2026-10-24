@@ -1,6 +1,8 @@
 =pod
 
-=head1 Configuration Description
+=head1 Name
+
+Workflow::Manual::Configuration - Configuration Description
 
 =head2 Workflows
 
