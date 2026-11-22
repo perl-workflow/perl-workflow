@@ -232,6 +232,13 @@ files alongside the built-in parsers for XML and Perl files:
      persister => 'persister.perl',
  );
 
+This option is useful if you want to replace the standard parsers with
+your own:
+
+  # Explicitly register your configuration parser
+  Workflow::Config->unregister_factory_type( 'xml' );
+  Workflow::Config->register_factory_type( xml => 'MY::Workflow::YAML' );
+
 =head2 Inherited Methods
 
 =head3 new( $parser_type )
