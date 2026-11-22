@@ -312,6 +312,8 @@ workflow pieces:
       state         \@
           name          $
           description   $
+          autorun       yes|no
+          may_stop      yes|no
           action        \@
               name            $
               resulting_state $ -or- \%
