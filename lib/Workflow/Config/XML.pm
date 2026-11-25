@@ -128,15 +128,49 @@ This documentation describes version 2.12 of this package
 
 =head1 SYNOPSIS
 
- my $parser = Workflow::Config->new( 'xml' );
- my $conf = $parser->parse( 'condition',
-                            'my_conditions.xml', 'your_conditions.xml' );
+  my $parser = Workflow::Config->new( 'xml' );
+  my $conf = $parser->parse( 'condition',
+                             'my_conditions.xml', 'your_conditions.xml' );
 
 =head1 DESCRIPTION
 
 Implementation of configuration parser for XML files/data; requires
 L<XML::Simple> to be installed. See L<Workflow::Config> for C<parse()>
 description.
+
+=head1 OBSERVER CONFIGURATION
+
+Observers can be configured in XML format. Both inline (workflow-associated)
+and independent observer configurations are supported.
+
+=head2 Inline Observer Configuration
+
+Observers can be declared inline within a workflow configuration file:
+
+  <workflow>
+    <type>MyWorkflow</type>
+    <description>My workflow</description>
+    <persister>MyPersister</persister>
+    <observer class="My::WorkflowObserver" />
+    <observer sub="My::Observers::handle_workflow" />
+    <state name="INITIAL">
+      ...
+    </state>
+  </workflow>
+
+=head2 Independent Observer Configuration
+
+Observers can be configured independently in a separate file and applied to
+workflows by type:
+
+  <observers>
+    <observer type="MyWorkflow" name="audit_observer" class="My::AuditObserver" />
+    <observer type="OtherWorkflow" name="notify_observer" 
+              sub="My::Notifications::send_notification" />
+  </observers>
+
+For comprehensive documentation of observer configuration options, see
+L<Workflow::Config/"observer"> and L<Workflow/"WORKFLOWS ARE OBSERVABLE">.
 
 =head2 Status of this module
 

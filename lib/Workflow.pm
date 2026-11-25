@@ -1016,6 +1016,19 @@ we're naming exactly the subroutine ('other_sub()' in the class
 All configured observers get all events. It's up to each observer to
 figure out what it wants to handle.
 
+It's also possible to configure observers separately from the workflow
+configuration: you can add observers in observer configuration files
+added to the factory. Such configuration would look like this:
+
+ <observers>
+   <observer type="ObservedItem" class="SomeObserver" />
+   <observer type="ObservedItem" sub="SomeOtherObserver::Functions::other_sub" />
+ </observers>
+
+This pattern is intended to allow you to add observers without modifying
+the workflow configuration itself, which is useful if the workflows are
+part of a standard deployment and you need to add additional behaviour to it.
+
 =head1 WORKFLOW METHODS
 
 The following documentation is for the workflow object itself rather

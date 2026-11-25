@@ -837,21 +837,22 @@ This documentation describes version 2.12 of this package
 
 =head1 SYNOPSIS
 
- # Import the singleton for easy access
- use Workflow::Factory qw( FACTORY );
+  # Import the singleton for easy access
+  use Workflow::Factory qw( FACTORY );
 
- # Add XML configurations to the factory
- FACTORY->add_config_from_file( workflow  => 'workflow.xml',
-                                action    => [ 'myactions.xml', 'otheractions.xml' ],
-                                validator => [ 'validator.xml', 'myvalidators.xml' ],
-                                condition => 'condition.xml',
-                                persister => 'persister.xml' );
+  # Add XML configurations to the factory
+  FACTORY->add_config_from_file( workflow  => 'workflow.xml',
+                                 action    => [ 'myactions.xml', 'otheractions.xml' ],
+                                 validator => [ 'validator.xml', 'myvalidators.xml' ],
+                                 condition => 'condition.xml',
+                                 persister => 'persister.xml',
+                                 observer  => 'observer.xml' );
 
- # Create a new workflow of type 'MyWorkflow'
- my $wf = FACTORY->create_workflow( 'MyWorkflow' );
+  # Create a new workflow of type 'MyWorkflow'
+  my $wf = FACTORY->create_workflow( 'MyWorkflow' );
 
- # Fetch an existing workflow with ID '25'
- my $wf = FACTORY->fetch_workflow( 'MyWorkflow', 25 );
+  # Fetch an existing workflow with ID '25'
+  my $wf = FACTORY->fetch_workflow( 'MyWorkflow', 25 );
 
 =head1 DESCRIPTION
 
@@ -927,9 +928,13 @@ Returns: L<Workflow> object
 =head3 add_config_from_file( %config_declarations )
 
 Pass in filenames for the various components you wish to initialize
-using the keys 'action', 'condition', 'persister', 'validator' and
-'workflow'. The value for each can be a single filename or an arrayref
-of filenames.
+using the keys 'action', 'condition', 'persister', 'validator', 'workflow',
+and optionally 'observer'. The value for each can be a single filename or 
+an arrayref of filenames.
+
+The 'observer' key is optional and specifies independent observer configuration
+files. These allow you to attach observers to workflows without modifying the
+workflow configuration itself.
 
 The system is familiar with the 'perl' and 'xml' configuration formats
 -- see the 'doc/configuration.txt' for what we expect as the format
@@ -945,7 +950,8 @@ directly to the factory using C<add_config()>. However, you need to
 ensure the configurations are added in the proper order -- when you
 add an 'action' configuration and reference 'validator' objects, those
 objects should already be read in. A good order is: 'validator',
-'condition', 'action', 'workflow'. Then just pass the resulting hash
+'condition', 'action', 'workflow', and 'observer' (last, to ensure
+all workflow types are defined). Then just pass the resulting hash
 references to C<add_config()> using the right type and the behavior
 should be exactly the same.
 
@@ -955,8 +961,8 @@ creating the objects it requires we throw a L<Workflow::Exception>.
 =head3 add_config( %config_hashrefs )
 
 Similar to C<add_config_from_file()> -- the keys may be 'action',
-'condition', 'persister', 'validator' and/or 'workflow'. But the
-values are the actual configuration hashrefs instead of the files
+'condition', 'persister', 'validator', 'workflow', and/or 'observer'. 
+But the values are the actual configuration hashrefs instead of the files
 holding the configurations.
 
 You normally will only need to call this if you are programmatically
@@ -1158,20 +1164,20 @@ C<add_config_from_file>.
 
 For example:
 
- use Workflow::Factory qw(FACTORY);
- use My::Config::System;
+  use Workflow::Factory qw(FACTORY);
+  use My::Config::System;
 
- sub init {
-   my $self = shift;
+  sub init {
+    my $self = shift;
 
-   FACTORY->config_callback(
-     sub {
-       my $wf_type = shift;
-       my %ret = My::Config::System->get_files_for_wf( $wf_type ) || ();
-       return \%ret;
-     }
-   );
- }
+    FACTORY->config_callback(
+      sub {
+        my $wf_type = shift;
+        my %ret = My::Config::System->get_files_for_wf( $wf_type ) || ();
+        return \%ret;
+      }
+    );
+  }
 
 =head1 SUBCLASSING
 
@@ -1181,31 +1187,31 @@ You can subclass the factory to implement your own methods and still
 use the useful facade of the C<FACTORY> constant. For instance, the
 implementation is typical Perl subclassing:
 
- package My::Cool::Factory;
+  package My::Cool::Factory;
 
- use strict;
- use parent qw( Workflow::Factory );
+  use strict;
+  use parent qw( Workflow::Factory );
 
- sub some_cool_method {
-     my ( $self ) = @_;
-     ...
- }
+  sub some_cool_method {
+      my ( $self ) = @_;
+      ...
+  }
 
 To use your factory you can just do the typical import:
 
- #!/usr/bin/perl
+  #!/usr/bin/perl
 
- use strict;
- use My::Cool::Factory qw( FACTORY );
+  use strict;
+  use My::Cool::Factory qw( FACTORY );
 
 Or you can call C<instance()> directly:
 
- #!/usr/bin/perl
+  #!/usr/bin/perl
 
- use strict;
- use My::Cool::Factory;
+  use strict;
+  use My::Cool::Factory;
 
- my $factory = My::Cool::Factory->instance();
+  my $factory = My::Cool::Factory->instance();
 
 =head1 GLOBAL RUN-TIME OPTIONS
 
