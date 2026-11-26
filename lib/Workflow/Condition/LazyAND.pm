@@ -1,7 +1,6 @@
 package Workflow::Condition::LazyAND;
 
 use warnings;
-use strict;
 use v5.14.0;
 
 our $VERSION = '2.12';

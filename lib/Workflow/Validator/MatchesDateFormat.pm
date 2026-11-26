@@ -1,7 +1,6 @@
 package Workflow::Validator::MatchesDateFormat;
 
 use warnings;
-use strict;
 use v5.14.0;
 use parent qw( Workflow::Validator );
 use DateTime::Format::Strptime;

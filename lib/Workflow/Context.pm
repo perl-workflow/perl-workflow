@@ -1,7 +1,6 @@
 package Workflow::Context;
 
 use warnings;
-use strict;
 use v5.14.0;
 use parent qw( Workflow::Base );
 
