@@ -119,18 +119,60 @@ This documentation describes version 2.12 of this package
 
 =head1 SYNOPSIS
 
- # either of these is acceptable
- my $parser = Workflow::Config->new( 'perl' );
- my $parser = Workflow::Config->new( 'pl' );
+  # either of these is acceptable
+  my $parser = Workflow::Config->new( 'perl' );
+  my $parser = Workflow::Config->new( 'pl' );
 
- my $conf = $parser->parse( 'condition',
-                            'my_conditions.pl', 'your_conditions.perl' );
+  my $conf = $parser->parse( 'condition',
+                             'my_conditions.pl', 'your_conditions.perl' );
 
 =head1 DESCRIPTION
 
 Implementation of configuration parser for serialized Perl data
 structures from files/data. See L<Workflow::Config> for C<parse()>
 description.
+
+=head1 OBSERVER CONFIGURATION
+
+Observers can be configured in Perl data structure format. Both inline 
+(workflow-associated) and independent observer configurations are supported.
+
+=head2 Inline Observer Configuration
+
+Observers can be declared inline within a workflow configuration:
+
+  {
+    type        => 'MyWorkflow',
+    description => 'My workflow',
+    persister   => 'MyPersister',
+    observer    => [
+      { class => 'My::WorkflowObserver' },
+      { sub   => 'My::Observers::handle_workflow' },
+    ],
+    state => [ ... ],
+  }
+
+=head2 Independent Observer Configuration
+
+Observers can be configured independently and applied to workflows by type:
+
+  {
+    observer => [
+      {
+        type  => 'MyWorkflow',
+        name  => 'audit_observer',
+        class => 'My::AuditObserver',
+      },
+      {
+        type  => 'OtherWorkflow',
+        name  => 'notify_observer',
+        sub   => 'My::Notifications::send_notification',
+      },
+    ]
+  }
+
+For comprehensive documentation of observer configuration options, see
+L<Workflow::Config/"observer"> and L<Workflow/"WORKFLOWS ARE OBSERVABLE">.
 
 =head1 METHODS
 
