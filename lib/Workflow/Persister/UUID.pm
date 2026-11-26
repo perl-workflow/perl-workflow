@@ -1,7 +1,6 @@
 package Workflow::Persister::UUID;
 
 use warnings;
-use strict;
 use v5.14.0;
 use Data::UUID;
 

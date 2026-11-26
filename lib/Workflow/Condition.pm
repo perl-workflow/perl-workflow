@@ -1,7 +1,6 @@
 package Workflow::Condition;
 
 use warnings;
-use strict;
 
 use parent qw( Workflow::Base );
 use v5.14.0;

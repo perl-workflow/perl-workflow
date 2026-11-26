@@ -1,7 +1,6 @@
 package Workflow::Validator::InEnumeratedType;
 
 use warnings;
-use strict;
 use v5.14.0;
 use parent qw( Workflow::Validator );
 use Workflow::Exception qw( configuration_error validation_error );

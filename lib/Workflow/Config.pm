@@ -1,7 +1,6 @@
 package Workflow::Config;
 
 use warnings;
-use strict;
 use v5.14.0;
 use parent qw( Class::Factory );
 use Data::Dumper qw( Dumper );

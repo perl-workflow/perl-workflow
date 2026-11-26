@@ -1,7 +1,6 @@
 package Workflow::Condition::Evaluate;
 
 use warnings;
-use strict;
 use v5.14.0;
 use parent qw( Workflow::Condition );
 use Safe;
