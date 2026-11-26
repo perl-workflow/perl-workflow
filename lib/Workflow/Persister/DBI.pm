@@ -513,6 +513,13 @@ This documentation describes version 2.12 of this package
 Main persistence class for storing the workflow and workflow history
 records to a DBI-accessible datasource.
 
+B<Remark> This class does not serialize the workflow context. If you
+want to persist the context, create a subclass and override the
+C<fetch_workflow> and C<update_workflow> methods to handle the context
+serialization and deserialization. See
+L<Issue 6|https://github.com/perl-workflow/perl-workflow/issues/6>
+for discussion of this topic.
+
 =head2 Subclassing: Getting handle from elsewhere
 
 A common need to create a subclass is to use a database handle created
