@@ -961,8 +961,8 @@ creating the objects it requires we throw a L<Workflow::Exception>.
 =head3 add_config( %config_hashrefs )
 
 Similar to C<add_config_from_file()> -- the keys may be 'action',
-'condition', 'persister', 'validator', 'workflow', and/or 'observer'. 
-But the values are the actual configuration hashrefs instead of the files
+'condition', 'persister', 'validator', 'workflow', and/or 'observer'.
+The values are the actual configuration hashrefs instead of the files
 holding the configurations.
 
 You normally will only need to call this if you are programmatically
